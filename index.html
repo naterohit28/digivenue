@@ -121,39 +121,39 @@ body {
 ════════════════════════════════════════════════════ */
 .sidebar {
   width: 220px; flex-shrink: 0;
-  background: var(--navy);
+  background: #ffffff;
   display: flex; flex-direction: column;
   overflow-x: hidden; overflow-y: auto;
-  border-right: 1px solid rgba(255,255,255,.06);
+  border-right: 1px solid #e8e3da;
   transition: width .3s ease;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,.12) transparent;
+  scrollbar-color: rgba(0,0,0,.12) transparent;
 }
 .sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 2px; }
 .sidebar.collapsed { width: 56px; }
 .sb-section { padding: 10px 10px 4px; }
 .sb-section-label {
   font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
-  color: rgba(255,255,255,.3); font-weight: 600; padding: 0 6px;
+  color: rgba(12,35,64,.35); font-weight: 600; padding: 0 6px;
   margin-bottom: 4px; white-space: nowrap; overflow: hidden;
 }
 .sidebar.collapsed .sb-section-label { opacity: 0; }
 .nav-link {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 12px; border-radius: 8px; margin-bottom: 2px;
-  cursor: pointer; transition: all .18s; color: rgba(255,255,255,.55);
+  cursor: pointer; transition: all .18s; color: rgba(12,35,64,.55);
   font-size: 13px; font-weight: 500; white-space: nowrap;
   position: relative;
 }
-.nav-link:hover { background: rgba(255,255,255,.08); color: rgba(255,255,255,.9); }
-.nav-link.active { background: rgba(200,146,10,.2); color: var(--gold-l); }
-.nav-link.active .nl-icon { color: var(--gold-l); }
+.nav-link:hover { background: rgba(12,35,64,.06); color: var(--navy); }
+.nav-link.active { background: rgba(200,146,10,.12); color: var(--navy); }
+.nav-link.active .nl-icon { color: var(--gold); }
 .nl-icon { font-size: 17px; flex-shrink: 0; width: 22px; text-align: center; }
 .nl-label { transition: opacity .2s; }
 .sidebar.collapsed .nl-label { opacity: 0; pointer-events: none; }
 .nl-badge {
-  margin-left: auto; background: var(--gold); color: var(--navy);
+  margin-left: auto; background: var(--gold); color: #ffffff;
   font-size: 10px; font-weight: 800; border-radius: 10px;
   padding: 1px 6px; font-family: 'JetBrains Mono', monospace;
   flex-shrink: 0;
@@ -161,15 +161,15 @@ body {
 .sidebar.collapsed .nl-badge { display: none; }
 .sb-bottom {
   margin-top: auto; padding: 12px 10px;
-  border-top: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid #e8e3da;
 }
 .sb-toggle {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 12px; border-radius: 8px; cursor: pointer;
-  color: rgba(255,255,255,.4); font-size: 13px;
+  color: rgba(12,35,64,.4); font-size: 13px;
   transition: all .18s;
 }
-.sb-toggle:hover { color: rgba(255,255,255,.7); background: rgba(255,255,255,.06); }
+.sb-toggle:hover { color: var(--navy); background: rgba(12,35,64,.06); }
 
 /* ════════════════════════════════════════════════════
    CONTENT AREA
@@ -794,6 +794,40 @@ body {
 }
 
 /* ════════════════════════════════════════════════════
+   WHATSAPP
+════════════════════════════════════════════════════ */
+.wp-tab {
+  padding: 10px 18px; font-size: 13px; font-weight: 600;
+  color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all .18s; margin-bottom: -2px;
+}
+.wp-tab.active { color: var(--jade); border-bottom-color: var(--jade); }
+.wp-tab:hover  { color: var(--text); }
+.wp-tab-content { display: none; }
+.wp-tab-content.active { display: block; }
+
+.wp-preview-box {
+  background: #e7fbe6;
+  border: 1px solid rgba(37,211,102,.3);
+  border-radius: 12px; padding: 14px 16px;
+  font-size: 13px; line-height: 1.8;
+  color: #1a1a1a;
+  font-family: 'DM Sans', sans-serif;
+  white-space: pre-wrap;
+  position: relative;
+}
+.wp-preview-box::before {
+  content: '📱 WhatsApp Preview';
+  display: block;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .8px;
+  color: #25d366; margin-bottom: 10px;
+}
+.wp-log-item { }
+.wl-sent    { color: var(--jade); font-size: 10px; font-weight: 700; }
+.wl-pending { color: var(--amber); font-size: 10px; font-weight: 700; }
+
+/* ════════════════════════════════════════════════════
    NOTIFICATION TOGGLES
 ════════════════════════════════════════════════════ */
 .notif-toggle {
@@ -826,6 +860,50 @@ body {
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-l); border-radius: 3px; }
+
+/* ════════════════════════════════════════════════════
+   MOBILE MENU DRAWER
+════════════════════════════════════════════════════ */
+.mobile-menu-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 200;
+}
+.mobile-menu-overlay.open { display: block; }
+.mobile-menu-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #fff; border-radius: 20px 20px 0 0;
+  z-index: 201; max-height: 82vh;
+  display: flex; flex-direction: column;
+  transform: translateY(100%);
+  transition: transform .28s cubic-bezier(.32,.72,0,1);
+  box-shadow: 0 -4px 32px rgba(0,0,0,.15);
+}
+.mobile-menu-drawer.open { transform: translateY(0); }
+.mmd-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 20px 12px; border-bottom: 1px solid #e8e3da;
+  flex-shrink: 0;
+}
+.mmd-scroll {
+  overflow-y: auto; padding: 8px 0 calc(20px + env(safe-area-inset-bottom));
+  flex: 1;
+}
+.mmd-section { padding: 8px 0; }
+.mmd-section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(12,35,64,.35);
+  padding: 6px 20px 4px;
+}
+.mmd-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 20px; cursor: pointer;
+  transition: background .15s;
+}
+.mmd-item:hover, .mmd-item:active { background: rgba(12,35,64,.05); }
+.mmd-item.active { background: rgba(200,146,10,.1); }
+.mmd-item.active .mmd-name { color: var(--navy); font-weight: 700; }
+.mmd-icon { font-size: 20px; width: 28px; text-align: center; }
+.mmd-name { font-size: 15px; color: var(--text); font-family: 'DM Sans', sans-serif; }
 
 /* ════════════════════════════════════════════════════
    ANIMATIONS
@@ -953,6 +1031,10 @@ body {
       </div>
       <div class="nav-link" onclick="showPage('clientportal',this)">
         <span class="nl-icon">🔗</span><span class="nl-label">Client Portal</span>
+      </div>
+      <div class="nav-link" onclick="showPage('whatsapp',this)">
+        <span class="nl-icon">💬</span><span class="nl-label">WhatsApp</span>
+        <span class="nl-badge" id="sb-wp-count">0</span>
       </div>
     </div>
     <div class="sb-bottom">
@@ -1444,9 +1526,9 @@ body {
           <div class="sec-head"><div class="sec-title">Your Venue QR Code</div></div>
           <div class="sec-body" style="text-align:center">
             <div style="display:inline-block;background:#fff;border:2px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://digivenue.co/ashraya/inquiry&color=0c2340&bgcolor=ffffff&margin=2" style="width:180px;height:180px;display:block" alt="QR Code" onerror="this.style.display='none';document.getElementById('qr-fallback').style.display='flex'">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://digivenue.app/ashraya/inquiry&color=0c2340&bgcolor=ffffff&margin=2" style="width:180px;height:180px;display:block" alt="QR Code" onerror="this.style.display='none';document.getElementById('qr-fallback').style.display='flex'">
               <div id="qr-fallback" style="display:none;width:180px;height:180px;background:var(--bg);border-radius:8px;align-items:center;justify-content:center;font-size:40px">📱</div>
-              <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">digivenue.co/ashraya/inquiry</div>
+              <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">digivenue.app/ashraya/inquiry</div>
             </div>
             <div style="background:var(--navy);color:#fff;border-radius:12px;padding:16px;margin-top:4px">
               <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;margin-bottom:4px">Ashraya Grand</div>
@@ -1483,7 +1565,7 @@ body {
           <div class="sec-card">
             <div class="sec-head"><div class="sec-title">⚙️ QR Settings</div></div>
             <div class="sec-body">
-              <div class="fg"><label>Redirect URL</label><input value="digivenue.co/ashraya/inquiry"></div>
+              <div class="fg"><label>Redirect URL</label><input value="digivenue.app/ashraya/inquiry"></div>
               <div class="fg"><label>QR Color Theme</label>
                 <select onchange="showToast('QR updated')">
                   <option>Navy Blue (default)</option><option>Black</option><option>Gold</option>
@@ -1587,6 +1669,173 @@ body {
       </div>
     </div>
 
+    <!-- ─── WHATSAPP INTEGRATION ─────────────────── -->
+    <div class="page" id="page-whatsapp">
+      <div class="page-header">
+        <div class="ph-left">
+          <div class="ph-title">WhatsApp Integration</div>
+          <div class="ph-sub">Send messages, confirmations & reminders directly from DigiVenue</div>
+        </div>
+        <div class="ph-actions">
+          <button class="btn btn-gold" onclick="sendDailyReport()">📊 Send Daily Report</button>
+          <button class="btn btn-primary" onclick="openModal('wpComposeModal')">✏️ Compose Message</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid" id="wpKPI"></div>
+
+      <!-- Tab bar -->
+      <div style="display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--border);padding-bottom:0">
+        <div class="wp-tab active" data-tab="quick"    onclick="setWpTab('quick',this)">Quick Send</div>
+        <div class="wp-tab" data-tab="templates"       onclick="setWpTab('templates',this)">Templates</div>
+        <div class="wp-tab" data-tab="log"             onclick="setWpTab('log',this)">Message Log</div>
+        <div class="wp-tab" data-tab="settings"        onclick="setWpTab('settings',this)">Settings</div>
+      </div>
+
+      <!-- QUICK SEND TAB -->
+      <div class="wp-tab-content active" id="wpt-quick">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+          <!-- Booking confirmation sender -->
+          <div class="sec-card">
+            <div class="sec-head">
+              <div class="sec-title">📋 Booking Confirmation</div>
+              <span class="badge b-confirmed">Instant</span>
+            </div>
+            <div class="sec-body">
+              <div class="fg"><label>Select Booking</label>
+                <select id="wp-bk-select" onchange="previewWpBooking()">
+                  <option value="">— Choose booking —</option>
+                </select>
+              </div>
+              <div id="wp-bk-preview" style="display:none">
+                <div class="wp-preview-box" id="wp-bk-msg"></div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button class="btn btn-primary" style="flex:1" onclick="sendWpBooking()">💬 Send on WhatsApp</button>
+                  <button class="btn btn-outline" onclick="copyWpMsg('wp-bk-msg')">📋 Copy</button>
+                </div>
+              </div>
+              <div id="wp-bk-empty" style="color:var(--faint);font-size:13px;font-style:italic">Select a booking to preview the message</div>
+            </div>
+          </div>
+
+          <!-- Payment reminder sender -->
+          <div class="sec-card">
+            <div class="sec-head">
+              <div class="sec-title">💰 Payment Reminder</div>
+              <span class="badge b-pending">Due</span>
+            </div>
+            <div class="sec-body">
+              <div class="fg"><label>Select Booking with Balance</label>
+                <select id="wp-pay-select" onchange="previewWpPayment()">
+                  <option value="">— Choose booking —</option>
+                </select>
+              </div>
+              <div id="wp-pay-preview" style="display:none">
+                <div class="wp-preview-box" id="wp-pay-msg"></div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button class="btn btn-primary" style="flex:1" onclick="sendWpPayment()">💬 Send Reminder</button>
+                  <button class="btn btn-outline" onclick="copyWpMsg('wp-pay-msg')">📋 Copy</button>
+                </div>
+              </div>
+              <div id="wp-pay-empty" style="color:var(--faint);font-size:13px;font-style:italic">Select a booking to preview reminder</div>
+            </div>
+          </div>
+
+          <!-- Inquiry reply -->
+          <div class="sec-card">
+            <div class="sec-head">
+              <div class="sec-title">💬 Inquiry Reply</div>
+              <span class="badge b-new">New</span>
+            </div>
+            <div class="sec-body">
+              <div class="fg"><label>Select Inquiry</label>
+                <select id="wp-inq-select" onchange="previewWpInquiry()">
+                  <option value="">— Choose inquiry —</option>
+                </select>
+              </div>
+              <div id="wp-inq-preview" style="display:none">
+                <div class="wp-preview-box" id="wp-inq-msg"></div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button class="btn btn-primary" style="flex:1" onclick="sendWpInquiry()">💬 Send Reply</button>
+                  <button class="btn btn-outline" onclick="copyWpMsg('wp-inq-msg')">📋 Copy</button>
+                </div>
+              </div>
+              <div id="wp-inq-empty" style="color:var(--faint);font-size:13px;font-style:italic">Select an inquiry to preview reply</div>
+            </div>
+          </div>
+
+          <!-- Tomorrow reminder -->
+          <div class="sec-card">
+            <div class="sec-head">
+              <div class="sec-title">📅 Event Reminder</div>
+              <span class="badge b-confirmed">Tomorrow</span>
+            </div>
+            <div class="sec-body">
+              <div class="fg"><label>Select Upcoming Event</label>
+                <select id="wp-evt-select" onchange="previewWpEvent()">
+                  <option value="">— Choose event —</option>
+                </select>
+              </div>
+              <div id="wp-evt-preview" style="display:none">
+                <div class="wp-preview-box" id="wp-evt-msg"></div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button class="btn btn-primary" style="flex:1" onclick="sendWpEvent()">💬 Send Reminder</button>
+                  <button class="btn btn-outline" onclick="copyWpMsg('wp-evt-msg')">📋 Copy</button>
+                </div>
+              </div>
+              <div id="wp-evt-empty" style="color:var(--faint);font-size:13px;font-style:italic">Select an event to preview reminder</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TEMPLATES TAB -->
+      <div class="wp-tab-content" id="wpt-templates">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="wpTemplateGrid"></div>
+      </div>
+
+      <!-- LOG TAB -->
+      <div class="wp-tab-content" id="wpt-log">
+        <div class="sec-card">
+          <div class="sec-head">
+            <div class="sec-title">Message History</div>
+            <div style="font-size:12px;color:var(--muted)" id="wp-log-count">—</div>
+          </div>
+          <div style="overflow-x:auto"><table class="data-table" id="wpLogTable"></table></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="wp-tab-content" id="wpt-settings">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">📱 Your WhatsApp Number</div></div>
+            <div class="sec-body">
+              <div class="fg"><label>Manager WhatsApp</label><input id="wp-mgr-num" placeholder="+91 9XXXXXXXXX" value="+91 98765 43210"></div>
+              <div class="fg"><label>Venue Name (shown in messages)</label><input id="wp-venue-name" placeholder="Ashraya Grand" value="Ashraya Grand"></div>
+              <div class="fg"><label>Manager Name</label><input id="wp-mgr-name" placeholder="Rohit" value="Rohit"></div>
+              <button class="btn btn-primary" onclick="saveWpSettings()">Save Settings</button>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">⚡ Auto-Send Triggers</div></div>
+            <div class="sec-body">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <label class="notif-toggle" onclick="toggleNotif(this)"><div class="nt-left"><span style="font-size:18px">📝</span><div><div style="font-weight:700;font-size:13px">New Booking Confirmation</div><div style="font-size:11px;color:var(--muted)">Auto-send when booking is added</div></div></div><div class="nt-switch on"></div></label>
+                <label class="notif-toggle" onclick="toggleNotif(this)"><div class="nt-left"><span style="font-size:18px">💰</span><div><div style="font-weight:700;font-size:13px">Payment Received</div><div style="font-size:11px;color:var(--muted)">Confirm receipt to client</div></div></div><div class="nt-switch on"></div></label>
+                <label class="notif-toggle" onclick="toggleNotif(this)"><div class="nt-left"><span style="font-size:18px">⏰</span><div><div style="font-weight:700;font-size:13px">3-Day Balance Reminder</div><div style="font-size:11px;color:var(--muted)">Remind if balance pending before event</div></div></div><div class="nt-switch on"></div></label>
+                <label class="notif-toggle" onclick="toggleNotif(this)"><div class="nt-left"><span style="font-size:18px">📅</span><div><div style="font-weight:700;font-size:13px">Day-Before Event Reminder</div><div style="font-size:11px;color:var(--muted)">Send prep details night before</div></div></div><div class="nt-switch"></div></label>
+                <label class="notif-toggle" onclick="toggleNotif(this)"><div class="nt-left"><span style="font-size:18px">📊</span><div><div style="font-weight:700;font-size:13px">Daily Summary to Manager</div><div style="font-size:11px;color:var(--muted)">Send end-of-day report to yourself</div></div></div><div class="nt-switch on"></div></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /layout -->
 
@@ -1604,8 +1853,45 @@ body {
   <div class="mn-item" onclick="showPage('finances',this,true)">
     <span class="mn-icon">💰</span><span class="mn-label">Finance</span>
   </div>
-  <div class="mn-item" onclick="showPage('venues',this,true)">
-    <span class="mn-icon">🏛️</span><span class="mn-label">Venues</span>
+  <div class="mn-item" id="moreNavBtn" onclick="openMobileMenu()">
+    <span class="mn-icon">☰</span><span class="mn-label">More</span>
+  </div>
+</div>
+
+<!-- MOBILE FULL MENU DRAWER -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu-drawer" id="mobileMenuDrawer">
+  <div class="mmd-header">
+    <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--navy);">All Modules</span>
+    <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:24px;color:var(--muted);cursor:pointer;line-height:1;">✕</button>
+  </div>
+  <div class="mmd-scroll">
+    <div class="mmd-section">
+      <div class="mmd-section-label">Main</div>
+      <div class="mmd-item" onclick="showPageMobile('dashboard')"><span class="mmd-icon">📊</span><span class="mmd-name">Dashboard</span></div>
+      <div class="mmd-item" onclick="showPageMobile('calendar')"><span class="mmd-icon">📅</span><span class="mmd-name">Calendar</span></div>
+      <div class="mmd-item" onclick="showPageMobile('muhurat')"><span class="mmd-icon">🕉️</span><span class="mmd-name">Muhurat Calendar</span></div>
+    </div>
+    <div class="mmd-section">
+      <div class="mmd-section-label">Sales</div>
+      <div class="mmd-item" onclick="showPageMobile('bookings')"><span class="mmd-icon">📋</span><span class="mmd-name">Bookings</span></div>
+      <div class="mmd-item" onclick="showPageMobile('leads')"><span class="mmd-icon">🎯</span><span class="mmd-name">Leads Pipeline</span></div>
+      <div class="mmd-item" onclick="showPageMobile('inquiries')"><span class="mmd-icon">📬</span><span class="mmd-name">Inquiries</span></div>
+    </div>
+    <div class="mmd-section">
+      <div class="mmd-section-label">Finance</div>
+      <div class="mmd-item" onclick="showPageMobile('finances')"><span class="mmd-icon">💰</span><span class="mmd-name">Finances</span></div>
+      <div class="mmd-item" onclick="showPageMobile('venues')"><span class="mmd-icon">🏛️</span><span class="mmd-name">Venues</span></div>
+    </div>
+    <div class="mmd-section">
+      <div class="mmd-section-label">Operations</div>
+      <div class="mmd-item" onclick="showPageMobile('payments')"><span class="mmd-icon">💳</span><span class="mmd-name">Payment Tracker</span></div>
+      <div class="mmd-item" onclick="showPageMobile('dealcalc')"><span class="mmd-icon">🧮</span><span class="mmd-name">Deal Calculator</span></div>
+      <div class="mmd-item" onclick="showPageMobile('notifications')"><span class="mmd-icon">🔔</span><span class="mmd-name">Notifications</span></div>
+      <div class="mmd-item" onclick="showPageMobile('leadqr')"><span class="mmd-icon">📲</span><span class="mmd-name">QR Leads</span></div>
+      <div class="mmd-item" onclick="showPageMobile('clientportal')"><span class="mmd-icon">🔗</span><span class="mmd-name">Client Portal</span></div>
+      <div class="mmd-item" onclick="showPageMobile('whatsapp')"><span class="mmd-icon">💬</span><span class="mmd-name">WhatsApp</span></div>
+    </div>
   </div>
 </div>
 
@@ -1770,6 +2056,35 @@ body {
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- WHATSAPP COMPOSE MODAL -->
+<div class="overlay" id="wpComposeModal" onclick="overlayClose('wpComposeModal',event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">✏️ Compose WhatsApp Message</div><div class="modal-sub">Send a custom message to any contact</div></div>
+      <button class="btn-x" onclick="closeModal('wpComposeModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="fg"><label>Recipient Name</label><input id="wpc-name" placeholder="Client name"></div>
+        <div class="fg"><label>WhatsApp Number</label><input id="wpc-phone" placeholder="+91 9XXXXXXXXX"></div>
+      </div>
+      <div class="fg"><label>Message</label><textarea id="wpc-body" style="min-height:140px" placeholder="Type your message..."></textarea></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn btn-sm btn-outline" onclick="insertTemplate('wpc-body','greeting')">+ Greeting</button>
+        <button class="btn btn-sm btn-outline" onclick="insertTemplate('wpc-body','closing')">+ Closing</button>
+        <button class="btn btn-sm btn-outline" onclick="insertTemplate('wpc-body','venue')">+ Venue Info</button>
+        <button class="btn btn-sm btn-outline" onclick="insertTemplate('wpc-body','upi')">+ UPI Details</button>
+      </div>
+      <div class="wp-preview-box" id="wpc-preview" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="previewCompose()">👁 Preview</button>
+      <button class="btn btn-outline" onclick="closeModal('wpComposeModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="sendCompose()">💬 Send on WhatsApp</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════ SCRIPT ══════════════════════════════ -->
 <script>
@@ -2425,6 +2740,7 @@ function showPage(name, el, isMobile=false) {
   // Page-specific renderers
   if (name === 'payments')     renderPaymentTracker();
   if (name === 'muhurat')      renderMuhuratCalendar();
+  if (name === 'whatsapp')     renderWhatsApp();
   if (name === 'clientportal') {
     const sel = document.getElementById('cp-booking');
     if (sel) {
@@ -2974,8 +3290,349 @@ function shiftMuCal(dir) {
   renderMuDayDetail(null);
 }
 
+/* ═══════════════════════════════════════════════════
+   WHATSAPP MODULE
+═══════════════════════════════════════════════════ */
+
+// Settings
+let wpSettings = {
+  managerNum:  '+91 98765 43210',
+  venueName:   'Ashraya Grand',
+  managerName: 'Rohit',
+};
+
+// Message log
+let wpLog = [
+  { type:'Booking Confirmation', client:'Sharma Wedding',   phone:'+91 98100 00001', time:'2h ago',  status:'sent' },
+  { type:'Payment Reminder',     client:'Gupta Engagement', phone:'+91 98100 00005', time:'5h ago',  status:'sent' },
+  { type:'Inquiry Reply',        client:'Anita Sharma',     phone:'+91 98100 00010', time:'1d ago',  status:'sent' },
+  { type:'Event Reminder',       client:'Mehra Reception',  phone:'+91 98100 00002', time:'2d ago',  status:'sent' },
+  { type:'Daily Report',         client:'— (Self)',         phone:wpSettings.managerNum, time:'1d ago', status:'sent' },
+];
+
+// Message Templates
+const WP_TEMPLATES = [
+  {
+    id:'booking_confirm',
+    title:'📋 Booking Confirmation',
+    tag:'Confirmation',
+    tagCls:'b-confirmed',
+    desc:'Sent when a booking is confirmed',
+    build: (b) => {
+      const v = vobj(b.venue);
+      return `🎉 *Booking Confirmed — ${wpSettings.venueName}*\n\nDear ${b.client.split(' ')[0]},\n\nYour *${b.etype}* has been confirmed! Here are your details:\n\n📅 *Date:* ${fdate(b.date)}\n🏛️ *Venue:* ${v.name}\n👥 *Guests:* ${b.guests || 'TBD'}\n\n💰 *Payment Summary*\nTotal Amount: *${rupee(b.amount)}*\nAdvance Paid: *${rupee(b.advance)}*\nBalance Due: *${rupee(bal(b))}*\n\nFor any queries, contact us anytime.\n\n— ${wpSettings.managerName}\n${wpSettings.venueName} 🙏`;
+    }
+  },
+  {
+    id:'payment_reminder',
+    title:'💰 Payment Reminder',
+    tag:'Reminder',
+    tagCls:'b-pending',
+    desc:'Sent when balance payment is due',
+    build: (b) => {
+      return `⏰ *Payment Reminder — ${wpSettings.venueName}*\n\nDear ${b.client.split(' ')[0]},\n\nThis is a friendly reminder that your event *${b.etype}* is on *${fdate(b.date)}*.\n\n💳 *Outstanding Balance: ${rupee(bal(b))}*\n\nKindly clear the balance at your earliest convenience to avoid any last-minute hassle.\n\nPayment Methods:\n🏦 Bank Transfer\n📱 UPI / GPay / PhonePe\n💵 Cash at venue\n\nThank you!\n— ${wpSettings.managerName}, ${wpSettings.venueName}`;
+    }
+  },
+  {
+    id:'event_reminder',
+    title:'📅 Day-Before Reminder',
+    tag:'Reminder',
+    tagCls:'b-confirmed',
+    desc:'Sent the evening before the event',
+    build: (b) => {
+      const v = vobj(b.venue);
+      return `✨ *Event Tomorrow — ${wpSettings.venueName}*\n\nDear ${b.client.split(' ')[0]},\n\nExcited to host your *${b.etype}* tomorrow! 🎊\n\n📅 *Date:* ${fdate(b.date)}\n🏛️ *Venue:* ${v.name}\n⏰ *Suggested Arrival:* 1 hour before event\n\n📍 *Venue Address:*\n${wpSettings.venueName}, [Your Address Here]\n\nFor any last-minute queries:\n📞 ${wpSettings.managerNum}\n\nWe look forward to making your event unforgettable! 🌟\n— Team ${wpSettings.venueName}`;
+    }
+  },
+  {
+    id:'inquiry_reply',
+    title:'💬 Inquiry Reply',
+    tag:'Inquiry',
+    tagCls:'b-new',
+    desc:'Reply to a new inquiry',
+    build: (inq) => {
+      return `🙏 *Thank You for Your Inquiry — ${wpSettings.venueName}*\n\nDear ${inq.name.split(' ')[0]},\n\nThank you for your interest in hosting your *${inq.etype}* with us!\n\nWe have received your inquiry for *${fdate(inq.date)}* for approximately *${inq.guests} guests*.\n\nOur team will contact you within 2 hours to discuss:\n✅ Availability confirmation\n✅ Customised packages\n✅ Pricing & offers\n\n📞 You can also reach us directly at:\n${wpSettings.managerNum}\n\n— ${wpSettings.managerName}\n${wpSettings.venueName}`;
+    }
+  },
+  {
+    id:'lead_followup',
+    title:'🎯 Lead Follow-Up',
+    tag:'Follow-up',
+    tagCls:'b-follow',
+    desc:'Follow up with a prospective client',
+    build: (l) => {
+      return `👋 *Following Up — ${wpSettings.venueName}*\n\nDear ${l.name.split(' ')[0]},\n\nHope you're doing well! We wanted to follow up on your inquiry for a *${l.etype}* at ${wpSettings.venueName}.\n\n🗓️ Your preferred date: *${fdate(l.date)}*\n👥 Guests: *${l.guests}*\n\nWe have exciting packages available and would love to give you a venue tour!\n\nAre you still planning the event? We'd be happy to assist.\n\n📞 ${wpSettings.managerNum}\n— ${wpSettings.managerName}, ${wpSettings.venueName}`;
+    }
+  },
+  {
+    id:'payment_receipt',
+    title:'✅ Payment Receipt',
+    tag:'Receipt',
+    tagCls:'b-paid',
+    desc:'Acknowledge a payment received',
+    build: (b) => {
+      return `✅ *Payment Received — ${wpSettings.venueName}*\n\nDear ${b.client.split(' ')[0]},\n\nWe confirm receipt of your payment for *${b.etype}* on *${fdate(b.date)}*.\n\n💰 *Amount Received:* ${rupee(b.advance)}\n📋 *Total Amount:* ${rupee(b.amount)}\n${bal(b) > 0 ? `⏳ *Balance Remaining:* ${rupee(bal(b))}` : '🎉 *Status: FULLY PAID*'}\n\nThank you for your prompt payment!\n\n— ${wpSettings.managerName}\n${wpSettings.venueName} 🙏`;
+    }
+  },
+  {
+    id:'daily_report',
+    title:'📊 Daily Summary Report',
+    tag:'Report',
+    tagCls:'b-confirmed',
+    desc:'End-of-day report sent to manager',
+    build: () => {
+      const today = new Date().toISOString().split('T')[0];
+      const todayBks = bookings.filter(b=>b.date===today);
+      const totalRev = bookings.reduce((s,b)=>s+b.amount,0);
+      const totalColl = bookings.reduce((s,b)=>s+b.advance,0);
+      const newLeads = leads.filter(l=>l.status==='new').length;
+      return `📊 *DigiVenue Daily Report*\n${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'long'})}\n\n━━━━━━━━━━━━━━━\n📋 Total Bookings: *${bookings.length}*\n📅 Today's Events: *${todayBks.length}*\n🎯 Active Leads: *${newLeads}*\n💬 New Inquiries: *${inquiries.filter(i=>i.status==='new').length}*\n━━━━━━━━━━━━━━━\n💰 Total Revenue: *${rupee(totalRev)}*\n✅ Collected: *${rupee(totalColl)}*\n⏳ Pending: *${rupee(totalRev-totalColl)}*\n━━━━━━━━━━━━━━━\n${todayBks.length>0?'🎊 Today\'s Events:\n'+todayBks.map(b=>`• ${b.client} — ${vobj(b.venue).name}`).join('\n')+'\n━━━━━━━━━━━━━━━\n':''}\nSent by DigiVenue ✅`;
+    }
+  },
+  {
+    id:'venue_tour',
+    title:'🏛️ Venue Tour Invite',
+    tag:'Invite',
+    tagCls:'b-new',
+    desc:'Invite a lead for a site visit',
+    build: (l) => {
+      return `🏛️ *Venue Tour Invitation — ${wpSettings.venueName}*\n\nDear ${(l||{name:'Guest'}).name?.split(' ')[0] || 'Guest'},\n\nWe'd love to invite you for a *complimentary venue tour* at ${wpSettings.venueName}!\n\nSee for yourself:\n✨ Grand decorated halls\n🌿 Lush outdoor spaces\n🍽️ Catering setup & kitchen\n🅿️ Ample parking\n\n📅 Available for tours:\nMon–Sat: 10 AM – 7 PM\nSunday: 11 AM – 5 PM\n\n📞 Call to schedule: ${wpSettings.managerNum}\n\nLooking forward to meeting you!\n— ${wpSettings.managerName}, ${wpSettings.venueName} 🙏`;
+    }
+  },
+];
+
+/* ───────────────────────────────────────────
+   RENDER WhatsApp page
+─────────────────────────────────────────── */
+function renderWhatsApp() {
+  // Populate selects
+  const bkOpts = '<option value="">— Choose booking —</option>' + bookings.map(b=>`<option value="${b.id}">${b.client} · ${fdate(b.date)}</option>`).join('');
+  ['wp-bk-select','wp-evt-select'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML=bkOpts; });
+
+  const payOpts = '<option value="">— Choose booking —</option>' + bookings.filter(b=>bal(b)>0).map(b=>`<option value="${b.id}">${b.client} · ${rupee(bal(b))} due</option>`).join('');
+  const wpPaySel = document.getElementById('wp-pay-select'); if(wpPaySel) wpPaySel.innerHTML = payOpts;
+
+  const inqOpts = '<option value="">— Choose inquiry —</option>' + inquiries.map(i=>`<option value="${i.id}">${i.name} · ${i.etype}</option>`).join('');
+  const wpInqSel = document.getElementById('wp-inq-select'); if(wpInqSel) wpInqSel.innerHTML = inqOpts;
+
+  // KPIs
+  document.getElementById('wpKPI').innerHTML = `
+    <div class="kpi-card kpi-jade"><div class="kpi-label">Messages Sent</div><div class="kpi-value kv-jade">${wpLog.length}</div><div class="kpi-sub">All time</div></div>
+    <div class="kpi-card kpi-gold"><div class="kpi-label">Templates</div><div class="kpi-value kv-gold">${WP_TEMPLATES.length}</div><div class="kpi-sub">Ready to use</div></div>
+    <div class="kpi-card kpi-navy"><div class="kpi-label">Pending Reminders</div><div class="kpi-value kv-navy">${bookings.filter(b=>bal(b)>0).length}</div><div class="kpi-sub">Balance outstanding</div></div>
+    <div class="kpi-card kpi-rose"><div class="kpi-label">Unanswered Inquiries</div><div class="kpi-value kv-rose">${inquiries.filter(i=>i.status==='new').length}</div><div class="kpi-sub">Awaiting reply</div></div>
+  `;
+
+  // Templates grid
+  document.getElementById('wpTemplateGrid').innerHTML = WP_TEMPLATES.map(t => `
+    <div class="sec-card" style="cursor:default">
+      <div class="sec-head">
+        <div class="sec-title">${t.title}</div>
+        <span class="badge ${t.tagCls}">${t.tag}</span>
+      </div>
+      <div class="sec-body">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">${t.desc}</div>
+        <div class="wp-preview-box" style="font-size:11px;max-height:140px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent)">${t.build(bookings[0]||{client:'Sample Client',etype:'Wedding',date:'2026-03-15',amount:500000,advance:200000,guests:300,venue:'grand-hall'})}</div>
+        <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px" onclick="useTemplate('${t.id}')">Use Template</button>
+      </div>
+    </div>`).join('');
+
+  // Log table
+  renderWpLog();
+  // Sidebar badge
+  document.getElementById('sb-wp-count').textContent = wpLog.filter(m=>m.status==='pending').length || wpLog.length;
+}
+
+function renderWpLog() {
+  document.getElementById('wp-log-count').textContent = `${wpLog.length} messages`;
+  document.getElementById('wpLogTable').innerHTML = `
+    <thead><tr><th>Type</th><th>Client</th><th>Phone</th><th>When</th><th>Status</th></tr></thead>
+    <tbody>${[...wpLog].reverse().map(m=>`
+      <tr>
+        <td class="td-bold">${m.type}</td>
+        <td>${m.client}</td>
+        <td class="td-mono">${m.phone}</td>
+        <td class="td-muted">${m.time}</td>
+        <td><span class="badge ${m.status==='sent'?'b-paid':'b-pending'}">${m.status}</span></td>
+      </tr>`).join('')}
+    </tbody>`;
+}
+
+/* ───────────────────────────────────────────
+   PREVIEW functions
+─────────────────────────────────────────── */
+function previewWpBooking() {
+  const id = +document.getElementById('wp-bk-select').value;
+  const b = bookings.find(b=>b.id===id);
+  const empty = document.getElementById('wp-bk-empty');
+  const preview = document.getElementById('wp-bk-preview');
+  if (!b) { empty.style.display='block'; preview.style.display='none'; return; }
+  document.getElementById('wp-bk-msg').textContent = WP_TEMPLATES.find(t=>t.id==='booking_confirm').build(b);
+  empty.style.display='none'; preview.style.display='block';
+}
+
+function previewWpPayment() {
+  const id = +document.getElementById('wp-pay-select').value;
+  const b = bookings.find(b=>b.id===id);
+  const empty = document.getElementById('wp-pay-empty');
+  const preview = document.getElementById('wp-pay-preview');
+  if (!b) { empty.style.display='block'; preview.style.display='none'; return; }
+  document.getElementById('wp-pay-msg').textContent = WP_TEMPLATES.find(t=>t.id==='payment_reminder').build(b);
+  empty.style.display='none'; preview.style.display='block';
+}
+
+function previewWpInquiry() {
+  const id = +document.getElementById('wp-inq-select').value;
+  const inq = inquiries.find(i=>i.id===id);
+  const empty = document.getElementById('wp-inq-empty');
+  const preview = document.getElementById('wp-inq-preview');
+  if (!inq) { empty.style.display='block'; preview.style.display='none'; return; }
+  document.getElementById('wp-inq-msg').textContent = WP_TEMPLATES.find(t=>t.id==='inquiry_reply').build(inq);
+  empty.style.display='none'; preview.style.display='block';
+}
+
+function previewWpEvent() {
+  const id = +document.getElementById('wp-evt-select').value;
+  const b = bookings.find(b=>b.id===id);
+  const empty = document.getElementById('wp-evt-empty');
+  const preview = document.getElementById('wp-evt-preview');
+  if (!b) { empty.style.display='block'; preview.style.display='none'; return; }
+  document.getElementById('wp-evt-msg').textContent = WP_TEMPLATES.find(t=>t.id==='event_reminder').build(b);
+  empty.style.display='none'; preview.style.display='block';
+}
+
+/* ───────────────────────────────────────────
+   SEND functions — open WhatsApp with pre-filled message
+─────────────────────────────────────────── */
+function openWA(phone, msg) {
+  const clean = phone.replace(/\D/g,'');
+  const url = `https://wa.me/${clean}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  wpLog.unshift({ type:'Manual Message', client:'—', phone, time:'just now', status:'sent' });
+  renderWpLog();
+  showToast('💬 Opening WhatsApp...');
+}
+
+function sendWpBooking() {
+  const id = +document.getElementById('wp-bk-select').value;
+  const b = bookings.find(b=>b.id===id); if(!b) return;
+  const msg = WP_TEMPLATES.find(t=>t.id==='booking_confirm').build(b);
+  const phone = prompt(`Send to phone number for ${b.client}:`, '+91 ');
+  if (!phone) return;
+  wpLog.unshift({ type:'Booking Confirmation', client:b.client, phone, time:'just now', status:'sent' });
+  openWA(phone, msg);
+}
+
+function sendWpPayment() {
+  const id = +document.getElementById('wp-pay-select').value;
+  const b = bookings.find(b=>b.id===id); if(!b) return;
+  const msg = WP_TEMPLATES.find(t=>t.id==='payment_reminder').build(b);
+  const phone = prompt(`Send payment reminder to ${b.client}:`, '+91 ');
+  if (!phone) return;
+  wpLog.unshift({ type:'Payment Reminder', client:b.client, phone, time:'just now', status:'sent' });
+  openWA(phone, msg);
+}
+
+function sendWpInquiry() {
+  const id = +document.getElementById('wp-inq-select').value;
+  const inq = inquiries.find(i=>i.id===id); if(!inq) return;
+  const msg = WP_TEMPLATES.find(t=>t.id==='inquiry_reply').build(inq);
+  openWA(inq.contact.includes('+') ? inq.contact : '+91 '+inq.contact, msg);
+  wpLog.unshift({ type:'Inquiry Reply', client:inq.name, phone:inq.contact, time:'just now', status:'sent' });
+  renderWpLog();
+}
+
+function sendWpEvent() {
+  const id = +document.getElementById('wp-evt-select').value;
+  const b = bookings.find(b=>b.id===id); if(!b) return;
+  const msg = WP_TEMPLATES.find(t=>t.id==='event_reminder').build(b);
+  const phone = prompt(`Send event reminder to ${b.client}:`, '+91 ');
+  if (!phone) return;
+  wpLog.unshift({ type:'Event Reminder', client:b.client, phone, time:'just now', status:'sent' });
+  openWA(phone, msg);
+}
+
+function sendDailyReport() {
+  const msg = WP_TEMPLATES.find(t=>t.id==='daily_report').build();
+  openWA(wpSettings.managerNum, msg);
+  wpLog.unshift({ type:'Daily Report', client:'— (Self)', phone:wpSettings.managerNum, time:'just now', status:'sent' });
+  renderWpLog();
+}
+
+function useTemplate(id) {
+  const t = WP_TEMPLATES.find(t=>t.id===id);
+  if (!t) return;
+  let subject, msg;
+  if (id==='daily_report') {
+    msg = t.build();
+    openWA(wpSettings.managerNum, msg);
+  } else if (id==='booking_confirm'||id==='payment_reminder'||id==='event_reminder'||id==='payment_receipt') {
+    if (!bookings.length) { showToast('No bookings available'); return; }
+    const b = bookings[0];
+    msg = t.build(b);
+    const phone = prompt(`Phone number for ${b.client}:`, '+91 ');
+    if (phone) openWA(phone, msg);
+  } else if (id==='inquiry_reply') {
+    if (!inquiries.length) { showToast('No inquiries available'); return; }
+    msg = t.build(inquiries[0]);
+    openWA(inquiries[0].contact, msg);
+  } else if (id==='lead_followup'||id==='venue_tour') {
+    if (!leads.length) { showToast('No leads available'); return; }
+    msg = t.build(leads[0]);
+    const phone = prompt(`Phone for ${leads[0].name}:`, leads[0].phone||'+91 ');
+    if (phone) openWA(phone, msg);
+  }
+  if (msg) {
+    wpLog.unshift({ type:t.title, client:'—', phone:'—', time:'just now', status:'sent' });
+    renderWpLog();
+  }
+}
+
+function copyWpMsg(elId) {
+  const txt = document.getElementById(elId)?.textContent || '';
+  navigator.clipboard?.writeText(txt).catch(()=>{});
+  showToast('📋 Message copied to clipboard');
+}
+
+function setWpTab(tab, el) {
+  document.querySelectorAll('.wp-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.wp-tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('wpt-'+tab).classList.add('active');
+}
+
+function saveWpSettings() {
+  wpSettings.managerNum  = document.getElementById('wp-mgr-num')?.value  || wpSettings.managerNum;
+  wpSettings.venueName   = document.getElementById('wp-venue-name')?.value || wpSettings.venueName;
+  wpSettings.managerName = document.getElementById('wp-mgr-name')?.value || wpSettings.managerName;
+  showToast('✅ WhatsApp settings saved');
+}
+
+// NO override — whatsapp render is handled inside the main showPage below
+
+/* ── Mobile full-screen menu drawer ── */
+function openMobileMenu() {
+  document.getElementById('mobileMenuOverlay').classList.add('open');
+  document.getElementById('mobileMenuDrawer').classList.add('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenuOverlay').classList.remove('open');
+  document.getElementById('mobileMenuDrawer').classList.remove('open');
+}
+function showPageMobile(name) {
+  closeMobileMenu();
+  // highlight correct bottom-nav item if it exists
+  const bottomMap = { dashboard:0, bookings:1, leads:2, finances:3 };
+  const items = document.querySelectorAll('#mobileNav .mn-item');
+  items.forEach(i => i.classList.remove('active'));
+  if (bottomMap[name] !== undefined) items[bottomMap[name]].classList.add('active');
+  // highlight drawer item
+  document.querySelectorAll('.mmd-item').forEach(i => {
+    i.classList.toggle('active', i.getAttribute('onclick').includes(`'${name}'`));
+  });
+  showPage(name, null, true);
+}
+
 </script>
 </body>
 </html>
-
-
