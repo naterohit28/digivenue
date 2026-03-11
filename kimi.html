@@ -1,0 +1,1278 @@
+ I'll design a comprehensive SaaS dashboard for DigiVenue with a unified smart booking calendar. Let me create this as a complete, interactive HTML prototype that demonstrates all the features you've specified.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiVenue - Smart Banquet Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        },
+                        muhurat: '#fbbf24',
+                        hot: '#f97316',
+                        booking: '#22c55e',
+                        inquiry: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e7eb;
+        }
+        .calendar-cell {
+            background: white;
+            min-height: 120px;
+            transition: all 0.2s;
+        }
+        .calendar-cell:hover {
+            background: #f9fafb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+            position: relative;
+        }
+        .demand-bar {
+            background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%);
+            height: 4px;
+            border-radius: 2px;
+            position: relative;
+        }
+        .demand-indicator {
+            position: absolute;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid #1f2937;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: left 0.3s ease;
+        }
+        .pulse-hot {
+            animation: pulse-orange 2s infinite;
+        }
+        @keyframes pulse-orange {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .sidebar-item {
+            transition: all 0.2s;
+        }
+        .sidebar-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(4px);
+        }
+        .mobile-nav-item {
+            transition: all 0.2s;
+        }
+        .mobile-nav-item.active {
+            color: #2563eb;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .group:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- Top Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-50 glass-effect">
+        <div class="flex items-center justify-between h-full px-4 lg:px-6">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-btn" class="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">D</div>
+                    <span class="text-xl font-bold text-gray-900 hidden sm:block">DigiVenue</span>
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="openModal('booking')" class="hidden sm:flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-medium transition-all hover:shadow-lg hover:scale-105 active:scale-95">
+                    <i class="fas fa-plus text-sm"></i>
+                    <span>New Booking</span>
+                </button>
+                <button onclick="openModal('inquiry')" class="hidden sm:flex items-center gap-2 bg-white border-2 border-brand-600 text-brand-600 hover:bg-brand-50 px-4 py-2 rounded-lg font-medium transition-all hover:shadow-md active:scale-95">
+                    <i class="fas fa-phone text-sm"></i>
+                    <span>New Inquiry</span>
+                </button>
+                
+                <!-- Mobile Quick Actions -->
+                <button onclick="openModal('booking')" class="sm:hidden w-10 h-10 bg-brand-600 text-white rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fas fa-plus"></i>
+                </button>
+
+                <!-- User Avatar -->
+                <div class="relative group ml-2">
+                    <button class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-full flex items-center justify-center text-white font-bold shadow-md hover:shadow-lg transition-all">
+                        DV
+                    </button>
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right">
+                        <div class="p-3 border-b border-gray-100">
+                            <p class="font-semibold text-sm">Venue Manager</p>
+                            <p class="text-xs text-gray-500">manager@digivenue.com</p>
+                        </div>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 text-gray-700">Profile Settings</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 text-gray-700">Venue Settings</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 text-red-600">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex pt-16 min-h-screen">
+        <!-- Sidebar Navigation (Desktop) -->
+        <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 bg-slate-900 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40 overflow-y-auto">
+            <div class="p-4">
+                <div class="mb-6">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Main Menu</p>
+                    <nav class="space-y-1">
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg bg-brand-600 text-white">
+                            <i class="fas fa-home w-5"></i>
+                            <span class="font-medium">Dashboard</span>
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-calendar-alt w-5"></i>
+                            <span class="font-medium">Calendar</span>
+                            <span class="ml-auto bg-brand-600 text-xs px-2 py-1 rounded-full">Live</span>
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-book w-5"></i>
+                            <span class="font-medium">Bookings</span>
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-phone-volume w-5"></i>
+                            <span class="font-medium">Inquiries</span>
+                            <span class="ml-auto bg-blue-500 text-xs px-2 py-1 rounded-full">5 New</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Management</p>
+                    <nav class="space-y-1">
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-rupee-sign w-5"></i>
+                            <span class="font-medium">Payments</span>
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-qrcode w-5"></i>
+                            <span class="font-medium">QR Leads</span>
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-chart-line w-5"></i>
+                            <span class="font-medium">Analytics</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">System</p>
+                    <nav class="space-y-1">
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-cog w-5"></i>
+                            <span class="font-medium">Settings</span>
+                        </a>
+                        <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white">
+                            <i class="fas fa-question-circle w-5"></i>
+                            <span class="font-medium">Help</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Venue Selector -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-slate-800">
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-700 cursor-pointer hover:bg-slate-600 transition-colors">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold">
+                        RS
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-sm truncate">Royal Celebration</p>
+                        <p class="text-xs text-slate-400 truncate">Mumbai, Maharashtra</p>
+                    </div>
+                    <i class="fas fa-chevron-up text-xs text-slate-400"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 p-4 lg:p-6 pb-24 lg:pb-6">
+            <!-- Header Section -->
+            <div class="mb-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Smart Calendar</h1>
+                        <p class="text-gray-500 mt-1">Unified view of bookings, inquiries, and muhurat dates</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="changeMonth(-1)" class="w-10 h-10 rounded-lg border border-gray-200 hover:bg-gray-50 flex items-center justify-center transition-colors">
+                            <i class="fas fa-chevron-left text-gray-600"></i>
+                        </button>
+                        <h2 id="current-month" class="text-lg font-semibold min-w-[140px] text-center">March 2026</h2>
+                        <button onclick="changeMonth(1)" class="w-10 h-10 rounded-lg border border-gray-200 hover:bg-gray-50 flex items-center justify-center transition-colors">
+                            <i class="fas fa-chevron-right text-gray-600"></i>
+                        </button>
+                        <button onclick="goToToday()" class="px-4 py-2 text-sm font-medium text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">
+                            Today
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="flex flex-wrap gap-4 text-sm bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-orange-500 pulse-hot"></span>
+                        <span class="text-gray-700">Hot Date</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                        <span class="text-gray-700">Muhurat</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                        <span class="text-gray-700">Confirmed</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                        <span class="text-gray-700">Inquiry</span>
+                    </div>
+                    <div class="flex items-center gap-2 ml-auto">
+                        <span class="text-gray-500">Demand Score:</span>
+                        <div class="w-24 h-2 bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Container -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <!-- Week Headers -->
+                <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Sun</div>
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Mon</div>
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Tue</div>
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Wed</div>
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Thu</div>
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Fri</div>
+                    <div class="py-3 text-center text-sm font-semibold text-gray-600">Sat</div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div id="calendar-grid" class="calendar-grid">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Demand Score Explanation -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">Hot Dates</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Automatically detected based on weekends, muhurat days, inquiry volume, and wedding season peaks.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-600">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">Muhurat Integration</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Support for Marathi, Gujarati, North Indian, and Drik Panchang calendars. Customize in venue settings.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center text-brand-600">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">Unified View</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">All bookings, inquiries, and auspicious dates in one calendar. No more switching between diaries.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-50 pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <a href="#" class="mobile-nav-item active flex flex-col items-center gap-1 p-2 text-gray-500">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs font-medium">Dashboard</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-500">
+                <i class="fas fa-calendar-alt text-lg"></i>
+                <span class="text-xs font-medium">Calendar</span>
+            </a>
+            <div class="w-12"></div> <!-- Spacer for FAB -->
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-500">
+                <i class="fas fa-phone-volume text-lg"></i>
+                <span class="text-xs font-medium">Leads</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-500">
+                <i class="fas fa-book text-lg"></i>
+                <span class="text-xs font-medium">Bookings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile FAB (Floating Action Button) -->
+    <button onclick="openModal('quick')" class="fixed bottom-20 right-4 lg:hidden w-14 h-14 bg-brand-600 text-white rounded-full shadow-xl flex items-center justify-center z-50 hover:scale-110 transition-transform">
+        <i class="fas fa-plus text-xl"></i>
+    </button>
+
+    <!-- Modal: New Booking -->
+    <div id="modal-booking" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all scale-95 opacity-0" id="modal-booking-content">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
+                <h2 class="text-xl font-bold text-gray-900">New Booking</h2>
+                <button onclick="closeModal('booking')" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times text-gray-500"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
+                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none" placeholder="e.g., Sharma Family">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Event Date</label>
+                        <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
+                            <option>Wedding</option>
+                            <option>Engagement</option>
+                            <option>Reception</option>
+                            <option>Birthday</option>
+                            <option>Corporate</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Guest Count</label>
+                    <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" placeholder="e.g., 300">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Package Amount (₹)</label>
+                    <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" placeholder="e.g., 150000">
+                </div>
+                <div class="pt-4 flex gap-3">
+                    <button onclick="closeModal('booking')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">Cancel</button>
+                    <button onclick="saveBooking()" class="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium transition-colors shadow-lg shadow-brand-500/30">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Inquiry -->
+    <div id="modal-inquiry" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all scale-95 opacity-0" id="modal-inquiry-content">
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
+                <h2 class="text-xl font-bold text-gray-900">New Inquiry</h2>
+                <button onclick="closeModal('inquiry')" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times text-gray-500"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
+                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" placeholder="e.g., Patel Family">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" placeholder="+91 98765 43210">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
+                        <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Flexibility</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
+                            <option>Fixed Date</option>
+                            <option>± 3 Days</option>
+                            <option>± 1 Week</option>
+                            <option>± 1 Month</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Expected Guests</label>
+                    <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" placeholder="e.g., 250">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none h-20 resize-none" placeholder="Any specific requirements..."></textarea>
+                </div>
+                <div class="pt-4 flex gap-3">
+                    <button onclick="closeModal('inquiry')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">Cancel</button>
+                    <button onclick="saveInquiry()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-lg shadow-blue-500/30">Save Inquiry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Date Details -->
+    <div id="modal-details" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl transform transition-all scale-95 opacity-0" id="modal-details-content">
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 id="detail-date" class="text-xl font-bold text-gray-900">March 15, 2026</h2>
+                    <button onclick="closeModal('details')" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+                <div id="detail-badges" class="flex flex-wrap gap-2">
+                    <!-- Badges injected by JS -->
+                </div>
+            </div>
+            <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                <div id="detail-muhurats" class="hidden">
+                    <h3 class="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <i class="fas fa-star text-yellow-500"></i> Muhurat Times
+                    </h3>
+                    <div class="space-y-2" id="muhurat-list"></div>
+                </div>
+                
+                <div id="detail-bookings" class="hidden">
+                    <h3 class="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500"></i> Confirmed Bookings
+                    </h3>
+                    <div class="space-y-2" id="booking-list"></div>
+                </div>
+
+                <div id="detail-inquiries" class="hidden">
+                    <h3 class="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <i class="fas fa-phone text-blue-500"></i> Active Inquiries
+                    </h3>
+                    <div class="space-y-2" id="inquiry-list"></div>
+                </div>
+
+                <div class="pt-4 flex gap-2">
+                    <button onclick="openModal('booking')" class="flex-1 bg-brand-600 text-white py-2 rounded-lg font-medium hover:bg-brand-700 transition-colors">
+                        <i class="fas fa-plus mr-1"></i> Add Booking
+                    </button>
+                    <button onclick="openModal('inquiry')" class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-phone mr-1"></i> Add Inquiry
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentDate = new Date(2026, 2, 1); // March 2026
+        let selectedDate = null;
+
+        // Sample Data
+        const venueSettings = {
+            panchangCalendars: ['Marathi', 'Gujarati', 'North Indian'],
+            location: 'Mumbai'
+        };
+
+        // Muhurat Data (Simulated for March 2026)
+        const muhuratData = {
+            '2026-03-12': [
+                { type: 'Wedding', calendar: 'Marathi', time: '09:15 - 10:45' },
+                { type: 'Wedding', calendar: 'Gujarati', time: '11:00 - 12:30' }
+            ],
+            '2026-03-15': [
+                { type: 'Engagement', calendar: 'North Indian', time: '08:30 - 10:00' },
+                { type: 'Wedding', calendar: 'Marathi', time: '12:00 - 13:30' }
+            ],
+            '2026-03-22': [
+                { type: 'Wedding', calendar: 'Gujarati', time: '09:00 - 10:30' }
+            ]
+        };
+
+        // Bookings Data
+        const bookingsData = {
+            '2026-03-12': [
+                { customer: 'Sharma', event: 'Wedding', guests: 350, amount: 250000 },
+                { customer: 'Patel', event: 'Engagement', guests: 150, amount: 80000 }
+            ],
+            '2026-03-15': [
+                { customer: 'Joshi', event: 'Reception', guests: 400, amount: 300000 }
+            ]
+        };
+
+        // Inquiries Data
+        const inquiriesData = {
+            '2026-03-12': [
+                { customer: 'Jain', guests: 300, status: 'hot' }
+            ],
+            '2026-03-14': [
+                { customer: 'Mehta', guests: 250, status: 'normal' },
+                { customer: 'Shah', guests: 400, status: 'hot' }
+            ],
+            '2026-03-18': [
+                { customer: 'Kumar', guests: 200, status: 'normal' }
+            ]
+        };
+
+        // Hot Dates Logic
+        function isHotDate(dateStr, dateObj) {
+            const day = dateObj.getDay();
+            const isWeekend = day === 0 || day === 5 || day === 6; // Fri, Sat, Sun
+            const hasMuhurat = muhuratData[dateStr] && muhuratData[dateStr].length > 0;
+            const inquiries = inquiriesData[dateStr] || [];
+            const highInquiry = inquiries.length >= 2 || inquiries.some(i => i.status === 'hot');
+            
+            // Wedding season check (Nov-Jan and March-April in India)
+            const month = dateObj.getMonth();
+            const isWeddingSeason = [0, 2, 3, 10, 11].includes(month);
+            
+            return (isWeekend && hasMuhurat) || (hasMuhurat && highInquiry) || (isWeekend && isWeddingSeason && highInquiry);
+        }
+
+        // Calculate Demand Score (0-10)
+        function calculateDemandScore(dateStr, dateObj) {
+            let score = 0;
+            const day = dateObj.getDay();
+            
+            // Weekend factor (0-3)
+            if (day === 0 || day === 6) score += 3;
+            else if (day === 5) score += 2;
+            
+            // Muhurat factor (0-3)
+            const muhurats = muhuratData[dateStr] || [];
+            score += Math.min(muhurats.length * 1.5, 3);
+            
+            // Inquiry factor (0-2)
+            const inquiries = inquiriesData[dateStr] || [];
+            score += Math.min(inquiries.length * 0.5, 2);
+            
+            // Wedding season factor (0-2)
+            const month = dateObj.getMonth();
+            if ([0, 2, 3, 10, 11].includes(month)) score += 2;
+            
+            return Math.min(Math.round(score), 10);
+        }
+
+        // Render Calendar
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            document.getElementById('current-month').textContent = 
+                new Date(year, month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            // Empty cells for previous month
+            for (let i = 0; i < firstDay; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell bg-gray-50';
+                grid.appendChild(cell);
+            }
+            
+            // Days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                const dateStr = dateObj.toISOString().split('T')[0];
+                const isToday = new Date().toDateString() === dateObj.toDateString();
+                
+                const cell = document.createElement('div');
+                cell.className = `calendar-cell p-2 cursor-pointer relative group ${isToday ? 'ring-2 ring-brand-500 ring-inset' : ''}`;
+                cell.onclick = () => openDateDetails(dateStr);
+                
+                // Check data
+                const bookings = bookingsData[dateStr] || [];
+                const inquiries = inquiriesData[dateStr] || [];
+                const muhurats = muhuratData[dateStr] || [];
+                const isHot = isHotDate(dateStr, dateObj);
+                const demandScore = calculateDemandScore(dateStr, dateObj);
+                
+                // Build cell content
+                let html = `
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-sm font-semibold ${isToday ? 'text-brand-600' : 'text-gray-900'}">${day}</span>
+                        ${isHot ? '<span class="text-xs">🔥</span>' : ''}
+                    </div>
+                `;
+                
+                // Demand Score Bar
+                if (demandScore > 0) {
+                    const percentage = (demandScore / 10) * 100;
+                    html += `
+                        <div class="mb-2">
+                            <div class="demand-bar w-full">
+                                <div class="demand-indicator" style="left: ${percentage}%"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] text-gray-500 mt-1">
+                                <span>Demand</span>
+                                <span class="font-semibold ${demandScore >= 7 ? 'text-orange-600' : demandScore >= 4 ? 'text-yellow-600' : 'text-green-600'}">${demandScore}/10</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Muhurat Badges
+                if (muhurats.length > 0) {
+                    html += `<div class="mb-1 space-y-1">`;
+                    muhurats.slice(0, 2).forEach(m => {
+                        if (venueSettings.panchangCalendars.includes(m.calendar)) {
+                            html += `
+                                <div class="flex items-center gap-1 text-[10px] bg-yellow-50 text-yellow-700 px-1.5 py-0.5 rounded border border-yellow-200 truncate">
+                                    <span>⭐</span>
+                                    <span class="truncate">${m.type} - ${m.calendar}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                    if (muhurats.length > 2) {
+                        html += `<div class="text-[10px] text-yellow-600 pl-1">+${muhurats.length - 2} more</div>`;
+                    }
+                    html += `</div>`;
+                }
+                
+                // Booking Indicators
+                if (bookings.length > 0) {
+                    html += `<div class="space-y-1 mt-1">`;
+                    bookings.slice(0, 2).forEach(b => {
+                        html += `
+                            <div class="flex items-center gap-1 text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded border border-green-200 truncate">
+                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></span>
+                                <span class="truncate font-medium">${b.event} - ${b.customer}</span>
+                            </div>
+                        `;
+                    });
+                    if (bookings.length > 2) {
+                        html += `<div class="text-[10px] text-green-600 pl-1">+${bookings.length - 2} more</div>`;
+                    }
+                    html += `</div>`;
+                }
+                
+                // Inquiry Indicators
+                if (inquiries.length > 0) {
+                    html += `<div class="space-y-1 mt-1">`;
+                    inquiries.slice(0, 2).forEach(inq => {
+                        html += `
+                            <div class="flex items-center gap-1 text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 truncate">
+                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0"></span>
+                                <span class="truncate">Inquiry - ${inq.customer}</span>
+                            </div>
+                        `;
+                    });
+                    if (inquiries.length > 2) {
+                        html += `<div class="text-[10px] text-blue-600 pl-1">+${inquiries.length - 2} more</div>`;
+                    }
+                    html += `</div>`;
+                }
+                
+                // Hot Date Overlay
+                if (isHot) {
+                    html += `
+                        <div class="absolute inset-0 pointer-events-none border-2 border-orange-400 rounded-sm m-0.5"></div>
+                        <div class="absolute top-1 right-1 pointer-events-none">
+                            <span class="flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                            </span>
+                        </div>
+                    `;
+                }
+                
+                cell.innerHTML = html;
+                grid.appendChild(cell);
+            }
+        }
+
+        // Navigation
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            renderCalendar();
+        }
+
+        // Modal Functions
+        function openModal(type) {
+            if (type === 'quick') {
+                // Show quick action sheet on mobile
+                if (confirm('Create New Booking?')) {
+                    openModal('booking');
+                } else {
+                    openModal('inquiry');
+                }
+                return;
+            }
+            
+            const modal = document.getElementById(`modal-${type}`);
+            const content = document.getElementById(`modal-${type}-content`);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal(type) {
+            const modal = document.getElementById(`modal-${type}`);
+            const content = document.getElementById(`modal-${type}-content`);
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+
+        function openDateDetails(dateStr) {
+            selectedDate = dateStr;
+            const dateObj = new Date(dateStr);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('detail-date').textContent = dateObj.toLocaleDateString('en-US', options);
+            
+            const bookings = bookingsData[dateStr] || [];
+            const inquiries = inquiriesData[dateStr] || [];
+            const muhurats = muhuratData[dateStr] || [];
+            const isHot = isHotDate(dateStr, dateObj);
+            const score = calculateDemandScore(dateStr, dateObj);
+            
+            // Badges
+            let badgesHtml = '';
+            if (isHot) badgesHtml += `<span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs font-semibold rounded-full">🔥 Hot Date</span>`;
+            badgesHtml += `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">Demand: ${score}/10</span>`;
+            document.getElementById('detail-badges').innerHTML = badgesHtml;
+            
+            // Muhurats
+            const muhuratSection = document.getElementById('detail-muhurats');
+            if (muhurats.length > 0) {
+                muhuratSection.classList.remove('hidden');
+                document.getElementById('muhurat-list').innerHTML = muhurats.map(m => `
+                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div>
+                            <p class="font-medium text-gray-900 text-sm">${m.type} Muhurat</p>
+                            <p class="text-xs text-gray-600">${m.calendar} Panchang</p>
+                        </div>
+                        <span class="text-sm font-semibold text-yellow-700">${m.time}</span>
+                    </div>
+                `).join('');
+            } else {
+                muhuratSection.classList.add('hidden');
+            }
+            
+            // Bookings
+            const bookingSection = document.getElementById('detail-bookings');
+            if (bookings.length > 0) {
+                bookingSection.classList.remove('hidden');
+                document.getElementById('booking-list').innerHTML = bookings.map(b => `
+                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                        <div>
+                            <p class="font-medium text-gray-900 text-sm">${b.event} - ${b.customer}</p>
+                            <p class="text-xs text-gray-600">${b.guests} guests</p>
+                        </div>
+                        <span class="text-sm font-bold text-green-700">₹${b.amount.toLocaleString()}</span>
+                    </div>
+                `).join('');
+            } else {
+                bookingSection.classList.add('hidden');
+            }
+            
+            // Inquiries
+            const inquirySection = document.getElementById('detail-inquiries');
+            if (inquiries.length > 0) {
+                inquirySection.classList.remove('hidden');
+                document.getElementById('inquiry-list').innerHTML = inquiries.map(i => `
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div>
+                            <p class="font-medium text-gray-900 text-sm">${i.customer} Family</p>
+                            <p class="text-xs text-gray-600">${i.guests} guests expected</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs rounded-full ${i.status === 'hot' ? 'bg-orange-200 text-orange-800' : 'bg-blue-200 text-blue-800'}">
+                            ${i.status === 'hot' ? '🔥 Hot Lead' : 'New'}
+                        </span>
+                    </div>
+                `).join('');
+            } else {
+                inquirySection.classList.add('hidden');
+            }
+            
+            openModal('details');
+        }
+
+        function saveBooking() {
+            // Simulate save
+            closeModal('booking');
+            setTimeout(() => {
+                alert('Booking saved successfully!');
+                renderCalendar();
+            }, 300);
+        }
+
+        function saveInquiry() {
+            closeModal('inquiry');
+            setTimeout(() => {
+                alert('Inquiry saved successfully!');
+                renderCalendar();
+            }, 300);
+        }
+
+        // Mobile Sidebar Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const btn = document.getElementById('mobile-menu-btn');
+            if (window.innerWidth < 1024 && !sidebar.contains(e.target) && !btn.contains(e.target)) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+
+        // Initialize
+        renderCalendar();
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('fixed')) {
+                const modalId = event.target.id.replace('modal-', '');
+                closeModal(modalId);
+            }
+        }
+    </script>
+</body>
+</html>
+```
+
+This interactive prototype demonstrates the complete **DigiVenue** smart booking calendar system. Here's the comprehensive product architecture and design specification:
+
+---
+
+## 1. UI Layout Design
+
+### **Topbar (Sticky Navigation)**
+- **Left**: DigiVenue logo with hamburger menu for mobile
+- **Right**: 
+  - Primary CTA: "+ New Booking" (filled button, brand color)
+  - Secondary CTA: "+ New Inquiry" (outline button)
+  - User Avatar: Gradient circle with initials "DV" + dropdown menu
+- **Mobile**: Collapses to logo + FAB (Floating Action Button) for quick actions
+
+### **Sidebar Navigation**
+- **Desktop**: Fixed 256px dark sidebar (slate-900) with icons + labels
+  - Dashboard (active state highlight)
+  - Calendar (with "Live" badge)
+  - Bookings
+  - Inquiries (with "5 New" notification badge)
+  - Payments, QR Leads, Analytics
+  - Settings
+- **Mobile**: Collapsible drawer overlay, bottom nav bar with 4 key tabs
+
+### **Main Calendar Interface**
+- **Header**: Month navigation with Today button
+- **Legend**: Visual color coding system (Hot=Orange, Muhurat=Gold, Booking=Green, Inquiry=Blue)
+- **Grid**: 7-column responsive grid with hover effects
+- **Cells**: Multi-layer information architecture showing demand score, muhurats, bookings, and inquiries
+
+---
+
+## 2. Component Structure
+
+```
+DigiVenue Dashboard
+├── Layout Components
+│   ├── Topbar (sticky, z-50)
+│   ├── Sidebar (responsive, collapsible)
+│   └── BottomNav (mobile-only)
+├── Calendar Module
+│   ├── CalendarHeader (month nav + legend)
+│   ├── CalendarGrid (7-column CSS Grid)
+│   └── CalendarCell (composite component)
+│       ├── DateHeader (day number + hot indicator)
+│       ├── DemandScoreBar (visual 0-10 scale)
+│       ├── MuhuratBadges (filtered by venue settings)
+│       ├── BookingIndicators (green pills)
+│       └── InquiryIndicators (blue pills)
+└── Modal System
+    ├── NewBookingModal
+    ├── NewInquiryModal
+    └── DateDetailModal (contextual view)
+```
+
+---
+
+## 3. Smart Calendar Logic
+
+### **Unified Data Layer**
+The calendar integrates four data streams into a single view:
+
+1. **Bookings** (Confirmed): Green indicators with customer name + event type
+2. **Inquiries** (Leads): Blue indicators with guest count
+3. **Muhurat Dates** (Auspicious): Gold stars with calendar source filtering
+4. **Hot Dates** (Algorithmic): Orange fire markers + pulse animation
+
+### **Hot Date Detection Algorithm**
+```javascript
+isHotDate = (isWeekend && hasMuhurat) || 
+            (hasMuhurat && highInquiryVolume) || 
+            (isWeekend && isWeddingSeason && highInquiryVolume)
+```
+
+**Signals:**
+- **Weekend**: Friday, Saturday, Sunday (Indian wedding culture)
+- **Muhurat**: Presence in selected Panchang calendars
+- **Inquiry Volume**: ≥2 inquiries OR any "hot" priority inquiry
+- **Wedding Season**: November-January, March-April (peak seasons)
+
+### **Demand Score Calculation (0-10)**
+- Weekend factor: 0-3 points
+- Muhurat factor: 0-3 points (1.5 per muhurat, max 3)
+- Inquiry factor: 0-2 points (0.5 per inquiry)
+- Season factor: 0-2 points (wedding season boost)
+
+**Visual**: Gradient bar (Green→Yellow→Red) with draggable indicator showing exact score.
+
+### **Panchang Filtering**
+Venue settings store preferred calendars as an array. The calendar filters muhurat displays:
+```javascript
+muhurats.filter(m => venueSettings.panchangCalendars.includes(m.calendar))
+```
+
+---
+
+## 4. Data Model
+
+### **Core Entities**
+
+```typescript
+// Venue Settings
+interface VenueSettings {
+  venueId: string;
+  name: string;
+  location: string; // City/State for regional muhurat calculation
+  panchangCalendars: ('Marathi' | 'Gujarati' | 'North Indian' | 'Drik' | 'Tamil' | 'Telugu')[];
+  capacity: number;
+  operatingHours: { open: string; close: string };
+}
+
+// Unified Calendar Event
+interface CalendarEvent {
+  id: string;
+  venueId: string;
+  date: Date;
+  type: 'booking' | 'inquiry' | 'muhurat';
+  status: 'confirmed' | 'pending' | 'cancelled' | 'completed';
+  metadata: BookingData | InquiryData | MuhuratData;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Booking (Confirmed)
+interface BookingData {
+  customerName: string;
+  customerPhone: string;
+  eventType: 'Wedding' | 'Engagement' | 'Reception' | 'Birthday' | 'Corporate';
+  guestCount: number;
+  packageAmount: number;
+  advancePaid: number;
+  assignedHalls: string[];
+  cateringRequired: boolean;
+  decorationPackage?: string;
+}
+
+// Inquiry (Lead)
+interface InquiryData {
+  customerName: string;
+  customerPhone: string;
+  email?: string;
+  preferredDate: Date;
+  dateFlexibility: 'fixed' | '3days' | '1week' | '1month';
+  guestCount: number;
+  budgetRange?: string;
+  referralSource: 'walkin' | 'phone' | 'website' | 'qr_code' | 'justdial';
+  priority: 'hot' | 'warm' | 'cold';
+  notes: string;
+  followUpDate?: Date;
+  assignedTo?: string; // Sales manager
+}
+
+// Muhurat (Auspicious Date)
+interface MuhuratData {
+  date: Date;
+  calendarType: string;
+  eventType: string;
+  startTime: string;
+  endTime: string;
+  description?: string;
+  abhijitMuhurat?: boolean;
+}
+```
+
+### **Hot Date Cache**
+```typescript
+interface HotDateCache {
+  date: Date;
+  score: number;
+  factors: {
+    isWeekend: boolean;
+    muhuratCount: number;
+    inquiryCount: number;
+    isWeddingSeason: boolean;
+  };
+  lastCalculated: Date;
+}
+```
+
+---
+
+## 5. Frontend Component Structure
+
+### **Tech Stack Recommendation**
+- **Framework**: React 18+ with TypeScript
+- **State Management**: Zustand or Redux Toolkit (for calendar state)
+- **Styling**: Tailwind CSS (as demonstrated) + CSS Modules for complex animations
+- **Date Handling**: date-fns (lightweight) or luxon (timezone support)
+- **Calendar Grid**: CSS Grid with virtual scrolling for large date ranges
+
+### **Component Hierarchy**
+```
+App
+├── providers/
+│   ├── VenueProvider (settings context)
+│   └── CalendarProvider (date range, filters)
+├── components/
+│   ├── layout/
+│   │   ├── Topbar.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── MobileNav.tsx
+│   ├── calendar/
+│   │   ├── SmartCalendar.tsx (container)
+│   │   ├── CalendarHeader.tsx
+│   │   ├── CalendarGrid.tsx
+│   │   ├── CalendarCell.tsx
+│   │   ├── DemandIndicator.tsx
+│   │   ├── MuhuratBadge.tsx
+│   │   ├── BookingPill.tsx
+│   │   └── InquiryPill.tsx
+│   └── modals/
+│       ├── ModalContainer.tsx
+│       ├── BookingForm.tsx
+│       ├── InquiryForm.tsx
+│       └── DateDetails.tsx
+├── hooks/
+│   ├── useCalendar.ts (navigation, date math)
+│   ├── useHotDates.ts (demand calculation)
+│   └── useMuhurat.ts (panchang API integration)
+└── utils/
+    ├── demandCalculator.ts
+    ├── panchangAPI.ts
+    └── colorSystem.ts
+```
+
+---
+
+## 6. Database Schema (PostgreSQL)
+
+```sql
+-- Venues table
+CREATE TABLE venues (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    location_state VARCHAR(100),
+    location_city VARCHAR(100),
+    panchang_calendars TEXT[] DEFAULT '{}',
+    capacity INTEGER,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Bookings table (confirmed events)
+CREATE TABLE bookings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    venue_id UUID REFERENCES venues(id),
+    event_date DATE NOT NULL,
+    customer_name VARCHAR(255) NOT NULL,
+    customer_phone VARCHAR(20),
+    event_type VARCHAR(50),
+    guest_count INTEGER,
+    package_amount DECIMAL(12,2),
+    advance_amount DECIMAL(12,2),
+    status VARCHAR(20) DEFAULT 'confirmed',
+    assigned_halls TEXT[],
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Inquiries table (leads)
+CREATE TABLE inquiries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    venue_id UUID REFERENCES venues(id),
+    preferred_date DATE,
+    date_flexibility VARCHAR(20),
+    customer_name VARCHAR(255),
+    customer_phone VARCHAR(20),
+    email VARCHAR(255),
+    guest_count INTEGER,
+    budget_range VARCHAR(50),
+    priority VARCHAR(10) DEFAULT 'warm',
+    referral_source VARCHAR(20),
+    notes TEXT,
+    status VARCHAR(20) DEFAULT 'active',
+    follow_up_date DATE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Muhurat dates (cached from external Panchang APIs)
+CREATE TABLE muhurat_dates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    date DATE NOT NULL,
+    calendar_type VARCHAR(50) NOT NULL, -- 'Marathi', 'Gujarati', etc.
+    event_type VARCHAR(50), -- 'Wedding', 'Engagement'
+    start_time TIME,
+    end_time TIME,
+    description TEXT,
+    location_region VARCHAR(100), -- for regional variations
+    UNIQUE(date, calendar_type, event_type)
+);
+
+-- Hot dates cache (pre-calculated for performance)
+CREATE TABLE hot_dates_cache (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    venue_id UUID REFERENCES venues(id),
+    date DATE NOT NULL,
+    demand_score INTEGER CHECK (demand_score >= 0 AND demand_score <= 10),
+    is_hot BOOLEAN DEFAULT false,
+    factors JSONB, -- store calculation factors
+    calculated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(venue_id, date)
+);
+
+-- Indexes for performance
+CREATE INDEX idx_bookings_date ON bookings(event_date);
+CREATE INDEX idx_bookings_venue ON bookings(venue_id);
+CREATE INDEX idx_inquiries_date ON inquiries(preferred_date);
+CREATE INDEX idx_inquiries_venue ON inquiries(venue_id);
+CREATE INDEX idx_muhurat_date ON muhurat_dates(date);
+CREATE INDEX idx_hotdates_lookup ON hot_dates_cache(venue_id, date);
+```
+
+---
+
+## 7. UX Explanation for Venue Managers
+
+### **The Problem with Traditional Paper Diaries**
+Banquet hall managers in India traditionally maintain multiple physical diaries:
+- **Main Booking Diary**: Confirmed events only
+- **Inquiry Register**: Phone calls and walk-ins
+- **Panchang Calendar**: Separate religious calendar for muhurat dates
+- **Season Planner**: Peak season tracking
+
+**Pain Points**: Double-booking risks, missed inquiries, no demand visibility, scattered information.
+
+### **DigiVenue Solution: The Unified Smart Calendar**
+
+#### **Instant Demand Visualization**
+When a customer calls asking for "next month," the manager opens one screen and immediately sees:
+- **🔥 Hot Dates**: High-demand dates (orange border + pulse) → Quote premium pricing
+- **⭐ Muhurat Dates**: Auspicious days for specific communities → Target marketing
+- **🟢 Confirmed**: Already booked (green) → Avoid conflicts
+- **🔵 Inquiries**: Pending decisions (blue) → Follow-up priority
+
+**Example Scenario**: March 12 shows:
+- Hot Date indicator (weekend + muhurat)
+- 2 confirmed bookings (Sharma Wedding, Patel Engagement)
+- 1 active inquiry (Jain, 300 guests)
+- **Action**: Manager knows this date is high-value, checks if Jain inquiry can be converted or if they should waitlist.
+
+#### **Smart Demand Scoring**
+Instead of gut feeling, the system calculates **Demand Score (0-10)** based on:
+1. **Weekend Premium**: Fri-Sun automatically scores higher
+2. **Religious Significance**: Muhurat days boost score
+3. **Market Heat**: Multiple inquiries indicate competition
+4. **Seasonality**: Wedding season (Nov-Jan, Mar-Apr) multipliers
+
+**Business Impact**: Dynamic pricing suggestions, staff allocation, inventory preparation.
+
+#### **Community-Specific Muhurat**
+India's diversity requires flexibility:
+- **Marathi Venue**: Shows Marathi Panchang only
+- **Gujarati Venue**: Shows Gujarati + North Indian Panchang
+- **Multi-community Venue**: Shows all selected calendars with color coding
+
+**Manager Workflow**: 
+1. Settings → Select relevant Panchang calendars
+2. Calendar automatically filters displays
+3. Sales team targets specific communities on their auspicious dates
+
+#### **Mobile-First Field Usage**
+Venue managers are often on the move:
+- **Quick Capture**: Mobile FAB (+ button) instantly creates booking/inquiry
+- **Offline Support**: Cache calendar data for basement/offline areas
+- **WhatsApp Integration**: Share available dates directly from calendar view
+
+#### **QR Lead Integration**
+Modern Indian venues use table-top QR codes for inquiries:
+- Customer scans QR → Fills inquiry form → Appears on calendar instantly
+- Manager sees **🔥 Hot Lead** if multiple inquiries for same date
+- **Conversion Tracking**: Inquiry → Booking conversion visible on same cell
+
+---
+
+### **Key Differentiators**
+
+1. **No Tab Switching**: Everything in one view vs. 3-4 separate calendars
+2. **Predictive Intelligence**: Hot date detection prevents underpricing
+3. **Cultural Integration**: First SaaS to properly integrate Panchang data
+4. **Visual Density**: Rich information without clutter (progressive disclosure via click)
+5. **Action-Oriented**: Every view has contextual "Add Booking/Inquiry" buttons
+
+This design transforms venue management from reactive (waiting for calls) to proactive (strategic pricing and marketing based on demand intelligence).
