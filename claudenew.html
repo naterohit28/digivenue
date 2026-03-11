@@ -1,0 +1,858 @@
+import { useState, useMemo } from "react";
+
+// ─── DATA MODEL ───────────────────────────────────────────────────────────────
+
+const MUHURATS = {
+  marathi: [
+    { date: "2025-03-12", type: "Wedding Muhurat" },
+    { date: "2025-03-15", type: "Wedding Muhurat" },
+    { date: "2025-03-19", type: "Engagement Muhurat" },
+    { date: "2025-03-22", type: "Wedding Muhurat" },
+    { date: "2025-03-28", type: "Wedding Muhurat" },
+    { date: "2025-04-02", type: "Wedding Muhurat" },
+    { date: "2025-04-06", type: "Engagement Muhurat" },
+    { date: "2025-04-10", type: "Wedding Muhurat" },
+  ],
+  gujarati: [
+    { date: "2025-03-12", type: "Wedding Muhurat" },
+    { date: "2025-03-14", type: "Wedding Muhurat" },
+    { date: "2025-03-20", type: "Engagement Muhurat" },
+    { date: "2025-03-22", type: "Wedding Muhurat" },
+    { date: "2025-03-27", type: "Wedding Muhurat" },
+    { date: "2025-04-03", type: "Wedding Muhurat" },
+    { date: "2025-04-09", type: "Wedding Muhurat" },
+  ],
+  northIndian: [
+    { date: "2025-03-11", type: "Wedding Muhurat" },
+    { date: "2025-03-13", type: "Engagement Muhurat" },
+    { date: "2025-03-22", type: "Wedding Muhurat" },
+    { date: "2025-03-25", type: "Wedding Muhurat" },
+    { date: "2025-04-01", type: "Wedding Muhurat" },
+    { date: "2025-04-07", type: "Engagement Muhurat" },
+    { date: "2025-04-11", type: "Wedding Muhurat" },
+  ],
+  drik: [
+    { date: "2025-03-10", type: "Wedding Muhurat" },
+    { date: "2025-03-17", type: "Wedding Muhurat" },
+    { date: "2025-03-22", type: "Wedding Muhurat" },
+    { date: "2025-03-29", type: "Wedding Muhurat" },
+    { date: "2025-04-05", type: "Wedding Muhurat" },
+    { date: "2025-04-12", type: "Wedding Muhurat" },
+  ],
+};
+
+const BOOKINGS = [
+  { id: 1, date: "2025-03-12", type: "confirmed", name: "Sharma Wedding", guests: 400, event: "Wedding" },
+  { id: 2, date: "2025-03-12", type: "inquiry", name: "Patel Engagement", guests: 200, event: "Engagement" },
+  { id: 3, date: "2025-03-15", type: "confirmed", name: "Gupta Reception", guests: 350, event: "Reception" },
+  { id: 4, date: "2025-03-19", type: "confirmed", name: "Mehta Wedding", guests: 500, event: "Wedding" },
+  { id: 5, date: "2025-03-19", type: "inquiry", name: "Jain Inquiry", guests: 300, event: "Wedding" },
+  { id: 6, date: "2025-03-22", type: "confirmed", name: "Singh Wedding", guests: 450, event: "Wedding" },
+  { id: 7, date: "2025-03-22", type: "inquiry", name: "Kumar Inquiry", guests: 250, event: "Engagement" },
+  { id: 8, date: "2025-03-22", type: "inquiry", name: "Desai Inquiry", guests: 180, event: "Reception" },
+  { id: 9, date: "2025-03-25", type: "confirmed", name: "Reddy Reception", guests: 300, event: "Reception" },
+  { id: 10, date: "2025-03-27", type: "inquiry", name: "Nair Inquiry", guests: 420, event: "Wedding" },
+  { id: 11, date: "2025-03-28", type: "confirmed", name: "Agarwal Wedding", guests: 600, event: "Wedding" },
+  { id: 12, date: "2025-04-02", type: "confirmed", name: "Verma Wedding", guests: 380, event: "Wedding" },
+  { id: 13, date: "2025-04-06", type: "inquiry", name: "Tiwari Inquiry", guests: 220, event: "Engagement" },
+  { id: 14, date: "2025-04-10", type: "confirmed", name: "Bose Wedding", guests: 500, event: "Wedding" },
+];
+
+const WEDDING_SEASON = [2, 3, 4, 10, 11]; // March=2, April=3, May=4, Nov=10, Dec=11 (0-indexed)
+
+const PANCHANG_LABELS = {
+  marathi: "Marathi",
+  gujarati: "Gujarati",
+  northIndian: "North Indian",
+  drik: "Drik",
+};
+
+const PANCHANG_COLORS = {
+  marathi: "#f59e0b",
+  gujarati: "#d97706",
+  northIndian: "#b45309",
+  drik: "#92400e",
+};
+
+// ─── DEMAND SCORE LOGIC ───────────────────────────────────────────────────────
+
+function calcDemandScore({ date, muhurats, bookings, enabledPanchangs }) {
+  let score = 0;
+  const d = new Date(date);
+  const dow = d.getDay(); // 0=Sun,6=Sat
+  const month = d.getMonth();
+
+  // Weekend boost
+  if (dow === 0 || dow === 5 || dow === 6) score += 2;
+
+  // Muhurat boost
+  const activeMuhurats = enabledPanchangs.filter(p => muhurats[p]?.some(m => m.date === date));
+  score += activeMuhurats.length * 1.5;
+
+  // Inquiry volume
+  const inquiries = bookings.filter(b => b.date === date && b.type === "inquiry");
+  score += Math.min(inquiries.length * 1.5, 3);
+
+  // Wedding season
+  if (WEDDING_SEASON.includes(month)) score += 1.5;
+
+  return Math.min(Math.round(score), 10);
+}
+
+function isHotDate(score) { return score >= 6; }
+
+// ─── SIDEBAR NAV ──────────────────────────────────────────────────────────────
+
+const NAV_ITEMS = [
+  { id: "dashboard", label: "Dashboard", icon: "⊞" },
+  { id: "calendar", label: "Calendar", icon: "◫" },
+  { id: "bookings", label: "Bookings", icon: "✓" },
+  { id: "inquiries", label: "Inquiries", icon: "?" },
+  { id: "payments", label: "Payments", icon: "₹" },
+  { id: "qrleads", label: "QR Leads", icon: "▣" },
+  { id: "settings", label: "Settings", icon: "⚙" },
+];
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+
+function Modal({ title, onClose, children }) {
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(10,14,26,0.82)",
+      zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center",
+      backdropFilter: "blur(4px)", padding: "1rem"
+    }}>
+      <div style={{
+        background: "#141926", border: "1px solid #2a3352", borderRadius: "16px",
+        width: "100%", maxWidth: "520px", padding: "2rem", position: "relative",
+        boxShadow: "0 32px 64px rgba(0,0,0,0.6)"
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          <h2 style={{ color: "#e8eaf6", fontSize: "1.1rem", fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>{title}</h2>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#6b7db3", cursor: "pointer", fontSize: "1.4rem", lineHeight: 1 }}>×</button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function FormField({ label, type = "text", options, value, onChange }) {
+  const style = {
+    width: "100%", background: "#0f1421", border: "1px solid #2a3352",
+    borderRadius: "8px", color: "#c9d4f0", padding: "0.6rem 0.9rem",
+    fontSize: "0.875rem", fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box"
+  };
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      <label style={{ display: "block", color: "#6b7db3", fontSize: "0.75rem", marginBottom: "0.35rem", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase" }}>{label}</label>
+      {type === "select" ? (
+        <select style={style} value={value} onChange={e => onChange(e.target.value)}>
+          {options.map(o => <option key={o}>{o}</option>)}
+        </select>
+      ) : (
+        <input type={type} style={style} value={value} onChange={e => onChange(e.target.value)} />
+      )}
+    </div>
+  );
+}
+
+function BookingModal({ onClose, prefillDate }) {
+  const [form, setForm] = useState({ name: "", event: "Wedding", date: prefillDate || "", guests: "", phone: "" });
+  const set = k => v => setForm(f => ({ ...f, [k]: v }));
+  return (
+    <Modal title="+ New Booking" onClose={onClose}>
+      <FormField label="Client Name" value={form.name} onChange={set("name")} />
+      <FormField label="Event Type" type="select" options={["Wedding", "Engagement", "Reception", "Birthday", "Corporate"]} value={form.event} onChange={set("event")} />
+      <FormField label="Event Date" type="date" value={form.date} onChange={set("date")} />
+      <FormField label="Guest Count" type="number" value={form.guests} onChange={set("guests")} />
+      <FormField label="Phone Number" value={form.phone} onChange={set("phone")} />
+      <button style={{
+        width: "100%", background: "linear-gradient(135deg,#3b5bdb,#4c6ef5)",
+        border: "none", borderRadius: "8px", color: "#fff", padding: "0.75rem",
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", marginTop: "0.5rem"
+      }} onClick={onClose}>Confirm Booking</button>
+    </Modal>
+  );
+}
+
+function InquiryModal({ onClose, prefillDate }) {
+  const [form, setForm] = useState({ name: "", event: "Wedding", date: prefillDate || "", guests: "", source: "Walk-in" });
+  const set = k => v => setForm(f => ({ ...f, [k]: v }));
+  return (
+    <Modal title="+ New Inquiry" onClose={onClose}>
+      <FormField label="Client Name" value={form.name} onChange={set("name")} />
+      <FormField label="Event Type" type="select" options={["Wedding", "Engagement", "Reception", "Birthday", "Corporate"]} value={form.event} onChange={set("event")} />
+      <FormField label="Preferred Date" type="date" value={form.date} onChange={set("date")} />
+      <FormField label="Guest Count" type="number" value={form.guests} onChange={set("guests")} />
+      <FormField label="Lead Source" type="select" options={["Walk-in", "Phone", "WhatsApp", "QR Code", "Referral", "Online"]} value={form.source} onChange={set("source")} />
+      <button style={{
+        width: "100%", background: "linear-gradient(135deg,#1971c2,#1c7ed6)",
+        border: "none", borderRadius: "8px", color: "#fff", padding: "0.75rem",
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", marginTop: "0.5rem"
+      }} onClick={onClose}>Save Inquiry</button>
+    </Modal>
+  );
+}
+
+// ─── DATE DETAIL PANEL ────────────────────────────────────────────────────────
+
+function DateDetailPanel({ dateStr, bookings, muhurats, enabledPanchangs, onClose, onBook, onInquiry }) {
+  const d = new Date(dateStr + "T00:00:00");
+  const label = d.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const dayBookings = bookings.filter(b => b.date === dateStr);
+  const confirmed = dayBookings.filter(b => b.type === "confirmed");
+  const inquiries = dayBookings.filter(b => b.type === "inquiry");
+  const dayMuhurats = enabledPanchangs.flatMap(p =>
+    (muhurats[p] || []).filter(m => m.date === dateStr).map(m => ({ ...m, panchang: p }))
+  );
+  const score = calcDemandScore({ date: dateStr, muhurats, bookings, enabledPanchangs });
+  const hot = isHotDate(score);
+
+  return (
+    <div style={{
+      position: "fixed", right: 0, top: 0, bottom: 0, width: "340px",
+      background: "#141926", borderLeft: "1px solid #2a3352", zIndex: 200,
+      overflowY: "auto", padding: "1.5rem",
+      boxShadow: "-16px 0 48px rgba(0,0,0,0.5)"
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.25rem" }}>
+        <div>
+          <div style={{ fontSize: "0.7rem", color: "#6b7db3", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: "'DM Sans', sans-serif" }}>Date Details</div>
+          <div style={{ color: "#e8eaf6", fontSize: "1rem", fontWeight: 700, fontFamily: "'DM Serif Display', serif", marginTop: "0.2rem" }}>{label}</div>
+        </div>
+        <button onClick={onClose} style={{ background: "none", border: "none", color: "#6b7db3", cursor: "pointer", fontSize: "1.4rem" }}>×</button>
+      </div>
+
+      {/* Demand Score */}
+      <div style={{
+        background: hot ? "rgba(234,88,12,0.12)" : "rgba(30,41,70,0.7)",
+        border: `1px solid ${hot ? "rgba(234,88,12,0.3)" : "#2a3352"}`,
+        borderRadius: "12px", padding: "1rem", marginBottom: "1rem"
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ color: "#6b7db3", fontSize: "0.78rem", fontFamily: "'DM Sans', sans-serif" }}>Demand Score</span>
+          {hot && <span style={{ fontSize: "0.72rem", background: "rgba(234,88,12,0.2)", color: "#fb923c", borderRadius: "20px", padding: "0.15rem 0.6rem", fontFamily: "'DM Sans', sans-serif" }}>🔥 Hot Date</span>}
+        </div>
+        <div style={{ marginTop: "0.6rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div style={{ flex: 1, height: "6px", background: "#1e2946", borderRadius: "3px", overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${score * 10}%`, background: hot ? "linear-gradient(90deg,#f97316,#fb923c)" : "linear-gradient(90deg,#3b5bdb,#4c6ef5)", borderRadius: "3px", transition: "width 0.5s ease" }} />
+          </div>
+          <span style={{ color: hot ? "#fb923c" : "#4c6ef5", fontWeight: 800, fontSize: "1rem", fontFamily: "'DM Sans', sans-serif", minWidth: "40px" }}>{score}/10</span>
+        </div>
+      </div>
+
+      {/* Muhurats */}
+      {dayMuhurats.length > 0 && (
+        <div style={{ marginBottom: "1rem" }}>
+          <div style={{ color: "#6b7db3", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem", fontFamily: "'DM Sans', sans-serif" }}>Muhurats</div>
+          {dayMuhurats.map((m, i) => (
+            <div key={i} style={{
+              display: "flex", alignItems: "center", gap: "0.6rem",
+              background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)",
+              borderRadius: "8px", padding: "0.5rem 0.75rem", marginBottom: "0.4rem"
+            }}>
+              <span style={{ fontSize: "0.9rem" }}>⭐</span>
+              <span style={{ color: "#fbbf24", fontSize: "0.8rem", fontFamily: "'DM Sans', sans-serif" }}>{m.type} – {PANCHANG_LABELS[m.panchang]}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Confirmed Bookings */}
+      {confirmed.length > 0 && (
+        <div style={{ marginBottom: "1rem" }}>
+          <div style={{ color: "#6b7db3", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem", fontFamily: "'DM Sans', sans-serif" }}>Confirmed Bookings</div>
+          {confirmed.map(b => (
+            <div key={b.id} style={{
+              background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)",
+              borderRadius: "8px", padding: "0.6rem 0.75rem", marginBottom: "0.4rem"
+            }}>
+              <div style={{ color: "#34d399", fontSize: "0.82rem", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>✓ {b.name}</div>
+              <div style={{ color: "#6b7db3", fontSize: "0.74rem", marginTop: "0.15rem", fontFamily: "'DM Sans', sans-serif" }}>{b.event} · {b.guests} guests</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Inquiries */}
+      {inquiries.length > 0 && (
+        <div style={{ marginBottom: "1rem" }}>
+          <div style={{ color: "#6b7db3", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem", fontFamily: "'DM Sans', sans-serif" }}>Inquiries</div>
+          {inquiries.map(b => (
+            <div key={b.id} style={{
+              background: "rgba(59,91,219,0.08)", border: "1px solid rgba(59,91,219,0.25)",
+              borderRadius: "8px", padding: "0.6rem 0.75rem", marginBottom: "0.4rem"
+            }}>
+              <div style={{ color: "#748ffc", fontSize: "0.82rem", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>◉ {b.name}</div>
+              <div style={{ color: "#6b7db3", fontSize: "0.74rem", marginTop: "0.15rem", fontFamily: "'DM Sans', sans-serif" }}>{b.event} · {b.guests} guests</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Actions */}
+      <div style={{ display: "flex", gap: "0.5rem", marginTop: "1.25rem" }}>
+        <button onClick={() => onBook(dateStr)} style={{
+          flex: 1, background: "linear-gradient(135deg,#3b5bdb,#4c6ef5)", border: "none",
+          borderRadius: "8px", color: "#fff", padding: "0.65rem", fontSize: "0.8rem",
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700, cursor: "pointer"
+        }}>+ Book</button>
+        <button onClick={() => onInquiry(dateStr)} style={{
+          flex: 1, background: "rgba(59,91,219,0.15)", border: "1px solid rgba(59,91,219,0.3)",
+          borderRadius: "8px", color: "#748ffc", padding: "0.65rem", fontSize: "0.8rem",
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700, cursor: "pointer"
+        }}>+ Inquiry</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── CALENDAR CELL ─────────────────────────────────────────────────────────
+
+function CalendarCell({ dateStr, isCurrentMonth, isToday, bookings, muhurats, enabledPanchangs, onClick }) {
+  const day = new Date(dateStr + "T00:00:00").getDate();
+  const dayBookings = bookings.filter(b => b.date === dateStr);
+  const confirmed = dayBookings.filter(b => b.type === "confirmed");
+  const inquiries = dayBookings.filter(b => b.type === "inquiry");
+
+  const dayMuhurats = enabledPanchangs.flatMap(p =>
+    (muhurats[p] || []).filter(m => m.date === dateStr).map(m => ({ ...m, panchang: p }))
+  );
+
+  const score = calcDemandScore({ date: dateStr, muhurats, bookings, enabledPanchangs });
+  const hot = isHotDate(score);
+
+  const hasContent = confirmed.length > 0 || inquiries.length > 0 || dayMuhurats.length > 0;
+
+  let bg = "transparent";
+  let border = "1px solid transparent";
+  if (hot && isCurrentMonth) { bg = "rgba(234,88,12,0.06)"; border = "1px solid rgba(234,88,12,0.2)"; }
+  else if (dayMuhurats.length > 0 && isCurrentMonth) { bg = "rgba(245,158,11,0.05)"; border = "1px solid rgba(245,158,11,0.15)"; }
+  else if (hasContent && isCurrentMonth) { bg = "rgba(30,41,70,0.5)"; border = "1px solid #1e2946"; }
+
+  return (
+    <div
+      onClick={() => isCurrentMonth && onClick(dateStr)}
+      style={{
+        minHeight: "90px", borderRadius: "10px", padding: "0.4rem 0.45rem",
+        background: bg, border: isToday ? "1.5px solid #4c6ef5" : border,
+        cursor: isCurrentMonth ? "pointer" : "default",
+        opacity: isCurrentMonth ? 1 : 0.3,
+        transition: "all 0.15s ease",
+        boxSizing: "border-box",
+        position: "relative",
+        overflow: "hidden",
+      }}
+      onMouseEnter={e => { if (isCurrentMonth) e.currentTarget.style.background = hot ? "rgba(234,88,12,0.1)" : "rgba(30,41,70,0.8)"; }}
+      onMouseLeave={e => { e.currentTarget.style.background = bg; }}
+    >
+      {/* Day number */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }}>
+        <span style={{
+          fontSize: "0.8rem", fontWeight: isToday ? 800 : 600,
+          color: isToday ? "#fff" : isCurrentMonth ? "#c9d4f0" : "#3a4a6b",
+          fontFamily: "'DM Sans', sans-serif",
+          background: isToday ? "#3b5bdb" : "transparent",
+          borderRadius: isToday ? "50%" : 0,
+          width: isToday ? "22px" : "auto", height: isToday ? "22px" : "auto",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>{day}</span>
+        {hot && isCurrentMonth && <span style={{ fontSize: "0.65rem" }}>🔥</span>}
+      </div>
+
+      {/* Muhurats */}
+      {dayMuhurats.slice(0, 2).map((m, i) => (
+        <div key={i} style={{
+          fontSize: "0.6rem", color: "#fbbf24", lineHeight: 1.3,
+          fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+          marginBottom: "0.15rem"
+        }}>⭐ {m.type.replace(" Muhurat", "")} – {PANCHANG_LABELS[m.panchang]}</div>
+      ))}
+
+      {/* Confirmed */}
+      {confirmed.slice(0, 2).map(b => (
+        <div key={b.id} style={{
+          fontSize: "0.62rem", color: "#34d399", lineHeight: 1.3,
+          fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+          marginBottom: "0.15rem", display: "flex", alignItems: "center", gap: "2px"
+        }}>
+          <span style={{ display: "inline-block", width: "5px", height: "5px", borderRadius: "50%", background: "#34d399", flexShrink: 0 }} />
+          {b.name.replace(" Wedding", "").replace(" Reception", "").replace(" Engagement", "")} – {b.event}
+        </div>
+      ))}
+
+      {/* Inquiries */}
+      {inquiries.slice(0, 1).map(b => (
+        <div key={b.id} style={{
+          fontSize: "0.62rem", color: "#748ffc", lineHeight: 1.3,
+          fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+          marginBottom: "0.15rem", display: "flex", alignItems: "center", gap: "2px"
+        }}>
+          <span style={{ display: "inline-block", width: "5px", height: "5px", borderRadius: "50%", background: "#748ffc", flexShrink: 0 }} />
+          {b.name}
+        </div>
+      ))}
+
+      {/* Overflow indicator */}
+      {(confirmed.length + inquiries.length + dayMuhurats.length > 4) && (
+        <div style={{ fontSize: "0.58rem", color: "#6b7db3", fontFamily: "'DM Sans', sans-serif" }}>
+          +{confirmed.length + inquiries.length + dayMuhurats.length - 4} more
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── SMART CALENDAR ───────────────────────────────────────────────────────────
+
+function SmartCalendar({ bookings, muhurats, enabledPanchangs, onDateClick }) {
+  const today = new Date();
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
+
+  const monthLabel = new Date(viewYear, viewMonth).toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+
+  const calDays = useMemo(() => {
+    const first = new Date(viewYear, viewMonth, 1);
+    const last = new Date(viewYear, viewMonth + 1, 0);
+    const startDow = first.getDay();
+    const days = [];
+    for (let i = 0; i < startDow; i++) {
+      const d = new Date(viewYear, viewMonth, -startDow + i + 1);
+      days.push({ dateStr: d.toISOString().slice(0, 10), currentMonth: false });
+    }
+    for (let d = 1; d <= last.getDate(); d++) {
+      const dt = new Date(viewYear, viewMonth, d);
+      days.push({ dateStr: dt.toISOString().slice(0, 10), currentMonth: true });
+    }
+    const remaining = 42 - days.length;
+    for (let i = 1; i <= remaining; i++) {
+      const dt = new Date(viewYear, viewMonth + 1, i);
+      days.push({ dateStr: dt.toISOString().slice(0, 10), currentMonth: false });
+    }
+    return days;
+  }, [viewYear, viewMonth]);
+
+  const todayStr = today.toISOString().slice(0, 10);
+
+  const prev = () => { if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11); } else setViewMonth(m => m - 1); };
+  const next = () => { if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0); } else setViewMonth(m => m + 1); };
+
+  return (
+    <div style={{ flex: 1, minWidth: 0 }}>
+      {/* Calendar Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
+        <h2 style={{ color: "#e8eaf6", fontSize: "1.2rem", fontFamily: "'DM Serif Display', serif", fontWeight: 400 }}>{monthLabel}</h2>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button onClick={prev} style={{ background: "#1e2946", border: "1px solid #2a3352", borderRadius: "8px", color: "#c9d4f0", width: "32px", height: "32px", cursor: "pointer", fontSize: "0.9rem" }}>‹</button>
+          <button onClick={() => { setViewYear(today.getFullYear()); setViewMonth(today.getMonth()); }}
+            style={{ background: "#1e2946", border: "1px solid #2a3352", borderRadius: "8px", color: "#c9d4f0", padding: "0 0.75rem", height: "32px", cursor: "pointer", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif" }}>Today</button>
+          <button onClick={next} style={{ background: "#1e2946", border: "1px solid #2a3352", borderRadius: "8px", color: "#c9d4f0", width: "32px", height: "32px", cursor: "pointer", fontSize: "0.9rem" }}>›</button>
+        </div>
+      </div>
+
+      {/* Day Headers */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px", marginBottom: "4px" }}>
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => (
+          <div key={d} style={{ textAlign: "center", fontSize: "0.7rem", color: "#6b7db3", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, padding: "0.3rem 0", letterSpacing: "0.04em" }}>{d}</div>
+        ))}
+      </div>
+
+      {/* Calendar Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px" }}>
+        {calDays.map(({ dateStr, currentMonth }) => (
+          <CalendarCell
+            key={dateStr}
+            dateStr={dateStr}
+            isCurrentMonth={currentMonth}
+            isToday={dateStr === todayStr}
+            bookings={bookings}
+            muhurats={muhurats}
+            enabledPanchangs={enabledPanchangs}
+            onClick={onDateClick}
+          />
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", flexWrap: "wrap" }}>
+        {[
+          { color: "#34d399", label: "Confirmed" },
+          { color: "#748ffc", label: "Inquiry" },
+          { color: "#fbbf24", label: "Muhurat" },
+          { color: "#fb923c", label: "Hot Date" },
+        ].map(({ color, label }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: color }} />
+            <span style={{ fontSize: "0.72rem", color: "#6b7db3", fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── DASHBOARD STATS ──────────────────────────────────────────────────────────
+
+function StatCard({ label, value, sub, color }) {
+  return (
+    <div style={{
+      background: "#141926", border: "1px solid #1e2946", borderRadius: "14px",
+      padding: "1.1rem 1.25rem", flex: 1, minWidth: "120px"
+    }}>
+      <div style={{ fontSize: "0.72rem", color: "#6b7db3", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
+      <div style={{ fontSize: "1.8rem", fontWeight: 800, color: color || "#e8eaf6", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.2, marginTop: "0.3rem" }}>{value}</div>
+      {sub && <div style={{ fontSize: "0.72rem", color: "#6b7db3", marginTop: "0.2rem", fontFamily: "'DM Sans', sans-serif" }}>{sub}</div>}
+    </div>
+  );
+}
+
+// ─── SETTINGS VIEW ────────────────────────────────────────────────────────────
+
+function SettingsView({ enabledPanchangs, onToggle }) {
+  return (
+    <div style={{ padding: "1.5rem", maxWidth: "560px" }}>
+      <h2 style={{ color: "#e8eaf6", fontFamily: "'DM Serif Display', serif", fontWeight: 400, fontSize: "1.4rem", marginBottom: "0.4rem" }}>Venue Settings</h2>
+      <p style={{ color: "#6b7db3", fontSize: "0.85rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "1.75rem" }}>Configure which Panchang calendars appear on your Smart Calendar.</p>
+
+      <div style={{ background: "#141926", border: "1px solid #1e2946", borderRadius: "14px", padding: "1.5rem", marginBottom: "1.5rem" }}>
+        <div style={{ color: "#c9d4f0", fontWeight: 700, fontSize: "0.9rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "1rem" }}>Preferred Muhurat Calendars</div>
+        {Object.entries(PANCHANG_LABELS).map(([key, label]) => (
+          <label key={key} style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.9rem", cursor: "pointer" }}>
+            <div onClick={() => onToggle(key)} style={{
+              width: "20px", height: "20px", borderRadius: "5px",
+              background: enabledPanchangs.includes(key) ? "#3b5bdb" : "transparent",
+              border: `2px solid ${enabledPanchangs.includes(key) ? "#3b5bdb" : "#2a3352"}`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0, transition: "all 0.15s ease"
+            }}>
+              {enabledPanchangs.includes(key) && <span style={{ color: "#fff", fontSize: "0.7rem", fontWeight: 800 }}>✓</span>}
+            </div>
+            <div>
+              <div style={{ color: "#c9d4f0", fontSize: "0.875rem", fontFamily: "'DM Sans', sans-serif" }}>{label} Panchang</div>
+              <div style={{ color: "#6b7db3", fontSize: "0.74rem", fontFamily: "'DM Sans', sans-serif" }}>
+                {key === "marathi" ? "Maharashtra, Goa" : key === "gujarati" ? "Gujarat, Rajasthan" : key === "northIndian" ? "UP, Delhi, Punjab, Bihar" : "Universal – Drik Siddhanta"}
+              </div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <div style={{ background: "#141926", border: "1px solid #1e2946", borderRadius: "14px", padding: "1.5rem" }}>
+        <div style={{ color: "#c9d4f0", fontWeight: 700, fontSize: "0.9rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "1rem" }}>Demand Score Weights</div>
+        {[
+          { label: "Weekend days (Fri/Sat/Sun)", weight: "+2 pts" },
+          { label: "Active Muhurat day", weight: "+1.5 pts each" },
+          { label: "Inquiry volume", weight: "+1.5 pts each" },
+          { label: "Wedding season months", weight: "+1.5 pts" },
+        ].map(({ label, weight }) => (
+          <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.7rem" }}>
+            <span style={{ color: "#c9d4f0", fontSize: "0.82rem", fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+            <span style={{ color: "#4c6ef5", fontSize: "0.8rem", fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>{weight}</span>
+          </div>
+        ))}
+        <div style={{ marginTop: "0.5rem", color: "#6b7db3", fontSize: "0.74rem", fontFamily: "'DM Sans', sans-serif", borderTop: "1px solid #1e2946", paddingTop: "0.75rem" }}>
+          🔥 Hot Date threshold: Demand Score ≥ 6/10
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── BOOKINGS LIST VIEW ───────────────────────────────────────────────────────
+
+function BookingsView({ bookings, type }) {
+  const list = bookings.filter(b => b.type === type);
+  return (
+    <div style={{ padding: "1.5rem" }}>
+      <h2 style={{ color: "#e8eaf6", fontFamily: "'DM Serif Display', serif", fontWeight: 400, fontSize: "1.4rem", marginBottom: "1.25rem" }}>
+        {type === "confirmed" ? "All Bookings" : "All Inquiries"}
+      </h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        {list.map(b => (
+          <div key={b.id} style={{
+            background: "#141926", border: `1px solid ${type === "confirmed" ? "rgba(16,185,129,0.2)" : "rgba(59,91,219,0.2)"}`,
+            borderRadius: "12px", padding: "1rem 1.25rem",
+            display: "flex", alignItems: "center", justifyContent: "space-between"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+              <div style={{
+                width: "38px", height: "38px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center",
+                background: type === "confirmed" ? "rgba(16,185,129,0.12)" : "rgba(59,91,219,0.12)",
+                color: type === "confirmed" ? "#34d399" : "#748ffc", fontSize: "1rem"
+              }}>{type === "confirmed" ? "✓" : "◉"}</div>
+              <div>
+                <div style={{ color: "#e8eaf6", fontSize: "0.875rem", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>{b.name}</div>
+                <div style={{ color: "#6b7db3", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif" }}>{b.event} · {b.guests} guests · {b.date}</div>
+              </div>
+            </div>
+            <div style={{
+              fontSize: "0.72rem", padding: "0.25rem 0.7rem", borderRadius: "20px",
+              background: type === "confirmed" ? "rgba(16,185,129,0.12)" : "rgba(59,91,219,0.12)",
+              color: type === "confirmed" ? "#34d399" : "#748ffc",
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700
+            }}>{type === "confirmed" ? "Confirmed" : "Inquiry"}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+
+export default function DigiVenue() {
+  const [activeNav, setActiveNav] = useState("calendar");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [enabledPanchangs, setEnabledPanchangs] = useState(["marathi", "gujarati"]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [modal, setModal] = useState(null); // "booking" | "inquiry"
+  const [prefillDate, setPrefillDate] = useState(null);
+
+  const togglePanchang = key => {
+    setEnabledPanchangs(p => p.includes(key) ? p.filter(x => x !== key) : [...p, key]);
+  };
+
+  const openBook = (date) => { setPrefillDate(date); setModal("booking"); setSelectedDate(null); };
+  const openInquiry = (date) => { setPrefillDate(date); setModal("inquiry"); setSelectedDate(null); };
+
+  const confirmedCount = BOOKINGS.filter(b => b.type === "confirmed").length;
+  const inquiryCount = BOOKINGS.filter(b => b.type === "inquiry").length;
+  const hotDates = useMemo(() => {
+    const seen = new Set(BOOKINGS.map(b => b.date));
+    return [...seen].filter(d => isHotDate(calcDemandScore({ date: d, muhurats: MUHURATS, bookings: BOOKINGS, enabledPanchangs }))).length;
+  }, [enabledPanchangs]);
+
+  return (
+    <>
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: "#0a0e1a", color: "#e8eaf6", fontFamily: "'DM Sans', sans-serif", overflow: "hidden" }}>
+
+        {/* TOPBAR */}
+        <header style={{
+          height: "56px", background: "#0f1421", borderBottom: "1px solid #1e2946",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0 1.25rem", flexShrink: 0, zIndex: 100, position: "sticky", top: 0
+        }}>
+          {/* Left: Logo + hamburger */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <button onClick={() => setSidebarOpen(s => !s)} style={{ background: "none", border: "none", color: "#6b7db3", cursor: "pointer", padding: "4px", fontSize: "1.1rem" }}>☰</button>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div style={{
+                width: "28px", height: "28px", borderRadius: "7px",
+                background: "linear-gradient(135deg,#3b5bdb,#4c6ef5)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: "0.75rem", fontWeight: 800, color: "#fff"
+              }}>DV</div>
+              <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: "1.15rem", color: "#e8eaf6", letterSpacing: "-0.01em" }}>DigiVenue</span>
+              <span style={{ fontSize: "0.62rem", background: "rgba(59,91,219,0.2)", color: "#748ffc", borderRadius: "4px", padding: "1px 6px", fontWeight: 700, letterSpacing: "0.05em" }}>PRO</span>
+            </div>
+          </div>
+
+          {/* Right: Actions + Avatar */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <button onClick={() => { setPrefillDate(null); setModal("booking"); }} style={{
+              display: "flex", alignItems: "center", gap: "0.4rem",
+              background: "linear-gradient(135deg,#3b5bdb,#4c6ef5)",
+              border: "none", borderRadius: "8px", color: "#fff",
+              padding: "0.45rem 0.9rem", fontSize: "0.8rem", fontWeight: 700,
+              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap"
+            }}>+ New Booking</button>
+            <button onClick={() => { setPrefillDate(null); setModal("inquiry"); }} style={{
+              display: "flex", alignItems: "center", gap: "0.4rem",
+              background: "rgba(59,91,219,0.15)", border: "1px solid rgba(59,91,219,0.35)",
+              borderRadius: "8px", color: "#748ffc",
+              padding: "0.45rem 0.9rem", fontSize: "0.8rem", fontWeight: 700,
+              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap"
+            }}>+ New Inquiry</button>
+            <div style={{
+              width: "32px", height: "32px", borderRadius: "50%",
+              background: "linear-gradient(135deg,#3b5bdb,#7048e8)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "0.72rem", fontWeight: 800, color: "#fff", cursor: "pointer"
+            }}>DV</div>
+          </div>
+        </header>
+
+        {/* BODY */}
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+
+          {/* SIDEBAR */}
+          <aside style={{
+            width: sidebarOpen ? "200px" : "0px", flexShrink: 0,
+            background: "#0f1421", borderRight: "1px solid #1e2946",
+            overflow: "hidden", transition: "width 0.25s ease",
+            display: "flex", flexDirection: "column"
+          }}>
+            <nav style={{ padding: "0.75rem 0.6rem", flex: 1 }}>
+              {NAV_ITEMS.map(({ id, label, icon }) => (
+                <button key={id} onClick={() => setActiveNav(id)} style={{
+                  display: "flex", alignItems: "center", gap: "0.65rem", width: "100%",
+                  padding: "0.6rem 0.75rem", borderRadius: "9px", border: "none",
+                  background: activeNav === id ? "rgba(59,91,219,0.18)" : "transparent",
+                  color: activeNav === id ? "#748ffc" : "#6b7db3",
+                  fontSize: "0.82rem", fontWeight: activeNav === id ? 700 : 500,
+                  cursor: "pointer", marginBottom: "2px", textAlign: "left",
+                  fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+                  borderLeft: activeNav === id ? "2px solid #4c6ef5" : "2px solid transparent",
+                  transition: "all 0.15s ease"
+                }}>
+                  <span style={{ fontSize: "1rem", minWidth: "18px", textAlign: "center" }}>{icon}</span>
+                  {label}
+                </button>
+              ))}
+            </nav>
+
+            {/* Panchang quick toggle */}
+            <div style={{ padding: "0.75rem", borderTop: "1px solid #1e2946" }}>
+              <div style={{ fontSize: "0.65rem", color: "#4a5a8a", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.5rem" }}>Active Panchangs</div>
+              {Object.entries(PANCHANG_LABELS).map(([key, label]) => (
+                <div key={key} onClick={() => togglePanchang(key)} style={{
+                  display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer", marginBottom: "0.3rem"
+                }}>
+                  <div style={{
+                    width: "8px", height: "8px", borderRadius: "50%",
+                    background: enabledPanchangs.includes(key) ? "#fbbf24" : "#2a3352",
+                    transition: "background 0.2s"
+                  }} />
+                  <span style={{ fontSize: "0.72rem", color: enabledPanchangs.includes(key) ? "#c9d4f0" : "#4a5a8a", fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          {/* MAIN CONTENT */}
+          <main style={{ flex: 1, overflow: "auto", padding: "1.25rem 1.5rem", minWidth: 0 }}>
+
+            {/* DASHBOARD VIEW */}
+            {activeNav === "dashboard" && (
+              <div>
+                <div style={{ marginBottom: "1.5rem" }}>
+                  <h1 style={{ color: "#e8eaf6", fontFamily: "'DM Serif Display', serif", fontWeight: 400, fontSize: "1.6rem" }}>Good morning, Venue Manager 👋</h1>
+                  <p style={{ color: "#6b7db3", fontSize: "0.85rem", marginTop: "0.25rem" }}>Here's your venue snapshot for today.</p>
+                </div>
+
+                <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+                  <StatCard label="Confirmed Bookings" value={confirmedCount} sub="This month" color="#34d399" />
+                  <StatCard label="Active Inquiries" value={inquiryCount} sub="Awaiting follow-up" color="#748ffc" />
+                  <StatCard label="Hot Dates" value={hotDates} sub="High demand days" color="#fb923c" />
+                  <StatCard label="Occupancy Rate" value="78%" sub="March 2025" color="#4c6ef5" />
+                </div>
+
+                {/* Mini calendar preview */}
+                <div style={{ background: "#141926", border: "1px solid #1e2946", borderRadius: "14px", padding: "1.25rem" }}>
+                  <div style={{ color: "#c9d4f0", fontWeight: 700, fontSize: "0.9rem", marginBottom: "1rem", fontFamily: "'DM Sans', sans-serif" }}>📅 Upcoming Events</div>
+                  {BOOKINGS.filter(b => b.type === "confirmed").slice(0, 5).map(b => (
+                    <div key={b.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
+                      <div style={{ width: "38px", height: "38px", borderRadius: "9px", background: "rgba(16,185,129,0.1)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontSize: "0.9rem", fontWeight: 800, color: "#34d399", fontFamily: "'DM Sans', sans-serif", lineHeight: 1 }}>{new Date(b.date).getDate()}</span>
+                        <span style={{ fontSize: "0.55rem", color: "#6b7db3", fontFamily: "'DM Sans', sans-serif" }}>{new Date(b.date).toLocaleString("default", { month: "short" })}</span>
+                      </div>
+                      <div>
+                        <div style={{ color: "#e8eaf6", fontSize: "0.82rem", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>{b.name}</div>
+                        <div style={{ color: "#6b7db3", fontSize: "0.73rem", fontFamily: "'DM Sans', sans-serif" }}>{b.event} · {b.guests} guests</div>
+                      </div>
+                      <div style={{ marginLeft: "auto", fontSize: "0.7rem", color: "#34d399", fontFamily: "'DM Sans', sans-serif", background: "rgba(16,185,129,0.08)", padding: "0.2rem 0.6rem", borderRadius: "20px" }}>Confirmed</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* CALENDAR VIEW */}
+            {activeNav === "calendar" && (
+              <div style={{ display: "flex", gap: "1.25rem" }}>
+                <SmartCalendar
+                  bookings={BOOKINGS}
+                  muhurats={MUHURATS}
+                  enabledPanchangs={enabledPanchangs}
+                  onDateClick={setSelectedDate}
+                />
+              </div>
+            )}
+
+            {/* BOOKINGS VIEW */}
+            {activeNav === "bookings" && <BookingsView bookings={BOOKINGS} type="confirmed" />}
+
+            {/* INQUIRIES VIEW */}
+            {activeNav === "inquiries" && <BookingsView bookings={BOOKINGS} type="inquiry" />}
+
+            {/* SETTINGS VIEW */}
+            {activeNav === "settings" && <SettingsView enabledPanchangs={enabledPanchangs} onToggle={togglePanchang} />}
+
+            {/* PAYMENTS / QR LEADS */}
+            {(activeNav === "payments" || activeNav === "qrleads") && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "60vh", flexDirection: "column", gap: "1rem" }}>
+                <div style={{ fontSize: "3rem" }}>{activeNav === "payments" ? "₹" : "▣"}</div>
+                <div style={{ color: "#6b7db3", fontSize: "0.9rem", fontFamily: "'DM Sans', sans-serif" }}>
+                  {activeNav === "payments" ? "Payments module coming soon" : "QR Leads module coming soon"}
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* DATE DETAIL PANEL */}
+          {selectedDate && (
+            <DateDetailPanel
+              dateStr={selectedDate}
+              bookings={BOOKINGS}
+              muhurats={MUHURATS}
+              enabledPanchangs={enabledPanchangs}
+              onClose={() => setSelectedDate(null)}
+              onBook={openBook}
+              onInquiry={openInquiry}
+            />
+          )}
+        </div>
+
+        {/* MOBILE BOTTOM NAV */}
+        <div style={{
+          display: "none",
+          "@media (max-width: 640px)": { display: "flex" }
+        }}>
+          {/* Handled via CSS below */}
+        </div>
+      </div>
+
+      {/* MODALS */}
+      {modal === "booking" && <BookingModal onClose={() => setModal(null)} prefillDate={prefillDate} />}
+      {modal === "inquiry" && <InquiryModal onClose={() => setModal(null)} prefillDate={prefillDate} />}
+
+      <style>{`
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0e1a; }
+        ::-webkit-scrollbar-thumb { background: #1e2946; border-radius: 3px; }
+        body { margin: 0; }
+        @media (max-width: 700px) {
+          aside { display: none !important; }
+          .mobile-nav { display: flex !important; }
+        }
+      `}</style>
+
+      {/* Mobile Bottom Nav */}
+      <div className="mobile-nav" style={{
+        display: "none", position: "fixed", bottom: 0, left: 0, right: 0,
+        background: "#0f1421", borderTop: "1px solid #1e2946", zIndex: 300,
+        justifyContent: "space-around", padding: "0.5rem 0 0.75rem"
+      }}>
+        {[
+          { id: "dashboard", label: "Dashboard", icon: "⊞" },
+          { id: "calendar", label: "Calendar", icon: "◫" },
+          { id: "inquiries", label: "Leads", icon: "?" },
+          { id: "bookings", label: "Bookings", icon: "✓" },
+        ].map(({ id, label, icon }) => (
+          <button key={id} onClick={() => setActiveNav(id)} style={{
+            background: "none", border: "none", display: "flex", flexDirection: "column",
+            alignItems: "center", gap: "0.2rem", cursor: "pointer",
+            color: activeNav === id ? "#748ffc" : "#4a5a8a"
+          }}>
+            <span style={{ fontSize: "1.2rem" }}>{icon}</span>
+            <span style={{ fontSize: "0.6rem", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>{label}</span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
