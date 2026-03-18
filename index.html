@@ -572,7 +572,7 @@ body {
 .venue-card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--r-lg); overflow: hidden;
-  cursor: pointer; transition: all .2s;
+  cursor: default; transition: all .2s;
 }
 .venue-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
 .vc-banner {
@@ -588,6 +588,13 @@ body {
   font-family: 'Cormorant Garamond', serif;
   font-size: 18px; font-weight: 700; color: #fff; position: relative; z-index: 1;
 }
+.vc-edit-btn {
+  position: absolute; top: 8px; left: 10px; z-index: 2;
+  background: rgba(0,0,0,.35); border: none; border-radius: 6px;
+  padding: 3px 7px; font-size: 13px; cursor: pointer;
+  opacity: 0; transition: opacity .2s;
+}
+.venue-card:hover .vc-edit-btn { opacity: 1; }
 .vc-body { padding: 14px 16px; }
 .vc-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 .vc-stat { }
@@ -1302,6 +1309,9 @@ body {
           <div class="ph-title">Venues</div>
           <div class="ph-sub">Manage your venue portfolio</div>
         </div>
+        <div class="ph-actions">
+          <button class="btn btn-primary" onclick="openVenueModal()">+ Add Venue</button>
+        </div>
       </div>
       <div class="venues-grid" id="venuesGrid"></div>
     </div>
@@ -1902,6 +1912,75 @@ body {
 </div>
 
 <!-- ═══════════════════════════════ MODALS ══════════════════════════════ -->
+
+<!-- VENUE MODAL -->
+<div class="overlay" id="venueModal" onclick="overlayClose('venueModal',event)">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-head">
+      <div><div class="modal-title" id="vmTitle">Add Venue</div><div class="modal-sub">Define a new venue in your portfolio</div></div>
+      <button class="btn-x" onclick="closeModal('venueModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="vm-id">
+      <div class="fg-row">
+        <div class="fg" style="flex:2">
+          <label>Venue Name *</label>
+          <input id="vm-name" placeholder="e.g. Grand Ballroom">
+        </div>
+        <div class="fg" style="flex:1">
+          <label>Emoji Icon</label>
+          <input id="vm-emoji" placeholder="🏛️" maxlength="4" style="text-align:center;font-size:22px">
+        </div>
+      </div>
+      <div class="fg-row">
+        <div class="fg">
+          <label>Capacity (guests) *</label>
+          <input id="vm-cap" type="number" placeholder="500" min="1">
+        </div>
+        <div class="fg">
+          <label>Accent Colour</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="vm-color" type="color" value="#c8920a" style="width:44px;height:38px;border-radius:8px;border:1px solid var(--border);cursor:pointer;padding:2px">
+            <span id="vm-color-hex" style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace">#c8920a</span>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Banner Colour</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="vm-bg" type="color" value="#1a3f60" style="width:44px;height:38px;border-radius:8px;border:1px solid var(--border);cursor:pointer;padding:2px">
+            <span id="vm-bg-hex" style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace">#1a3f60</span>
+          </div>
+        </div>
+      </div>
+      <!-- Live preview -->
+      <div style="margin-top:8px">
+        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Preview</label>
+        <div id="vm-preview" class="venue-card" style="max-width:260px;margin-top:6px;pointer-events:none">
+          <div id="vmp-banner" class="vc-banner" style="background:#1a3f60">
+            <div id="vmp-emoji" class="vc-emoji">🏛️</div>
+            <div id="vmp-name" class="vc-name">Venue Name</div>
+          </div>
+          <div class="vc-body">
+            <div class="vc-stats">
+              <div class="vc-stat"><div class="vc-stat-lbl">Capacity</div><div id="vmp-cap" class="vc-stat-val">—</div></div>
+              <div class="vc-stat"><div class="vc-stat-lbl">Bookings</div><div class="vc-stat-val">0</div></div>
+              <div class="vc-stat"><div class="vc-stat-lbl">Revenue</div><div class="vc-stat-val" style="font-size:11px">₹0</div></div>
+            </div>
+            <div class="vc-occupancy">
+              <div class="vc-occ-row"><span>This month occupancy</span><span>0%</span></div>
+              <div class="vc-occ-track"><div id="vmp-fill" class="vc-occ-fill" style="width:0%;background:#c8920a"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('venueModal')">Cancel</button>
+      <button id="vm-del-btn" class="btn" style="background:var(--rose);color:#fff;display:none" onclick="deleteVenue()">Delete Venue</button>
+      <button class="btn btn-primary" onclick="saveVenue()">Save Venue</button>
+    </div>
+  </div>
+</div>
 
 <!-- BOOKING MODAL -->
 <div class="overlay" id="bookingModal" onclick="overlayClose('bookingModal',event)">
@@ -2591,6 +2670,7 @@ function renderVenues() {
       <div class="vc-banner" style="background:${v.bg}">
         <div class="vc-emoji">${v.emoji}</div>
         <div class="vc-name">${v.name}</div>
+        <button class="vc-edit-btn" onclick="openVenueModal('${v.id}')" title="Edit venue">✏️</button>
       </div>
       <div class="vc-body">
         <div class="vc-stats">
@@ -2606,6 +2686,120 @@ function renderVenues() {
       </div>
     </div>`;
   }).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   VENUE ADD / EDIT MODAL
+═══════════════════════════════════════════════════ */
+function syncVenuePreview() {
+  const name  = document.getElementById('vm-name').value  || 'Venue Name';
+  const emoji = document.getElementById('vm-emoji').value || '🏛️';
+  const cap   = document.getElementById('vm-cap').value   || '—';
+  const color = document.getElementById('vm-color').value;
+  const bg    = document.getElementById('vm-bg').value;
+  document.getElementById('vmp-name').textContent   = name;
+  document.getElementById('vmp-emoji').textContent  = emoji;
+  document.getElementById('vmp-cap').textContent    = cap;
+  document.getElementById('vmp-banner').style.background = bg;
+  document.getElementById('vmp-fill').style.background   = color;
+  document.getElementById('vm-color-hex').textContent    = color;
+  document.getElementById('vm-bg-hex').textContent       = bg;
+}
+
+function openVenueModal(id) {
+  if (id) {
+    // Edit mode
+    const v = VENUES.find(x=>x.id===id); if(!v) return;
+    document.getElementById('vmTitle').textContent    = 'Edit Venue';
+    document.getElementById('vm-id').value            = v.id;
+    document.getElementById('vm-name').value          = v.name;
+    document.getElementById('vm-emoji').value         = v.emoji;
+    document.getElementById('vm-cap').value           = v.cap;
+    document.getElementById('vm-color').value         = v.color;
+    document.getElementById('vm-bg').value            = v.bg;
+    document.getElementById('vm-del-btn').style.display = 'inline-flex';
+  } else {
+    // Add mode
+    document.getElementById('vmTitle').textContent    = 'Add Venue';
+    document.getElementById('vm-id').value            = '';
+    document.getElementById('vm-name').value          = '';
+    document.getElementById('vm-emoji').value         = '🏛️';
+    document.getElementById('vm-cap').value           = '';
+    document.getElementById('vm-color').value         = '#c8920a';
+    document.getElementById('vm-bg').value            = '#1a3f60';
+    document.getElementById('vm-del-btn').style.display = 'none';
+  }
+  syncVenuePreview();
+  // Attach live preview listeners
+  ['vm-name','vm-emoji','vm-cap','vm-color','vm-bg'].forEach(fid=>{
+    document.getElementById(fid).oninput = syncVenuePreview;
+    document.getElementById(fid).onchange = syncVenuePreview;
+  });
+  openModal('venueModal');
+}
+
+function slugify(str) {
+  return str.toLowerCase().trim().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}
+
+function saveVenue() {
+  const name  = document.getElementById('vm-name').value.trim();
+  const emoji = document.getElementById('vm-emoji').value.trim() || '🏢';
+  const cap   = parseInt(document.getElementById('vm-cap').value);
+  const color = document.getElementById('vm-color').value;
+  const bg    = document.getElementById('vm-bg').value;
+  const editId= document.getElementById('vm-id').value;
+
+  if (!name)        { showToast('Venue name is required');         return; }
+  if (!cap || cap<1){ showToast('Enter a valid capacity');         return; }
+
+  if (editId) {
+    // Update existing
+    const v = VENUES.find(x=>x.id===editId);
+    if (v) { v.name=name; v.emoji=emoji; v.cap=cap; v.color=color; v.bg=bg; }
+  } else {
+    // Generate unique id
+    let base = slugify(name) || 'venue';
+    let newId = base;
+    let n = 2;
+    while (VENUES.find(x=>x.id===newId)) newId = base+'-'+(n++);
+    VENUES.push({ id:newId, name, cap, emoji, color, bg });
+  }
+
+  closeModal('venueModal');
+  renderVenues();
+  refreshVenueDropdowns();
+  renderDashboard();
+  renderFinances();
+  showToast(editId ? 'Venue updated ✓' : 'Venue added ✓');
+}
+
+function deleteVenue() {
+  const editId = document.getElementById('vm-id').value;
+  if (!editId) return;
+  const hasBks = bookings.some(b=>b.venue===editId);
+  if (hasBks) {
+    showToast('Cannot delete — this venue has existing bookings. Reassign or remove those first.');
+    return;
+  }
+  const idx = VENUES.findIndex(x=>x.id===editId);
+  if (idx > -1) VENUES.splice(idx,1);
+  closeModal('venueModal');
+  renderVenues();
+  refreshVenueDropdowns();
+  renderDashboard();
+  renderFinances();
+  showToast('Venue deleted');
+}
+
+function refreshVenueDropdowns() {
+  // Booking modal venue select
+  ['bm-venue','lm-venue'].forEach(selId=>{
+    const sel = document.getElementById(selId);
+    if (sel) sel.innerHTML = VENUES.map(v=>`<option value="${v.id}">${v.name} (${v.cap} pax)</option>`).join('');
+  });
+  // Dashboard venue utilization
+  if (document.getElementById('venueUtil')) renderDashboard();
 }
 
 /* ═══════════════════════════════════════════════════
