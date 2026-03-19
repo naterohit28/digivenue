@@ -1073,6 +1073,18 @@ body {
 /* Leads counter badge on banner */
 .db-count { font-size: 10px; color: rgba(255,255,255,.5); }
 
+/* ── Page-specific grids — mobile-first (single col by default) ── */
+.dc-grid          { display: grid; grid-template-columns: 1fr; gap: 14px; max-width: 900px; }
+.dc-inner-grid    { display: grid; grid-template-columns: 1fr; gap: 0; }
+.notif-grid       { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.qr-grid          { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.qr-stats-grid    { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cp-grid          { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.otp-form-grid    { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wp-quick-grid    { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.wp-template-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.wp-settings-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+
    Base = mobile. Desktop upgrades via min-width: 769px
 ════════════════════════════════════════════════════ */
 
@@ -1232,6 +1244,19 @@ body {
 
   /* Venue modal preview desktop */
   #vm-preview { max-width: 260px !important; }
+
+  /* Page-specific grids — desktop upgrades */
+  .dc-grid          { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .dc-inner-grid    { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .notif-grid       { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .qr-grid          { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cp-grid          { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .wp-quick-grid    { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .wp-template-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .wp-settings-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* Calendar page-header desktop: pills + button side by side */
+  #page-calendar .ph-actions { flex-direction: row !important; align-items: center !important; gap: 12px !important; }
 }
 
 /* ════════════════════════════════════════════════════
@@ -1663,7 +1688,7 @@ body {
           <div class="ph-title">Smart Booking Calendar</div>
           <div class="ph-sub">Bookings · Inquiries · Muhurats · Hot Dates — all in one view</div>
         </div>
-        <div class="ph-actions">
+        <div class="ph-actions" style="flex-direction:column;align-items:flex-start;gap:10px">
           <!-- Panchang filter -->
           <div class="sc-panchang-pills" id="scPanchangPills">
             <button class="sc-pp active" data-p="marathi"  onclick="togglePanchang('marathi',this)">🕉️ Marathi</button>
@@ -1856,7 +1881,7 @@ body {
           <div class="ph-sub">Reverse GST calculator — split any deal into bank &amp; cash portions</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px">
+      <div class="dc-grid">
         <!-- Calculator -->
         <div class="sec-card">
           <div class="sec-head"><div class="sec-title">🧮 GST Reverse Calculator</div></div>
@@ -1865,7 +1890,7 @@ body {
               <label>Total Deal Amount (₹)</label>
               <input type="number" id="dc-deal" placeholder="e.g. 500000" oninput="calcDeal()">
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="dc-inner-grid">
               <div class="fg">
                 <label>GST @18% Amount (₹)</label>
                 <input type="number" id="dc-gst18" placeholder="e.g. 18000" oninput="calcDeal()">
@@ -1936,7 +1961,7 @@ body {
           <button class="btn btn-gold" onclick="saveNotifSettings()">Save Settings</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="notif-grid">
         <!-- Daily report settings -->
         <div class="sec-card">
           <div class="sec-head"><div class="sec-title">📊 Daily Report</div></div>
@@ -2035,7 +2060,7 @@ body {
           <button class="btn btn-primary" onclick="showToast('QR image downloaded')">⬇ Download</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="qr-grid">
         <!-- QR display -->
         <div class="sec-card">
           <div class="sec-head"><div class="sec-title">Your Venue QR Code</div></div>
@@ -2057,7 +2082,7 @@ body {
           <div class="sec-card" style="margin-bottom:16px">
             <div class="sec-head"><div class="sec-title">📊 QR Scan Stats</div></div>
             <div class="sec-body">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+              <div class="qr-stats-grid" style="margin-bottom:16px">
                 <div style="text-align:center;padding:16px;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
                   <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--navy)">47</div>
                   <div style="font-size:11px;color:var(--muted)">Total Scans</div>
@@ -2106,7 +2131,7 @@ body {
           <button class="btn btn-primary" onclick="openModal('bookingModal')">+ New Booking</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="cp-grid">
         <!-- Portal link generator -->
         <div class="sec-card">
           <div class="sec-head"><div class="sec-title">🔗 Generate Client Link</div></div>
@@ -2151,7 +2176,7 @@ body {
                     <option>Wedding</option><option>Reception</option><option>Birthday</option><option>Corporate</option>
                   </select>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+                <div class="otp-form-grid" style="margin-bottom:14px">
                   <div class="fg"><label style="color:rgba(255,255,255,.6)">Date</label><input type="date" id="otp-date" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff"></div>
                   <div class="fg"><label style="color:rgba(255,255,255,.6)">Guests</label><input type="number" id="otp-guests" placeholder="200" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff"></div>
                 </div>
@@ -2210,7 +2235,7 @@ body {
 
       <!-- QUICK SEND TAB -->
       <div class="wp-tab-content active" id="wpt-quick">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="wp-quick-grid">
 
           <!-- Booking confirmation sender -->
           <div class="sec-card">
@@ -2309,7 +2334,7 @@ body {
 
       <!-- TEMPLATES TAB -->
       <div class="wp-tab-content" id="wpt-templates">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="wpTemplateGrid"></div>
+        <div class="wp-template-grid" id="wpTemplateGrid"></div>
       </div>
 
       <!-- LOG TAB -->
@@ -2325,7 +2350,7 @@ body {
 
       <!-- SETTINGS TAB -->
       <div class="wp-tab-content" id="wpt-settings">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="wp-settings-grid">
           <div class="sec-card">
             <div class="sec-head"><div class="sec-title">📱 Your WhatsApp Number</div></div>
             <div class="sec-body">
