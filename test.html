@@ -548,144 +548,173 @@ body {
 /* ════════════════════════════════════════════════════
    ─── CALENDAR PAGE ───
 ════════════════════════════════════════════════════ */
-.cal-layout { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: start; }
-.cal-sidebar { position: sticky; top: 0; max-height: calc(100vh - 160px); overflow-y: auto; }
+/* ════════════════════════════════════════════════════
+   SMART CALENDAR
+════════════════════════════════════════════════════ */
+
+/* Page-level layout: calendar grid + sidebar panel */
+.cal-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+/* Nav row: month title + arrows */
 .cal-nav-row {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
-.cal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; }
+.cal-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700; color: var(--navy); letter-spacing: -.3px;
+}
 .cal-arrows { display: flex; gap: 6px; }
 .cal-arr {
-  width: 32px; height: 32px; border-radius: 8px;
+  height: 34px; padding: 0 12px; border-radius: var(--r-sm);
   background: var(--card); border: 1.5px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   font-size: 15px; cursor: pointer; color: var(--navy);
-  transition: all .15s; font-weight: 700;
+  transition: all .15s; font-weight: 700; white-space: nowrap;
+  box-shadow: var(--shadow-xs);
 }
 .cal-arr:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
-.view-toggle {
-  display: flex; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 3px; gap: 3px;
-}
-.vt-btn {
-  padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all .18s; color: var(--muted);
-}
-.vt-btn.active { background: var(--navy); color: #fff; }
 
-/* Month grid */
-.cal-grid-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
-.cal-head-row  { display: grid; grid-template-columns: repeat(7,1fr); background: var(--navy); }
+/* Month grid wrapper */
+.cal-grid-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.cal-head-row {
+  display: grid; grid-template-columns: repeat(7,1fr);
+  background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+}
 .cal-head-cell {
   padding: 10px 4px; text-align: center;
-  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.6);
-  text-transform: uppercase; letter-spacing: .6px;
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,.6);
+  text-transform: uppercase; letter-spacing: .8px;
 }
-.cal-body-grid { display: grid; grid-template-columns: repeat(7,1fr); }
+.cal-body-grid {
+  display: grid; grid-template-columns: repeat(7,1fr);
+}
 .cal-cell {
-  min-height: 110px; border-right: 1px solid var(--border);
+  min-height: 80px; border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 5px 5px 4px; position: relative; cursor: pointer;
+  padding: 5px 4px 4px; position: relative; cursor: pointer;
   transition: background .12s; overflow: hidden;
 }
-.cal-cell:nth-child(7n) { border-right: none; }
-.cal-cell:hover { background: var(--surface); }
-.cal-cell.other-month { background: #faf9f7; }
+.cal-cell:nth-child(7n)     { border-right: none; }
+.cal-cell:nth-child(n+36)   { border-bottom: none; }
+.cal-cell:hover              { background: var(--surface); }
+.cal-cell.other-month        { background: rgba(238,241,246,.6); }
 .cal-cell.other-month .cal-day-num { color: var(--faint); }
-.cal-cell.is-today { background: var(--gold-pale); }
+.cal-cell.is-today           { background: var(--gold-pale); }
 .cal-cell.is-today .cal-day-num { color: var(--gold); font-weight: 800; }
-.cal-cell.selected { background: #eef3fa; outline: 2px solid var(--navy); outline-offset: -2px; }
-.cal-cell.is-hot { background: #fff7ed; }
-.cal-cell.is-avoid { background: #fff0f0; }
-.cal-day-num { font-size: 12px; font-weight: 600; margin-bottom: 2px; display:flex; align-items:center; justify-content:space-between; }
-.cal-hot-badge { font-size: 11px; line-height:1; }
+.cal-cell.selected           { background: #eef3fa; outline: 2px solid var(--navy); outline-offset: -2px; }
+.cal-cell.is-hot             { background: #fff7ed; }
+.cal-cell.is-avoid           { background: #fff0f0; }
+.cal-day-num {
+  font-size: 11px; font-weight: 600; margin-bottom: 2px; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between; line-height: 1;
+}
+.cal-hot-badge { font-size: 10px; line-height: 1; }
 
-/* Smart Calendar chips */
+/* Chips inside calendar cells */
 .sc-chip {
-  font-size: 9px; font-weight: 600; padding: 2px 5px;
-  border-radius: 4px; margin-bottom: 2px; cursor: pointer;
+  font-size: 8px; font-weight: 700; padding: 1px 4px;
+  border-radius: 3px; margin-bottom: 1px; cursor: pointer;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  transition: opacity .15s; display: block; line-height: 1.4;
+  transition: opacity .15s; display: block; line-height: 1.5;
+  letter-spacing: .1px;
 }
 .sc-chip:hover { opacity: .8; }
-.sc-booking        { background: var(--gold-pale); color: #92400e;   border-left: 2px solid var(--gold); }
-.sc-bk-paid        { background: var(--jade-pale); color: var(--jade); border-left: 2px solid var(--jade); }
-.sc-bk-overdue     { background: #ffe4e6;          color: var(--rose); border-left: 2px solid var(--rose); }
-.sc-inquiry        { background: #e0f2fe;           color: #0369a1;   border-left: 2px solid var(--sky); }
-.sc-muhurat        { background: #fdf4ff;           color: #7e22ce;   border-left: 2px solid #a855f7; }
-.sc-mu-vivah       { background: #fff0f9;           color: #be185d;   border-left: 2px solid #ec4899; }
-.sc-mu-shubh       { background: #fef3c7;           color: #92400e;   border-left: 2px solid #f59e0b; }
-.sc-mu-avoid       { background: #f3f4f6;           color: var(--muted); border-left: 2px solid #9ca3af; }
+.sc-booking    { background: var(--gold-pale);  color: #92400e;    border-left: 2px solid var(--gold); }
+.sc-bk-paid    { background: var(--jade-pale);  color: var(--jade); border-left: 2px solid var(--jade); }
+.sc-bk-overdue { background: #ffe4e6;           color: var(--rose); border-left: 2px solid var(--rose); }
+.sc-inquiry    { background: #e0f2fe;            color: #0369a1;    border-left: 2px solid var(--sky); }
+.sc-muhurat    { background: #fdf4ff;            color: #7e22ce;    border-left: 2px solid #a855f7; }
+.sc-mu-vivah   { background: #fff0f9;            color: var(--vivah); border-left: 2px solid #ec4899; }
+.sc-mu-shubh   { background: var(--shubh-pale); color: var(--shubh); border-left: 2px solid #f59e0b; }
+.sc-mu-avoid   { background: #f3f4f6;            color: var(--muted); border-left: 2px solid #9ca3af; }
 
-/* Panchang pills */
-.sc-panchang-pills { display:flex; gap:5px; flex-wrap:wrap; }
+/* Panchang filter pills */
+.sc-panchang-pills { display: flex; gap: 5px; flex-wrap: wrap; }
 .sc-pp {
-  padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  padding: 5px 11px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 600;
   border: 1.5px solid var(--border); background: var(--card); color: var(--muted);
-  cursor: pointer; transition: all .18s;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
 }
+.sc-pp:hover { border-color: #a855f7; color: #7e22ce; }
 .sc-pp.active { background: #fdf4ff; border-color: #a855f7; color: #7e22ce; }
 
-/* Smart Calendar legend */
+/* Legend bar */
 .sc-legend {
-  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px;
-  padding: 10px 14px; background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); font-size: 11px;
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+  padding: 9px 13px; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); font-size: 10px; align-items: center;
+  box-shadow: var(--shadow-xs);
 }
-.sc-leg-item { display:flex; align-items:center; gap:5px; color: var(--muted); font-weight:600; }
-.sc-leg-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
-.sc-leg-star { width:auto; height:auto; font-size:12px; }
+.sc-leg-item { display: flex; align-items: center; gap: 4px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.sc-leg-dot  { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+.sc-leg-star { width: auto; height: auto; font-size: 11px; }
 
-/* Day detail sidebar enhancements */
+/* ── Day detail sidebar panel ── */
+.cal-day-detail {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  box-shadow: var(--shadow-xs);
+}
+.cdd-date {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700;
+  color: var(--navy); margin-bottom: 14px; letter-spacing: -.2px;
+  border-bottom: 1px solid var(--border); padding-bottom: 10px;
+}
 .cdd-section { margin-bottom: 14px; }
 .cdd-section-title {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .7px; color: var(--muted); margin-bottom: 6px;
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--faint); margin-bottom: 7px;
 }
 .cdd-muhurat-badge {
   background: #fdf4ff; border: 1px solid #e9d5ff;
-  border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
+  border-radius: var(--r-sm); padding: 8px 10px; margin-bottom: 6px;
 }
-.cdd-mu-type { font-size: 12px; font-weight: 700; color: #7e22ce; margin-bottom: 4px; }
-.cdd-mu-type.vivah { color: #be185d; }
-.cdd-mu-type.shubh { color: #92400e; }
+.cdd-mu-type       { font-size: 12px; font-weight: 700; color: #7e22ce; margin-bottom: 3px; }
+.cdd-mu-type.vivah { color: var(--vivah); }
+.cdd-mu-type.shubh { color: var(--shubh); }
 .cdd-mu-type.avoid { color: var(--rose); }
-.cdd-mu-detail { font-size: 11px; color: var(--muted); }
-.cdd-mu-timing { font-size: 11px; color: var(--jade); font-weight: 600; margin-top: 3px; }
+.cdd-mu-detail     { font-size: 10px; color: var(--muted); line-height: 1.5; }
+.cdd-mu-timing     { font-size: 10px; color: var(--jade); font-weight: 700; margin-top: 3px; }
 .cdd-hot-banner {
   background: linear-gradient(135deg, #fff7ed, #fef3c7);
-  border: 1px solid #fbbf24; border-radius: 8px;
+  border: 1px solid #fbbf24; border-radius: var(--r-sm);
   padding: 8px 10px; margin-bottom: 10px;
-  font-size: 12px; font-weight: 700; color: #92400e;
+  font-size: 12px; font-weight: 700; color: var(--shubh);
   display: flex; align-items: center; gap: 6px;
 }
 .cdd-hot-reasons { font-size: 10px; font-weight: 500; color: #b45309; margin-top: 2px; }
-
-/* Calendar sidebar */
-.cal-day-detail { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
-.cdd-date { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; margin-bottom: 14px; }
-.cdd-venue { margin-bottom: 10px; }
+.cdd-venue { margin-bottom: 8px; }
 .cdd-v-head {
   display: flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 700; margin-bottom: 5px;
+  font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 5px;
 }
-.cdd-pip { width: 8px; height: 8px; border-radius: 3px; }
+.cdd-pip { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 .cdd-event {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 7px; padding: 8px 10px; margin-bottom: 4px;
+  border-radius: var(--r-sm); padding: 8px 10px; margin-bottom: 4px;
   cursor: pointer; transition: all .15s;
 }
-.cdd-event:hover { box-shadow: var(--shadow-sm); }
-.cdd-ev-name { font-size: 12px; font-weight: 700; }
-.cdd-ev-meta { font-size: 11px; color: var(--muted); }
+.cdd-event:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.cdd-ev-name { font-size: 12px; font-weight: 700; color: var(--navy); }
+.cdd-ev-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
 .cdd-avail {
-  background: var(--jade-pale); border: 1px dashed rgba(30,122,80,.3);
-  border-radius: 7px; padding: 7px 10px; margin-bottom: 4px;
+  background: var(--jade-pale); border: 1px dashed rgba(26,112,72,.3);
+  border-radius: var(--r-sm); padding: 7px 10px; margin-bottom: 4px;
   font-size: 11px; color: var(--jade); cursor: pointer;
-  transition: all .15s; font-weight: 600;
+  transition: all .15s; font-weight: 600; text-align: center;
 }
-.cdd-avail:hover { background: var(--jade); color: #fff; }
+.cdd-avail:hover { background: var(--jade); color: #fff; border-style: solid; }
 
 /* ════════════════════════════════════════════════════
    ─── BOOKINGS PAGE ───
@@ -1518,20 +1547,28 @@ body {
   .data-table th, .data-table td { padding: 11px 14px; white-space: normal; }
 
   /* Calendar desktop */
-  .cal-layout { grid-template-columns: 1fr 300px; gap: 20px; }
-  .cal-sidebar { position: sticky; top: 0; max-height: calc(100vh - 160px); overflow-y: auto; }
-  .cal-cell { min-height: 90px; padding: 5px 5px 4px; }
+  .cal-layout { grid-template-columns: 1fr 280px; gap: 20px; align-items: start; }
+  .cal-sidebar { position: sticky; top: 16px; max-height: calc(100vh - 200px); overflow-y: auto; }
+  .cal-main { min-width: 0; }
+  .cal-cell { min-height: 100px; padding: 6px 5px 4px; }
   .cal-day-num { font-size: 13px; margin-bottom: 3px; }
-  .cal-head-cell { padding: 10px 4px; font-size: 11px; }
+  .cal-head-cell { padding: 11px 4px; font-size: 11px; }
   .sc-chip { font-size: 10px; padding: 2px 5px; margin-bottom: 2px; }
   .cal-hot-badge { font-size: 11px; }
-  .sc-panchang-pills { gap: 5px; }
-  .sc-pp { font-size: 11px; padding: 4px 12px; }
-  .sc-legend { gap: 12px; padding: 10px 14px; font-size: 11px; flex-wrap: nowrap; }
+  .sc-panchang-pills { gap: 6px; flex-wrap: nowrap; }
+  .sc-pp { font-size: 11px; padding: 5px 13px; }
+  .sc-legend { gap: 14px; padding: 10px 16px; flex-wrap: nowrap; margin-bottom: 14px; }
   .sc-leg-item { font-size: 11px; }
   .cal-nav-row { margin-bottom: 14px; }
-  .cal-title { font-size: 22px; }
-  .cal-arr { width: 34px; height: 34px; font-size: 16px; }
+  .cal-title { font-size: 26px; }
+  .cal-arr { height: 36px; font-size: 15px; padding: 0 14px; }
+  .cdd-date { font-size: 22px; }
+  .cdd-section-title { font-size: 10px; }
+  .cdd-hot-banner { font-size: 13px; padding: 10px 12px; }
+  .cdd-ev-name { font-size: 13px; }
+  .cdd-ev-meta { font-size: 11px; }
+  /* On desktop: panchang pills + button go side by side */
+  #page-calendar .ph-actions { flex-direction: row !important; align-items: center !important; gap: 12px !important; }
 
   /* Bookings desktop */
   .filter-bar { gap: 8px; margin-bottom: 16px; }
@@ -1612,8 +1649,7 @@ body {
   .wp-template-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
   .wp-settings-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
 
-  /* Calendar page-header desktop: pills + button side by side */
-  #page-calendar .ph-actions { flex-direction: row !important; align-items: center !important; gap: 12px !important; }
+  /* Calendar page-header desktop: already set in calendar desktop block above */
 }
 
 /* ════════════════════════════════════════════════════
@@ -2038,26 +2074,28 @@ body {
     <!-- ─── CALENDAR ──────────────────────────── -->
     <!-- ─── SMART BOOKING CALENDAR ──────────────── -->
     <div class="page" id="page-calendar">
+
+      <!-- Page header -->
       <div class="page-header">
         <div class="ph-left">
           <div class="ph-title">Smart Booking Calendar</div>
           <div class="ph-sub">Bookings · Inquiries · Muhurats · Hot Dates — all in one view</div>
         </div>
-        <div class="ph-actions" style="flex-direction:column;align-items:flex-start;gap:10px">
-          <!-- Panchang filter -->
+        <div class="ph-actions" style="flex-direction:column;align-items:flex-start;gap:8px">
           <div class="sc-panchang-pills" id="scPanchangPills">
             <button class="sc-pp active" data-p="marathi"  onclick="togglePanchang('marathi',this)">🕉️ Marathi</button>
             <button class="sc-pp active" data-p="gujarati" onclick="togglePanchang('gujarati',this)">🕉️ Gujarati</button>
             <button class="sc-pp active" data-p="north"    onclick="togglePanchang('north',this)">🕉️ North Indian</button>
             <button class="sc-pp active" data-p="drik"     onclick="togglePanchang('drik',this)">🕉️ Drik</button>
           </div>
-          <button class="btn btn-primary" onclick="openModal('bookingModal')">+ Booking</button>
+          <button class="btn btn-primary" onclick="openModal('bookingModal')">+ New Booking</button>
         </div>
       </div>
 
-      <!-- Legend -->
+      <!-- Legend bar -->
       <div class="sc-legend">
-        <div class="sc-leg-item"><span class="sc-leg-dot" style="background:var(--gold)"></span>Confirmed Booking</div>
+        <div class="sc-leg-item"><span class="sc-leg-dot" style="background:var(--gold)"></span>Confirmed</div>
+        <div class="sc-leg-item"><span class="sc-leg-dot" style="background:var(--jade)"></span>Paid</div>
         <div class="sc-leg-item"><span class="sc-leg-dot" style="background:var(--sky)"></span>Inquiry</div>
         <div class="sc-leg-item"><span class="sc-leg-dot sc-leg-star" style="color:var(--vivah)">⭐</span>Vivah Muhurat</div>
         <div class="sc-leg-item"><span class="sc-leg-dot sc-leg-star" style="color:var(--shubh)">✨</span>Shubh Muhurat</div>
@@ -2065,15 +2103,17 @@ body {
         <div class="sc-leg-item"><span class="sc-leg-dot sc-leg-star">🔥</span>Hot Date</div>
       </div>
 
+      <!-- Main layout: calendar + sidebar -->
       <div class="cal-layout">
-        <!-- Calendar grid -->
-        <div style="flex:1;min-width:0">
+
+        <!-- Calendar: nav row + month grid -->
+        <div class="cal-main">
           <div class="cal-nav-row">
             <div class="cal-title" id="calTitle">—</div>
             <div class="cal-arrows">
-              <button class="cal-arr" onclick="shiftCal(-1)">‹</button>
+              <button class="cal-arr" onclick="shiftCal(-1)">‹ Prev</button>
               <button class="cal-arr" onclick="shiftCal(0)">Today</button>
-              <button class="cal-arr" onclick="shiftCal(1)">›</button>
+              <button class="cal-arr" onclick="shiftCal(1)">Next ›</button>
             </div>
           </div>
           <div class="cal-grid-wrap">
@@ -2086,13 +2126,14 @@ body {
         <div class="cal-sidebar">
           <div class="cal-day-detail" id="calDayDetail">
             <div class="cdd-date" id="cddDate">Select a date</div>
-            <div id="cddContent" style="color:var(--faint);font-size:13px;font-style:italic">Click any date to see details</div>
+            <div id="cddContent" class="placeholder-text">Tap any date to see bookings, muhurats &amp; availability</div>
           </div>
         </div>
+
       </div>
     </div>
 
-    <!-- ─── BOOKINGS ──────────────────────────── -->
+
     <div class="page" id="page-bookings">
       <div class="page-header">
         <div class="ph-left">
