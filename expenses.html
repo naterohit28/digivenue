@@ -1,286 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Finance • Catering</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #0a0a0a;
-      color: #f1f5f9;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      background: #171717;
-      padding: 20px;
-      border-bottom: 1px solid #333;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .card {
-      background: #171717;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-    .btn {
-      background: #22d3ee;
-      color: #0a0a0a;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 9999px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .floating {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      background: #22d3ee;
-      color: #0a0a0a;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      box-shadow: 0 10px 30px rgba(34, 211, 238, 0.4);
-      z-index: 200;
-    }
-    input, select {
-      width: 100%;
-      padding: 16px;
-      background: #262626;
-      border: 1px solid #444;
-      border-radius: 16px;
-      color: white;
-      margin-bottom: 12px;
-    }
-    .modal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.9);
-      display: none;
-      align-items: flex-end;
-      z-index: 300;
-    }
-    .modal-content {
-      background: #171717;
-      width: 100%;
-      max-width: 500px;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      padding: 24px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .warning {
-      background: #451a03;
-      color: #fdba74;
-      padding: 12px 20px;
-      border-radius: 12px;
-      margin: 16px;
-      font-size: 14px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flavor Fusion | Event Finance Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --primary: #2563eb; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .warning { background: #451a03; color: #fdba74; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+        .profit { color: #4ade80; }
+        .expense { color: #f87171; }
+        .pending { color: #fbbf24; }
+    </style>
 </head>
-<body>
+<body class="bg-zinc-950 text-zinc-100">
 
-  <div class="header">
-    <h1 class="text-3xl font-bold">Event Finance</h1>
-  </div>
+    <nav class="bg-zinc-900 border-b border-zinc-800 p-4 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-cyan-400">Flavor Fusion <span class="text-gray-400 text-sm">Event Finance Pro</span></h1>
+            <div class="flex space-x-6 text-sm">
+                <button onclick="switchTab('dashboard')" class="hover:text-cyan-400">Dashboard</button>
+                <button onclick="switchTab('events')" class="hover:text-cyan-400">Events</button>
+                <button onclick="switchTab('expenses')" class="hover:text-cyan-400">Expenses</button>
+            </div>
+        </div>
+    </nav>
 
-  <div id="warning" class="warning hidden">
-    ⚠️ Data will not be saved after refresh (sandbox mode). 
-    For saving, open with Live Server in VS Code.
-  </div>
+    <main class="max-w-7xl mx-auto p-6">
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="p-6">
-    <div class="grid grid-cols-2 gap-4">
-      <div class="card">
-        <p class="text-gray-400">Total Events</p>
-        <p id="total-events" class="text-4xl font-bold mt-2">0</p>
-      </div>
-      <div class="card">
-        <p class="text-gray-400">Total Expenses</p>
-        <p id="total-exp" class="text-4xl font-bold mt-2 text-red-400">₹0</p>
-      </div>
+        <div id="warning" class="warning hidden">⚠️ Sandbox mode - data not persistent. Use Live Server for saving.</div>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10" id="stats-grid"></div>
+            <div class="bg-zinc-900 p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4">Recent Events</h2>
+                <div id="dashboard-recent-events" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- EVENTS -->
+        <section id="events" class="tab-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Events Management</h2>
+                <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold">+ Create Event</button>
+            </div>
+            <div id="events-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- EXPENSES -->
+        <section id="expenses" class="tab-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">All Expenses</h2>
+                <button onclick="openExpenseModal()" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-semibold">+ Add Expense</button>
+            </div>
+            <div class="bg-zinc-900 rounded-2xl overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-zinc-800">
+                        <tr>
+                            <th class="p-4 text-left">Date</th>
+                            <th class="p-4 text-left">Event</th>
+                            <th class="p-4 text-left">Category</th>
+                            <th class="p-4 text-left">Head</th>
+                            <th class="p-4 text-right">Amount</th>
+                            <th class="p-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenses-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- EVENT DETAIL -->
+        <section id="event-detail" class="tab-content">
+            <button onclick="switchTab('events')" class="text-cyan-400 mb-6 flex items-center gap-2">← Back to Events</button>
+            <div id="detail-content" class="bg-zinc-900 rounded-3xl p-8"></div>
+        </section>
+    </main>
+
+    <!-- EVENT MODAL -->
+    <div id="event-modal" class="modal">
+        <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
+            <h3 id="event-modal-title" class="text-2xl font-bold mb-6">Create Event</h3>
+            <input type="hidden" id="edit-event-id">
+            <div class="space-y-5">
+                <input type="text" id="ev-client" placeholder="Client Name" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4" required>
+                <input type="date" id="ev-date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+                <input type="tel" id="ev-mobile" placeholder="Mobile" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+                <input type="text" id="ev-venue" placeholder="Venue" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+                <select id="ev-type" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+                    <option>Wedding</option><option>Corporate</option><option>Birthday</option><option>Engagement</option><option>Haldi</option><option>Reception</option><option>Other</option>
+                </select>
+                <input type="number" id="ev-billing" placeholder="Total Billing ₹" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button onclick="closeModals()" class="flex-1 py-4 border border-zinc-700 rounded-2xl">Cancel</button>
+                <button onclick="handleEventSubmit()" class="flex-1 py-4 bg-blue-600 rounded-2xl font-semibold">Save Event</button>
+            </div>
+        </div>
     </div>
 
-    <h2 class="text-xl font-semibold mt-8 mb-4">Recent Events</h2>
-    <div id="recent-events" class="space-y-4"></div>
-  </div>
-
-  <!-- FLOATING + BUTTON -->
-  <div onclick="showAddExpenseModal()" class="floating">
-    <i class="fa-solid fa-plus"></i>
-  </div>
-
-  <!-- ADD EXPENSE MODAL -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <h3 class="text-2xl font-semibold mb-6" id="modal-title">Add Expense</h3>
-      
-      <select id="event-select" class="mb-4"></select>
-      
-      <select id="category-select" onchange="updateHeads()" class="mb-4">
-        <option value="">Select Category</option>
-        <option value="Raw Material">Raw Material</option>
-        <option value="Live Counter">Live Counter</option>
-        <option value="Labour">Labour</option>
-        <option value="Operations">Operations</option>
-        <option value="Admin">Admin</option>
-        <option value="Adjustment">Adjustment</option>
-      </select>
-      
-      <select id="head-select" class="mb-4"></select>
-      
-      <input type="number" id="amount" placeholder="Amount ₹" class="mb-4 text-3xl text-center">
-      
-      <div class="flex gap-3 mb-6">
-        <button onclick="quickAdd(500)" class="flex-1 bg-zinc-800 py-3 rounded-2xl">+500</button>
-        <button onclick="quickAdd(1000)" class="flex-1 bg-zinc-800 py-3 rounded-2xl">+1000</button>
-        <button onclick="quickAdd(5000)" class="flex-1 bg-zinc-800 py-3 rounded-2xl">+5000</button>
-      </div>
-      
-      <button onclick="saveExpense()" class="btn w-full mb-3">Save Expense</button>
-      <button onclick="hideModal()" class="w-full py-4 text-gray-400">Cancel</button>
+    <!-- EXPENSE MODAL -->
+    <div id="expense-modal" class="modal">
+        <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
+            <h3 id="expense-modal-title" class="text-2xl font-bold mb-6">Add Expense</h3>
+            <input type="hidden" id="edit-expense-id">
+            <div class="space-y-5">
+                <select id="ex-event" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"></select>
+                <div class="grid grid-cols-2 gap-4">
+                    <select id="ex-cat" onchange="updateHeads()" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"></select>
+                    <select id="ex-head" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"></select>
+                </div>
+                <input type="number" id="ex-amount" placeholder="Amount ₹" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4 text-2xl text-center">
+                <input type="date" id="ex-date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+                <input type="text" id="ex-vendor" placeholder="Vendor Name" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4">
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button onclick="closeModals()" class="flex-1 py-4 border border-zinc-700 rounded-2xl">Cancel</button>
+                <button onclick="handleExpenseSubmit()" class="flex-1 py-4 bg-red-600 rounded-2xl font-semibold">Save Expense</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // In-memory data (safe for sandboxed environments)
-    let events = []
-    let expenses = []
+    <script>
+        // All variables declared FIRST
+        let state = {
+            events: [],
+            expenses: [],
+            payments: []
+        };
 
-    const expenseHeadsDB = {
-      "Raw Material": ["Grocery – किराणा", "Vegetable – भाजी", "Fruits", "Oil / Ghee", "Paneer / Dairy"],
-      "Live Counter": ["Chaat – चाट", "Starter – स्टार्टर", "Dosa – डोसा"],
-      "Labour": ["Cook – स्वयंपाकी", "Helper Staff"],
-      "Operations": ["Transport", "Gas", "Packaging"],
-      "Admin": ["Office Expense", "Commission"],
-      "Adjustment": ["Damage", "Refund"]
-    }
+        const expenseHeadsDB = {
+            "Raw Material": ["Grocery – किराणा","Vegetable – भाजी","Fruits","Juice – ज्यूस","Water – पाणी","Ice + Milk – बर्फ + दूध","Bread – ब्रेड","Pickle – लोणचे","Sweet – मिठाई","Dry Fruits","Spices / Masala","Oil / Ghee","Paneer / Dairy"],
+            "Live Counter": ["Chaat – चाट","Starter – स्टार्टर","Dosa – डोसा","Chinese – चायनीज","Ice Cream – आईस्क्रीम","Paan Mukhwas – पान मुखवास","Counter Setup – काउंटर","Pav Bhaji Counter","Pizza / Italian Counter","Dessert Counter","Beverage Counter"],
+            "Labour": ["Rojiya Labour","Boys","Cook","Helper Staff","Cleaner","Supervisor","Loading Labour"],
+            "Operations": ["Transport","Fuel / Diesel","Gas / Cylinder","Rented Material","Disposable","Packaging Material","Utensils","Generator","Water Tanker"],
+            "Admin": ["Office Expense","Phone / Internet","Printing","License","Commission","Marketing","Tips","Misc"],
+            "Adjustment": ["Damage","Refund","Staff Advance","Cash Difference"]
+        };
 
-    function loadDemoData() {
-      if (events.length === 0) {
-        events = [
-          {
-            id: "EV-260414-001",
-            client: "Manav Seva Trust",
-            date: "2026-04-14",
-            venue: "Manav Seva Hall"
-          }
-        ]
-      }
-    }
+        function saveToDB() {
+            // In sandbox mode we keep data in memory only
+        }
 
-    function renderDashboard() {
-      document.getElementById('total-events').textContent = events.length
-      
-      const totalExp = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0)
-      document.getElementById('total-exp').textContent = `₹${totalExp.toLocaleString('en-IN')}`
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            renderAll();
+        }
 
-      let html = ''
-      events.slice(0, 5).forEach(ev => {
-        html += `
-          <div class="card">
-            <div class="font-semibold">${ev.client || 'Unnamed Event'}</div>
-            <div class="text-sm text-gray-400">${ev.date || ''} • ${ev.venue || ''}</div>
-          </div>`
-      })
-      document.getElementById('recent-events').innerHTML = html || '<p class="text-gray-400">No events yet</p>'
-    }
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
 
-    function showAddExpenseModal() {
-      if (events.length === 0) {
-        alert("No events found. Please add an event first.")
-        return
-      }
+        function updateHeads() {
+            const cat = document.getElementById('ex-cat').value;
+            const headSelect = document.getElementById('ex-head');
+            headSelect.innerHTML = expenseHeadsDB[cat] ? expenseHeadsDB[cat].map(h => `<option>${h}</option>`).join('') : '';
+        }
 
-      document.getElementById('modal').style.display = 'flex'
-      document.getElementById('modal-title').textContent = 'Add Expense'
+        function openEventModal(id = null) {
+            const modal = document.getElementById('event-modal');
+            document.getElementById('event-modal-title').textContent = id ? "Edit Event" : "Create Event";
+            document.getElementById('edit-event-id').value = id || '';
+            modal.classList.add('active');
+        }
 
-      const select = document.getElementById('event-select')
-      select.innerHTML = '<option value="">Select Event</option>'
-      events.forEach(ev => {
-        const opt = document.createElement('option')
-        opt.value = ev.id
-        opt.textContent = ev.client || 'Event'
-        select.appendChild(opt)
-      })
-    }
+        function handleEventSubmit() {
+            const id = document.getElementById('edit-event-id').value || Date.now().toString();
+            const eventData = {
+                id: id,
+                client: document.getElementById('ev-client').value,
+                date: document.getElementById('ev-date').value,
+                mobile: document.getElementById('ev-mobile').value,
+                venue: document.getElementById('ev-venue').value,
+                type: document.getElementById('ev-type').value,
+                billing: parseFloat(document.getElementById('ev-billing').value) || 0
+            };
+            if (document.getElementById('edit-event-id').value) {
+                const idx = state.events.findIndex(e => e.id === id);
+                if (idx > -1) state.events[idx] = eventData;
+            } else {
+                state.events.push(eventData);
+            }
+            closeModals();
+            renderAll();
+        }
 
-    function hideModal() {
-      document.getElementById('modal').style.display = 'none'
-    }
+        function openExpenseModal(id = null) {
+            const modal = document.getElementById('expense-modal');
+            document.getElementById('expense-modal-title').textContent = id ? "Edit Expense" : "Add Expense";
+            document.getElementById('edit-expense-id').value = id || '';
 
-    function updateHeads() {
-      const cat = document.getElementById('category-select').value
-      const headSelect = document.getElementById('head-select')
-      headSelect.innerHTML = '<option value="">Select Head</option>'
-      if (expenseHeadsDB[cat]) {
-        expenseHeadsDB[cat].forEach(h => {
-          const opt = document.createElement('option')
-          opt.value = h
-          opt.textContent = h
-          headSelect.appendChild(opt)
-        })
-      }
-    }
+            const evSelect = document.getElementById('ex-event');
+            evSelect.innerHTML = state.events.map(e => `<option value="${e.id}">${e.client}</option>`).join('');
 
-    function quickAdd(val) {
-      const amt = document.getElementById('amount')
-      amt.value = (parseFloat(amt.value) || 0) + val
-    }
+            const catSelect = document.getElementById('ex-cat');
+            catSelect.innerHTML = Object.keys(expenseHeadsDB).map(c => `<option>${c}</option>`).join('');
+            updateHeads();
 
-    function saveExpense() {
-      const eventId = document.getElementById('event-select').value
-      const category = document.getElementById('category-select').value
-      const head = document.getElementById('head-select').value
-      const amount = parseFloat(document.getElementById('amount').value)
+            modal.classList.add('active');
+        }
 
-      if (!eventId || !category || !head || !amount) {
-        alert("Please fill all required fields")
-        return
-      }
+        function handleExpenseSubmit() {
+            const id = document.getElementById('edit-expense-id').value || Date.now().toString();
+            const expData = {
+                id: id,
+                eventId: document.getElementById('ex-event').value,
+                category: document.getElementById('ex-cat').value,
+                head: document.getElementById('ex-head').value,
+                amount: parseFloat(document.getElementById('ex-amount').value),
+                date: document.getElementById('ex-date').value || new Date().toISOString().slice(0,10),
+                vendor: document.getElementById('ex-vendor').value
+            };
+            if (document.getElementById('edit-expense-id').value) {
+                const idx = state.expenses.findIndex(ex => ex.id === id);
+                if (idx > -1) state.expenses[idx] = expData;
+            } else {
+                state.expenses.push(expData);
+            }
+            closeModals();
+            renderAll();
+        }
 
-      const newExpense = {
-        id: "EXP-" + Date.now().toString().slice(-6),
-        eventId: eventId,
-        date: new Date().toISOString().slice(0,10),
-        category: category,
-        head: head,
-        amount: amount
-      }
+        function getEventFinancials(eventId) {
+            const event = state.events.find(e => e.id === eventId);
+            if (!event) return { billing: 0, expenses: 0, received: 0, pending: 0, profit: 0 };
+            const expensesSum = state.expenses.filter(ex => ex.eventId === eventId).reduce((sum, ex) => sum + (ex.amount || 0), 0);
+            const receivedSum = state.payments.filter(p => p.eventId === eventId).reduce((sum, p) => sum + (p.amount || 0), 0);
+            return {
+                billing: event.billing || 0,
+                expenses: expensesSum,
+                received: receivedSum,
+                pending: (event.billing || 0) - receivedSum,
+                profit: (event.billing || 0) - expensesSum
+            };
+        }
 
-      expenses.unshift(newExpense)
-      hideModal()
-      renderDashboard()
-      alert("✅ Expense added successfully!")
-    }
+        function renderAll() {
+            renderDashboard();
+            renderEvents();
+            renderExpenses();
+        }
 
-    // Initialize
-    function init() {
-      loadDemoData()
-      renderDashboard()
+        function renderDashboard() {
+            const totalBilling = state.events.reduce((sum, e) => sum + (e.billing || 0), 0);
+            const totalExp = state.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+            const totalRec = state.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
 
-      // Show warning if running in sandbox
-      try {
-        localStorage.getItem('test')
-      } catch(e) {
-        document.getElementById('warning').classList.remove('hidden')
-      }
-    }
+            document.getElementById('stats-grid').innerHTML = `
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <p class="text-gray-400 text-sm">Total Events</p>
+                    <p class="text-3xl font-bold">${state.events.length}</p>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <p class="text-gray-400 text-sm">Total Billing</p>
+                    <p class="text-3xl font-bold text-blue-400">₹${totalBilling.toLocaleString()}</p>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <p class="text-gray-400 text-sm">Total Expenses</p>
+                    <p class="text-3xl font-bold text-red-400">₹${totalExp.toLocaleString()}</p>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <p class="text-gray-400 text-sm">Expected Profit</p>
+                    <p class="text-3xl font-bold text-green-400">₹${(totalBilling - totalExp).toLocaleString()}</p>
+                </div>
+            `;
+        }
 
-    window.onload = init
-  </script>
+        function renderEvents() {
+            const container = document.getElementById('events-list');
+            container.innerHTML = state.events.map(ev => {
+                const fin = getEventFinancials(ev.id);
+                return `
+                <div onclick="showEventDetail('${ev.id}')" class="bg-zinc-900 p-6 rounded-2xl cursor-pointer hover:ring-2 hover:ring-blue-500 transition">
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-gray-400">${ev.type}</p>
+                            <h3 class="font-bold text-lg">${ev.client}</h3>
+                            <p class="text-sm text-gray-400">${ev.date} | ${ev.venue}</p>
+                        </div>
+                        <button onclick="event.stopPropagation(); openEventModal('${ev.id}')" class="text-blue-400 text-sm">Edit</button>
+                    </div>
+                    <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
+                        <div>Billing<br><span class="font-bold">₹${fin.billing}</span></div>
+                        <div>Profit<br><span class="font-bold ${fin.profit >= 0 ? 'text-green-400' : 'text-red-400'}">₹${fin.profit}</span></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderExpenses() {
+            const tbody = document.getElementById('expenses-table-body');
+            tbody.innerHTML = state.expenses.map(ex => {
+                const event = state.events.find(e => e.id === ex.eventId);
+                return `
+                <tr onclick="openExpenseModal('${ex.id}')" class="border-b border-zinc-800 hover:bg-zinc-800 cursor-pointer">
+                    <td class="p-4">${ex.date}</td>
+                    <td class="p-4 font-medium">${event ? event.client : 'Unknown'}</td>
+                    <td class="p-4"><span class="px-3 py-1 bg-zinc-800 text-xs rounded-full">${ex.category}</span></td>
+                    <td class="p-4">${ex.head}</td>
+                    <td class="p-4 font-bold text-red-400">₹${ex.amount}</td>
+                    <td class="p-4 text-blue-400 text-sm">Edit</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function showEventDetail(id) {
+            const ev = state.events.find(e => e.id === id);
+            const fin = getEventFinancials(id);
+            switchTab('event-detail');
+            document.getElementById('detail-content').innerHTML = `
+                <div class="bg-zinc-900 p-8 rounded-3xl">
+                    <h2 class="text-3xl font-bold">${ev.client}</h2>
+                    <p class="text-gray-400">${ev.date} • ${ev.venue}</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-10">
+                        <div><p class="text-gray-400">Billing</p><p class="text-4xl font-bold">₹${fin.billing}</p></div>
+                        <div><p class="text-gray-400">Expenses</p><p class="text-4xl font-bold text-red-400">₹${fin.expenses}</p></div>
+                        <div><p class="text-gray-400">Received</p><p class="text-4xl font-bold text-emerald-400">₹${fin.received}</p></div>
+                        <div><p class="text-gray-400">Profit</p><p class="text-4xl font-bold ${fin.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">₹${fin.profit}</p></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderEvents();
+            renderExpenses();
+        }
+
+        // Initialize
+        function init() {
+            // Demo data
+            state.events = [
+                { id: "EV-001", client: "Manav Seva Trust", date: "2026-04-14", venue: "Manav Seva Hall", type: "Wedding", billing: 45000 }
+            ];
+            renderAll();
+
+            try {
+                localStorage.getItem('test');
+            } catch(e) {
+                document.getElementById('warning').classList.remove('hidden');
+            }
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
