@@ -4,205 +4,134 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Event Finance • Catering</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
+    :root { --primary: #22d3ee; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #09090b;
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+    .sidebar { width: 260px; background: #18181b; border-right: 1px solid #3f3f46; height: 100vh; position: fixed; padding: 24px; display: none; }
+    @media (min-width: 1024px) { .sidebar { display: block; } }
+    .nav-btn {
+      width: 100%; text-align: left; padding: 14px 20px; border-radius: 16px; margin-bottom: 6px;
+      font-weight: 500; transition: all 0.2s; display: flex; align-items: center; gap: 12px;
+    }
+    .nav-btn:hover, .nav-btn.active { background: #27272a; color: var(--primary); }
+    .card { background: #18181b; border-radius: 20px; padding: 24px; }
     .modal { animation: modalPop 0.3s ease; }
     @keyframes modalPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    input, select, textarea {
+      background: #27272a; border: 1px solid #3f3f46; border-radius: 16px;
+      padding: 16px 20px; width: 100%; color: #f1f5f9; font-size: 16px;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    .btn-primary { background: var(--primary); color: #0f172a; font-weight: 600; border: none; padding: 14px 28px; border-radius: 9999px; }
+    .floating-btn {
+      position: fixed; bottom: 24px; right: 24px; width: 64px; height: 64px;
+      background: var(--primary); color: #0f172a; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 28px;
+      box-shadow: 0 10px 30px rgba(34, 211, 238, 0.4); z-index: 100;
+    }
+    .action-sheet {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #18181b;
+      border-top-left-radius: 24px; border-top-right-radius: 24px;
+      padding: 24px; transform: translateY(100%); transition: transform 0.3s ease;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.5); z-index: 110;
+    }
+    .action-sheet.show { transform: translateY(0); }
   </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100">
+<body>
 
   <!-- SIDEBAR -->
-  <div class="w-64 bg-zinc-900 h-screen fixed border-r border-zinc-800 p-6 hidden lg:block">
-    <div class="flex items-center gap-3 mb-10">
-      <div class="w-10 h-10 bg-cyan-500 rounded-3xl flex items-center justify-center text-3xl">🍽️</div>
+  <div class="sidebar">
+    <div class="flex items-center gap-3 mb-12">
+      <div class="w-11 h-11 bg-cyan-400 rounded-2xl flex items-center justify-center text-3xl">🍽️</div>
       <h1 class="text-2xl font-bold">Event Finance</h1>
     </div>
-    <nav class="space-y-1">
-      <button onclick="showView('dashboard')" class="w-full text-left px-5 py-3.5 rounded-2xl hover:bg-zinc-800 flex items-center gap-3 active">Dashboard</button>
-      <button onclick="showView('events')" class="w-full text-left px-5 py-3.5 rounded-2xl hover:bg-zinc-800 flex items-center gap-3">Events</button>
-      <button onclick="showView('expenses')" class="w-full text-left px-5 py-3.5 rounded-2xl hover:bg-zinc-800 flex items-center gap-3">Expenses</button>
-      <button onclick="showView('vendors')" class="w-full text-left px-5 py-3.5 rounded-2xl hover:bg-zinc-800 flex items-center gap-3">Vendors</button>
-    </nav>
+    <button onclick="showView('dashboard')" class="nav-btn active" id="nav-dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</button>
+    <button onclick="showView('events')" class="nav-btn" id="nav-events"><i class="fa-solid fa-calendar"></i> Events</button>
+    <button onclick="showView('expenses')" class="nav-btn" id="nav-expenses"><i class="fa-solid fa-receipt"></i> Expenses</button>
+    <button onclick="showView('payments')" class="nav-btn" id="nav-payments"><i class="fa-solid fa-money-bill-wave"></i> Payments</button>
+    <button onclick="showView('vendors')" class="nav-btn" id="nav-vendors"><i class="fa-solid fa-handshake"></i> Vendors</button>
   </div>
 
-  <div class="lg:ml-64 min-h-screen">
+  <div class="lg:ml-64 min-h-screen pb-20">
 
     <!-- TOP BAR -->
-    <div class="bg-zinc-900 border-b border-zinc-800 px-6 py-5 flex items-center justify-between">
+    <div class="bg-zinc-900 border-b border-zinc-800 px-6 py-5 flex items-center justify-between sticky top-0 z-50">
       <h1 id="page-title" class="text-3xl font-semibold">Dashboard</h1>
-      <div class="flex gap-3">
-        <button onclick="showAddEventModal()" class="bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-3xl flex items-center gap-2 text-sm font-medium">
-          <i class="fa-solid fa-plus"></i> New Event
-        </button>
-        <button onclick="showAddExpenseModal()" class="bg-cyan-500 hover:bg-cyan-400 text-zinc-950 px-6 py-3 rounded-3xl flex items-center gap-2 font-semibold">
-          <i class="fa-solid fa-plus"></i> Add Expense
-        </button>
-      </div>
     </div>
 
     <!-- DASHBOARD VIEW -->
-    <div id="dashboard-view" class="p-8">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div class="bg-zinc-900 rounded-3xl p-6">
-          <p class="text-zinc-400 text-sm">Total Events</p>
-          <p id="total-events" class="text-5xl font-semibold mt-2">0</p>
-        </div>
-        <div class="bg-zinc-900 rounded-3xl p-6">
-          <p class="text-zinc-400 text-sm">Total Expenses</p>
-          <p id="total-expenses" class="text-5xl font-semibold mt-2 text-red-400">₹0</p>
-        </div>
-        <div class="bg-zinc-900 rounded-3xl p-6">
-          <p class="text-zinc-400 text-sm">Total Billing</p>
-          <p id="total-billing" class="text-5xl font-semibold mt-2 text-emerald-400">₹0</p>
-        </div>
-        <div class="bg-zinc-900 rounded-3xl p-6">
-          <p class="text-zinc-400 text-sm">Net Profit</p>
-          <p id="net-profit" class="text-5xl font-semibold mt-2">₹0</p>
-        </div>
+    <div id="dashboard-view" class="p-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="card"><p class="text-zinc-400 text-sm">Total Revenue</p><p id="dash-revenue" class="text-4xl font-bold mt-2">₹0</p></div>
+        <div class="card"><p class="text-zinc-400 text-sm">Total Expenses</p><p id="dash-expenses" class="text-4xl font-bold mt-2 text-red-400">₹0</p></div>
+        <div class="card"><p class="text-zinc-400 text-sm">Total Profit</p><p id="dash-profit" class="text-4xl font-bold mt-2">₹0</p></div>
+        <div class="card"><p class="text-zinc-400 text-sm">Pending Amount</p><p id="dash-pending" class="text-4xl font-bold mt-2 text-amber-400">₹0</p></div>
       </div>
 
-      <div class="grid lg:grid-cols-12 gap-6">
-        <!-- Upcoming Events -->
-        <div class="lg:col-span-7 bg-zinc-900 rounded-3xl p-6">
-          <h2 class="font-semibold text-lg mb-4">Upcoming Events</h2>
-          <div id="upcoming-events" class="space-y-4"></div>
-        </div>
-
-        <!-- Recent Expenses -->
-        <div class="lg:col-span-5 bg-zinc-900 rounded-3xl p-6">
-          <h2 class="font-semibold text-lg mb-4">Recent Expenses</h2>
-          <div id="recent-expenses" class="space-y-3"></div>
-        </div>
-      </div>
+      <h2 class="text-xl font-semibold mt-10 mb-4">Your Events</h2>
+      <div id="dash-events" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </div>
 
     <!-- EVENTS VIEW -->
-    <div id="events-view" class="p-8 hidden">
+    <div id="events-view" class="p-6 hidden">
       <h2 class="text-2xl font-semibold mb-6">All Events</h2>
-      <div id="events-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      <div id="events-list" class="space-y-4"></div>
     </div>
 
     <!-- EXPENSES VIEW -->
-    <div id="expenses-view" class="p-8 hidden">
+    <div id="expenses-view" class="p-6 hidden">
       <h2 class="text-2xl font-semibold mb-6">All Expenses</h2>
-      <div id="all-expenses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="expenses-list" class="space-y-4"></div>
+    </div>
+
+    <!-- PAYMENTS VIEW -->
+    <div id="payments-view" class="p-6 hidden">
+      <h2 class="text-2xl font-semibold mb-6">All Payments (Receivables)</h2>
+      <div id="payments-list" class="space-y-4"></div>
     </div>
 
     <!-- VENDORS VIEW -->
-    <div id="vendors-view" class="p-8 hidden">
-      <div class="flex justify-between mb-6">
-        <h2 class="text-2xl font-semibold">Vendors</h2>
-        <button onclick="showAddVendorModal()" class="bg-cyan-500 text-zinc-950 px-6 py-3 rounded-3xl font-medium">+ Add Vendor</button>
-      </div>
-      <div id="vendors-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <div id="vendors-view" class="p-6 hidden">
+      <h2 class="text-2xl font-semibold mb-6">Vendors</h2>
+      <div id="vendors-list" class="space-y-4"></div>
     </div>
   </div>
 
-  <!-- ADD EVENT MODAL -->
-  <div id="add-event-modal" onclick="if(event.target.id==='add-event-modal')hideModal('add-event-modal')" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-    <div onclick="event.stopImmediatePropagation()" class="modal bg-zinc-900 w-full max-w-lg mx-4 rounded-3xl p-8">
-      <h3 class="text-2xl font-semibold mb-6">New Event</h3>
-      <div class="space-y-5">
-        <input type="date" id="event-date" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-        <input type="text" id="client-name" placeholder="Client Name" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-        <input type="tel" id="client-mobile" placeholder="Mobile Number" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-        <input type="text" id="venue" placeholder="Venue" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-        <select id="event-type" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-          <option value="Wedding">Wedding</option>
-          <option value="Corporate">Corporate</option>
-          <option value="Birthday">Birthday</option>
-          <option value="Engagement">Engagement</option>
-          <option value="Haldi">Haldi</option>
-          <option value="Reception">Reception</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="number" id="billing-amount" placeholder="Total Billing Amount" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-      </div>
-      <div class="mt-8 flex gap-4">
-        <button onclick="hideModal('add-event-modal')" class="flex-1 py-5 border border-zinc-700 rounded-3xl">Cancel</button>
-        <button onclick="saveEvent()" class="flex-1 py-5 bg-cyan-500 text-zinc-950 rounded-3xl font-semibold">Create Event</button>
-      </div>
-    </div>
+  <!-- FLOATING + BUTTON -->
+  <div onclick="toggleActionSheet()" class="floating-btn">
+    <i class="fa-solid fa-plus"></i>
   </div>
 
-  <!-- ADD VENDOR MODAL -->
-  <div id="add-vendor-modal" onclick="if(event.target.id==='add-vendor-modal')hideModal('add-vendor-modal')" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-    <div onclick="event.stopImmediatePropagation()" class="modal bg-zinc-900 w-full max-w-md mx-4 rounded-3xl p-8">
-      <h3 class="text-2xl font-semibold mb-6">Add Vendor</h3>
-      <input type="text" id="vendor-name" placeholder="Vendor Name" class="w-full bg-zinc-800 rounded-3xl px-6 py-5 mb-4">
-      <select id="vendor-category" class="w-full bg-zinc-800 rounded-3xl px-6 py-5 mb-4">
-        <option value="Raw Material">Raw Material</option>
-        <option value="Live Counter">Live Counter</option>
-        <option value="Labour">Labour</option>
-        <option value="Operations">Operations</option>
-        <option value="Admin">Admin</option>
-      </select>
-      <input type="tel" id="vendor-phone" placeholder="Phone" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-      <div class="mt-8 flex gap-4">
-        <button onclick="hideModal('add-vendor-modal')" class="flex-1 py-5 border border-zinc-700 rounded-3xl">Cancel</button>
-        <button onclick="saveVendor()" class="flex-1 py-5 bg-cyan-500 text-zinc-950 rounded-3xl font-semibold">Save Vendor</button>
-      </div>
-    </div>
+  <!-- ACTION SHEET -->
+  <div id="action-sheet" class="action-sheet">
+    <div class="text-center text-zinc-400 mb-6">Quick Add</div>
+    <button onclick="quickAdd('event')" class="w-full py-5 text-left px-6 flex items-center gap-4 border-b border-zinc-700 hover:bg-zinc-800">New Event</button>
+    <button onclick="quickAdd('expense')" class="w-full py-5 text-left px-6 flex items-center gap-4 border-b border-zinc-700 hover:bg-zinc-800">New Expense</button>
+    <button onclick="quickAdd('payment')" class="w-full py-5 text-left px-6 flex items-center gap-4 border-b border-zinc-700 hover:bg-zinc-800">New Payment</button>
+    <button onclick="quickAdd('vendor')" class="w-full py-5 text-left px-6 flex items-center gap-4 hover:bg-zinc-800">New Vendor</button>
+    <button onclick="toggleActionSheet()" class="w-full py-6 text-cyan-400 font-medium">Cancel</button>
   </div>
 
-  <!-- ADD EXPENSE MODAL -->
-  <div id="add-expense-modal" onclick="if(event.target.id==='add-expense-modal')hideModal('add-expense-modal')" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-    <div onclick="event.stopImmediatePropagation()" class="modal bg-zinc-900 w-full max-w-2xl mx-4 rounded-3xl p-8 max-h-[90vh] overflow-auto">
-      <h3 class="text-2xl font-semibold mb-6">Add Expense</h3>
-      
-      <select id="expense-event" onchange="updateExpenseLiveSummary()" class="w-full bg-zinc-800 rounded-3xl px-6 py-5 mb-5">
-        <option value="">Select Event</option>
-      </select>
-
-      <div class="grid grid-cols-2 gap-5 mb-5">
-        <select id="expense-category" onchange="updateExpenseHeads()" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-          <option value="">Category</option>
-        </select>
-        <select id="expense-head" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-          <option value="">Expense Head</option>
-        </select>
-      </div>
-
-      <input type="number" id="expense-amount" placeholder="Amount ₹" class="w-full bg-zinc-800 rounded-3xl px-8 py-6 text-4xl text-center mb-5">
-
-      <div class="grid grid-cols-2 gap-5">
-        <select id="expense-mode" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-          <option value="Cash">Cash</option>
-          <option value="UPI">UPI</option>
-          <option value="Bank">Bank</option>
-          <option value="Pending">Pending</option>
-        </select>
-        <select id="expense-vendor" class="w-full bg-zinc-800 rounded-3xl px-6 py-5">
-          <option value="">Vendor (optional)</option>
-        </select>
-      </div>
-
-      <textarea id="expense-notes" placeholder="Notes" class="w-full bg-zinc-800 rounded-3xl px-6 py-5 mt-5 h-24"></textarea>
-
-      <div id="expense-live-summary" class="mt-8 bg-zinc-800 rounded-3xl p-6 text-sm"></div>
-
-      <div class="mt-8 flex gap-4">
-        <button onclick="hideModal('add-expense-modal')" class="flex-1 py-5 border border-zinc-700 rounded-3xl">Cancel</button>
-        <button onclick="saveExpense()" class="flex-1 py-5 bg-cyan-500 text-zinc-950 rounded-3xl font-semibold">Save Expense</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- EVENT DETAIL MODAL -->
-  <div id="event-detail-modal" onclick="if(event.target.id==='event-detail-modal')hideModal('event-detail-modal')" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-    <div onclick="event.stopImmediatePropagation()" class="modal bg-zinc-900 w-full max-w-3xl mx-4 rounded-3xl p-8 max-h-[92vh] overflow-auto">
-      <div id="detail-content"></div>
-    </div>
+  <!-- MODALS (Add/Edit) -->
+  <div id="modal" onclick="if(event.target.id==='modal')hideModal()" class="hidden fixed inset-0 bg-black/80 flex items-end lg:items-center justify-center z-[9999]">
+    <div onclick="event.stopImmediatePropagation()" id="modal-content" class="modal bg-zinc-900 w-full max-w-2xl rounded-t-3xl lg:rounded-3xl max-h-[92vh] overflow-auto"></div>
   </div>
 
   <script>
+    // Data
     let events = JSON.parse(localStorage.getItem('events')) || []
-    let vendors = JSON.parse(localStorage.getItem('vendors')) || []
     let expenses = JSON.parse(localStorage.getItem('expenses')) || []
+    let payments = JSON.parse(localStorage.getItem('payments')) || []
+    let vendors = JSON.parse(localStorage.getItem('vendors')) || []
 
     const expenseHeadsDB = {
       "Raw Material": ["Grocery – किराणा", "Vegetable – भाजी", "Fruits", "Oil / Ghee", "Paneer / Dairy", "Spices / Masala"],
@@ -215,142 +144,279 @@
 
     function saveAll() {
       localStorage.setItem('events', JSON.stringify(events))
-      localStorage.setItem('vendors', JSON.stringify(vendors))
       localStorage.setItem('expenses', JSON.stringify(expenses))
+      localStorage.setItem('payments', JSON.stringify(payments))
+      localStorage.setItem('vendors', JSON.stringify(vendors))
     }
 
     function showView(view) {
-      document.querySelectorAll('#dashboard-view, #events-view, #expenses-view, #vendors-view').forEach(v => v.classList.add('hidden'))
+      document.querySelectorAll('#dashboard-view, #events-view, #expenses-view, #payments-view, #vendors-view').forEach(v => v.classList.add('hidden'))
       document.getElementById(view + '-view').classList.remove('hidden')
       document.getElementById('page-title').textContent = view === 'dashboard' ? 'Dashboard' : view.charAt(0).toUpperCase() + view.slice(1)
+      renderCurrentView(view)
+    }
+
+    function renderCurrentView(view) {
       if (view === 'dashboard') renderDashboard()
-      if (view === 'events') renderEvents()
-      if (view === 'expenses') renderAllExpenses()
-      if (view === 'vendors') renderVendors()
+      if (view === 'events') renderEventsList()
+      if (view === 'expenses') renderExpensesList()
+      if (view === 'payments') renderPaymentsList()
+      if (view === 'vendors') renderVendorsList()
     }
 
     function calculateEventSummary(eventId) {
       const eventExpenses = expenses.filter(e => e.eventId === eventId)
-      const totalExpense = eventExpenses.reduce((sum, e) => sum + Number(e.amount), 0)
+      const eventPayments = payments.filter(p => p.eventId === eventId)
+      const totalExpense = eventExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0)
+      const totalReceived = eventPayments.reduce((sum, p) => sum + Number(p.amount || 0), 0)
       const ev = events.find(e => e.id === eventId)
-      const billing = ev ? Number(ev.billing) || 0 : 0
-      return { totalExpense, profit: billing - totalExpense }
+      const billing = ev ? Number(ev.billing || 0) : 0
+      return {
+        billing,
+        totalExpense,
+        totalReceived,
+        pending: billing - totalReceived,
+        profit: billing - totalExpense
+      }
     }
 
     function renderDashboard() {
-      document.getElementById('total-events').textContent = events.length
+      let revenue = 0, expensesTotal = 0
+      events.forEach(ev => {
+        const s = calculateEventSummary(ev.id)
+        revenue += s.billing
+        expensesTotal += s.totalExpense
+      })
+      const profit = revenue - expensesTotal
+      const pending = events.reduce((sum, ev) => sum + calculateEventSummary(ev.id).pending, 0)
 
-      const totalExp = expenses.reduce((sum, e) => sum + Number(e.amount), 0)
-      document.getElementById('total-expenses').textContent = `₹${totalExp.toLocaleString('en-IN')}`
+      document.getElementById('dash-revenue').textContent = `₹${revenue.toLocaleString('en-IN')}`
+      document.getElementById('dash-expenses').textContent = `₹${expensesTotal.toLocaleString('en-IN')}`
+      document.getElementById('dash-profit').textContent = `₹${profit.toLocaleString('en-IN')}`
+      document.getElementById('dash-pending').textContent = `₹${pending.toLocaleString('en-IN')}`
 
-      const totalBill = events.reduce((sum, e) => sum + Number(e.billing || 0), 0)
-      document.getElementById('total-billing').textContent = `₹${totalBill.toLocaleString('en-IN')}`
-
-      document.getElementById('net-profit').textContent = `₹${(totalBill - totalExp).toLocaleString('en-IN')}`
-
-      // Upcoming (simple)
-      const upcomingHTML = events.slice(0, 3).map(ev => {
-        const sum = calculateEventSummary(ev.id)
-        return `<div onclick="showEventDetail('${ev.id}')" class="bg-zinc-800 rounded-3xl p-5 flex justify-between cursor-pointer">
-          <div><strong>${ev.client}</strong><br><small class="text-zinc-400">${ev.date} • ${ev.venue}</small></div>
-          <div class="text-right"><span class="text-cyan-400">₹${Number(ev.billing||0).toLocaleString('en-IN')}</span><br><small>Profit: ₹${sum.profit}</small></div>
-        </div>`
-      }).join('')
-      document.getElementById('upcoming-events').innerHTML = upcomingHTML || '<p class="text-zinc-400">No events yet</p>'
-
-      // Recent expenses
-      const recentHTML = expenses.slice(0, 5).map(exp => {
-        const ev = events.find(e => e.id === exp.eventId) || {client: 'Unknown'}
-        return `<div class="flex justify-between bg-zinc-800 rounded-2xl p-4">
-          <div>${ev.client} • ${exp.head}</div>
-          <div class="text-red-400">₹${Number(exp.amount).toLocaleString('en-IN')}</div>
-        </div>`
-      }).join('')
-      document.getElementById('recent-expenses').innerHTML = recentHTML || '<p class="text-zinc-400">No expenses yet</p>'
+      let html = ''
+      events.forEach(ev => {
+        const s = calculateEventSummary(ev.id)
+        html += `
+          <div onclick="showEventDetail('${ev.id}')" class="card cursor-pointer">
+            <div class="flex justify-between">
+              <div>
+                <div class="font-semibold">${ev.client}</div>
+                <div class="text-sm text-zinc-400">${ev.date} • ${ev.venue}</div>
+              </div>
+              <div class="text-right">
+                <div>Billing ₹${s.billing.toLocaleString('en-IN')}</div>
+                <div class="text-red-400">Expense ₹${s.totalExpense.toLocaleString('en-IN')}</div>
+                <div class="text-emerald-400">Profit ₹${s.profit}</div>
+              </div>
+            </div>
+          </div>`
+      })
+      document.getElementById('dash-events').innerHTML = html || '<p class="text-zinc-400 text-center py-8">No events yet</p>'
     }
 
-    function renderEvents() {
-      const container = document.getElementById('events-list')
-      container.innerHTML = events.map(ev => {
-        const sum = calculateEventSummary(ev.id)
-        return `<div onclick="showEventDetail('${ev.id}')" class="bg-zinc-900 rounded-3xl p-6 cursor-pointer">
-          <div class="font-semibold">${ev.client}</div>
-          <div class="text-sm text-zinc-400">${ev.date} • ${ev.venue}</div>
-          <div class="mt-4 flex justify-between">
-            <span>Billing: ₹${Number(ev.billing||0).toLocaleString('en-IN')}</span>
-            <span class="text-cyan-400">Expenses: ₹${sum.totalExpense.toLocaleString('en-IN')}</span>
-          </div>
-        </div>`
-      }).join('') || '<p class="text-zinc-400">No events. Create one above.</p>'
+    function renderEventsList() {
+      let html = ''
+      events.forEach(ev => {
+        const s = calculateEventSummary(ev.id)
+        html += `
+          <div onclick="showEventDetail('${ev.id}')" class="card cursor-pointer">
+            <div class="font-semibold">${ev.client}</div>
+            <div class="text-sm text-zinc-400">${ev.date} • ${ev.venue}</div>
+            <div class="mt-6 flex justify-between text-sm">
+              <span>Billing: ₹${s.billing.toLocaleString('en-IN')}</span>
+              <span class="text-red-400">Expense: ₹${s.totalExpense.toLocaleString('en-IN')}</span>
+            </div>
+          </div>`
+      })
+      document.getElementById('events-list').innerHTML = html || '<p class="text-zinc-400">No events yet</p>'
     }
 
-    function renderAllExpenses() {
-      const container = document.getElementById('all-expenses-list')
-      container.innerHTML = expenses.map(exp => {
-        const ev = events.find(e => e.id === exp.eventId) || {client:'Unknown'}
-        return `<div class="bg-zinc-900 rounded-3xl p-6">
-          <div class="flex justify-between">
-            <div><strong>${ev.client}</strong><br><small>${exp.date}</small></div>
-            <div class="text-right text-xl font-semibold text-red-400">₹${Number(exp.amount).toLocaleString('en-IN')}</div>
-          </div>
-          <div class="mt-4">${exp.head} <span class="text-xs bg-zinc-800 px-3 py-1 rounded-full">${exp.category}</span></div>
-        </div>`
-      }).join('') || '<p class="text-zinc-400">No expenses yet</p>'
+    function renderExpensesList() {
+      let html = ''
+      expenses.forEach(exp => {
+        const ev = events.find(e => e.id === exp.eventId) || { client: 'Unknown' }
+        html += `
+          <div onclick="editExpense('${exp.id}')" class="card cursor-pointer">
+            <div class="flex justify-between">
+              <div>
+                <div class="font-medium">${ev.client}</div>
+                <div class="text-sm text-zinc-400">${exp.date}</div>
+              </div>
+              <div class="text-right font-semibold text-red-400 text-2xl">₹${Number(exp.amount).toLocaleString('en-IN')}</div>
+            </div>
+            <div class="mt-4">${exp.head} <span class="text-xs bg-zinc-800 px-4 py-1 rounded-full">${exp.category}</span></div>
+          </div>`
+      })
+      document.getElementById('expenses-list').innerHTML = html || '<p class="text-zinc-400">No expenses yet</p>'
     }
 
-    function renderVendors() {
-      document.getElementById('vendors-list').innerHTML = vendors.map(v => `
-        <div class="bg-zinc-900 rounded-3xl p-6">
-          <div class="font-semibold">${v.name}</div>
-          <div class="text-sm text-zinc-400">${v.category} • ${v.phone}</div>
-        </div>
-      `).join('') || '<p class="text-zinc-400">No vendors added yet</p>'
+    function renderPaymentsList() {
+      let html = ''
+      payments.forEach(p => {
+        const ev = events.find(e => e.id === p.eventId) || { client: 'Unknown' }
+        html += `
+          <div onclick="editPayment('${p.id}')" class="card cursor-pointer">
+            <div class="flex justify-between">
+              <div>${ev.client}</div>
+              <div class="text-emerald-400 font-semibold">₹${Number(p.amount).toLocaleString('en-IN')}</div>
+            </div>
+            <div class="text-sm text-zinc-400">${p.date} • ${p.mode}</div>
+          </div>`
+      })
+      document.getElementById('payments-list').innerHTML = html || '<p class="text-zinc-400">No payments yet</p>'
+    }
+
+    function renderVendorsList() {
+      let html = ''
+      vendors.forEach(v => {
+        html += `
+          <div class="card">
+            <div class="font-semibold">${v.name}</div>
+            <div class="text-sm text-zinc-400">${v.category} • ${v.phone}</div>
+          </div>`
+      })
+      document.getElementById('vendors-list').innerHTML = html || '<p class="text-zinc-400">No vendors yet</p>'
     }
 
     function showEventDetail(id) {
       const ev = events.find(e => e.id === id)
-      if (!ev) return
-      const eventExpenses = expenses.filter(ex => ex.eventId === id)
-      const sum = calculateEventSummary(id)
-
+      const s = calculateEventSummary(id)
       let html = `
         <h2 class="text-3xl font-semibold">${ev.client}</h2>
-        <p class="text-zinc-400">${ev.date} • ${ev.venue} • ${ev.type}</p>
-        <div class="grid grid-cols-3 gap-6 my-8">
-          <div class="bg-zinc-800 rounded-3xl p-6 text-center"><div class="text-sm text-zinc-400">Billing</div><div class="text-3xl font-semibold">₹${Number(ev.billing||0).toLocaleString('en-IN')}</div></div>
-          <div class="bg-zinc-800 rounded-3xl p-6 text-center"><div class="text-sm text-zinc-400">Expenses</div><div class="text-3xl font-semibold text-red-400">₹${sum.totalExpense.toLocaleString('en-IN')}</div></div>
-          <div class="bg-zinc-800 rounded-3xl p-6 text-center"><div class="text-sm text-zinc-400">Profit</div><div class="text-3xl font-semibold ${sum.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">₹${sum.profit.toLocaleString('en-IN')}</div></div>
+        <p class="text-zinc-400">${ev.date} • ${ev.venue}</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 my-8">
+          <div class="text-center"><div class="text-sm text-zinc-400">Billing</div><div class="text-4xl font-bold">₹${s.billing.toLocaleString('en-IN')}</div></div>
+          <div class="text-center"><div class="text-sm text-zinc-400">Expense</div><div class="text-4xl font-bold text-red-400">₹${s.totalExpense.toLocaleString('en-IN')}</div></div>
+          <div class="text-center"><div class="text-sm text-zinc-400">Received</div><div class="text-4xl font-bold text-emerald-400">₹${s.totalReceived.toLocaleString('en-IN')}</div></div>
+          <div class="text-center"><div class="text-sm text-zinc-400">Profit</div><div class="text-4xl font-bold ${s.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">₹${s.profit.toLocaleString('en-IN')}</div></div>
         </div>
-        <h3 class="font-semibold mb-4">Expenses for this event</h3>
+        <button onclick="editEvent('${id}')" class="w-full py-4 border border-zinc-700 rounded-3xl mb-4">Edit Event</button>
+        <h3 class="font-semibold mb-4">Expenses</h3>
         <div class="space-y-4">`
-
-      eventExpenses.forEach(ex => {
-        html += `<div class="bg-zinc-800 rounded-2xl p-5 flex justify-between"><div>${ex.head}</div><div class="text-red-400">₹${Number(ex.amount).toLocaleString('en-IN')}</div></div>`
+      expenses.filter(e => e.eventId === id).forEach(exp => {
+        html += `<div class="bg-zinc-800 rounded-2xl p-5 flex justify-between"><div>${exp.head}</div><div class="text-red-400">₹${exp.amount}</div></div>`
       })
       html += `</div>`
-      document.getElementById('detail-content').innerHTML = html
-      document.getElementById('event-detail-modal').classList.remove('hidden')
-      document.getElementById('event-detail-modal').classList.add('flex')
+      document.getElementById('modal-content').innerHTML = html
+      document.getElementById('modal').classList.remove('hidden')
+      document.getElementById('modal').classList.add('flex')
     }
 
-    // Modal helpers
-    function hideModal(id) {
-      document.getElementById(id).classList.add('hidden')
-      document.getElementById(id).classList.remove('flex')
+    function toggleActionSheet() {
+      const sheet = document.getElementById('action-sheet')
+      sheet.classList.toggle('show')
     }
 
-    function showAddEventModal() { document.getElementById('add-event-modal').classList.remove('hidden'); document.getElementById('add-event-modal').classList.add('flex') }
-    function showAddVendorModal() { document.getElementById('add-vendor-modal').classList.remove('hidden'); document.getElementById('add-vendor-modal').classList.add('flex') }
-    function showAddExpenseModal() {
-      document.getElementById('add-expense-modal').classList.remove('hidden')
-      document.getElementById('add-expense-modal').classList.add('flex')
-      refreshExpenseForm()
+    function quickAdd(type) {
+      toggleActionSheet()
+      if (type === 'event') showAddEventModal()
+      if (type === 'expense') showAddExpenseModal()
+      if (type === 'payment') showAddPaymentModal()
+      if (type === 'vendor') showAddVendorModal()
     }
 
-    function refreshExpenseForm() {
-      // Populate events
-      const eventSelect = document.getElementById('expense-event')
-      eventSelect.innerHTML = '<option value="">Select Event</option>'
+    // Form handlers (create/edit)
+    let currentEditId = null
+
+    function showAddEventModal(editId = null) {
+      currentEditId = editId
+      let html = `
+        <h3 class="text-2xl font-semibold mb-6">${editId ? 'Edit Event' : 'New Event'}</h3>
+        <input type="date" id="form-event-date" class="w-full mb-4">
+        <input type="text" id="form-client" placeholder="Client Name" class="w-full mb-4">
+        <input type="tel" id="form-mobile" placeholder="Mobile" class="w-full mb-4">
+        <input type="text" id="form-venue" placeholder="Venue" class="w-full mb-4">
+        <select id="form-type" class="w-full mb-4">
+          <option value="Wedding">Wedding</option>
+          <option value="Corporate">Corporate</option>
+          <option value="Birthday">Birthday</option>
+          <option value="Engagement">Engagement</option>
+          <option value="Haldi">Haldi</option>
+          <option value="Reception">Reception</option>
+          <option value="Other">Other</option>
+        </select>
+        <input type="number" id="form-billing" placeholder="Total Billing ₹" class="w-full mb-8">
+        <div class="flex gap-4">
+          <button onclick="hideModal()" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+          <button onclick="saveEvent()" class="flex-1 py-4 btn-primary">Save</button>
+        </div>`
+      document.getElementById('modal-content').innerHTML = html
+      document.getElementById('modal').classList.remove('hidden')
+      document.getElementById('modal').classList.add('flex')
+
+      if (editId) {
+        const ev = events.find(e => e.id === editId)
+        document.getElementById('form-event-date').value = ev.date
+        document.getElementById('form-client').value = ev.client
+        document.getElementById('form-mobile').value = ev.mobile || ''
+        document.getElementById('form-venue').value = ev.venue
+        document.getElementById('form-type').value = ev.type
+        document.getElementById('form-billing').value = ev.billing
+      }
+    }
+
+    function saveEvent() {
+      const data = {
+        date: document.getElementById('form-event-date').value,
+        client: document.getElementById('form-client').value,
+        mobile: document.getElementById('form-mobile').value,
+        venue: document.getElementById('form-venue').value,
+        type: document.getElementById('form-type').value,
+        billing: parseFloat(document.getElementById('form-billing').value) || 0
+      }
+      if (currentEditId) {
+        const ev = events.find(e => e.id === currentEditId)
+        Object.assign(ev, data)
+      } else {
+        data.id = "EV-" + Date.now().toString().slice(-8)
+        events.unshift(data)
+      }
+      saveAll()
+      hideModal()
+      renderCurrentView('dashboard')
+      renderCurrentView('events')
+    }
+
+    function editEvent(id) {
+      hideModal()
+      showAddEventModal(id)
+    }
+
+    // Expense form (same pattern for add/edit)
+    function showAddExpenseModal(editId = null) {
+      currentEditId = editId
+      let html = `
+        <h3 class="text-2xl font-semibold mb-6">${editId ? 'Edit Expense' : 'New Expense'}</h3>
+        <select id="form-exp-event" class="w-full mb-4"></select>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <select id="form-exp-category" onchange="updateHeads()" class="w-full"></select>
+          <select id="form-exp-head" class="w-full"></select>
+        </div>
+        <input type="number" id="form-exp-amount" placeholder="Amount ₹" class="w-full text-4xl text-center mb-4">
+        <div class="flex gap-3 mb-6">
+          <button onclick="quickAmount(500)" class="flex-1 bg-zinc-800 py-3 rounded-3xl">+500</button>
+          <button onclick="quickAmount(1000)" class="flex-1 bg-zinc-800 py-3 rounded-3xl">+1000</button>
+          <button onclick="quickAmount(5000)" class="flex-1 bg-zinc-800 py-3 rounded-3xl">+5000</button>
+        </div>
+        <select id="form-exp-mode" class="w-full mb-4">
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Bank">Bank</option>
+        </select>
+        <select id="form-exp-vendor" class="w-full mb-4"></select>
+        <textarea id="form-exp-notes" placeholder="Notes" class="w-full h-24"></textarea>
+        <div class="mt-8 flex gap-4">
+          <button onclick="hideModal()" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+          <button onclick="saveExpense()" class="flex-1 py-4 btn-primary">Save</button>
+        </div>`
+      document.getElementById('modal-content').innerHTML = html
+      document.getElementById('modal').classList.remove('hidden')
+      document.getElementById('modal').classList.add('flex')
+
+      // Populate dropdowns
+      const eventSelect = document.getElementById('form-exp-event')
       events.forEach(ev => {
         const opt = document.createElement('option')
         opt.value = ev.id
@@ -358,9 +424,7 @@
         eventSelect.appendChild(opt)
       })
 
-      // Populate categories
-      const catSelect = document.getElementById('expense-category')
-      catSelect.innerHTML = '<option value="">Category</option>'
+      const catSelect = document.getElementById('form-exp-category')
       Object.keys(expenseHeadsDB).forEach(cat => {
         const opt = document.createElement('option')
         opt.value = cat
@@ -368,21 +432,24 @@
         catSelect.appendChild(opt)
       })
 
-      // Populate vendors
-      const vendorSelect = document.getElementById('expense-vendor')
-      vendorSelect.innerHTML = '<option value="">Vendor (optional)</option>'
-      vendors.forEach(v => {
-        const opt = document.createElement('option')
-        opt.value = v.name
-        opt.textContent = v.name
-        vendorSelect.appendChild(opt)
-      })
+      // If editing
+      if (editId) {
+        const exp = expenses.find(e => e.id === editId)
+        document.getElementById('form-exp-event').value = exp.eventId
+        document.getElementById('form-exp-category').value = exp.category
+        updateHeads()
+        document.getElementById('form-exp-head').value = exp.head
+        document.getElementById('form-exp-amount').value = exp.amount
+        document.getElementById('form-exp-mode').value = exp.mode
+        document.getElementById('form-exp-vendor').value = exp.vendor || ''
+        document.getElementById('form-exp-notes').value = exp.notes || ''
+      }
     }
 
-    function updateExpenseHeads() {
-      const cat = document.getElementById('expense-category').value
-      const headSelect = document.getElementById('expense-head')
-      headSelect.innerHTML = '<option value="">Expense Head</option>'
+    function updateHeads() {
+      const cat = document.getElementById('form-exp-category').value
+      const headSelect = document.getElementById('form-exp-head')
+      headSelect.innerHTML = '<option value="">Select Head</option>'
       if (expenseHeadsDB[cat]) {
         expenseHeadsDB[cat].forEach(h => {
           const opt = document.createElement('option')
@@ -391,77 +458,157 @@
           headSelect.appendChild(opt)
         })
       }
-      updateExpenseLiveSummary()
     }
 
-    function updateExpenseLiveSummary() {
-      const eventId = document.getElementById('expense-event').value
-      const amount = parseFloat(document.getElementById('expense-amount').value) || 0
-      if (!eventId || amount === 0) return
-      const eventExpenses = expenses.filter(e => e.eventId === eventId)
-      const total = eventExpenses.reduce((s, e) => s + Number(e.amount), 0) + amount
-      document.getElementById('expense-live-summary').innerHTML = `Total expenses for this event will be <strong>₹${total.toLocaleString('en-IN')}</strong>`
-    }
-
-    function saveEvent() {
-      const newEvent = {
-        id: "EV-" + Date.now().toString().slice(-8),
-        date: document.getElementById('event-date').value,
-        client: document.getElementById('client-name').value,
-        mobile: document.getElementById('client-mobile').value,
-        venue: document.getElementById('venue').value,
-        type: document.getElementById('event-type').value,
-        billing: parseFloat(document.getElementById('billing-amount').value) || 0
-      }
-      events.unshift(newEvent)
-      saveAll()
-      hideModal('add-event-modal')
-      renderDashboard()
-      renderEvents()
-    }
-
-    function saveVendor() {
-      const newVendor = {
-        id: Date.now(),
-        name: document.getElementById('vendor-name').value,
-        category: document.getElementById('vendor-category').value,
-        phone: document.getElementById('vendor-phone').value
-      }
-      vendors.unshift(newVendor)
-      saveAll()
-      hideModal('add-vendor-modal')
-      renderVendors()
+    function quickAmount(val) {
+      const input = document.getElementById('form-exp-amount')
+      input.value = (parseFloat(input.value) || 0) + val
     }
 
     function saveExpense() {
-      const eventId = document.getElementById('expense-event').value
-      if (!eventId) return alert("Please select an event")
-
-      const newExpense = {
-        id: "EXP-" + Date.now().toString().slice(-8),
-        eventId: eventId,
-        date: new Date().toISOString().slice(0,10),
-        category: document.getElementById('expense-category').value,
-        head: document.getElementById('expense-head').value,
-        amount: parseFloat(document.getElementById('expense-amount').value) || 0,
-        mode: document.getElementById('expense-mode').value,
-        vendor: document.getElementById('expense-vendor').value,
-        notes: document.getElementById('expense-notes').value
+      const data = {
+        eventId: document.getElementById('form-exp-event').value,
+        category: document.getElementById('form-exp-category').value,
+        head: document.getElementById('form-exp-head').value,
+        amount: parseFloat(document.getElementById('form-exp-amount').value) || 0,
+        mode: document.getElementById('form-exp-mode').value,
+        vendor: document.getElementById('form-exp-vendor').value,
+        notes: document.getElementById('form-exp-notes').value,
+        date: new Date().toISOString().slice(0,10)
       }
-
-      expenses.unshift(newExpense)
+      if (currentEditId) {
+        const exp = expenses.find(e => e.id === currentEditId)
+        Object.assign(exp, data)
+      } else {
+        data.id = "EXP-" + Date.now().toString().slice(-8)
+        expenses.unshift(data)
+      }
       saveAll()
-      hideModal('add-expense-modal')
-      renderDashboard()
-      renderAllExpenses()
+      hideModal()
+      renderCurrentView('expenses')
+      renderCurrentView('dashboard')
     }
 
-    // Initial load
-    function init() {
-      if (events.length === 0) {
-        events = [{ id: "EV-260414-001", date: "2026-04-14", client: "Manav Seva Trust", venue: "Manav Seva Hall", type: "Wedding", billing: 45000 }]
+    function editExpense(id) {
+      hideModal()
+      showAddExpenseModal(id)
+    }
+
+    // Similar functions for Payment and Vendor (shortened for brevity)
+    function showAddPaymentModal(editId = null) {
+      currentEditId = editId
+      let html = `
+        <h3 class="text-2xl font-semibold mb-6">${editId ? 'Edit Payment' : 'New Payment'}</h3>
+        <select id="form-pay-event" class="w-full mb-4"></select>
+        <input type="number" id="form-pay-amount" placeholder="Amount Received ₹" class="w-full text-4xl text-center mb-4">
+        <input type="date" id="form-pay-date" class="w-full mb-4">
+        <select id="form-pay-mode" class="w-full mb-4">
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Bank">Bank</option>
+        </select>
+        <textarea id="form-pay-notes" placeholder="Notes" class="w-full h-24"></textarea>
+        <div class="mt-8 flex gap-4">
+          <button onclick="hideModal()" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+          <button onclick="savePayment()" class="flex-1 py-4 btn-primary">Save</button>
+        </div>`
+      document.getElementById('modal-content').innerHTML = html
+      document.getElementById('modal').classList.remove('hidden')
+      document.getElementById('modal').classList.add('flex')
+
+      const eventSelect = document.getElementById('form-pay-event')
+      events.forEach(ev => {
+        const opt = document.createElement('option')
+        opt.value = ev.id
+        opt.textContent = `${ev.id} - ${ev.client}`
+        eventSelect.appendChild(opt)
+      })
+
+      if (editId) {
+        const p = payments.find(p => p.id === editId)
+        document.getElementById('form-pay-event').value = p.eventId
+        document.getElementById('form-pay-amount').value = p.amount
+        document.getElementById('form-pay-date').value = p.date
+        document.getElementById('form-pay-mode').value = p.mode
+        document.getElementById('form-pay-notes').value = p.notes || ''
+      }
+    }
+
+    function savePayment() {
+      const data = {
+        eventId: document.getElementById('form-pay-event').value,
+        amount: parseFloat(document.getElementById('form-pay-amount').value) || 0,
+        date: document.getElementById('form-pay-date').value,
+        mode: document.getElementById('form-pay-mode').value,
+        notes: document.getElementById('form-pay-notes').value
+      }
+      if (currentEditId) {
+        const p = payments.find(p => p.id === currentEditId)
+        Object.assign(p, data)
+      } else {
+        data.id = "PAY-" + Date.now().toString().slice(-8)
+        payments.unshift(data)
       }
       saveAll()
+      hideModal()
+      renderCurrentView('payments')
+      renderCurrentView('dashboard')
+    }
+
+    function editPayment(id) {
+      hideModal()
+      showAddPaymentModal(id)
+    }
+
+    function showAddVendorModal() {
+      currentEditId = null
+      let html = `
+        <h3 class="text-2xl font-semibold mb-6">New Vendor</h3>
+        <input type="text" id="form-vendor-name" placeholder="Vendor Name" class="w-full mb-4">
+        <select id="form-vendor-category" class="w-full mb-4">
+          <option value="Raw Material">Raw Material</option>
+          <option value="Live Counter">Live Counter</option>
+          <option value="Labour">Labour</option>
+          <option value="Operations">Operations</option>
+          <option value="Admin">Admin</option>
+        </select>
+        <input type="tel" id="form-vendor-phone" placeholder="Phone" class="w-full mb-4">
+        <textarea id="form-vendor-notes" placeholder="Notes" class="w-full h-24"></textarea>
+        <div class="mt-8 flex gap-4">
+          <button onclick="hideModal()" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+          <button onclick="saveVendor()" class="flex-1 py-4 btn-primary">Save</button>
+        </div>`
+      document.getElementById('modal-content').innerHTML = html
+      document.getElementById('modal').classList.remove('hidden')
+      document.getElementById('modal').classList.add('flex')
+    }
+
+    function saveVendor() {
+      const data = {
+        id: "VEN-" + Date.now().toString().slice(-8),
+        name: document.getElementById('form-vendor-name').value,
+        category: document.getElementById('form-vendor-category').value,
+        phone: document.getElementById('form-vendor-phone').value,
+        notes: document.getElementById('form-vendor-notes').value
+      }
+      vendors.unshift(data)
+      saveAll()
+      hideModal()
+      renderVendorsList()
+    }
+
+    function hideModal() {
+      const modal = document.getElementById('modal')
+      modal.classList.add('hidden')
+      modal.classList.remove('flex')
+      currentEditId = null
+    }
+
+    function init() {
+      if (events.length === 0) {
+        events = [{ id: "EV-260414-001", date: "2026-04-14", client: "Manav Seva Trust", mobile: "9876543210", venue: "Manav Seva Hall", type: "Wedding", billing: 45000 }]
+        saveAll()
+      }
       showView('dashboard')
     }
 
