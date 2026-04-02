@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Finance • Catering</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    
+    :root { --primary: #22d3ee; }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #09090b;
+      color: #f1f5f9;
+      line-height: 1.5;
+    }
+    .container { max-width: 1280px; margin: 0 auto; }
+    
+    .sidebar {
+      width: 260px;
+      background: #18181b;
+      border-right: 1px solid #3f3f46;
+      height: 100vh;
+      position: fixed;
+      padding: 24px;
+    }
+    
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      padding: 14px 20px;
+      border-radius: 16px;
+      margin-bottom: 6px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: #27272a;
+      color: var(--primary);
+    }
+    
+    .card {
+      background: #18181b;
+      border-radius: 20px;
+      padding: 24px;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-4px); }
+    
+    .modal {
+      animation: modalPop 0.3s ease;
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    input, select, textarea {
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      border-radius: 16px;
+      padding: 16px 20px;
+      width: 100%;
+      color: #f1f5f9;
+      font-size: 16px;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: #0f172a;
+      font-weight: 600;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 9999px;
+    }
+    
+    .warning {
+      background: #451a03;
+      color: #fdba74;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar hidden lg:block">
+    <div class="flex items-center gap-3 mb-12">
+      <div class="w-11 h-11 bg-cyan-400 rounded-2xl flex items-center justify-center text-3xl shadow-inner">🍽️</div>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">Event Finance</h1>
+        <p class="text-xs text-zinc-500">Catering & Banquet</p>
+      </div>
+    </div>
+    
+    <nav>
+      <button onclick="showView('dashboard')" class="nav-btn active flex items-center gap-3" id="nav-dashboard">
+        <i class="fa-solid fa-gauge-high w-5"></i> Dashboard
+      </button>
+      <button onclick="showView('events')" class="nav-btn flex items-center gap-3" id="nav-events">
+        <i class="fa-solid fa-calendar w-5"></i> Events
+      </button>
+      <button onclick="showView('expenses')" class="nav-btn flex items-center gap-3" id="nav-expenses">
+        <i class="fa-solid fa-receipt w-5"></i> Expenses
+      </button>
+      <button onclick="showView('vendors')" class="nav-btn flex items-center gap-3" id="nav-vendors">
+        <i class="fa-solid fa-handshake w-5"></i> Vendors
+      </button>
+    </nav>
+  </div>
+
+  <div class="lg:ml-64 min-h-screen pb-12">
+
+    <!-- TOP BAR -->
+    <div class="bg-zinc-900 border-b border-zinc-800 px-6 py-5 flex items-center justify-between sticky top-0 z-50">
+      <h1 id="page-title" class="text-3xl font-semibold">Dashboard</h1>
+      <div class="flex gap-4">
+        <button onclick="showAddEventModal()" 
+                class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-3xl text-sm font-medium">
+          <i class="fa-solid fa-plus"></i> New Event
+        </button>
+        <button onclick="showAddExpenseModal()" 
+                class="flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-zinc-950 px-6 py-3 rounded-3xl font-semibold">
+          <i class="fa-solid fa-plus"></i> Add Expense
+        </button>
+      </div>
+    </div>
+
+    <div id="storage-warning" class="warning mx-8 mt-6 hidden">
+      ⚠️ Running in sandboxed mode. Data will <strong>not be saved</strong> after refresh. 
+      For full persistence, open this file from a local server (e.g., Live Server in VS Code).
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard-view" class="p-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        <div class="card">
+          <p class="text-zinc-400 text-sm">Total Events</p>
+          <p id="total-events" class="text-5xl font-bold mt-3">0</p>
+        </div>
+        <div class="card">
+          <p class="text-zinc-400 text-sm">Total Expenses</p>
+          <p id="total-expenses" class="text-5xl font-bold mt-3 text-red-400">₹0</p>
+        </div>
+        <div class="card">
+          <p class="text-zinc-400 text-sm">Total Billing</p>
+          <p id="total-billing" class="text-5xl font-bold mt-3 text-emerald-400">₹0</p>
+        </div>
+        <div class="card">
+          <p class="text-zinc-400 text-sm">Net Profit</p>
+          <p id="net-profit" class="text-5xl font-bold mt-3">₹0</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 card">
+          <h2 class="font-semibold mb-5 text-lg">Upcoming Events</h2>
+          <div id="upcoming-events" class="space-y-4"></div>
+        </div>
+        <div class="lg:col-span-5 card">
+          <h2 class="font-semibold mb-5 text-lg">Recent Expenses</h2>
+          <div id="recent-expenses" class="space-y-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS VIEW -->
+    <div id="events-view" class="p-8 hidden">
+      <h2 class="text-2xl font-semibold mb-6">All Events</h2>
+      <div id="events-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+
+    <!-- EXPENSES VIEW -->
+    <div id="expenses-view" class="p-8 hidden">
+      <h2 class="text-2xl font-semibold mb-6">All Expenses</h2>
+      <div id="expenses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- VENDORS VIEW -->
+    <div id="vendors-view" class="p-8 hidden">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold">Vendors</h2>
+        <button onclick="showAddVendorModal()" class="bg-cyan-400 text-zinc-950 px-6 py-3 rounded-3xl font-medium">+ Add Vendor</button>
+      </div>
+      <div id="vendors-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+  </div>
+
+  <!-- ADD EVENT MODAL -->
+  <div id="add-event-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="modal bg-zinc-900 w-full max-w-lg mx-4 rounded-3xl p-8">
+      <h3 class="text-2xl font-semibold mb-6">New Event</h3>
+      <div class="space-y-5">
+        <input type="date" id="event-date" class="w-full">
+        <input type="text" id="client-name" placeholder="Client Name" class="w-full">
+        <input type="tel" id="client-mobile" placeholder="Mobile Number" class="w-full">
+        <input type="text" id="venue" placeholder="Venue" class="w-full">
+        <select id="event-type" class="w-full">
+          <option value="Wedding">Wedding</option>
+          <option value="Corporate">Corporate</option>
+          <option value="Birthday">Birthday</option>
+          <option value="Engagement">Engagement</option>
+          <option value="Haldi">Haldi</option>
+          <option value="Reception">Reception</option>
+          <option value="Other">Other</option>
+        </select>
+        <input type="number" id="billing-amount" placeholder="Total Billing Amount ₹" class="w-full">
+      </div>
+      <div class="mt-8 flex gap-4">
+        <button onclick="hideModal('add-event-modal')" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+        <button onclick="saveEvent()" class="flex-1 py-4 btn-primary">Create Event</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD VENDOR MODAL -->
+  <div id="add-vendor-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="modal bg-zinc-900 w-full max-w-md mx-4 rounded-3xl p-8">
+      <h3 class="text-2xl font-semibold mb-6">Add Vendor</h3>
+      <input type="text" id="vendor-name" placeholder="Vendor Name" class="w-full mb-4">
+      <select id="vendor-category" class="w-full mb-4">
+        <option value="Raw Material">Raw Material</option>
+        <option value="Live Counter">Live Counter</option>
+        <option value="Labour">Labour</option>
+        <option value="Operations">Operations</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <input type="tel" id="vendor-phone" placeholder="Phone Number" class="w-full">
+      <div class="mt-8 flex gap-4">
+        <button onclick="hideModal('add-vendor-modal')" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+        <button onclick="saveVendor()" class="flex-1 py-4 btn-primary">Save Vendor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD EXPENSE MODAL -->
+  <div id="add-expense-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="modal bg-zinc-900 w-full max-w-2xl mx-4 rounded-3xl p-8 overflow-auto max-h-[92vh]">
+      <h3 class="text-2xl font-semibold mb-6">Add Expense</h3>
+      
+      <select id="expense-event" onchange="updateExpenseLiveSummary()" class="w-full mb-5"></select>
+
+      <div class="grid grid-cols-2 gap-5 mb-5">
+        <select id="expense-category" onchange="updateExpenseHeads()" class="w-full"></select>
+        <select id="expense-head" class="w-full"></select>
+      </div>
+
+      <input type="number" id="expense-amount" placeholder="Amount ₹" class="w-full text-4xl text-center mb-5">
+
+      <div class="grid grid-cols-2 gap-5 mb-5">
+        <select id="expense-mode" class="w-full">
+          <option value="Cash">Cash</option>
+          <option value="UPI" selected>UPI</option>
+          <option value="Bank">Bank</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <select id="expense-vendor" class="w-full"></select>
+      </div>
+
+      <textarea id="expense-notes" placeholder="Notes" class="w-full h-28"></textarea>
+
+      <div id="expense-live-summary" class="mt-8 bg-zinc-800 rounded-3xl p-6 text-sm min-h-[60px]"></div>
+
+      <div class="mt-10 flex gap-4">
+        <button onclick="hideModal('add-expense-modal')" class="flex-1 py-4 border border-zinc-700 rounded-3xl">Cancel</button>
+        <button onclick="saveExpense()" class="flex-1 py-4 btn-primary">Save Expense</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT DETAIL MODAL -->
+  <div id="event-detail-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="modal bg-zinc-900 w-full max-w-3xl mx-4 rounded-3xl p-8 max-h-[92vh] overflow-auto">
+      <div id="detail-content" class="space-y-8"></div>
+      <button onclick="hideModal('event-detail-modal')" class="mt-8 w-full py-4 border border-zinc-700 rounded-3xl">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // In-memory storage (works in all environments)
+    let events = []
+    let vendors = []
+    let expenses = []
+
+    // Try to load from localStorage safely
+    function loadData() {
+      try {
+        if (localStorage) {
+          const savedEvents = localStorage.getItem('events')
+          const savedVendors = localStorage.getItem('vendors')
+          const savedExpenses = localStorage.getItem('expenses')
+          
+          if (savedEvents) events = JSON.parse(savedEvents)
+          if (savedVendors) vendors = JSON.parse(savedVendors)
+          if (savedExpenses) expenses = JSON.parse(savedExpenses)
+        }
+      } catch (e) {
+        console.warn("localStorage not available - running in memory mode")
+        document.getElementById('storage-warning').classList.remove('hidden')
+      }
+    }
+
+    function saveAll() {
+      try {
+        if (localStorage) {
+          localStorage.setItem('events', JSON.stringify(events))
+          localStorage.setItem('vendors', JSON.stringify(vendors))
+          localStorage.setItem('expenses', JSON.stringify(expenses))
+        }
+      } catch (e) {
+        console.warn("Could not save to localStorage")
+      }
+    }
+
+    const expenseHeadsDB = {
+      "Raw Material": ["Grocery – किराणा", "Vegetable – भाजी", "Fruits", "Oil / Ghee", "Paneer / Dairy", "Spices / Masala"],
+      "Live Counter": ["Chaat – चाट", "Starter – स्टार्टर", "Dosa – डोसा", "Chinese – चायनीज", "Ice Cream – आईस्क्रीम"],
+      "Labour": ["Cook – स्वयंपाकी", "Helper Staff", "Cleaner / Washing", "Supervisor"],
+      "Operations": ["Transport – वाहतूक", "Gas / Cylinder", "Rented Material", "Packaging"],
+      "Admin": ["Office Expense", "Commission", "Marketing Expense"],
+      "Adjustment": ["Damage", "Refund", "Cash Difference"]
+    }
+
+    function showView(view) {
+      document.querySelectorAll('#dashboard-view, #events-view, #expenses-view, #vendors-view').forEach(v => v.classList.add('hidden'))
+      document.getElementById(view + '-view').classList.remove('hidden')
+      document.getElementById('page-title').textContent = view === 'dashboard' ? 'Dashboard' : view.charAt(0).toUpperCase() + view.slice(1)
+
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'))
+      const activeBtn = document.getElementById('nav-' + view)
+      if (activeBtn) activeBtn.classList.add('active')
+
+      if (view === 'dashboard') renderDashboard()
+      if (view === 'events') renderEvents()
+      if (view === 'expenses') renderAllExpenses()
+      if (view === 'vendors') renderVendors()
+    }
+
+    function calculateEventSummary(eventId) {
+      const eventExpenses = expenses.filter(e => e.eventId === eventId)
+      const totalExpense = eventExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0)
+      const ev = events.find(e => e.id === eventId)
+      const billing = ev ? Number(ev.billing || 0) : 0
+      return { totalExpense, profit: billing - totalExpense }
+    }
+
+    function renderDashboard() {
+      document.getElementById('total-events').textContent = events.length
+
+      const totalExp = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0)
+      document.getElementById('total-expenses').textContent = `₹${totalExp.toLocaleString('en-IN')}`
+
+      const totalBill = events.reduce((sum, e) => sum + Number(e.billing || 0), 0)
+      document.getElementById('total-billing').textContent = `₹${totalBill.toLocaleString('en-IN')}`
+
+      const profit = totalBill - totalExp
+      document.getElementById('net-profit').textContent = `₹${profit.toLocaleString('en-IN')}`
+
+      // Upcoming
+      let upcomingHTML = ''
+      events.slice(0, 4).forEach(ev => {
+        const sum = calculateEventSummary(ev.id)
+        upcomingHTML += `
+          <div onclick="showEventDetail('${ev.id}')" class="card cursor-pointer flex justify-between items-center">
+            <div>
+              <div class="font-semibold">${ev.client}</div>
+              <div class="text-sm text-zinc-400">${ev.date} • ${ev.venue}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-emerald-400">₹${Number(ev.billing||0).toLocaleString('en-IN')}</div>
+              <div class="text-xs ${sum.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">Profit ₹${sum.profit}</div>
+            </div>
+          </div>`
+      })
+      document.getElementById('upcoming-events').innerHTML = upcomingHTML || '<p class="text-zinc-400">No events yet</p>'
+
+      // Recent expenses
+      let recentHTML = ''
+      expenses.slice(0, 5).forEach(exp => {
+        const ev = events.find(e => e.id === exp.eventId) || {client: 'Unknown'}
+        recentHTML += `
+          <div class="flex justify-between items-center bg-zinc-800 rounded-2xl p-4">
+            <div>${ev.client} • ${exp.head}</div>
+            <div class="font-semibold text-red-400">₹${Number(exp.amount).toLocaleString('en-IN')}</div>
+          </div>`
+      })
+      document.getElementById('recent-expenses').innerHTML = recentHTML || '<p class="text-zinc-400">No expenses recorded</p>'
+    }
+
+    function renderEvents() {
+      const html = events.map(ev => {
+        const sum = calculateEventSummary(ev.id)
+        return `
+          <div onclick="showEventDetail('${ev.id}')" class="card cursor-pointer">
+            <div class="font-semibold text-lg">${ev.client}</div>
+            <div class="text-sm text-zinc-400">${ev.date} • ${ev.venue}</div>
+            <div class="mt-6 flex justify-between text-sm">
+              <span>Billing: ₹${Number(ev.billing||0).toLocaleString('en-IN')}</span>
+              <span class="text-red-400">Expenses: ₹${sum.totalExpense.toLocaleString('en-IN')}</span>
+            </div>
+          </div>`
+      }).join('')
+      document.getElementById('events-list').innerHTML = html || '<p class="text-zinc-400">No events yet. Create one from the top button.</p>'
+    }
+
+    function renderAllExpenses() {
+      const html = expenses.map(exp => {
+        const ev = events.find(e => e.id === exp.eventId) || {client: 'Unknown'}
+        return `
+          <div class="card">
+            <div class="flex justify-between">
+              <div>
+                <div class="font-medium">${ev.client}</div>
+                <div class="text-xs text-zinc-400">${exp.date}</div>
+              </div>
+              <div class="text-right font-semibold text-red-400 text-2xl">₹${Number(exp.amount).toLocaleString('en-IN')}</div>
+            </div>
+            <div class="mt-4 text-sm">${exp.head}</div>
+            <div class="text-xs bg-zinc-800 inline-block px-4 py-1 rounded-full mt-3">${exp.category}</div>
+          </div>`
+      }).join('')
+      document.getElementById('expenses-list').innerHTML = html || '<p class="text-zinc-400">No expenses yet</p>'
+    }
+
+    function renderVendors() {
+      const html = vendors.map(v => `
+        <div class="card">
+          <div class="font-semibold">${v.name}</div>
+          <div class="text-sm text-zinc-400">${v.category} • ${v.phone || ''}</div>
+        </div>
+      `).join('')
+      document.getElementById('vendors-list').innerHTML = html || '<p class="text-zinc-400">No vendors added yet</p>'
+    }
+
+    function showEventDetail(id) {
+      const ev = events.find(e => e.id === id)
+      if (!ev) return
+      
+      const eventExpenses = expenses.filter(ex => ex.eventId === id)
+      const sum = calculateEventSummary(id)
+
+      let html = `
+        <h2 class="text-3xl font-semibold mb-2">${ev.client}</h2>
+        <p class="text-zinc-400">${ev.date} • ${ev.venue} • ${ev.type}</p>
+        
+        <div class="grid grid-cols-3 gap-6 my-10">
+          <div class="text-center bg-zinc-800 rounded-3xl p-6">
+            <div class="text-sm text-zinc-400">Billing</div>
+            <div class="text-3xl font-bold mt-2">₹${Number(ev.billing||0).toLocaleString('en-IN')}</div>
+          </div>
+          <div class="text-center bg-zinc-800 rounded-3xl p-6">
+            <div class="text-sm text-zinc-400">Expenses</div>
+            <div class="text-3xl font-bold mt-2 text-red-400">₹${sum.totalExpense.toLocaleString('en-IN')}</div>
+          </div>
+          <div class="text-center bg-zinc-800 rounded-3xl p-6">
+            <div class="text-sm text-zinc-400">Profit</div>
+            <div class="text-3xl font-bold mt-2 ${sum.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">₹${sum.profit.toLocaleString('en-IN')}</div>
+          </div>
+        </div>
+
+        <h3 class="font-semibold mb-4">Expenses List</h3>
+        <div class="space-y-4">`
+
+      if (eventExpenses.length === 0) {
+        html += `<p class="text-zinc-400 text-center py-8">No expenses recorded for this event yet</p>`
+      } else {
+        eventExpenses.forEach(ex => {
+          html += `
+            <div class="bg-zinc-800 rounded-2xl p-5 flex justify-between items-center">
+              <div>
+                <div>${ex.head}</div>
+                <div class="text-xs text-zinc-400">${ex.category} • ${ex.mode || ''}</div>
+              </div>
+              <div class="font-semibold text-red-400">₹${Number(ex.amount).toLocaleString('en-IN')}</div>
+            </div>`
+        })
+      }
+      html += `</div>`
+
+      document.getElementById('detail-content').innerHTML = html
+      document.getElementById('event-detail-modal').classList.remove('hidden')
+      document.getElementById('event-detail-modal').classList.add('flex')
+    }
+
+    function hideModal(modalId) {
+      const modal = document.getElementById(modalId)
+      modal.classList.add('hidden')
+      modal.classList.remove('flex')
+    }
+
+    function showAddEventModal() {
+      document.getElementById('add-event-modal').classList.remove('hidden')
+      document.getElementById('add-event-modal').classList.add('flex')
+      document.getElementById('event-date').valueAsDate = new Date()
+    }
+
+    function showAddVendorModal() {
+      document.getElementById('add-vendor-modal').classList.remove('hidden')
+      document.getElementById('add-vendor-modal').classList.add('flex')
+    }
+
+    function showAddExpenseModal() {
+      document.getElementById('add-expense-modal').classList.remove('hidden')
+      document.getElementById('add-expense-modal').classList.add('flex')
+      refreshExpenseForm()
+    }
+
+    function refreshExpenseForm() {
+      const eventSelect = document.getElementById('expense-event')
+      eventSelect.innerHTML = '<option value="">Select Event</option>'
+      events.forEach(ev => {
+        const opt = document.createElement('option')
+        opt.value = ev.id
+        opt.textContent = `${ev.id} - ${ev.client}`
+        eventSelect.appendChild(opt)
+      })
+
+      const catSelect = document.getElementById('expense-category')
+      catSelect.innerHTML = '<option value="">Select Category</option>'
+      Object.keys(expenseHeadsDB).forEach(cat => {
+        const opt = document.createElement('option')
+        opt.value = cat
+        opt.textContent = cat
+        catSelect.appendChild(opt)
+      })
+
+      const vendorSelect = document.getElementById('expense-vendor')
+      vendorSelect.innerHTML = '<option value="">Vendor (optional)</option>'
+      vendors.forEach(v => {
+        const opt = document.createElement('option')
+        opt.value = v.name
+        opt.textContent = v.name
+        vendorSelect.appendChild(opt)
+      })
+    }
+
+    function updateExpenseHeads() {
+      const cat = document.getElementById('expense-category').value
+      const headSelect = document.getElementById('expense-head')
+      headSelect.innerHTML = '<option value="">Select Head</option>'
+      if (expenseHeadsDB[cat]) {
+        expenseHeadsDB[cat].forEach(head => {
+          const opt = document.createElement('option')
+          opt.value = head
+          opt.textContent = head
+          headSelect.appendChild(opt)
+        })
+      }
+      updateExpenseLiveSummary()
+    }
+
+    function updateExpenseLiveSummary() {
+      const eventId = document.getElementById('expense-event').value
+      const amount = parseFloat(document.getElementById('expense-amount').value) || 0
+      if (!eventId) return
+      
+      const eventExpenses = expenses.filter(e => e.eventId === eventId)
+      const total = eventExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0) + amount
+      
+      document.getElementById('expense-live-summary').innerHTML = `
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Total expenses for this event after adding:</span>
+          <span class="font-semibold text-cyan-400">₹${total.toLocaleString('en-IN')}</span>
+        </div>`
+    }
+
+    function saveEvent() {
+      const newEvent = {
+        id: "EV-" + Date.now().toString().slice(-8),
+        date: document.getElementById('event-date').value,
+        client: document.getElementById('client-name').value.trim(),
+        mobile: document.getElementById('client-mobile').value.trim(),
+        venue: document.getElementById('venue').value.trim(),
+        type: document.getElementById('event-type').value,
+        billing: parseFloat(document.getElementById('billing-amount').value) || 0
+      }
+      if (!newEvent.client) return alert("Client name is required")
+      events.unshift(newEvent)
+      saveAll()
+      hideModal('add-event-modal')
+      renderDashboard()
+      renderEvents()
+    }
+
+    function saveVendor() {
+      const newVendor = {
+        id: Date.now(),
+        name: document.getElementById('vendor-name').value.trim(),
+        category: document.getElementById('vendor-category').value,
+        phone: document.getElementById('vendor-phone').value.trim()
+      }
+      if (!newVendor.name) return alert("Vendor name is required")
+      vendors.unshift(newVendor)
+      saveAll()
+      hideModal('add-vendor-modal')
+      renderVendors()
+    }
+
+    function saveExpense() {
+      const eventId = document.getElementById('expense-event').value
+      if (!eventId) return alert("Please select an event")
+
+      const newExpense = {
+        id: "EXP-" + Date.now().toString().slice(-8),
+        eventId: eventId,
+        date: new Date().toISOString().slice(0,10),
+        category: document.getElementById('expense-category').value,
+        head: document.getElementById('expense-head').value,
+        amount: parseFloat(document.getElementById('expense-amount').value) || 0,
+        mode: document.getElementById('expense-mode').value,
+        vendor: document.getElementById('expense-vendor').value,
+        notes: document.getElementById('expense-notes').value.trim()
+      }
+
+      if (!newExpense.category || !newExpense.head || newExpense.amount <= 0) {
+        return alert("Please fill Category, Head and Amount")
+      }
+
+      expenses.unshift(newExpense)
+      saveAll()
+      hideModal('add-expense-modal')
+      renderDashboard()
+      renderAllExpenses()
+    }
+
+    // Init
+    function init() {
+      loadData()
+      if (events.length === 0) {
+        events = [{
+          id: "EV-260414-001",
+          date: "2026-04-14",
+          client: "Manav Seva Trust",
+          mobile: "9876543210",
+          venue: "Manav Seva Hall",
+          type: "Wedding",
+          billing: 45000
+        }]
+        saveAll()
+      }
+      showView('dashboard')
+    }
+
+    window.onload = init
+  </script>
+</body>
+</html>
