@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flavor Fusion Pro v2.8 | Full Control Suite</title>
+    <title>Flavor Fusion Pro v2.9 | Business Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; backdrop-filter: blur(4px); }
@@ -22,10 +22,10 @@
     <nav class="bg-white border-b p-3 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="logo.png" class="h-10 w-auto object-contain" onerror="this.src='https://via.placeholder.com/120x40?text=FLAVOR+FUSION'" alt="Logo">
+                <img src="logo.png" class="h-10 w-auto object-contain" onerror="this.src='https://via.placeholder.com/120x40?text=LOGO'" alt="Logo">
                 <div class="hidden md:block border-l pl-3 border-slate-100">
                     <h1 class="text-lg font-black leading-none text-orange-600 tracking-tighter uppercase">Flavor Fusion</h1>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Catering Control</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Business Control Panel</p>
                 </div>
             </div>
             <div class="flex space-x-1 md:space-x-4 font-bold uppercase text-[10px] md:text-xs">
@@ -43,11 +43,11 @@
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8" id="stats-grid"></div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border">
-                    <h2 class="text-lg font-black mb-4 flex items-center gap-2"><span class="w-1.5 h-6 bg-amber-500 rounded-full"></span> Pending Collections</h2>
+                    <h2 class="text-lg font-black mb-4 flex items-center gap-2"><span class="w-1.5 h-6 bg-amber-500 rounded-full"></span> Overdue Collections</h2>
                     <div id="overdue-list" class="space-y-3"></div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border">
-                    <h2 class="text-xs font-bold mb-4 uppercase tracking-widest text-slate-400">Quick Entry</h2>
+                    <h2 class="text-xs font-bold mb-4 uppercase tracking-widest text-slate-400">Operations</h2>
                     <div class="grid grid-cols-1 gap-3">
                         <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">+ Add Event</button>
                         <button onclick="openExpenseModal()" class="bg-red-500 text-white px-5 py-3 rounded-xl font-bold hover:bg-red-600 transition flex items-center justify-center gap-2">+ Record Expense</button>
@@ -59,27 +59,32 @@
 
         <section id="events" class="tab-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold tracking-tight">Events</h2>
-                <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2">+ Add Event</button>
+                <h2 class="text-2xl font-bold">Event Portfolio</h2>
+                <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold">+ Add Event</button>
             </div>
-            <div class="mb-6"><input type="text" id="event-search" oninput="renderEvents()" placeholder="Search client..." class="w-full md:w-96 border p-3 rounded-2xl text-sm outline-none focus:border-blue-500 bg-white shadow-sm"></div>
+            <input type="text" id="event-search" oninput="renderEvents()" placeholder="Search client..." class="w-full md:w-96 mb-6 border p-3 rounded-2xl text-sm outline-none focus:border-blue-500">
             <div id="events-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="expenses" class="tab-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold tracking-tight">Expense Registry</h2>
-                <button onclick="openExpenseModal()" class="bg-red-500 text-white px-5 py-2 rounded-xl font-bold hover:bg-red-600 transition flex items-center gap-2">+ Add Expense</button>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border mb-6 flex justify-around text-center shadow-sm">
-                <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Entries</p><p id="exp-count" class="text-xl font-black">0</p></div>
-                <div class="w-px bg-slate-100"></div>
-                <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Spend</p><p id="exp-total-val" class="text-xl font-black text-red-600">₹0</p></div>
+                <h2 class="text-2xl font-bold">Comprehensive Expense Log</h2>
+                <button onclick="openExpenseModal()" class="bg-red-500 text-white px-5 py-2 rounded-xl font-bold">+ Add Expense</button>
             </div>
             <div class="bg-white rounded-2xl shadow-sm border overflow-hidden overflow-x-auto">
-                <table class="w-full text-left min-w-[700px]">
+                <table class="w-full text-left min-w-[1000px]">
                     <thead class="bg-slate-50 border-b text-slate-500 text-[10px] font-black uppercase tracking-widest">
-                        <tr><th class="p-4">Date</th><th class="p-4">Event</th><th class="p-4">Vendor</th><th class="p-4">Head</th><th class="p-4">Amount</th><th class="p-4 text-right">Actions</th></tr>
+                        <tr>
+                            <th class="p-4 text-center">Exp. Date</th>
+                            <th class="p-4">Event</th>
+                            <th class="p-4">Vendor</th>
+                            <th class="p-4">Category</th>
+                            <th class="p-4">Head</th>
+                            <th class="p-4">Mode</th>
+                            <th class="p-4">Amount</th>
+                            <th class="p-4">Notes</th>
+                            <th class="p-4 text-right">Actions</th>
+                        </tr>
                     </thead>
                     <tbody id="expenses-table-body"></tbody>
                 </table>
@@ -88,8 +93,8 @@
 
         <section id="vendors" class="tab-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold tracking-tight">Vendor Directory</h2>
-                <button onclick="openVendorModal()" class="bg-slate-800 text-white px-5 py-2 rounded-xl font-bold hover:bg-slate-900 transition flex items-center gap-2">+ Add Vendor</button>
+                <h2 class="text-2xl font-bold">Vendors Ledger</h2>
+                <button onclick="openVendorModal()" class="bg-slate-800 text-white px-5 py-2 rounded-xl font-bold">+ Add Vendor</button>
             </div>
             <div id="vendors-list" class="grid grid-cols-1 md:grid-cols-4 gap-4"></div>
         </section>
@@ -97,6 +102,11 @@
         <section id="event-detail" class="tab-content">
             <button onclick="switchTab('events')" class="text-blue-600 mb-6 font-bold flex items-center gap-2">← Back to Portfolio</button>
             <div id="detail-content"></div>
+        </section>
+
+        <section id="vendor-detail" class="tab-content">
+            <button onclick="switchTab('vendors')" class="text-blue-600 mb-6 font-bold flex items-center gap-2">← Back to Vendors</button>
+            <div id="v-detail-content"></div>
         </section>
 
     </main>
@@ -107,7 +117,12 @@
             <input type="hidden" id="edit-event-id">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</label><input type="text" id="ev-client" required class="w-full border-b py-2 focus:border-blue-600 outline-none font-bold"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ev-date" required class="w-full border-b py-2 outline-none"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Event Type</label>
+                    <select id="ev-type" class="w-full border-b py-2 outline-none font-bold">
+                        <option>Wedding</option><option>Corporate</option><option>Birthday</option><option>Other</option>
+                    </select>
+                </div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ev-date" required class="w-full border-b py-2 outline-none font-bold"></div>
                 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mobile</label><input type="tel" id="ev-mobile" required class="w-full border-b py-2 outline-none"></div>
                 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Billing (₹)</label><input type="number" id="ev-billing" required class="w-full border-b py-2 font-black text-blue-600 outline-none"></div>
                 <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Venue</label><input type="text" id="ev-venue" class="w-full border-b py-2 outline-none"></div>
@@ -120,62 +135,44 @@
         <form onsubmit="handleExpenseSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
             <h3 id="expense-modal-title" class="text-xl font-black mb-6 text-red-600">Record Expense</h3>
             <input type="hidden" id="edit-expense-id">
-            <div class="space-y-5">
+            <div class="space-y-4">
                 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Event</label><select id="ex-event" required class="w-full border-b py-2 outline-none font-bold bg-transparent"></select></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</label><select id="ex-cat" onchange="updateHeads('ex-cat', 'ex-head')" required class="w-full border-b py-2 outline-none bg-transparent"></select></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sub-Head</label><select id="ex-head" required class="w-full border-b py-2 outline-none font-bold bg-transparent"></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</label><select id="ex-cat" onchange="updateHeads('ex-cat', 'ex-head')" required class="w-full border-b py-2 outline-none"></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sub-Head</label><select id="ex-head" required class="w-full border-b py-2 outline-none font-bold"></select></div>
                 </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (₹)</label>
-                    <input type="number" id="ex-amount" required class="w-full border-b py-2 font-black text-red-600 text-2xl outline-none">
-                    <div class="flex gap-2 mt-2">
-                        <button type="button" onclick="setAmt(500)" class="bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition">₹500</button>
-                        <button type="button" onclick="setAmt(1000)" class="bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition">₹1000</button>
-                        <button type="button" onclick="setAmt(2000)" class="bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition">₹2000</button>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (₹)</label><input type="number" id="ex-amount" required class="w-full border-b py-2 font-black text-red-600 text-xl outline-none"></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Payment Mode</label>
+                        <select id="ex-mode" class="w-full border-b py-2 outline-none font-bold"><option>Cash</option><option>UPI</option><option>Bank</option></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ex-date" required class="w-full border-b py-2 outline-none"></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vendor</label><select id="ex-vendor" class="w-full border-b py-2 outline-none font-bold text-orange-600 bg-transparent"></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vendor</label><select id="ex-vendor" class="w-full border-b py-2 outline-none font-bold text-orange-600"></select></div>
                 </div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Notes</label><textarea id="ex-notes" class="w-full border p-2 rounded-xl text-xs outline-none" rows="2" placeholder="Item description, weight, etc..."></textarea></div>
             </div>
             <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-red-500 text-white px-8 py-3 rounded-2xl font-bold">Save Expense</button></div>
         </form>
     </div>
 
-    <div id="vendor-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handleVendorSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
-            <h3 id="vendor-modal-title" class="text-xl font-black mb-6">Vendor Details</h3>
-            <input type="hidden" id="edit-vendor-id">
-            <div class="space-y-5">
-                <div><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Business Name</label><input type="text" id="vn-name" required class="w-full border-b py-2 outline-none font-bold"></div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Category</label><select id="vn-cat" onchange="updateHeads('vn-cat', 'vn-head')" required class="w-full border-b py-2 outline-none"></select></div>
-                    <div><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Specialty</label><select id="vn-head" required class="w-full border-b py-2 outline-none font-bold"></select></div>
-                </div>
-                <div><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Phone Number</label><input type="tel" id="vn-phone" class="w-full border-b py-2 outline-none" placeholder="9876543210"></div>
-            </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold">Save Vendor</button></div>
-        </form>
-    </div>
-
-    <div id="payment-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handlePaymentSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl">
-            <h3 class="text-xl font-black mb-6 text-green-600 italic">Record Payment</h3>
-            <input type="hidden" id="pay-event-id">
-            <input type="hidden" id="edit-pay-id">
+    <div id="v-payment-modal" class="modal items-center justify-center p-4">
+        <form onsubmit="handleVendorPaymentSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl">
+            <h3 id="v-pay-title" class="text-xl font-bold mb-6 text-slate-800 italic">Pay Vendor</h3>
+            <input type="hidden" id="edit-v-pay-id">
+            <input type="hidden" id="v-pay-vendor-id">
             <div class="space-y-4">
-                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Amount</label><input type="number" id="pay-amount" required class="w-full border-b py-2 font-black text-green-600 outline-none text-2xl"></div>
-                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Date</label><input type="date" id="pay-date" required class="w-full border-b py-2 outline-none"></div>
-                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Mode</label><select id="pay-mode" class="w-full border-b py-2 outline-none font-bold"><option>Cash</option><option>UPI</option><option>Bank Transfer</option></select></div>
+                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Amount Paid</label><input type="number" id="v-pay-amount" required class="w-full border-b py-2 font-black text-slate-800 outline-none text-2xl"></div>
+                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Payment Date</label><input type="date" id="v-pay-date" required class="w-full border-b py-2 outline-none"></div>
+                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Mode</label><select id="v-pay-mode" class="w-full border-b py-2 outline-none font-bold"><option>Cash</option><option>UPI</option><option>Bank Transfer</option></select></div>
             </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs tracking-widest">Save</button></div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold">Confirm Payment</button></div>
         </form>
     </div>
 
     <script>
-        const DB_KEYS = { EVENTS: 'ff_events_v2', EXPENSES: 'ff_exp_v2', PAYMENTS: 'ff_pay_v2', VENDORS: 'ff_ven_v2' };
+        const DB_KEYS = { EVENTS: 'ff_events_v2', EXPENSES: 'ff_exp_v2', PAYMENTS: 'ff_pay_v2', VENDORS: 'ff_ven_v2', V_PAYMENTS: 'ff_vpay_v2' };
         
         const expenseHeadsDB = {
             "Raw Material": ["Grocery – किराणा", "Other Grocery", "Vegetable – भाजी", "Fruits", "Juice", "Water", "Ice + Milk", "Bread", "Pickle", "Sweet", "Dry Fruits", "Spices", "Oil / Ghee", "Paneer / Dairy"],
@@ -190,83 +187,72 @@
             events: JSON.parse(localStorage.getItem(DB_KEYS.EVENTS)) || [],
             expenses: JSON.parse(localStorage.getItem(DB_KEYS.EXPENSES)) || [],
             payments: JSON.parse(localStorage.getItem(DB_KEYS.PAYMENTS)) || [],
-            vendors: JSON.parse(localStorage.getItem(DB_KEYS.VENDORS)) || []
+            vendors: JSON.parse(localStorage.getItem(DB_KEYS.VENDORS)) || [],
+            vendorPayments: JSON.parse(localStorage.getItem(DB_KEYS.V_PAYMENTS)) || []
         };
 
-        // --- UTILS ---
+        // --- CORE UTILS ---
         function save() {
-            localStorage.setItem(DB_KEYS.EVENTS, JSON.stringify(state.events));
-            localStorage.setItem(DB_KEYS.EXPENSES, JSON.stringify(state.expenses));
-            localStorage.setItem(DB_KEYS.PAYMENTS, JSON.stringify(state.payments));
-            localStorage.setItem(DB_KEYS.VENDORS, JSON.stringify(state.vendors));
+            Object.keys(DB_KEYS).forEach(k => {
+                const stateKey = k === 'V_PAYMENTS' ? 'vendorPayments' : k.toLowerCase();
+                localStorage.setItem(DB_KEYS[k], JSON.stringify(state[stateKey] || state[k.toLowerCase()]));
+            });
             renderAll();
         }
 
         function generateID(pre) { return pre + Date.now() + Math.random().toString(36).substr(2, 5); }
         function getToday() { return new Date().toISOString().split('T')[0]; }
-        function setAmt(v) { document.getElementById('ex-amount').value = v; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
         function showToast(m) { const t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = m; t.style.display = 'flex'; setTimeout(() => t.style.display = 'none', 3000); }
-        function formatPhone(n) { n = n.replace(/\D/g,''); return n.startsWith('91') ? '+'+n : '+91'+n; }
-        
         function updateHeads(catId, subCatId) {
             const cat = document.getElementById(catId).value;
             const sub = document.getElementById(subCatId);
             sub.innerHTML = (expenseHeadsDB[cat] || []).map(h => `<option value="${h}">${h}</option>`).join('');
         }
-
         function switchTab(id) { 
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
             document.getElementById(id).classList.add('active'); 
             renderAll(); 
         }
 
-        // --- HANDLERS ---
+        // --- SUBMISSION HANDLERS ---
         function handleEventSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('edit-event-id').value;
-            const data = { id: id || generateID("EV"), client: document.getElementById('ev-client').value, date: document.getElementById('ev-date').value, mobile: document.getElementById('ev-mobile').value, billing: parseFloat(document.getElementById('ev-billing').value), venue: document.getElementById('ev-venue').value };
+            const data = { id: id || generateID("EV"), client: document.getElementById('ev-client').value, type: document.getElementById('ev-type').value, date: document.getElementById('ev-date').value, mobile: document.getElementById('ev-mobile').value, billing: parseFloat(document.getElementById('ev-billing').value), venue: document.getElementById('ev-venue').value };
             if(id) state.events = state.events.map(ev => ev.id === id ? data : ev);
             else state.events.push(data);
-            save(); closeModals(); showToast("Event Saved");
+            save(); closeModals(); showToast("Event Record Updated");
         }
 
         function handleExpenseSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('edit-expense-id').value;
-            const data = { id: id || generateID("EX"), eventId: document.getElementById('ex-event').value, category: document.getElementById('ex-cat').value, head: document.getElementById('ex-head').value, amount: parseFloat(document.getElementById('ex-amount').value), date: document.getElementById('ex-date').value, vendorId: document.getElementById('ex-vendor').value };
+            const data = { id: id || generateID("EX"), eventId: document.getElementById('ex-event').value, category: document.getElementById('ex-cat').value, head: document.getElementById('ex-head').value, amount: parseFloat(document.getElementById('ex-amount').value), date: document.getElementById('ex-date').value, vendorId: document.getElementById('ex-vendor').value, mode: document.getElementById('ex-mode').value, notes: document.getElementById('ex-notes').value };
             if(id) state.expenses = state.expenses.map(x => x.id === id ? data : x);
             else state.expenses.push(data);
             save(); closeModals(); showToast("Expense Recorded");
         }
 
-        function handleVendorSubmit(e) {
+        function handleVendorPaymentSubmit(e) {
             e.preventDefault();
-            const id = document.getElementById('edit-vendor-id').value;
-            const data = { id: id || generateID("VN"), name: document.getElementById('vn-name').value, category: document.getElementById('vn-cat').value, specialty: document.getElementById('vn-head').value, phone: document.getElementById('vn-phone').value };
-            if(id) state.vendors = state.vendors.map(v => v.id === id ? data : v);
-            else state.vendors.push(data);
-            save(); closeModals(); showToast("Vendor Updated");
+            const id = document.getElementById('edit-v-pay-id').value;
+            const vId = document.getElementById('v-pay-vendor-id').value;
+            const data = { id: id || generateID("VP"), vendorId: vId, amount: parseFloat(document.getElementById('v-pay-amount').value), date: document.getElementById('v-pay-date').value, mode: document.getElementById('v-pay-mode').value };
+            if(id) state.vendorPayments = state.vendorPayments.map(p => p.id === id ? data : p);
+            else state.vendorPayments.push(data);
+            save(); closeModals(); showToast("Vendor Payment Recorded");
+            if (document.getElementById('vendor-detail').classList.contains('active')) showVendorDetail(vId);
         }
 
-        function handlePaymentSubmit(e) {
-            e.preventDefault();
-            const eid = document.getElementById('pay-event-id').value;
-            const pid = document.getElementById('edit-pay-id').value;
-            const data = { id: pid || generateID("PAY"), eventId: eid, amount: parseFloat(document.getElementById('pay-amount').value), date: document.getElementById('pay-date').value, mode: document.getElementById('pay-mode').value };
-            if(pid) state.payments = state.payments.map(p => p.id === pid ? data : p);
-            else state.payments.push(data);
-            save(); closeModals(); showToast("Payment Saved");
-            if (document.getElementById('event-detail').classList.contains('active')) showEventDetail(eid);
-        }
-
-        // --- MODAL OPENERS ---
+        // --- OPEN MODALS ---
         function openEventModal(id = null) {
             const m = document.getElementById('event-modal'); m.querySelector('form').reset();
             document.getElementById('edit-event-id').value = id || "";
             if(id) {
                 const ev = state.events.find(e => e.id === id);
                 document.getElementById('ev-client').value = ev.client;
+                document.getElementById('ev-type').value = ev.type || 'Wedding';
                 document.getElementById('ev-date').value = ev.date;
                 document.getElementById('ev-mobile').value = ev.mobile;
                 document.getElementById('ev-billing').value = ev.billing;
@@ -278,58 +264,43 @@
         function openExpenseModal(id = null) {
             const m = document.getElementById('expense-modal'); m.querySelector('form').reset();
             document.getElementById('edit-expense-id').value = id || "";
-            document.getElementById('ex-event').innerHTML = state.events.map(e => `<option value="${e.id}">${e.client}</option>`).join('') || '<option value="">Add Event First</option>';
+            document.getElementById('ex-event').innerHTML = state.events.map(e => `<option value="${e.id}">${e.client}</option>`).join('');
             document.getElementById('ex-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
             updateHeads('ex-cat', 'ex-head');
-            document.getElementById('ex-vendor').innerHTML = `<option value="">Generic / Self</option>` + state.vendors.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
+            document.getElementById('ex-vendor').innerHTML = `<option value="">Self/Generic</option>` + state.vendors.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
             document.getElementById('ex-date').value = getToday();
             if(id) {
                 const x = state.expenses.find(ex => ex.id === id);
                 document.getElementById('ex-event').value = x.eventId;
-                document.getElementById('ex-cat').value = x.category;
-                updateHeads('ex-cat', 'ex-head');
+                document.getElementById('ex-cat').value = x.category; updateHeads('ex-cat', 'ex-head');
                 document.getElementById('ex-head').value = x.head;
                 document.getElementById('ex-amount').value = x.amount;
+                document.getElementById('ex-mode').value = x.mode || 'Cash';
                 document.getElementById('ex-date').value = x.date;
                 document.getElementById('ex-vendor').value = x.vendorId;
+                document.getElementById('ex-notes').value = x.notes || '';
             }
             m.classList.add('active');
         }
 
-        function openVendorModal(id = null) {
-            const m = document.getElementById('vendor-modal'); m.querySelector('form').reset();
-            document.getElementById('edit-vendor-id').value = id || "";
-            document.getElementById('vn-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
-            updateHeads('vn-cat', 'vn-head');
-            if(id) {
-                const v = state.vendors.find(ven => ven.id === id);
-                document.getElementById('vn-name').value = v.name;
-                document.getElementById('vn-cat').value = v.category;
-                updateHeads('vn-cat', 'vn-head');
-                document.getElementById('vn-head').value = v.specialty;
-                document.getElementById('vn-phone').value = v.phone || '';
+        function openVendorPaymentModal(vId, payId = null) {
+            const m = document.getElementById('v-payment-modal'); m.querySelector('form').reset();
+            document.getElementById('edit-v-pay-id').value = payId || "";
+            document.getElementById('v-pay-vendor-id').value = vId;
+            document.getElementById('v-pay-date').value = getToday();
+            if(payId) {
+                const p = state.vendorPayments.find(x => x.id === payId);
+                document.getElementById('v-pay-amount').value = p.amount;
+                document.getElementById('v-pay-date').value = p.date;
+                document.getElementById('v-pay-mode').value = p.mode;
             }
             m.classList.add('active');
         }
-
-        function openPaymentModal(eid, pid = null) {
-            const m = document.getElementById('payment-modal'); m.querySelector('form').reset();
-            document.getElementById('pay-event-id').value = eid;
-            document.getElementById('edit-pay-id').value = pid || "";
-            document.getElementById('pay-date').value = getToday();
-            if(pid) {
-                const p = state.payments.find(x => x.id === pid);
-                document.getElementById('pay-amount').value = p.amount;
-                document.getElementById('pay-date').value = p.date;
-                document.getElementById('pay-mode').value = p.mode;
-            }
-            m.classList.add('active');
-        }
-
-        function deleteItem(type, id, name) { if(confirm(`Delete ${name}?`)) { state[type] = state[type].filter(x => x.id !== id); save(); } }
 
         // --- RENDERERS ---
-        function renderAll() { renderDashboard(); renderEvents(); renderExpenses(); renderVendors(); }
+        function renderAll() { 
+            renderDashboard(); renderEvents(); renderExpenses(); renderVendors(); 
+        }
 
         function renderDashboard() {
             const totalBill = state.events.reduce((s, e) => s + e.billing, 0);
@@ -337,78 +308,81 @@
             const totalRec = state.payments.reduce((s, p) => s + p.amount, 0);
             const profit = totalBill - totalExp;
             document.getElementById('stats-grid').innerHTML = `
-                <div class="bg-white p-4 rounded-2xl border shadow-sm"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Portfolio</p><p class="text-xl font-black">₹${totalBill.toLocaleString()}</p></div>
-                <div class="bg-white p-4 rounded-2xl border shadow-sm text-red-500"><p class="text-[10px] font-bold uppercase opacity-60">Expenses</p><p class="text-xl font-black">₹${totalExp.toLocaleString()}</p></div>
-                <div class="bg-white p-4 rounded-2xl border shadow-sm text-green-600"><p class="text-[10px] font-bold uppercase opacity-60">Received</p><p class="text-xl font-black">₹${totalRec.toLocaleString()}</p></div>
-                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 text-amber-700"><p class="text-[10px] font-bold uppercase opacity-60">Pending</p><p class="text-xl font-black">₹${(totalBill - totalRec).toLocaleString()}</p></div>
-                <div class="${profit >= 0 ? 'bg-green-600' : 'bg-red-600'} p-4 rounded-2xl text-white shadow-lg"><p class="text-[10px] font-bold uppercase opacity-70">Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()}</p></div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Portfolio</p><p class="text-lg font-black">₹${totalBill.toLocaleString()}</p></div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm text-red-500"><p class="text-[9px] font-bold uppercase opacity-60">Expenses</p><p class="text-lg font-black">₹${totalExp.toLocaleString()}</p></div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm text-green-600"><p class="text-[9px] font-bold uppercase opacity-60">Received</p><p class="text-lg font-black">₹${totalRec.toLocaleString()}</p></div>
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 text-amber-700"><p class="text-[9px] font-bold uppercase opacity-60">Pending</p><p class="text-lg font-black">₹${(totalBill - totalRec).toLocaleString()}</p></div>
+                <div class="${profit >= 0 ? 'bg-green-600' : 'bg-red-600'} p-4 rounded-2xl text-white"><p class="text-[9px] font-bold uppercase opacity-70">Net Profit</p><p class="text-lg font-black">₹${profit.toLocaleString()}</p></div>
             `;
             const overdue = state.events.map(ev => { const rec = state.payments.filter(p => p.eventId === ev.id).reduce((s, p) => s + p.amount, 0); return { ...ev, pending: ev.billing - rec }; }).filter(e => e.pending > 0).sort((a,b) => b.pending - a.pending);
-            document.getElementById('overdue-list').innerHTML = overdue.map(e => `<div class="flex justify-between items-center p-4 bg-amber-50 rounded-2xl border border-amber-100 cursor-pointer" onclick="showEventDetail('${e.id}')"><div><p class="font-bold">${e.client}</p><p class="text-[10px] font-bold text-amber-600">${e.date}</p></div><p class="text-lg font-black text-amber-700">₹${e.pending.toLocaleString()}</p></div>`).join('') || '<p class="text-slate-300 italic text-center p-8">No collections pending.</p>';
+            document.getElementById('overdue-list').innerHTML = overdue.map(e => `<div class="flex justify-between items-center p-4 bg-amber-50 rounded-2xl border border-amber-100 cursor-pointer" onclick="showEventDetail('${e.id}')"><div><p class="font-bold text-sm">${e.client}</p><p class="text-[9px] font-bold text-amber-600 uppercase">${e.date}</p></div><p class="text-md font-black text-amber-700">₹${e.pending.toLocaleString()}</p></div>`).join('') || '<p class="text-slate-300 text-center py-4 italic text-sm">No collections pending.</p>';
         }
 
         function renderEvents() {
             const list = document.getElementById('events-list');
-            const query = document.getElementById('event-search').value.toLowerCase();
+            const query = (document.getElementById('event-search')?.value || "").toLowerCase();
             const filtered = state.events.filter(e => e.client.toLowerCase().includes(query));
-            if(filtered.length === 0) { list.innerHTML = `<p class="col-span-full py-20 text-center text-slate-400 italic">No events found.</p>`; return; }
             list.innerHTML = filtered.map(ev => {
                 const rec = state.payments.filter(p => p.eventId === ev.id).reduce((s, p) => s + p.amount, 0);
                 const pending = ev.billing - rec;
-                return `
-                <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition cursor-pointer" onclick="showEventDetail('${ev.id}')">
-                    <div class="flex justify-between items-start mb-1"><h3 class="font-black text-lg">${ev.client}</h3>
-                        <div class="flex gap-2">
-                            <button onclick="event.stopPropagation(); openEventModal('${ev.id}')" class="text-blue-500 hover:bg-blue-50 p-1 rounded-lg">✏️</button>
-                            <button onclick="event.stopPropagation(); deleteItem('events', '${ev.id}', '${ev.client}')" class="text-red-300 hover:text-red-500 text-xl leading-none">×</button>
-                        </div>
-                    </div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4">${ev.date}</p>
-                    <div class="flex justify-between text-xs mb-2"><span>Billing:</span><span class="font-black">₹${ev.billing.toLocaleString()}</span></div>
-                    <div class="flex justify-between text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded"><span>Pending:</span><span>₹${pending.toLocaleString()}</span></div>
+                return `<div class="bg-white p-5 rounded-3xl border shadow-sm hover:border-blue-300 transition cursor-pointer" onclick="showEventDetail('${ev.id}')">
+                    <div class="flex justify-between items-start mb-1"><h3 class="font-black text-lg leading-none">${ev.client}</h3><div class="flex gap-1"><button onclick="event.stopPropagation(); openEventModal('${ev.id}')" class="text-blue-500 px-2 py-1 rounded text-xs">✏️</button><button onclick="event.stopPropagation(); deleteItem('events', '${ev.id}', '${ev.client}')" class="text-red-300 px-2 py-1 text-lg leading-none">×</button></div></div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">${ev.type || 'Wedding'} • ${ev.date}</p>
+                    <div class="flex justify-between text-xs mb-1"><span>Billing:</span><span class="font-bold">₹${ev.billing.toLocaleString()}</span></div>
+                    <div class="flex justify-between text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded mt-2"><span>Pending:</span><span>₹${pending.toLocaleString()}</span></div>
                 </div>`;
-            }).join('');
+            }).join('') || '<p class="col-span-full py-10 text-center text-slate-300 italic">No events found.</p>';
         }
 
         function renderExpenses() {
             const tbody = document.getElementById('expenses-table-body');
             const list = state.expenses.sort((a,b) => new Date(b.date) - new Date(a.date));
-            if(list.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-20 text-center text-slate-400 italic">No expenses recorded.</td></tr>`; return; }
             document.getElementById('exp-count').innerText = list.length;
             document.getElementById('exp-total-val').innerText = '₹' + list.reduce((s, x) => s + x.amount, 0).toLocaleString();
             tbody.innerHTML = list.map(ex => {
                 const ev = state.events.find(e => e.id === ex.eventId);
                 const ven = state.vendors.find(v => v.id === ex.vendorId);
-                return `<tr class="border-b text-sm group hover:bg-slate-50"><td class="p-4 text-slate-400 font-mono text-[10px]">${ex.date}</td><td class="p-4 font-bold text-blue-800">${ev?.client || '---'}</td><td class="p-4 font-medium text-orange-600 text-xs">${ven?.name || 'Generic'}</td><td class="p-4 uppercase text-[10px] font-black opacity-60">${ex.head}</td><td class="p-4 font-black text-red-600">₹${ex.amount.toLocaleString()}</td><td class="p-4 text-right flex justify-end gap-3">
-                    <button onclick="openExpenseModal('${ex.id}')" class="text-blue-500 font-bold uppercase text-[10px]">Edit</button>
-                    <button onclick="deleteItem('expenses', '${ex.id}', 'Expense ₹${ex.amount}')" class="text-red-300 hover:text-red-500">×</button>
-                </td></tr>`;
-            }).join('');
+                return `<tr class="border-b text-[11px] group hover:bg-slate-50">
+                    <td class="p-4 text-slate-400 font-mono text-[10px]">${ex.date}</td>
+                    <td class="p-4 font-bold text-blue-800">${ev?.client || '---'}<br><small class="text-slate-300">${ev?.date || ''}</small></td>
+                    <td class="p-4 font-bold text-orange-600">${ven?.name || 'Self'}</td>
+                    <td class="p-4 uppercase font-black opacity-40">${ex.category}</td>
+                    <td class="p-4 uppercase font-black opacity-60">${ex.head}</td>
+                    <td class="p-4 font-bold">${ex.mode || 'Cash'}</td>
+                    <td class="p-4 font-black text-red-600 text-sm">₹${ex.amount.toLocaleString()}</td>
+                    <td class="p-4 text-slate-400 italic max-w-xs truncate">${ex.notes || '-'}</td>
+                    <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick="openExpenseModal('${ex.id}')" class="text-blue-500 font-bold uppercase text-[9px]">Edit</button>
+                        <button onclick="deleteItem('expenses', '${ex.id}', 'Expense ₹${ex.amount}')" class="text-red-300 text-lg leading-none">×</button>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="9" class="p-10 text-center text-slate-300">No records found.</td></tr>';
         }
 
         function renderVendors() {
             const list = document.getElementById('vendors-list');
-            if(state.vendors.length === 0) { list.innerHTML = `<p class="col-span-full py-20 text-center text-slate-400 italic">No vendors added.</p>`; return; }
             list.innerHTML = state.vendors.map(v => {
                 const totalBus = state.expenses.filter(ex => ex.vendorId === v.id).reduce((s, x) => s + x.amount, 0);
-                return `
-                <div class="bg-white p-5 rounded-2xl border shadow-sm group">
-                    <div class="flex justify-between items-start mb-2"><p class="font-black text-slate-800">${v.name}</p>
-                        <div class="flex gap-2">
-                            <button onclick="openVendorModal('${v.id}')" class="text-blue-500 font-bold text-[10px] uppercase">Edit</button>
-                            <button onclick="deleteItem('vendors', '${v.id}', '${v.name}')" class="text-slate-200 hover:text-red-500 text-xl leading-none">×</button>
-                        </div>
+                const totalPaid = state.vendorPayments.filter(p => p.vendorId === v.id).reduce((s, p) => s + p.amount, 0);
+                const bal = totalBus - totalPaid;
+                return `<div class="bg-white p-5 rounded-2xl border shadow-sm group hover:border-slate-400 transition cursor-pointer" onclick="showVendorDetail('${v.id}')">
+                    <div class="flex justify-between items-start mb-2"><p class="font-black text-slate-800 text-lg leading-none">${v.name}</p>
+                        <button onclick="event.stopPropagation(); deleteItem('vendors', '${v.id}', '${v.name}')" class="text-slate-200 hover:text-red-500 text-xl leading-none">×</button>
                     </div>
-                    <p class="text-[10px] font-black text-orange-600 uppercase mb-4">${v.specialty}</p>
-                    <div class="mb-4"><p class="text-[9px] font-bold text-slate-400 uppercase">Total Business</p><p class="text-lg font-black text-slate-700">₹${totalBus.toLocaleString()}</p></div>
-                    <div class="flex justify-between items-center pt-2 border-t">
-                        <span class="text-xs font-bold text-slate-400">${v.phone || '--'}</span>
-                        ${v.phone ? `<a href="https://wa.me/${formatPhone(v.phone)}" target="_blank" class="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded font-bold">WhatsApp</a>` : ''}
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4">${v.specialty}</p>
+                    <div class="grid grid-cols-2 gap-2 text-[10px] uppercase font-bold mb-4">
+                        <div class="text-slate-400">Paid: <span class="text-green-600 font-black">₹${totalPaid.toLocaleString()}</span></div>
+                        <div class="text-right text-slate-400">Due: <span class="${bal > 0 ? 'text-red-600' : 'text-green-600'} font-black">₹${bal.toLocaleString()}</span></div>
+                    </div>
+                    <div class="pt-2 border-t flex justify-between items-center text-[10px] font-black text-blue-600 uppercase">
+                        <span>${v.phone || 'NO PHONE'}</span>
+                        <span class="bg-blue-50 px-2 py-1 rounded">Ledger →</span>
                     </div>
                 </div>`;
-            }).join('');
+            }).join('') || '<p class="col-span-full py-10 text-center text-slate-300 italic">No vendors added.</p>';
         }
 
+        // --- DETAIL VIEWS ---
         function showEventDetail(id) {
             const ev = state.events.find(e => e.id === id);
             const exps = state.expenses.filter(x => x.eventId === id);
@@ -416,43 +390,87 @@
             const totalExp = exps.reduce((s, x) => s + x.amount, 0);
             const totalRec = pays.reduce((s, p) => s + p.amount, 0);
             const profit = ev.billing - totalExp;
-            const margin = ev.billing > 0 ? ((profit / ev.billing) * 100).toFixed(1) : 0;
+            
+            // Category Totals
+            const catTotals = exps.reduce((acc, x) => { acc[x.category] = (acc[x.category] || 0) + x.amount; return acc; }, {});
+
             switchTab('event-detail');
             document.getElementById('detail-content').innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <div class="lg:col-span-2 bg-white p-8 rounded-3xl border shadow-sm">
                         <div class="flex justify-between items-start mb-6">
-                            <div><h2 class="text-3xl font-black">${ev.client}</h2><p class="text-slate-400 font-bold uppercase text-xs">${ev.venue} • ${ev.date}</p></div>
-                            <div class="flex gap-2">
-                                <button onclick="openEventModal('${ev.id}')" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold">Edit Event</button>
-                                <a href="https://wa.me/${formatPhone(ev.mobile)}" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded-xl text-xs font-bold">WhatsApp Client</a>
+                            <div><h2 class="text-3xl font-black">${ev.client}</h2><p class="text-slate-400 font-bold uppercase text-xs">${ev.type || 'Wedding'} • ${ev.venue} • ${ev.date}</p></div>
+                            <div class="${profit >= 0 ? 'text-blue-600 bg-blue-50' : 'text-red-600 bg-red-50'} px-6 py-2 rounded-2xl text-center">
+                                <p class="text-[9px] font-bold uppercase">Profit Margin</p><p class="text-xl font-black">${ev.billing > 0 ? ((profit/ev.billing)*100).toFixed(1) : 0}%</p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t uppercase text-[10px] font-bold">
                             <div><p class="text-slate-400">Billing</p><p class="text-xl font-black">₹${ev.billing.toLocaleString()}</p></div>
-                            <div class="text-red-500"><p>Expense</p><p class="text-xl font-black">₹${totalExp.toLocaleString()}</p></div>
+                            <div class="text-red-500"><p>Expenses</p><p class="text-xl font-black">₹${totalExp.toLocaleString()}</p></div>
                             <div class="text-green-600"><p>Received</p><p class="text-xl font-black">₹${totalRec.toLocaleString()}</p></div>
-                            <div class="${profit >= 0 ? 'text-blue-600' : 'text-red-600'}"><p>Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()} (${margin}%)</p></div>
+                            <div class="${profit >= 0 ? 'text-blue-600' : 'text-red-600'}"><p>Net Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()}</p></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 p-8 rounded-3xl border border-amber-200 text-center flex flex-col justify-center">
-                        <p class="text-amber-600 font-bold text-xs uppercase tracking-widest">Pending</p>
+                        <p class="text-amber-600 font-bold text-xs uppercase tracking-widest">Client Pending</p>
                         <p class="text-4xl font-black text-amber-700 mt-2">₹${(ev.billing - totalRec).toLocaleString()}</p>
-                        <button onclick="openPaymentModal('${ev.id}')" class="mt-4 bg-amber-600 text-white py-3 rounded-xl font-bold uppercase text-xs">Record Collection</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-2xl border">
-                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Payment History</h4>
-                        <div class="space-y-2">${pays.map(p => `<div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl"><div><p class="text-[9px] font-bold text-slate-400 uppercase">${p.mode} • ${p.date}</p><p class="font-black text-green-600 text-sm">₹${p.amount.toLocaleString()}</p></div><div class="flex gap-2"><button onclick="openPaymentModal('${ev.id}', '${p.id}')" class="text-blue-500 text-[9px] font-bold uppercase">Edit</button><button onclick="deleteItem('payments', '${p.id}', 'Payment ₹${p.amount}')" class="text-red-300">×</button></div></div>`).join('') || '<p class="text-slate-300 italic">No payments yet.</p>'}</div>
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Category Summary</h4>
+                        <div class="space-y-3">${Object.entries(catTotals).map(([cat, amt]) => `<div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl"><span class="font-black text-[10px] uppercase text-slate-500">${cat}</span><span class="font-black text-slate-800">₹${amt.toLocaleString()}</span></div>`).join('') || '<p class="text-slate-300 italic">No expense breakdown available.</p>'}</div>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl border">
-                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Expense Breakdown</h4>
-                        <div class="space-y-2">${exps.map(x => `<div class="flex justify-between p-3 bg-slate-50 rounded-xl"><span><b class="text-xs uppercase">${x.head}</b><br><small class="text-slate-400">${state.vendors.find(v => v.id === x.vendorId)?.name || 'Generic'}</small></span><span class="font-bold text-red-500">₹${x.amount.toLocaleString()}</span></div>`).join('') || '<p class="text-slate-400 italic">No expenses recorded.</p>'}</div>
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Expense Timeline</h4>
+                        <div class="space-y-2">${exps.map(x => `<div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl group"><div class="flex items-center gap-3"><p class="text-[9px] text-slate-300 font-mono">${x.date}</p><p class="text-xs font-black uppercase text-slate-700">${x.head}</p></div><span class="font-black text-red-500 text-xs">₹${x.amount.toLocaleString()}</span></div>`).join('')}</div>
                     </div>
                 </div>`;
         }
 
+        function showVendorDetail(id) {
+            const v = state.vendors.find(ven => ven.id === id);
+            const exps = state.expenses.filter(x => x.vendorId === id);
+            const vpays = state.vendorPayments.filter(p => p.vendorId === id);
+            const totalBus = exps.reduce((s, x) => s + x.amount, 0);
+            const totalPaid = vpays.reduce((s, p) => s + p.amount, 0);
+
+            switchTab('vendor-detail');
+            document.getElementById('v-detail-content').innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2 bg-white p-8 rounded-3xl border shadow-sm">
+                        <div class="flex justify-between items-start mb-6">
+                            <div><h2 class="text-3xl font-black text-slate-800">${v.name}</h2><p class="text-orange-600 font-black uppercase text-xs">${v.specialty} Vendor</p></div>
+                            <button onclick="openVendorModal('${v.id}')" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-xs font-black uppercase">Edit Profile</button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 pt-6 border-t uppercase text-[10px] font-bold">
+                            <div><p class="text-slate-400">Total Business</p><p class="text-xl font-black">₹${totalBus.toLocaleString()}</p></div>
+                            <div class="text-green-600"><p>Total Paid</p><p class="text-xl font-black">₹${totalPaid.toLocaleString()}</p></div>
+                            <div class="text-red-600"><p>Current Due</p><p class="text-xl font-black">₹${(totalBus - totalPaid).toLocaleString()}</p></div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 p-8 rounded-3xl text-center flex flex-col justify-center shadow-xl">
+                        <p class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">Pay Vendor</p>
+                        <button onclick="openVendorPaymentModal('${v.id}')" class="w-full bg-white text-slate-900 py-3 rounded-2xl font-black uppercase text-xs shadow-lg">Record Outward Payment</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Business History</h4>
+                        <div class="space-y-2">${exps.map(x => `<div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl group"><div><p class="text-[10px] font-black text-slate-400 uppercase">${x.head}</p><p class="text-[9px] font-medium italic text-slate-300">${state.events.find(e => e.id === x.eventId)?.client || '---'}</p></div><span class="font-black text-slate-700 text-sm">₹${x.amount.toLocaleString()}</span></div>`).join('') || '<p class="text-slate-300 italic">No business records.</p>'}</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Payment Ledger</h4>
+                        <div class="space-y-2">${vpays.map(p => `<div class="flex justify-between items-center p-3 bg-green-50 rounded-xl group"><div><p class="text-[10px] font-black text-green-700 uppercase">${p.mode}</p><p class="text-[9px] font-medium text-green-400">${p.date}</p></div><div class="flex gap-3 items-center"><span class="font-black text-green-700 text-sm">₹${p.amount.toLocaleString()}</span><button onclick="deleteItem('vendorPayments', '${p.id}', 'Payment ₹${p.amount}')" class="text-red-300">×</button></div></div>`).join('') || '<p class="text-slate-300 italic">No payments recorded.</p>'}</div>
+                    </div>
+                </div>`;
+        }
+
+        function deleteItem(type, id, name) { 
+            if(confirm(`Delete ${name}?`)) { state[type] = state[type].filter(x => x.id !== id); save(); showToast("Deleted successfully"); } 
+        }
+
+        // --- INIT ---
         renderAll();
     </script>
 </body>
