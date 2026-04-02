@@ -3,25 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flavor Fusion | Event Finance Pro v2.2</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Flavor Fusion Pro v2.7 | Business Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
-        :root { --primary: #2563eb; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; align-items: center; justify-content: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
         .modal.active { display: flex; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .warning { background: #451a03; color: #fdba74; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+        .card {
+            background: #171717;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .warning {
+            background: #451a03;
+            color: #fdba74;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
         .profit { color: #4ade80; }
         .loss { color: #f87171; }
         .pending { color: #fbbf24; }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100">
+<body>
 
     <nav class="bg-zinc-900 border-b border-zinc-800 p-4 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-cyan-400">Flavor Fusion <span class="text-gray-400 text-sm">Event Finance Pro v2.2</span></h1>
+            <h1 class="text-2xl font-bold text-cyan-400">Flavor Fusion <span class="text-gray-400 text-sm">Event Finance Pro v2.7</span></h1>
             <div class="flex space-x-6 text-sm">
                 <button onclick="switchTab('dashboard')" class="hover:text-cyan-400">Dashboard</button>
                 <button onclick="switchTab('events')" class="hover:text-cyan-400">Events</button>
@@ -32,7 +60,9 @@
 
     <main class="max-w-7xl mx-auto p-6">
 
-        <div id="warning" class="warning hidden">⚠️ Sandbox mode - data not persistent. Use Live Server for full saving.</div>
+        <div class="warning">
+            ⚠️ Sandbox mode — data resets on refresh. Use Live Server in VS Code for persistence.
+        </div>
 
         <!-- DASHBOARD -->
         <section id="dashboard" class="tab-content active">
@@ -40,7 +70,7 @@
             
             <div class="bg-zinc-900 p-6 rounded-2xl mb-8">
                 <h2 class="text-lg font-bold mb-4">Pending Collections</h2>
-                <div id="pending-collections" class="space-y-3"></div>
+                <div id="overdue-list" class="space-y-3"></div>
             </div>
 
             <div class="bg-zinc-900 p-6 rounded-2xl">
@@ -53,23 +83,16 @@
         <section id="events" class="tab-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Events Management</h2>
-                <div class="flex gap-3">
-                    <input type="text" id="event-search" placeholder="Search client..." class="bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-2 text-sm" onkeyup="filterEvents()">
-                    <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold">+ Create Event</button>
-                </div>
+                <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold">+ Create Event</button>
             </div>
             <div id="events-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <!-- EXPENSES -->
         <section id="expenses" class="tab-content">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">All Expenses</h2>
-                <button onclick="openExpenseModal()" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-semibold">+ Add Expense</button>
-            </div>
-            <div class="bg-zinc-900 p-4 rounded-2xl mb-4 flex justify-between text-sm">
-                <div>Total Expenses: <span id="expense-total" class="font-bold text-red-400">₹0</span></div>
-                <div>Entries: <span id="expense-count" class="font-bold">0</span></div>
+            <div class="bg-zinc-900 p-4 rounded-2xl mb-6 flex justify-around text-center">
+                <div><p class="text-xs text-gray-400">Entries</p><p id="exp-count" class="text-2xl font-bold">0</p></div>
+                <div><p class="text-xs text-gray-400">Total Spend</p><p id="exp-total-val" class="text-2xl font-bold text-red-400">₹0</p></div>
             </div>
             <div class="bg-zinc-900 rounded-2xl overflow-hidden">
                 <table class="w-full">
@@ -77,7 +100,7 @@
                         <tr>
                             <th class="p-4 text-left">Date</th>
                             <th class="p-4 text-left">Event</th>
-                            <th class="p-4 text-left">Category</th>
+                            <th class="p-4 text-left">Vendor</th>
                             <th class="p-4 text-left">Head</th>
                             <th class="p-4 text-right">Amount</th>
                             <th class="p-4"></th>
@@ -90,7 +113,7 @@
 
         <!-- EVENT DETAIL -->
         <section id="event-detail" class="tab-content">
-            <button onclick="switchTab('events')" class="text-cyan-400 mb-6 flex items-center gap-2">← Back to Events</button>
+            <button onclick="switchTab('events')" class="text-cyan-400 mb-6 flex items-center gap-2">← Back</button>
             <div id="detail-content" class="bg-zinc-900 rounded-3xl p-8"></div>
         </section>
     </main>
@@ -140,10 +163,11 @@
     </div>
 
     <script>
+        // In-memory data (safe for sandboxed environments)
         let state = {
-            events: JSON.parse(localStorage.getItem('ff_events')) || [],
-            expenses: JSON.parse(localStorage.getItem('ff_expenses')) || [],
-            payments: JSON.parse(localStorage.getItem('ff_payments')) || []
+            events: [],
+            expenses: [],
+            payments: []
         };
 
         const expenseHeadsDB = {
@@ -154,13 +178,6 @@
             "Admin": ["Office Expense","Phone / Internet","Printing","License","Commission","Marketing","Tips","Misc"],
             "Adjustment": ["Damage","Refund","Staff Advance","Cash Difference"]
         };
-
-        function saveToDB() {
-            localStorage.setItem('ff_events', JSON.stringify(state.events));
-            localStorage.setItem('ff_expenses', JSON.stringify(state.expenses));
-            localStorage.setItem('ff_payments', JSON.stringify(state.payments));
-            renderAll();
-        }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -187,7 +204,7 @@
 
         function handleEventSubmit() {
             const id = document.getElementById('edit-event-id').value || Date.now().toString();
-            const eventData = {
+            const data = {
                 id: id,
                 client: document.getElementById('ev-client').value,
                 date: document.getElementById('ev-date').value,
@@ -198,12 +215,12 @@
             };
             if (document.getElementById('edit-event-id').value) {
                 const idx = state.events.findIndex(e => e.id === id);
-                if (idx > -1) state.events[idx] = eventData;
+                if (idx > -1) state.events[idx] = data;
             } else {
-                state.events.push(eventData);
+                state.events.push(data);
             }
-            saveToDB();
             closeModals();
+            renderAll();
         }
 
         function openExpenseModal(id = null) {
@@ -238,8 +255,8 @@
             } else {
                 state.expenses.push(expData);
             }
-            saveToDB();
             closeModals();
+            renderAll();
         }
 
         function getEventFinancials(eventId) {
@@ -266,6 +283,7 @@
             const totalBilling = state.events.reduce((sum, e) => sum + (e.billing || 0), 0);
             const totalExp = state.expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
             const totalRec = state.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+            const profit = totalBilling - totalExp;
 
             document.getElementById('stats-grid').innerHTML = `
                 <div class="bg-zinc-900 p-6 rounded-2xl">
@@ -282,7 +300,7 @@
                 </div>
                 <div class="bg-zinc-900 p-6 rounded-2xl">
                     <p class="text-gray-400 text-sm">Expected Profit</p>
-                    <p class="text-3xl font-bold text-green-400">₹${(totalBilling - totalExp).toLocaleString()}</p>
+                    <p class="text-3xl font-bold ${profit >= 0 ? 'profit' : 'loss'}">₹${profit.toLocaleString()}</p>
                 </div>
             `;
 
@@ -303,7 +321,7 @@
                         </div>`;
                 }
             });
-            document.getElementById('pending-collections').innerHTML = pendingHTML || '<p class="text-gray-400">No pending collections 🎉</p>';
+            document.getElementById('overdue-list').innerHTML = pendingHTML || '<p class="text-gray-400">No pending collections 🎉</p>';
         }
 
         function renderEvents() {
@@ -338,14 +356,14 @@
                 <tr onclick="openExpenseModal('${ex.id}')" class="border-b border-zinc-800 hover:bg-zinc-800 cursor-pointer">
                     <td class="p-4">${ex.date}</td>
                     <td class="p-4 font-medium">${event ? event.client : 'Unknown'}</td>
-                    <td class="p-4"><span class="px-3 py-1 bg-zinc-800 text-xs rounded-full">${ex.category}</span></td>
+                    <td class="p-4">${ex.vendor || '—'}</td>
                     <td class="p-4">${ex.head}</td>
                     <td class="p-4 font-bold text-red-400">₹${ex.amount}</td>
                     <td class="p-4 text-blue-400 text-sm">Edit</td>
                 </tr>`;
             }).join('');
-            document.getElementById('expense-total').textContent = `₹${total.toLocaleString()}`;
-            document.getElementById('expense-count').textContent = state.expenses.length;
+            document.getElementById('exp-total-val').innerText = '₹' + total.toLocaleString();
+            document.getElementById('exp-count').innerText = state.expenses.length;
         }
 
         function showEventDetail(id) {
@@ -354,22 +372,15 @@
             const evExpenses = state.expenses.filter(ex => ex.eventId === id);
             const evPayments = state.payments.filter(p => p.eventId === id);
 
-            let categoryBreakdown = '';
+            let catBreakdown = '';
             const catTotals = {};
             evExpenses.forEach(ex => {
                 catTotals[ex.category] = (catTotals[ex.category] || 0) + ex.amount;
             });
             Object.keys(catTotals).forEach(cat => {
-                const percent = ((catTotals[cat] / fin.expenses) * 100).toFixed(1);
-                categoryBreakdown += `<div class="flex justify-between"><span>${cat}</span><span class="font-bold">₹${catTotals[cat]} (${percent}%)</span></div>`;
+                const percent = fin.expenses > 0 ? ((catTotals[cat] / fin.expenses) * 100).toFixed(1) : 0;
+                catBreakdown += `<div class="flex justify-between py-1"><span>${cat}</span><span class="font-bold">₹${catTotals[cat]} (${percent}%)</span></div>`;
             });
-
-            let paymentHTML = evPayments.map(p => `
-                <div class="flex justify-between bg-zinc-800 p-4 rounded-2xl">
-                    <div>${p.date} • ${p.mode}</div>
-                    <div class="text-emerald-400 font-bold">₹${p.amount}</div>
-                </div>
-            `).join('') || '<p class="text-gray-400">No payments yet</p>';
 
             switchTab('event-detail');
             document.getElementById('detail-content').innerHTML = `
@@ -384,11 +395,21 @@
                     </div>
                     <div class="mt-10">
                         <h3 class="font-bold mb-4">Expenses by Category</h3>
-                        <div class="space-y-3">${categoryBreakdown}</div>
+                        <div class="space-y-2">${catBreakdown}</div>
                     </div>
                     <div class="mt-10">
                         <h3 class="font-bold mb-4">Payment History</h3>
-                        <div class="space-y-3">${paymentHTML}</div>
+                        <div class="space-y-3">
+                            ${evPayments.map(p => `
+                                <div class="flex justify-between p-4 bg-emerald-900/30 rounded-2xl">
+                                    <div>
+                                        <span class="text-xs font-bold uppercase">${p.mode}</span>
+                                        <p class="font-bold text-emerald-400">₹${p.amount}</p>
+                                    </div>
+                                    <div class="text-sm text-gray-400">${p.date}</div>
+                                </div>
+                            `).join('') || '<p class="text-gray-400">No payments recorded</p>'}
+                        </div>
                     </div>
                 </div>
             `;
@@ -407,12 +428,6 @@
                 ];
             }
             renderAll();
-
-            try {
-                localStorage.getItem('test');
-            } catch(e) {
-                document.getElementById('warning').classList.remove('hidden');
-            }
         }
 
         window.onload = init;
