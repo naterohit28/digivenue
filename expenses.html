@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flavor Fusion Pro v2.7 | Lean Manager</title>
+    <title>Flavor Fusion Pro v2.8 | Full Control Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; backdrop-filter: blur(4px); }
@@ -11,14 +11,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         #toast { position: fixed; bottom: 20px; right: 20px; display: none; z-index: 100; transition: all 0.3s; }
-        
-        /* Consistent Button Style */
-        .btn-primary { @apply bg-blue-600 text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2; }
-        .btn-secondary { @apply bg-slate-800 text-white px-5 py-2 rounded-xl font-bold hover:bg-slate-900 transition flex items-center gap-2; }
-        .btn-danger { @apply bg-red-500 text-white px-5 py-2 rounded-xl font-bold hover:bg-red-600 transition flex items-center gap-2; }
-        .quick-amt-btn { @apply bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition border border-transparent hover:border-orange-200; }
-        
-        .empty-state { @apply py-20 text-center text-slate-400 italic text-sm font-medium; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans leading-relaxed">
@@ -30,20 +22,17 @@
     <nav class="bg-white border-b p-3 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="logo.png" 
-                     class="h-10 w-auto object-contain" 
-                     onerror="this.src='https://via.placeholder.com/120x40?text=FLAVOR+FUSION'" 
-                     alt="Flavor Fusion">
+                <img src="logo.png" class="h-10 w-auto object-contain" onerror="this.src='https://via.placeholder.com/120x40?text=FLAVOR+FUSION'" alt="Logo">
                 <div class="hidden md:block border-l pl-3 border-slate-100">
                     <h1 class="text-lg font-black leading-none text-orange-600 tracking-tighter uppercase">Flavor Fusion</h1>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Next-Gen Catering</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Catering Control</p>
                 </div>
             </div>
-            <div class="flex space-x-1 md:space-x-4">
-                <button onclick="switchTab('dashboard')" class="text-[10px] md:text-xs font-bold uppercase tracking-widest px-3 py-2 hover:text-orange-500 transition">Dashboard</button>
-                <button onclick="switchTab('events')" class="text-[10px] md:text-xs font-bold uppercase tracking-widest px-3 py-2 hover:text-orange-500 transition">Events</button>
-                <button onclick="switchTab('expenses')" class="text-[10px] md:text-xs font-bold uppercase tracking-widest px-3 py-2 hover:text-orange-500 transition">Expenses</button>
-                <button onclick="switchTab('vendors')" class="text-[10px] md:text-xs font-bold uppercase tracking-widest px-3 py-2 hover:text-orange-500 transition">Vendors</button>
+            <div class="flex space-x-1 md:space-x-4 font-bold uppercase text-[10px] md:text-xs">
+                <button onclick="switchTab('dashboard')" class="px-3 py-2 hover:text-orange-500">Dashboard</button>
+                <button onclick="switchTab('events')" class="px-3 py-2 hover:text-orange-500">Events</button>
+                <button onclick="switchTab('expenses')" class="px-3 py-2 hover:text-orange-500">Expenses</button>
+                <button onclick="switchTab('vendors')" class="px-3 py-2 hover:text-orange-500">Vendors</button>
             </div>
         </div>
     </nav>
@@ -54,17 +43,15 @@
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8" id="stats-grid"></div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border">
-                    <h2 class="text-lg font-black mb-4 flex items-center gap-2">
-                        <span class="w-1.5 h-6 bg-amber-500 rounded-full"></span> Overdue Collections
-                    </h2>
+                    <h2 class="text-lg font-black mb-4 flex items-center gap-2"><span class="w-1.5 h-6 bg-amber-500 rounded-full"></span> Pending Collections</h2>
                     <div id="overdue-list" class="space-y-3"></div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border">
-                    <h2 class="text-sm font-bold mb-4 uppercase tracking-widest text-slate-400">Quick Actions</h2>
+                    <h2 class="text-xs font-bold mb-4 uppercase tracking-widest text-slate-400">Quick Entry</h2>
                     <div class="grid grid-cols-1 gap-3">
-                        <button onclick="openEventModal()" class="btn-primary justify-center">+ Add Event</button>
-                        <button onclick="openExpenseModal()" class="btn-danger justify-center">+ Record Expense</button>
-                        <button onclick="openVendorModal()" class="btn-secondary justify-center">+ New Vendor</button>
+                        <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">+ Add Event</button>
+                        <button onclick="openExpenseModal()" class="bg-red-500 text-white px-5 py-3 rounded-xl font-bold hover:bg-red-600 transition flex items-center justify-center gap-2">+ Record Expense</button>
+                        <button onclick="openVendorModal()" class="bg-slate-800 text-white px-5 py-3 rounded-xl font-bold hover:bg-slate-900 transition flex items-center justify-center gap-2">+ Add Vendor</button>
                     </div>
                 </div>
             </div>
@@ -72,38 +59,37 @@
 
         <section id="events" class="tab-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold tracking-tight">Event Portfolio</h2>
-                <button onclick="openEventModal()" class="btn-primary">+ Add Event</button>
+                <h2 class="text-2xl font-bold tracking-tight">Events</h2>
+                <button onclick="openEventModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2">+ Add Event</button>
             </div>
-            <div class="mb-6"><input type="text" id="event-search" oninput="renderEvents()" placeholder="Search client name..." class="w-full md:w-96 border p-3 rounded-2xl text-sm outline-none focus:border-blue-500 bg-white shadow-sm"></div>
+            <div class="mb-6"><input type="text" id="event-search" oninput="renderEvents()" placeholder="Search client..." class="w-full md:w-96 border p-3 rounded-2xl text-sm outline-none focus:border-blue-500 bg-white shadow-sm"></div>
             <div id="events-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="expenses" class="tab-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold tracking-tight">Expense Registry</h2>
-                <button onclick="openExpenseModal()" class="btn-danger">+ Add Expense</button>
+                <button onclick="openExpenseModal()" class="bg-red-500 text-white px-5 py-2 rounded-xl font-bold hover:bg-red-600 transition flex items-center gap-2">+ Add Expense</button>
             </div>
             <div class="bg-white p-4 rounded-2xl border mb-6 flex justify-around text-center shadow-sm">
                 <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Entries</p><p id="exp-count" class="text-xl font-black">0</p></div>
                 <div class="w-px bg-slate-100"></div>
-                <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Outflow</p><p id="exp-total-val" class="text-xl font-black text-red-600">₹0</p></div>
+                <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Spend</p><p id="exp-total-val" class="text-xl font-black text-red-600">₹0</p></div>
             </div>
             <div class="bg-white rounded-2xl shadow-sm border overflow-hidden overflow-x-auto">
-                <table class="w-full text-left min-w-[600px]">
+                <table class="w-full text-left min-w-[700px]">
                     <thead class="bg-slate-50 border-b text-slate-500 text-[10px] font-black uppercase tracking-widest">
-                        <tr><th class="p-4">Date</th><th class="p-4">Event</th><th class="p-4">Vendor</th><th class="p-4">Amount</th><th class="p-4 text-right">Action</th></tr>
+                        <tr><th class="p-4">Date</th><th class="p-4">Event</th><th class="p-4">Vendor</th><th class="p-4">Head</th><th class="p-4">Amount</th><th class="p-4 text-right">Actions</th></tr>
                     </thead>
                     <tbody id="expenses-table-body"></tbody>
                 </table>
-                <div id="expense-empty" class="empty-state hidden">No expenses recorded.</div>
             </div>
         </section>
 
         <section id="vendors" class="tab-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold tracking-tight">Vendor Directory</h2>
-                <button onclick="openVendorModal()" class="btn-secondary">+ Add Vendor</button>
+                <button onclick="openVendorModal()" class="bg-slate-800 text-white px-5 py-2 rounded-xl font-bold hover:bg-slate-900 transition flex items-center gap-2">+ Add Vendor</button>
             </div>
             <div id="vendors-list" class="grid grid-cols-1 md:grid-cols-4 gap-4"></div>
         </section>
@@ -115,9 +101,24 @@
 
     </main>
 
+    <div id="event-modal" class="modal items-center justify-center p-4">
+        <form onsubmit="handleEventSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
+            <h3 id="event-modal-title" class="text-xl font-bold mb-6 text-blue-600">Event Details</h3>
+            <input type="hidden" id="edit-event-id">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</label><input type="text" id="ev-client" required class="w-full border-b py-2 focus:border-blue-600 outline-none font-bold"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ev-date" required class="w-full border-b py-2 outline-none"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mobile</label><input type="tel" id="ev-mobile" required class="w-full border-b py-2 outline-none"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Billing (₹)</label><input type="number" id="ev-billing" required class="w-full border-b py-2 font-black text-blue-600 outline-none"></div>
+                <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Venue</label><input type="text" id="ev-venue" class="w-full border-b py-2 outline-none"></div>
+            </div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold">Save Event</button></div>
+        </form>
+    </div>
+
     <div id="expense-modal" class="modal items-center justify-center p-4">
         <form onsubmit="handleExpenseSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
-            <h3 class="text-xl font-black mb-6 text-red-600">Record Expense</h3>
+            <h3 id="expense-modal-title" class="text-xl font-black mb-6 text-red-600">Record Expense</h3>
             <input type="hidden" id="edit-expense-id">
             <div class="space-y-5">
                 <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Event</label><select id="ex-event" required class="w-full border-b py-2 outline-none font-bold bg-transparent"></select></div>
@@ -129,10 +130,9 @@
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (₹)</label>
                     <input type="number" id="ex-amount" required class="w-full border-b py-2 font-black text-red-600 text-2xl outline-none">
                     <div class="flex gap-2 mt-2">
-                        <button type="button" onclick="setAmt(500)" class="quick-amt-btn">₹500</button>
-                        <button type="button" onclick="setAmt(1000)" class="quick-amt-btn">₹1000</button>
-                        <button type="button" onclick="setAmt(2000)" class="quick-amt-btn">₹2000</button>
-                        <button type="button" onclick="setAmt(5000)" class="quick-amt-btn">₹5000</button>
+                        <button type="button" onclick="setAmt(500)" class="bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition">₹500</button>
+                        <button type="button" onclick="setAmt(1000)" class="bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition">₹1000</button>
+                        <button type="button" onclick="setAmt(2000)" class="bg-slate-100 hover:bg-orange-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold transition">₹2000</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -140,22 +140,7 @@
                     <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vendor</label><select id="ex-vendor" class="w-full border-b py-2 outline-none font-bold text-orange-600 bg-transparent"></select></div>
                 </div>
             </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400 px-4">Cancel</button><button type="submit" class="bg-red-500 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-red-100">Save Expense</button></div>
-        </form>
-    </div>
-
-    <div id="event-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handleEventSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
-            <h3 class="text-xl font-bold mb-6 text-blue-600">Event Details</h3>
-            <input type="hidden" id="edit-event-id">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</label><input type="text" id="ev-client" required class="w-full border-b py-2 focus:border-blue-600 outline-none font-bold"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ev-date" required class="w-full border-b py-2 outline-none"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mobile</label><input type="tel" id="ev-mobile" required class="w-full border-b py-2 outline-none"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Billing (₹)</label><input type="number" id="ev-billing" required class="w-full border-b py-2 font-black text-blue-600 outline-none"></div>
-                <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Venue</label><input type="text" id="ev-venue" class="w-full border-b py-2 outline-none"></div>
-            </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400 px-4">Cancel</button><button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-100">Save Event</button></div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-red-500 text-white px-8 py-3 rounded-2xl font-bold">Save Expense</button></div>
         </form>
     </div>
 
@@ -171,7 +156,7 @@
                 </div>
                 <div><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Phone Number</label><input type="tel" id="vn-phone" class="w-full border-b py-2 outline-none" placeholder="9876543210"></div>
             </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400 px-4">Cancel</button><button type="submit" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Save Vendor</button></div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold">Save Vendor</button></div>
         </form>
     </div>
 
@@ -181,11 +166,11 @@
             <input type="hidden" id="pay-event-id">
             <input type="hidden" id="edit-pay-id">
             <div class="space-y-4">
-                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Amount Collected</label><input type="number" id="pay-amount" required class="w-full border-b py-2 font-black text-green-600 outline-none text-2xl"></div>
-                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Payment Date</label><input type="date" id="pay-date" required class="w-full border-b py-2 outline-none"></div>
+                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Amount</label><input type="number" id="pay-amount" required class="w-full border-b py-2 font-black text-green-600 outline-none text-2xl"></div>
+                <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Date</label><input type="date" id="pay-date" required class="w-full border-b py-2 outline-none"></div>
                 <div><label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Mode</label><select id="pay-mode" class="w-full border-b py-2 outline-none font-bold"><option>Cash</option><option>UPI</option><option>Bank Transfer</option></select></div>
             </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400 px-4">Cancel</button><button type="submit" class="bg-green-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-green-100">Save</button></div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs tracking-widest">Save</button></div>
         </form>
     </div>
 
@@ -195,7 +180,7 @@
         const expenseHeadsDB = {
             "Raw Material": ["Grocery – किराणा", "Other Grocery", "Vegetable – भाजी", "Fruits", "Juice", "Water", "Ice + Milk", "Bread", "Pickle", "Sweet", "Dry Fruits", "Spices", "Oil / Ghee", "Paneer / Dairy"],
             "Live Counter": ["Chaat", "Starter", "Dosa", "Chinese", "Ice Cream", "Paan Mukhwas", "Counter Setup", "Pav Bhaji", "Pizza", "Dessert", "Beverage"],
-            "Labour": ["Rojiya Labour", "Boys", "Ghati", "Cook", "Helper Staff", "Roti Labour", "Cleaner", "PRO", "Supervisor", "Loading"],
+            "Labour": ["Rojiya Labour", "Boys", "Ghati", "Cook", "Helper", "Roti Labour", "Cleaner", "PRO", "Supervisor", "Loading"],
             "Operations": ["Transport", "Fuel / Diesel", "Gas", "Rented Material", "Disposable", "Packaging", "New Utensils", "Generator", "Water Tanker"],
             "Admin": ["Royalty", "Office", "Phone", "Printing", "License", "Commission", "Marketing", "Tips", "Misc"],
             "Adjustment": ["Damage", "Refund", "Staff Advance", "Cash Difference"]
@@ -217,22 +202,30 @@
             renderAll();
         }
 
+        function generateID(pre) { return pre + Date.now() + Math.random().toString(36).substr(2, 5); }
         function getToday() { return new Date().toISOString().split('T')[0]; }
-        function setAmt(val) { document.getElementById('ex-amount').value = val; }
+        function setAmt(v) { document.getElementById('ex-amount').value = v; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
-        function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = msg; t.style.display = 'flex'; setTimeout(() => t.style.display = 'none', 3000); }
+        function showToast(m) { const t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = m; t.style.display = 'flex'; setTimeout(() => t.style.display = 'none', 3000); }
+        function formatPhone(n) { n = n.replace(/\D/g,''); return n.startsWith('91') ? '+'+n : '+91'+n; }
+        
         function updateHeads(catId, subCatId) {
             const cat = document.getElementById(catId).value;
             const sub = document.getElementById(subCatId);
             sub.innerHTML = (expenseHeadsDB[cat] || []).map(h => `<option value="${h}">${h}</option>`).join('');
         }
-        function switchTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById(id).classList.add('active'); renderAll(); }
+
+        function switchTab(id) { 
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
+            document.getElementById(id).classList.add('active'); 
+            renderAll(); 
+        }
 
         // --- HANDLERS ---
         function handleEventSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('edit-event-id').value;
-            const data = { id: id || "EV"+Date.now(), client: document.getElementById('ev-client').value, date: document.getElementById('ev-date').value, mobile: document.getElementById('ev-mobile').value, billing: parseFloat(document.getElementById('ev-billing').value), venue: document.getElementById('ev-venue').value };
+            const data = { id: id || generateID("EV"), client: document.getElementById('ev-client').value, date: document.getElementById('ev-date').value, mobile: document.getElementById('ev-mobile').value, billing: parseFloat(document.getElementById('ev-billing').value), venue: document.getElementById('ev-venue').value };
             if(id) state.events = state.events.map(ev => ev.id === id ? data : ev);
             else state.events.push(data);
             save(); closeModals(); showToast("Event Saved");
@@ -241,7 +234,7 @@
         function handleExpenseSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('edit-expense-id').value;
-            const data = { id: id || "EX"+Date.now(), eventId: document.getElementById('ex-event').value, category: document.getElementById('ex-cat').value, head: document.getElementById('ex-head').value, amount: parseFloat(document.getElementById('ex-amount').value), date: document.getElementById('ex-date').value, vendorId: document.getElementById('ex-vendor').value };
+            const data = { id: id || generateID("EX"), eventId: document.getElementById('ex-event').value, category: document.getElementById('ex-cat').value, head: document.getElementById('ex-head').value, amount: parseFloat(document.getElementById('ex-amount').value), date: document.getElementById('ex-date').value, vendorId: document.getElementById('ex-vendor').value };
             if(id) state.expenses = state.expenses.map(x => x.id === id ? data : x);
             else state.expenses.push(data);
             save(); closeModals(); showToast("Expense Recorded");
@@ -250,46 +243,90 @@
         function handleVendorSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('edit-vendor-id').value;
-            const data = { id: id || "VN"+Date.now(), name: document.getElementById('vn-name').value, category: document.getElementById('vn-cat').value, specialty: document.getElementById('vn-head').value, phone: document.getElementById('vn-phone').value };
+            const data = { id: id || generateID("VN"), name: document.getElementById('vn-name').value, category: document.getElementById('vn-cat').value, specialty: document.getElementById('vn-head').value, phone: document.getElementById('vn-phone').value };
             if(id) state.vendors = state.vendors.map(v => v.id === id ? data : v);
             else state.vendors.push(data);
-            save(); closeModals(); showToast("Vendor Registry Updated");
+            save(); closeModals(); showToast("Vendor Updated");
         }
 
         function handlePaymentSubmit(e) {
             e.preventDefault();
             const eid = document.getElementById('pay-event-id').value;
-            state.payments.push({ id: "PAY"+Date.now(), eventId: eid, amount: parseFloat(document.getElementById('pay-amount').value), date: document.getElementById('pay-date').value, mode: document.getElementById('pay-mode').value });
-            save(); closeModals(); showToast("Payment Received");
+            const pid = document.getElementById('edit-pay-id').value;
+            const data = { id: pid || generateID("PAY"), eventId: eid, amount: parseFloat(document.getElementById('pay-amount').value), date: document.getElementById('pay-date').value, mode: document.getElementById('pay-mode').value };
+            if(pid) state.payments = state.payments.map(p => p.id === pid ? data : p);
+            else state.payments.push(data);
+            save(); closeModals(); showToast("Payment Saved");
             if (document.getElementById('event-detail').classList.contains('active')) showEventDetail(eid);
         }
 
         // --- MODAL OPENERS ---
-        function openEventModal() { document.getElementById('event-modal').querySelector('form').reset(); document.getElementById('edit-event-id').value = ""; document.getElementById('event-modal').classList.add('active'); }
-        
-        function openExpenseModal() {
+        function openEventModal(id = null) {
+            const m = document.getElementById('event-modal'); m.querySelector('form').reset();
+            document.getElementById('edit-event-id').value = id || "";
+            if(id) {
+                const ev = state.events.find(e => e.id === id);
+                document.getElementById('ev-client').value = ev.client;
+                document.getElementById('ev-date').value = ev.date;
+                document.getElementById('ev-mobile').value = ev.mobile;
+                document.getElementById('ev-billing').value = ev.billing;
+                document.getElementById('ev-venue').value = ev.venue;
+            }
+            m.classList.add('active');
+        }
+
+        function openExpenseModal(id = null) {
             const m = document.getElementById('expense-modal'); m.querySelector('form').reset();
+            document.getElementById('edit-expense-id').value = id || "";
             document.getElementById('ex-event').innerHTML = state.events.map(e => `<option value="${e.id}">${e.client}</option>`).join('') || '<option value="">Add Event First</option>';
             document.getElementById('ex-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
             updateHeads('ex-cat', 'ex-head');
             document.getElementById('ex-vendor').innerHTML = `<option value="">Generic / Self</option>` + state.vendors.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
             document.getElementById('ex-date').value = getToday();
-            document.getElementById('expense-modal').classList.add('active');
+            if(id) {
+                const x = state.expenses.find(ex => ex.id === id);
+                document.getElementById('ex-event').value = x.eventId;
+                document.getElementById('ex-cat').value = x.category;
+                updateHeads('ex-cat', 'ex-head');
+                document.getElementById('ex-head').value = x.head;
+                document.getElementById('ex-amount').value = x.amount;
+                document.getElementById('ex-date').value = x.date;
+                document.getElementById('ex-vendor').value = x.vendorId;
+            }
+            m.classList.add('active');
         }
 
-        function openVendorModal() {
+        function openVendorModal(id = null) {
             const m = document.getElementById('vendor-modal'); m.querySelector('form').reset();
+            document.getElementById('edit-vendor-id').value = id || "";
             document.getElementById('vn-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
             updateHeads('vn-cat', 'vn-head');
-            document.getElementById('vendor-modal').classList.add('active');
+            if(id) {
+                const v = state.vendors.find(ven => ven.id === id);
+                document.getElementById('vn-name').value = v.name;
+                document.getElementById('vn-cat').value = v.category;
+                updateHeads('vn-cat', 'vn-head');
+                document.getElementById('vn-head').value = v.specialty;
+                document.getElementById('vn-phone').value = v.phone || '';
+            }
+            m.classList.add('active');
         }
 
-        function openPaymentModal(eid) {
-            document.getElementById('payment-modal').querySelector('form').reset();
+        function openPaymentModal(eid, pid = null) {
+            const m = document.getElementById('payment-modal'); m.querySelector('form').reset();
             document.getElementById('pay-event-id').value = eid;
+            document.getElementById('edit-pay-id').value = pid || "";
             document.getElementById('pay-date').value = getToday();
-            document.getElementById('payment-modal').classList.add('active');
+            if(pid) {
+                const p = state.payments.find(x => x.id === pid);
+                document.getElementById('pay-amount').value = p.amount;
+                document.getElementById('pay-date').value = p.date;
+                document.getElementById('pay-mode').value = p.mode;
+            }
+            m.classList.add('active');
         }
+
+        function deleteItem(type, id, name) { if(confirm(`Delete ${name}?`)) { state[type] = state[type].filter(x => x.id !== id); save(); } }
 
         // --- RENDERERS ---
         function renderAll() { renderDashboard(); renderEvents(); renderExpenses(); renderVendors(); }
@@ -299,72 +336,77 @@
             const totalExp = state.expenses.reduce((s, e) => s + e.amount, 0);
             const totalRec = state.payments.reduce((s, p) => s + p.amount, 0);
             const profit = totalBill - totalExp;
-
             document.getElementById('stats-grid').innerHTML = `
-                <div class="bg-white p-4 rounded-2xl border shadow-sm"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Portfolio</p><p class="text-xl font-black">₹${totalBill.toLocaleString()}</p></div>
+                <div class="bg-white p-4 rounded-2xl border shadow-sm"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Portfolio</p><p class="text-xl font-black">₹${totalBill.toLocaleString()}</p></div>
                 <div class="bg-white p-4 rounded-2xl border shadow-sm text-red-500"><p class="text-[10px] font-bold uppercase opacity-60">Expenses</p><p class="text-xl font-black">₹${totalExp.toLocaleString()}</p></div>
                 <div class="bg-white p-4 rounded-2xl border shadow-sm text-green-600"><p class="text-[10px] font-bold uppercase opacity-60">Received</p><p class="text-xl font-black">₹${totalRec.toLocaleString()}</p></div>
                 <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 text-amber-700"><p class="text-[10px] font-bold uppercase opacity-60">Pending</p><p class="text-xl font-black">₹${(totalBill - totalRec).toLocaleString()}</p></div>
-                <div class="${profit >= 0 ? 'bg-blue-600' : 'bg-red-600'} p-4 rounded-2xl text-white shadow-lg shadow-blue-100"><p class="text-[10px] font-bold uppercase opacity-70">Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()}</p></div>
+                <div class="${profit >= 0 ? 'bg-green-600' : 'bg-red-600'} p-4 rounded-2xl text-white shadow-lg"><p class="text-[10px] font-bold uppercase opacity-70">Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()}</p></div>
             `;
-
-            const overdue = state.events.map(ev => {
-                const rec = state.payments.filter(p => p.eventId === ev.id).reduce((s, p) => s + p.amount, 0);
-                return { ...ev, pending: ev.billing - rec };
-            }).filter(e => e.pending > 0).sort((a,b) => b.pending - a.pending);
-
-            document.getElementById('overdue-list').innerHTML = overdue.map(e => `
-                <div class="flex justify-between items-center p-4 bg-amber-50 rounded-2xl border border-amber-100 cursor-pointer" onclick="showEventDetail('${e.id}')">
-                    <div><p class="font-bold">${e.client}</p><p class="text-[10px] uppercase font-bold text-amber-600">${e.date}</p></div>
-                    <p class="text-lg font-black text-amber-700">₹${e.pending.toLocaleString()}</p>
-                </div>
-            `).join('') || '<p class="text-slate-300 italic text-center p-8">No collections pending.</p>';
+            const overdue = state.events.map(ev => { const rec = state.payments.filter(p => p.eventId === ev.id).reduce((s, p) => s + p.amount, 0); return { ...ev, pending: ev.billing - rec }; }).filter(e => e.pending > 0).sort((a,b) => b.pending - a.pending);
+            document.getElementById('overdue-list').innerHTML = overdue.map(e => `<div class="flex justify-between items-center p-4 bg-amber-50 rounded-2xl border border-amber-100 cursor-pointer" onclick="showEventDetail('${e.id}')"><div><p class="font-bold">${e.client}</p><p class="text-[10px] font-bold text-amber-600">${e.date}</p></div><p class="text-lg font-black text-amber-700">₹${e.pending.toLocaleString()}</p></div>`).join('') || '<p class="text-slate-300 italic text-center p-8">No collections pending.</p>';
         }
 
         function renderEvents() {
             const list = document.getElementById('events-list');
-            if(state.events.length === 0) { list.innerHTML = `<p class="col-span-full empty-state">No events yet. Add your first event.</p>`; return; }
             const query = document.getElementById('event-search').value.toLowerCase();
             const filtered = state.events.filter(e => e.client.toLowerCase().includes(query));
+            if(filtered.length === 0) { list.innerHTML = `<p class="col-span-full py-20 text-center text-slate-400 italic">No events found.</p>`; return; }
             list.innerHTML = filtered.map(ev => {
                 const rec = state.payments.filter(p => p.eventId === ev.id).reduce((s, p) => s + p.amount, 0);
+                const pending = ev.billing - rec;
                 return `
                 <div class="bg-white p-6 rounded-3xl border shadow-sm hover:border-blue-400 transition cursor-pointer" onclick="showEventDetail('${ev.id}')">
-                    <div class="flex justify-between items-start mb-1"><h3 class="font-black text-lg">${ev.client}</h3><button onclick="event.stopPropagation(); deleteItem('events', '${ev.id}', '${ev.client}')" class="text-slate-200 hover:text-red-500 text-xl">×</button></div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">${ev.date}</p>
+                    <div class="flex justify-between items-start mb-1"><h3 class="font-black text-lg">${ev.client}</h3>
+                        <div class="flex gap-2">
+                            <button onclick="event.stopPropagation(); openEventModal('${ev.id}')" class="text-blue-500 hover:bg-blue-50 p-1 rounded-lg">✏️</button>
+                            <button onclick="event.stopPropagation(); deleteItem('events', '${ev.id}', '${ev.client}')" class="text-red-300 hover:text-red-500 text-xl leading-none">×</button>
+                        </div>
+                    </div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4">${ev.date}</p>
                     <div class="flex justify-between text-xs mb-2"><span>Billing:</span><span class="font-black">₹${ev.billing.toLocaleString()}</span></div>
-                    <div class="flex justify-between text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded"><span>Pending:</span><span>₹${(ev.billing - rec).toLocaleString()}</span></div>
+                    <div class="flex justify-between text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded"><span>Pending:</span><span>₹${pending.toLocaleString()}</span></div>
                 </div>`;
             }).join('');
         }
 
         function renderExpenses() {
-            const empty = document.getElementById('expense-empty');
             const tbody = document.getElementById('expenses-table-body');
-            if(state.expenses.length === 0) { empty.classList.remove('hidden'); tbody.innerHTML = ""; return; }
-            empty.classList.add('hidden');
             const list = state.expenses.sort((a,b) => new Date(b.date) - new Date(a.date));
+            if(list.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-20 text-center text-slate-400 italic">No expenses recorded.</td></tr>`; return; }
             document.getElementById('exp-count').innerText = list.length;
             document.getElementById('exp-total-val').innerText = '₹' + list.reduce((s, x) => s + x.amount, 0).toLocaleString();
             tbody.innerHTML = list.map(ex => {
                 const ev = state.events.find(e => e.id === ex.eventId);
                 const ven = state.vendors.find(v => v.id === ex.vendorId);
-                return `<tr class="border-b text-sm"><td class="p-4 text-slate-400">${ex.date}</td><td class="p-4 font-bold text-blue-800">${ev?.client || '---'}</td><td class="p-4 font-medium text-slate-600 text-xs">${ven?.name || 'Generic'}</td><td class="p-4 font-black text-red-600">₹${ex.amount.toLocaleString()}</td><td class="p-4 text-right"><button onclick="deleteItem('expenses', '${ex.id}', 'Expense of ₹${ex.amount}')" class="text-red-300 hover:text-red-500">×</button></td></tr>`;
+                return `<tr class="border-b text-sm group hover:bg-slate-50"><td class="p-4 text-slate-400 font-mono text-[10px]">${ex.date}</td><td class="p-4 font-bold text-blue-800">${ev?.client || '---'}</td><td class="p-4 font-medium text-orange-600 text-xs">${ven?.name || 'Generic'}</td><td class="p-4 uppercase text-[10px] font-black opacity-60">${ex.head}</td><td class="p-4 font-black text-red-600">₹${ex.amount.toLocaleString()}</td><td class="p-4 text-right flex justify-end gap-3">
+                    <button onclick="openExpenseModal('${ex.id}')" class="text-blue-500 font-bold uppercase text-[10px]">Edit</button>
+                    <button onclick="deleteItem('expenses', '${ex.id}', 'Expense ₹${ex.amount}')" class="text-red-300 hover:text-red-500">×</button>
+                </td></tr>`;
             }).join('');
         }
 
         function renderVendors() {
             const list = document.getElementById('vendors-list');
-            if(state.vendors.length === 0) { list.innerHTML = `<p class="col-span-full empty-state">No vendors added.</p>`; return; }
-            list.innerHTML = state.vendors.map(v => `
+            if(state.vendors.length === 0) { list.innerHTML = `<p class="col-span-full py-20 text-center text-slate-400 italic">No vendors added.</p>`; return; }
+            list.innerHTML = state.vendors.map(v => {
+                const totalBus = state.expenses.filter(ex => ex.vendorId === v.id).reduce((s, x) => s + x.amount, 0);
+                return `
                 <div class="bg-white p-5 rounded-2xl border shadow-sm group">
-                    <div class="flex justify-between items-start mb-2"><p class="font-black text-slate-800">${v.name}</p><button onclick="deleteItem('vendors', '${v.id}', '${v.name}')" class="text-slate-200 hover:text-red-500 text-xl leading-none">×</button></div>
+                    <div class="flex justify-between items-start mb-2"><p class="font-black text-slate-800">${v.name}</p>
+                        <div class="flex gap-2">
+                            <button onclick="openVendorModal('${v.id}')" class="text-blue-500 font-bold text-[10px] uppercase">Edit</button>
+                            <button onclick="deleteItem('vendors', '${v.id}', '${v.name}')" class="text-slate-200 hover:text-red-500 text-xl leading-none">×</button>
+                        </div>
+                    </div>
                     <p class="text-[10px] font-black text-orange-600 uppercase mb-4">${v.specialty}</p>
+                    <div class="mb-4"><p class="text-[9px] font-bold text-slate-400 uppercase">Total Business</p><p class="text-lg font-black text-slate-700">₹${totalBus.toLocaleString()}</p></div>
                     <div class="flex justify-between items-center pt-2 border-t">
                         <span class="text-xs font-bold text-slate-400">${v.phone || '--'}</span>
-                        ${v.phone ? `<a href="https://wa.me/+91${v.phone.replace(/\D/g,'')}" target="_blank" class="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded font-bold">WhatsApp</a>` : ''}
+                        ${v.phone ? `<a href="https://wa.me/${formatPhone(v.phone)}" target="_blank" class="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded font-bold">WhatsApp</a>` : ''}
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
 
         function showEventDetail(id) {
@@ -375,36 +417,42 @@
             const totalRec = pays.reduce((s, p) => s + p.amount, 0);
             const profit = ev.billing - totalExp;
             const margin = ev.billing > 0 ? ((profit / ev.billing) * 100).toFixed(1) : 0;
-
             switchTab('event-detail');
             document.getElementById('detail-content').innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <div class="lg:col-span-2 bg-white p-8 rounded-3xl border shadow-sm">
                         <div class="flex justify-between items-start mb-6">
                             <div><h2 class="text-3xl font-black">${ev.client}</h2><p class="text-slate-400 font-bold uppercase text-xs">${ev.venue} • ${ev.date}</p></div>
-                            <div class="bg-slate-100 px-4 py-2 rounded-xl text-center"><p class="text-[9px] font-bold text-slate-400 uppercase">Margin</p><p class="font-black text-blue-600">${margin}%</p></div>
+                            <div class="flex gap-2">
+                                <button onclick="openEventModal('${ev.id}')" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold">Edit Event</button>
+                                <a href="https://wa.me/${formatPhone(ev.mobile)}" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded-xl text-xs font-bold">WhatsApp Client</a>
+                            </div>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t uppercase text-[10px] font-bold">
                             <div><p class="text-slate-400">Billing</p><p class="text-xl font-black">₹${ev.billing.toLocaleString()}</p></div>
                             <div class="text-red-500"><p>Expense</p><p class="text-xl font-black">₹${totalExp.toLocaleString()}</p></div>
                             <div class="text-green-600"><p>Received</p><p class="text-xl font-black">₹${totalRec.toLocaleString()}</p></div>
-                            <div class="${profit >= 0 ? 'text-blue-600' : 'text-red-600'}"><p>Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()}</p></div>
+                            <div class="${profit >= 0 ? 'text-blue-600' : 'text-red-600'}"><p>Profit</p><p class="text-xl font-black">₹${profit.toLocaleString()} (${margin}%)</p></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 p-8 rounded-3xl border border-amber-200 text-center flex flex-col justify-center">
                         <p class="text-amber-600 font-bold text-xs uppercase tracking-widest">Pending</p>
                         <p class="text-4xl font-black text-amber-700 mt-2">₹${(ev.billing - totalRec).toLocaleString()}</p>
-                        <button onclick="openPaymentModal('${ev.id}')" class="mt-4 bg-amber-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-amber-200 uppercase text-xs">Record Collection</button>
+                        <button onclick="openPaymentModal('${ev.id}')" class="mt-4 bg-amber-600 text-white py-3 rounded-xl font-bold uppercase text-xs">Record Collection</button>
                     </div>
                 </div>
-            `;
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-2xl border">
+                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Payment History</h4>
+                        <div class="space-y-2">${pays.map(p => `<div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl"><div><p class="text-[9px] font-bold text-slate-400 uppercase">${p.mode} • ${p.date}</p><p class="font-black text-green-600 text-sm">₹${p.amount.toLocaleString()}</p></div><div class="flex gap-2"><button onclick="openPaymentModal('${ev.id}', '${p.id}')" class="text-blue-500 text-[9px] font-bold uppercase">Edit</button><button onclick="deleteItem('payments', '${p.id}', 'Payment ₹${p.amount}')" class="text-red-300">×</button></div></div>`).join('') || '<p class="text-slate-300 italic">No payments yet.</p>'}</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border">
+                        <h4 class="font-black text-xs uppercase text-slate-400 mb-4 tracking-widest">Expense Breakdown</h4>
+                        <div class="space-y-2">${exps.map(x => `<div class="flex justify-between p-3 bg-slate-50 rounded-xl"><span><b class="text-xs uppercase">${x.head}</b><br><small class="text-slate-400">${state.vendors.find(v => v.id === x.vendorId)?.name || 'Generic'}</small></span><span class="font-bold text-red-500">₹${x.amount.toLocaleString()}</span></div>`).join('') || '<p class="text-slate-400 italic">No expenses recorded.</p>'}</div>
+                    </div>
+                </div>`;
         }
 
-        function deleteItem(type, id, name) {
-            if(confirm(`Delete ${name}?`)) { state[type] = state[type].filter(x => x.id !== id); save(); showToast("Removed successfully"); }
-        }
-
-        // --- INIT ---
         renderAll();
     </script>
 </body>
