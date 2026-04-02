@@ -3,105 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Flavor Fusion | Business Ledger Pro</title>
+    <title>Flavor Fusion Pro | Control Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #EA580C;
-            --bg-color: #0F172A;
-            --card-bg: #1E293B;
-            --text-main: #F1F5F9;
-            --text-muted: #94A3B8;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --text: #F1F5F9;
             --border: #334155;
         }
-
         .light {
-            --bg-color: #F8FAFC;
-            --card-bg: #FFFFFF;
-            --text-main: #0F172A;
-            --text-muted: #64748B;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #0F172A;
             --border: #E2E8F0;
         }
-
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-main);
-            transition: all 0.3s ease;
-            -webkit-tap-highlight-color: transparent;
+            background-color: var(--bg); 
+            color: var(--text);
+            transition: all 0.2s ease;
         }
-
-        /* Sidebar Logic */
-        #sidebar { 
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--border);
-        }
+        .sidebar { background-color: var(--card); border-right: 1px solid var(--border); }
+        .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 1rem; }
         
-        @media (max-width: 1024px) {
-            #sidebar { transform: translateX(-100%); width: 280px; z-index: 100; }
-            #sidebar.open { transform: translateX(0); }
-            #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90; }
-            #sidebar-overlay.open { display: block; }
-        }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; backdrop-filter: blur(8px); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; backdrop-filter: blur(10px); }
         .modal.active { display: flex; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 1.5rem; }
-        .sidebar-btn { color: var(--text-main); }
-        .sidebar-btn:hover { background-color: rgba(234, 88, 12, 0.1); color: #EA580C; }
+        /* Mobile Optimization */
+        @media (max-width: 1024px) {
+            #sidebar { transform: translateX(-100%); width: 280px; position: fixed; height: 100%; z-index: 200; }
+            #sidebar.open { transform: translateX(0); }
+            #overlay.open { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 190; }
+        }
 
-        /* Responsive Mobile Table */
+        /* Mobile Table to Card Transformation */
         @media (max-width: 768px) {
-            .responsive-table thead { display: none; }
-            .responsive-table tr { 
-                display: flex; flex-direction: column; margin-bottom: 1rem; padding: 1.25rem; 
-                background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 1rem;
-            }
-            .responsive-table td { display: flex; justify-content: space-between; padding: 8px 0; border: none !important; }
-            .responsive-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; }
+            .resp-table thead { display: none; }
+            .resp-table tr { display: flex; flex-direction: column; margin-bottom: 1rem; padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 1rem; }
+            .resp-table td { display: flex; justify-content: space-between; padding: 0.5rem 0; border: none !important; font-size: 0.85rem; }
+            .resp-table td::before { content: attr(data-label); font-weight: 700; opacity: 0.5; text-transform: uppercase; font-size: 0.7rem; }
         }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden">
+<body class="min-h-screen">
 
-    <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
-    
-    <div id="toast" class="fixed bottom-6 right-6 hidden z-[200] bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl shadow-2xl font-semibold flex items-center gap-3">
-        <span id="toast-msg">Success</span>
-    </div>
+    <div id="overlay" onclick="toggleSidebar()"></div>
 
-    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 flex flex-col overflow-y-auto">
+    <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 flex flex-col transition-transform duration-300">
         <div class="p-6 border-b border-slate-500/10">
             <div class="flex items-center gap-3">
-                <svg width="40" height="40" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="40" height="40" viewBox="0 0 512 512" fill="none">
                     <path d="M124.9 334.8c-23.7-18.4-56.8-11.8-73.9 14.7-15.5 24.1-10.9 56 10.2 74.3 21.1 18.4 54.2 11.8 71.3-12.3 17.1-24.1 16.3-58.4-7.6-76.7z" fill="#EA580C"/>
                     <path d="M256 32C172.1 32 104 100.1 104 184c0 38.8 14.5 74.2 38.4 101.1l-4.1 4.1c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l4.1-4.1c26.9 23.9 62.3 38.4 101.1 38.4s74.2-14.5 101.1-38.4l4.1 4.1c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-4.1-4.1c23.9-26.9 38.4-62.3 38.4-101.1 0-83.9-68.1-152-152-152z" fill="#334155"/>
                 </svg>
                 <div>
-                    <h1 class="text-lg font-bold text-orange-600 leading-none">FLAVOR FUSION</h1>
-                    <p class="text-[9px] font-bold text-slate-500 uppercase mt-1">PRO Control</p>
+                    <h1 class="text-lg font-black text-orange-600 leading-none">FLAVOR FUSION</h1>
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mt-1">Management Pro</p>
                 </div>
             </div>
         </div>
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-semibold text-sm"><span>📊</span> Dashboard</button>
-            <button onclick="switchTab('events')" id="nav-events" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-semibold text-sm"><span>📅</span> Events</button>
-            <button onclick="switchTab('expenses')" id="nav-expenses" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-semibold text-sm"><span>💸</span> Expenses</button>
-            <button onclick="switchTab('vendors')" id="nav-vendors" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-semibold text-sm"><span>🤝</span> Vendors</button>
+        <nav class="flex-1 px-4 py-8 space-y-2">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm hover:bg-orange-500/10"><span>📊</span> Dashboard</button>
+            <button onclick="switchTab('events')" id="nav-events" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm hover:bg-orange-500/10"><span>📅</span> Events</button>
+            <button onclick="switchTab('expenses')" id="nav-expenses" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm hover:bg-orange-500/10"><span>💸</span> Expenses</button>
+            <button onclick="switchTab('vendors')" id="nav-vendors" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm hover:bg-orange-500/10"><span>🤝</span> Vendors</button>
         </nav>
     </aside>
 
-    <header class="lg:ml-64 h-16 border-b border-slate-500/10 flex items-center justify-between px-4 md:px-8 sticky top-0 bg-opacity-80 backdrop-blur-md z-40">
+    <header class="lg:ml-64 h-16 border-b border-slate-500/10 flex items-center justify-between px-6 sticky top-0 bg-opacity-80 backdrop-blur-md z-40">
         <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()" class="lg:hidden p-2 text-2xl">☰</button>
-            <h2 id="page-title" class="font-bold text-lg tracking-tight">Dashboard</h2>
+            <button onclick="toggleSidebar()" class="lg:hidden text-2xl">☰</button>
+            <h2 id="page-title" class="font-bold text-xl">Dashboard</h2>
         </div>
-        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-500/10 text-xl" id="theme-icon">🌙</button>
+        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-500/10 text-xl" id="theme-btn">🌙</button>
     </header>
 
     <main class="lg:ml-64 p-4 md:p-8 space-y-8">
@@ -110,28 +89,33 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" id="stats-grid"></div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 card p-6">
-                    <h2 class="text-lg font-bold mb-4 text-amber-500">Overdue Collections</h2>
+                    <h2 class="text-lg font-bold mb-4 text-amber-500">Overdue Follow-up</h2>
                     <div id="overdue-list" class="space-y-3"></div>
                 </div>
-                <div class="card p-6 space-y-3">
-                    <p class="text-[10px] font-bold uppercase text-slate-500">Operations</p>
-                    <button onclick="openEventModal()" class="w-full bg-[#EA580C] text-white py-3 rounded-xl font-bold active:scale-95 transition-all">+ Add Event</button>
-                    <button onclick="openExpenseModal()" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold active:scale-95 transition-all">+ Add Expense</button>
+                <div class="card p-6 flex flex-col gap-3">
+                    <button onclick="openEventModal()" class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold">+ New Event</button>
+                    <button onclick="openExpenseModal()" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold">+ Record Expense</button>
                 </div>
             </div>
         </section>
 
         <section id="events" class="tab-content space-y-6">
-            <div class="flex justify-between items-center"><h2 class="text-2xl font-black">Events</h2><button onclick="openEventModal()" class="bg-[#EA580C] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-orange-600/20">+ Add Event</button></div>
-            <div id="events-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-black">Event Portfolio</h2>
+                <button onclick="openEventModal()" class="bg-orange-600 text-white px-6 py-2.5 rounded-xl font-bold">+ Add Event</button>
+            </div>
+            <div id="events-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="expenses" class="tab-content space-y-6">
-            <div class="flex justify-between items-center"><h2 class="text-2xl font-black">Expenses</h2><button onclick="openExpenseModal()" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-red-600/20">+ Record Expense</button></div>
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-black">Financial Ledger</h2>
+                <button onclick="openExpenseModal()" class="bg-red-600 text-white px-6 py-2.5 rounded-xl font-bold">+ Add Expense</button>
+            </div>
             <div class="card overflow-hidden">
-                <table class="w-full responsive-table">
-                    <thead class="bg-slate-500/5 text-[10px] font-bold uppercase text-slate-500 border-b border-slate-500/10">
-                        <tr><th class="p-4 text-left">Date</th><th class="p-4 text-left">Event</th><th class="p-4 text-left">Head</th><th class="p-4 text-left">Amount</th><th class="p-4 text-right">Action</th></tr>
+                <table class="w-full resp-table">
+                    <thead class="bg-slate-500/5 text-[10px] font-black uppercase text-slate-500 border-b border-slate-500/10">
+                        <tr><th class="p-4 text-left">Date</th><th class="p-4 text-left">Event</th><th class="p-4 text-left">Vendor</th><th class="p-4 text-left">Head</th><th class="p-4 text-left">Amount</th><th class="p-4 text-right">Action</th></tr>
                     </thead>
                     <tbody id="expenses-table-body"></tbody>
                 </table>
@@ -139,203 +123,26 @@
         </section>
 
         <section id="vendors" class="tab-content space-y-6">
-            <div class="flex justify-between items-center"><h2 class="text-2xl font-black">Vendors</h2><button onclick="openVendorModal()" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg">+ Add Vendor</button></div>
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-black">Vendors</h2>
+                <button onclick="openVendorModal()" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold">+ Add Vendor</button>
+            </div>
             <div id="vendors-list" class="grid grid-cols-1 md:grid-cols-4 gap-4"></div>
         </section>
 
+        <section id="event-detail" class="tab-content"></section>
     </main>
 
     <div id="event-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handleEventSubmit(event)" class="card p-8 md:p-10 w-full max-w-lg shadow-2xl space-y-6 border-none">
-            <h3 class="text-2xl font-bold text-orange-600">Event Details</h3>
-            <div class="space-y-4">
-                <div><label class="text-[10px] font-bold uppercase text-slate-400">Client Name</label><input type="text" id="ev-client" required class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold outline-none text-current"></div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Date</label><input type="date" id="ev-date" required class="w-full bg-transparent border-b border-slate-500/30 py-3 outline-none text-current"></div>
-                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Billing (₹)</label><input type="number" id="ev-billing" required class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold text-orange-500 text-2xl outline-none"></div>
+        <form onsubmit="handleEventSubmit(event)" class="card p-8 w-full max-w-lg shadow-2xl space-y-6 border-none">
+            <h3 id="event-modal-title" class="text-2xl font-bold text-orange-600">Event Details</h3>
+            <input type="hidden" id="edit-event-id">
+            <div class="space-y-4 text-slate-800 dark:text-white">
+                <div><label class="text-[10px] font-bold uppercase text-slate-400">Client Name</label><input type="text" id="ev-client" required class="w-full bg-transparent border-b border-slate-500/30 py-2 font-bold outline-none"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Date</label><input type="date" id="ev-date" required class="w-full bg-transparent border-b border-slate-500/30 py-2 outline-none"></div>
+                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Billing (₹)</label><input type="number" id="ev-billing" required class="w-full bg-transparent border-b border-slate-500/30 py-2 font-bold text-orange-500"></div>
                 </div>
             </div>
-            <button type="submit" class="w-full bg-[#EA580C] text-white py-4 rounded-2xl font-bold uppercase tracking-widest active:scale-95 transition-all">Save Event</button>
-            <button type="button" onclick="closeModals()" class="w-full font-bold text-slate-500 py-2">Close</button>
-        </form>
-    </div>
-
-    <div id="vendor-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handleVendorSubmit(event)" class="card p-8 md:p-10 w-full max-w-lg shadow-2xl space-y-6 border-none">
-            <h3 class="text-2xl font-bold">Register Vendor</h3>
-            <div class="space-y-4">
-                <div><label class="text-[10px] font-bold uppercase text-slate-400">Business Name</label><input type="text" id="vn-name" required class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold outline-none text-current"></div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Category</label><select id="vn-cat" onchange="updateHeads('vn-cat', 'vn-subcat')" required class="w-full bg-transparent border-b border-slate-500/30 py-3 outline-none text-current"></select></div>
-                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Specialty</label><select id="vn-subcat" required class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold outline-none text-current"></select></div>
-                </div>
-                <div><label class="text-[10px] font-bold uppercase text-slate-400">Phone</label><input type="tel" id="vn-phone" class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold outline-none text-current" placeholder="9123456789"></div>
-            </div>
-            <button type="submit" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold uppercase tracking-widest active:scale-95 transition-all">Register Vendor</button>
-            <button type="button" onclick="closeModals()" class="w-full font-bold text-slate-500 py-2">Cancel</button>
-        </form>
-    </div>
-
-    <div id="expense-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handleExpenseSubmit(event)" class="card p-8 md:p-10 w-full max-w-lg shadow-2xl space-y-6 border-none">
-            <h3 class="text-2xl font-bold text-red-500">Record Expense</h3>
-            <div class="space-y-4">
-                <div><label class="text-[10px] font-bold uppercase text-slate-400">Select Event</label><select id="ex-event" required class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold outline-none text-current"></select></div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Category</label><select id="ex-cat" onchange="updateHeads('ex-cat', 'ex-head')" class="w-full bg-transparent border-b border-slate-500/30 py-3 outline-none text-current"></select></div>
-                    <div><label class="text-[10px] font-bold uppercase text-slate-400">Sub-Head</label><select id="ex-head" class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold outline-none text-current"></select></div>
-                </div>
-                <div><label class="text-[10px] font-bold uppercase text-slate-400">Amount (₹)</label><input type="number" id="ex-amount" required class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold text-red-500 text-4xl outline-none"></div>
-                <div><label class="text-[10px] font-bold uppercase text-slate-400">Vendor</label><select id="ex-vendor" class="w-full bg-transparent border-b border-slate-500/30 py-3 font-bold text-orange-500 outline-none"></select></div>
-            </div>
-            <button type="submit" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold uppercase tracking-widest active:scale-95 transition-all">Save Expense</button>
-        </form>
-    </div>
-
-    <script>
-        // --- DATA & STATE ---
-        const DB_KEYS = { EVENTS: 'ff_events_v2', EXPENSES: 'ff_exp_v2', VENDORS: 'ff_ven_v2' };
-        const expenseHeadsDB = {
-            "Raw Material": ["Grocery – किराणा", "Other Grocery", "Vegetable – भाजी", "Fruits", "Juice", "Water", "Ice + Milk", "Bread", "Pickle", "Sweet", "Dry Fruits", "Spices", "Oil / Ghee", "Paneer / Dairy"],
-            "Live Counter": ["Chaat", "Starter", "Dosa", "Chinese", "Ice Cream", "Paan Mukhwas", "Counter Setup"],
-            "Labour": ["Waiters", "Cooks", "Cleaning", "Supervisor"],
-            "Operations": ["Transport", "Fuel", "Gas", "Generator"]
-        };
-
-        let state = {
-            events: JSON.parse(localStorage.getItem(DB_KEYS.EVENTS)) || [],
-            expenses: JSON.parse(localStorage.getItem(DB_KEYS.EXPENSES)) || [],
-            vendors: JSON.parse(localStorage.getItem(DB_KEYS.VENDORS)) || []
-        };
-
-        function save() {
-            localStorage.setItem(DB_KEYS.EVENTS, JSON.stringify(state.events));
-            localStorage.setItem(DB_KEYS.EXPENSES, JSON.stringify(state.expenses));
-            localStorage.setItem(DB_KEYS.VENDORS, JSON.stringify(state.vendors));
-            renderAll();
-        }
-
-        // --- UI HANDLERS ---
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            const mode = isDark ? 'dark' : 'light';
-            localStorage.setItem('theme', mode);
-            document.getElementById('theme-icon').innerText = mode === 'dark' ? '🌙' : '☀️';
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebar-overlay').classList.toggle('open');
-        }
-
-        function switchTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('page-title').innerText = id.charAt(0).toUpperCase() + id.slice(1);
-            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('bg-orange-600/10', 'text-orange-500'));
-            document.getElementById('nav-' + id)?.classList.add('bg-orange-600/10', 'text-orange-500');
-            if(window.innerWidth < 1024 && document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
-            renderAll();
-        }
-
-        function showToast(m) { const t = document.getElementById('toast'); t.querySelector('#toast-msg').innerText = m; t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 3000); }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
-
-        // --- SUBMISSION LOGIC (RE-CONNECTED) ---
-        function handleEventSubmit(e) {
-            e.preventDefault();
-            const data = { id: "EV"+Date.now(), client: document.getElementById('ev-client').value, date: document.getElementById('ev-date').value, billing: parseFloat(document.getElementById('ev-billing').value) };
-            state.events.push(data);
-            save(); closeModals(); showToast("Event Added");
-        }
-
-        function handleVendorSubmit(e) {
-            e.preventDefault();
-            const data = { id: "VN"+Date.now(), name: document.getElementById('vn-name').value, category: document.getElementById('vn-cat').value, specialty: document.getElementById('vn-subcat').value, phone: document.getElementById('vn-phone').value };
-            state.vendors.push(data);
-            save(); closeModals(); showToast("Vendor Registered");
-        }
-
-        function handleExpenseSubmit(e) {
-            e.preventDefault();
-            const data = { id: "EX"+Date.now(), eventId: document.getElementById('ex-event').value, head: document.getElementById('ex-head').value, amount: parseFloat(document.getElementById('ex-amount').value), date: new Date().toISOString().split('T')[0], vendorId: document.getElementById('ex-vendor').value };
-            state.expenses.push(data);
-            save(); closeModals(); showToast("Expense Recorded");
-        }
-
-        function updateHeads(catId, headId) {
-            const cat = document.getElementById(catId).value;
-            document.getElementById(headId).innerHTML = (expenseHeadsDB[cat] || []).map(h => `<option value="${h}">${h}</option>`).join('');
-        }
-
-        // --- MODAL TRIGGERS ---
-        function openEventModal() { document.getElementById('event-modal').classList.add('active'); }
-        function openVendorModal() {
-            const m = document.getElementById('vendor-modal');
-            document.getElementById('vn-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
-            updateHeads('vn-cat', 'vn-subcat');
-            m.classList.add('active');
-        }
-        function openExpenseModal() {
-            const m = document.getElementById('expense-modal');
-            document.getElementById('ex-event').innerHTML = state.events.map(e => `<option value="${e.id}">${e.client}</option>`).join('') || '<option>Add Event First</option>';
-            document.getElementById('ex-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
-            updateHeads('ex-cat', 'ex-head');
-            document.getElementById('ex-vendor').innerHTML = `<option value="">Self/Generic</option>` + state.vendors.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
-            m.classList.add('active');
-        }
-
-        // --- RENDERERS ---
-        function renderAll() {
-            const bill = state.events.reduce((s, e) => s + e.billing, 0);
-            const exp = state.expenses.reduce((s, e) => s + e.amount, 0);
-            document.getElementById('stats-grid').innerHTML = `
-                <div class="card p-5"><p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Portfolio</p><p class="text-xl font-bold">₹${bill.toLocaleString()}</p></div>
-                <div class="card p-5"><p class="text-[10px] font-bold text-red-500 uppercase mb-1">Expenses</p><p class="text-xl font-bold text-red-500">₹${exp.toLocaleString()}</p></div>
-                <div class="card p-5 bg-orange-600 text-white lg:col-span-2 shadow-lg shadow-orange-600/20"><p class="text-[10px] font-bold uppercase opacity-80 mb-1">Net Profit</p><p class="text-2xl font-bold">₹${(bill-exp).toLocaleString()}</p></div>
-            `;
-
-            // Render Events
-            document.getElementById('events-list').innerHTML = state.events.map(ev => {
-                const evExp = state.expenses.filter(x => x.eventId === ev.id).reduce((s, x) => s + x.amount, 0);
-                return `<div class="card p-6 shadow-sm">
-                    <h3 class="font-bold text-lg leading-none mb-1">${ev.client}</h3>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-6">${ev.date}</p>
-                    <div class="space-y-2 text-sm font-semibold">
-                        <div class="flex justify-between"><span>Billing</span><span>₹${ev.billing.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-red-500"><span>Expense</span><span>₹${evExp.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-green-500 pt-2 border-t border-slate-500/10"><span>Profit</span><span>₹${(ev.billing - evExp).toLocaleString()}</span></div>
-                    </div>
-                </div>`;
-            }).join('');
-
-            // Render Expenses
-            document.getElementById('expenses-table-body').innerHTML = state.expenses.map(ex => {
-                const ev = state.events.find(e => e.id === ex.eventId);
-                return `<tr class="responsive-table border-b border-slate-500/10">
-                    <td data-label="Date" class="p-4 font-mono text-[11px] text-slate-500">${ex.date || '-'}</td>
-                    <td data-label="Event" class="p-4 font-bold">${ev?.client || '---'}</td>
-                    <td data-label="Head" class="p-4 uppercase text-[10px] font-bold text-slate-400">${ex.head}</td>
-                    <td data-label="Amount" class="p-4 font-bold text-red-500">₹${ex.amount.toLocaleString()}</td>
-                    <td class="p-4 text-right actions-cell"><button onclick="deleteItem('expenses', '${ex.id}')" class="text-red-500 font-bold">Delete</button></td>
-                </tr>`;
-            }).join('');
-
-            // Render Vendors
-            document.getElementById('vendors-list').innerHTML = state.vendors.map(v => `<div class="card p-5">
-                <p class="font-bold text-lg">${v.name}</p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">${v.specialty}</p>
-                <p class="text-sm font-bold text-blue-500">${v.phone || '--'}</p>
-            </div>`).join('');
-        }
-
-        function deleteItem(type, id) { if(confirm("Confirm Delete?")) { state[type] = state[type].filter(x => x.id !== id); save(); } }
-
-        // --- INIT ---
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.className = savedTheme;
-        document.getElementById('theme-icon').innerText = savedTheme === 'dark' ? '🌙' : '☀️';
-        switchTab('dashboard');
-    </script>
-</body>
-</html>
+            <div class="flex gap-3">
+                <button type="submit" class="flex
