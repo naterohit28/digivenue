@@ -3,386 +3,675 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Expense Maintenance</title>
+  <title>Event Finance Manager • Catering & Banquet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root {
-      --bg: #121212;
-      --card: #1e1e1e;
-      --text: #e0e0e0;
-      --accent: #007bff;
-      --danger: #dc3545;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 15px;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: var(--card);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    header {
-      background: #1a1a1a;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #333;
-    }
-    h1 {
-      font-size: 1.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .logo {
-      width: 40px;
-      height: 40px;
-      background: #007bff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    .content { padding: 20px; }
-    .section { margin-bottom: 35px; }
-    .section-title {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: #aaa;
-      border-bottom: 1px solid #333;
-      padding-bottom: 8px;
-    }
-    form {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 12px;
-    }
-    input, select, textarea, button {
-      padding: 12px;
-      background: #2a2a2a;
-      border: 1px solid #444;
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 16px;
-    }
-    input:focus, select:focus { outline: none; border-color: var(--accent); }
-    button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      grid-column: span 2;
-    }
-    button:hover { background: #0056b3; }
-    .list {
-      background: #2a2a2a;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    .item {
-      padding: 12px;
-      border-bottom: 1px solid #333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .item:last-child { border-bottom: none; }
-    .delete-btn {
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .expense-item {
-      background: #252525;
-      padding: 14px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    .total {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #4caf50;
-      text-align: right;
-      margin: 15px 0;
-    }
-    @media (max-width: 600px) {
-      form { grid-template-columns: 1fr; }
-      button { grid-column: span 1; }
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    :root { --tw-color-primary: #00d4ff; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-link { transition: all 0.2s; }
+    .sidebar-link:hover { background-color: #1f2937; color: #00d4ff; }
+    .modal { animation: modalPop 0.3s ease; }
+    @keyframes modalPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
   </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1><span class="logo">📋</span> Expense Maintenance</h1>
-    </header>
-    
-    <div class="content">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex">
 
-      <!-- Register New Event -->
-      <div class="section">
-        <h2 class="section-title">Register New Event</h2>
-        <form id="event-form">
-          <input type="date" id="event-date" required>
-          <input type="text" id="venue" placeholder="Event Venue" required>
-          <select id="event-type" required>
-            <option value="">Event Type</option>
-            <option value="Manav Seva">Manav Seva</option>
-            <option value="Christ Church">Christ Church</option>
-            <option value="Lohar Wadi">Lohar Wadi</option>
-            <option value="Dadar">Dadar</option>
-            <option value="Corporate">Corporate</option>
-            <option value="Wedding">Wedding</option>
-            <option value="Other">Other</option>
-          </select>
-          <input type="text" id="client-name" placeholder="Name of Client / Organizer" required>
-          <input type="tel" id="contact" placeholder="Contact No." required>
-          <button type="submit">Register Event</button>
-        </form>
+  <!-- SIDEBAR -->
+  <div class="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col h-screen sticky top-0">
+    <div class="p-6 border-b border-zinc-800 flex items-center gap-3">
+      <div class="w-10 h-10 bg-cyan-500 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🍽️</div>
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight">Event Finance</h1>
+        <p class="text-xs text-zinc-500 -mt-1">Catering • Banquet</p>
       </div>
+    </div>
 
-      <!-- Events List -->
-      <div class="section">
-        <h2 class="section-title">Registered Events</h2>
-        <div id="events-list" class="list"></div>
+    <nav class="flex-1 p-4 space-y-1">
+      <button onclick="showView('dashboard')" class="sidebar-link flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl text-zinc-300 hover:text-white active">
+        <i class="fa-solid fa-gauge-high w-5"></i>
+        <span class="font-medium">Dashboard</span>
+      </button>
+      <button onclick="showView('events')" class="sidebar-link flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl text-zinc-300 hover:text-white">
+        <i class="fa-solid fa-calendar w-5"></i>
+        <span class="font-medium">Events</span>
+      </button>
+      <button onclick="showView('payments')" class="sidebar-link flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl text-zinc-300 hover:text-white">
+        <i class="fa-solid fa-money-bill-wave w-5"></i>
+        <span class="font-medium">Payments</span>
+      </button>
+      <button onclick="showView('expenses')" class="sidebar-link flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl text-zinc-300 hover:text-white">
+        <i class="fa-solid fa-receipt w-5"></i>
+        <span class="font-medium">Expenses</span>
+      </button>
+      <button onclick="showView('vendors')" class="sidebar-link flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl text-zinc-300 hover:text-white">
+        <i class="fa-solid fa-handshake w-5"></i>
+        <span class="font-medium">Vendors</span>
+      </button>
+    </nav>
+
+    <div class="p-4 border-t border-zinc-800 text-xs text-zinc-500">
+      <div class="flex justify-between items-center">
+        <span>Data saved in browser</span>
+        <button onclick="clearAllData()" class="text-red-400 hover:text-red-500 flex items-center gap-1">
+          <i class="fa-solid fa-trash"></i> Reset
+        </button>
       </div>
-
-      <!-- Add Expense -->
-      <div class="section">
-        <h2 class="section-title">Add Expense for Event</h2>
-        <form id="expense-form">
-          <select id="event-select" required>
-            <option value="">Select Event</option>
-          </select>
-          <input type="date" id="exp-date" required>
-          <input type="number" id="amount" placeholder="Amount (₹)" step="0.01" required>
-          <select id="mode" required>
-            <option value="">Payment Mode</option>
-            <option value="Cash">Cash</option>
-            <option value="UPI">UPI</option>
-            <option value="Cheque">Cheque</option>
-          </select>
-          <input type="text" id="paidby" placeholder="Paid By" required>
-          <textarea id="notes" placeholder="Notes / Receipt details" rows="2"></textarea>
-          <button type="submit">Add Expense</button>
-        </form>
-      </div>
-
-      <!-- All Expenses -->
-      <div class="section">
-        <h2 class="section-title">All Expenses</h2>
-        <input type="text" id="search" placeholder="Search expenses..." style="width:100%; padding:12px; margin-bottom:15px; background:#2a2a2a; border:1px solid #444; border-radius:8px; color:white;">
-        <div id="expense-list"></div>
-      </div>
-
-      <!-- Costing Per Event -->
-      <div class="section">
-        <h2 class="section-title">Costing Per Event</h2>
-        <div id="event-costing"></div>
-      </div>
-
     </div>
   </div>
 
+  <!-- MAIN CONTENT -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- TOP BAR -->
+    <div class="bg-zinc-900 border-b border-zinc-800 px-8 py-5 flex items-center justify-between">
+      <div id="page-title" class="text-3xl font-semibold">Dashboard</div>
+      
+      <div class="flex items-center gap-6">
+        <button onclick="addNewEvent()" 
+                class="bg-cyan-500 hover:bg-cyan-400 transition-colors text-zinc-950 font-semibold px-6 py-2.5 rounded-2xl flex items-center gap-2 shadow-lg shadow-cyan-500/30">
+          <i class="fa-solid fa-plus"></i>
+          <span>New Event</span>
+        </button>
+        
+        <div class="flex items-center gap-2 bg-zinc-800 rounded-3xl pl-2 pr-5 py-1">
+          <div class="w-8 h-8 bg-emerald-400 rounded-2xl flex items-center justify-center text-sm font-bold">👷</div>
+          <div>
+            <p class="text-sm font-medium">Manav Purnima Catering</p>
+            <p class="text-[10px] text-emerald-400 -mt-px">Live • Mumbai</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW CONTAINERS -->
+    
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard-view" class="flex-1 p-8 overflow-auto">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10">
+        <div class="bg-zinc-900 rounded-3xl p-6 card-hover">
+          <div class="flex justify-between">
+            <p class="text-zinc-400 text-sm">Total Revenue</p>
+            <i class="fa-solid fa-rupee-sign text-cyan-400"></i>
+          </div>
+          <p id="total-revenue" class="text-4xl font-semibold mt-2">₹0</p>
+          <p class="text-emerald-400 text-sm mt-1">All billed events</p>
+        </div>
+        <div class="bg-zinc-900 rounded-3xl p-6 card-hover">
+          <div class="flex justify-between">
+            <p class="text-zinc-400 text-sm">Payments Received</p>
+            <i class="fa-solid fa-arrow-down text-emerald-400"></i>
+          </div>
+          <p id="total-received" class="text-4xl font-semibold mt-2">₹0</p>
+        </div>
+        <div class="bg-zinc-900 rounded-3xl p-6 card-hover">
+          <div class="flex justify-between">
+            <p class="text-zinc-400 text-sm">Pending Receivable</p>
+            <i class="fa-solid fa-exclamation-triangle text-amber-400"></i>
+          </div>
+          <p id="total-pending" class="text-4xl font-semibold mt-2 text-amber-400">₹0</p>
+        </div>
+        <div class="bg-zinc-900 rounded-3xl p-6 card-hover">
+          <div class="flex justify-between">
+            <p class="text-zinc-400 text-sm">Total Expenses</p>
+            <i class="fa-solid fa-arrow-up text-red-400"></i>
+          </div>
+          <p id="total-expenses" class="text-4xl font-semibold mt-2">₹0</p>
+        </div>
+        <div class="bg-zinc-900 rounded-3xl p-6 card-hover">
+          <div class="flex justify-between">
+            <p class="text-zinc-400 text-sm">Net Profit</p>
+            <i class="fa-solid fa-chart-line text-cyan-400"></i>
+          </div>
+          <p id="total-profit" class="text-4xl font-semibold mt-2">₹0</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Upcoming Events -->
+        <div class="lg:col-span-7 bg-zinc-900 rounded-3xl p-6">
+          <h2 class="text-xl font-semibold mb-4 flex items-center justify-between">
+            <span>Upcoming Events</span>
+            <span onclick="showView('events')" class="text-cyan-400 text-sm cursor-pointer hover:underline">View all →</span>
+          </h2>
+          <div id="upcoming-list" class="space-y-3"></div>
+        </div>
+
+        <!-- Overdue / Recent Activity -->
+        <div class="lg:col-span-5 bg-zinc-900 rounded-3xl p-6">
+          <h2 class="text-xl font-semibold mb-4">Overdue Payments</h2>
+          <div id="overdue-list" class="space-y-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS VIEW -->
+    <div id="events-view" class="flex-1 p-8 hidden">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold">All Events</h2>
+        <button onclick="addNewEvent()" class="bg-white text-zinc-950 px-5 py-2 rounded-2xl font-medium flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> New Event
+        </button>
+      </div>
+      <div id="events-table" class="bg-zinc-900 rounded-3xl overflow-hidden"></div>
+    </div>
+
+    <!-- PAYMENTS VIEW -->
+    <div id="payments-view" class="flex-1 p-8 hidden">
+      <h2 class="text-2xl font-semibold mb-6">All Payments (Receivables)</h2>
+      <div id="payments-list" class="bg-zinc-900 rounded-3xl p-6"></div>
+    </div>
+
+    <!-- EXPENSES VIEW -->
+    <div id="expenses-view" class="flex-1 p-8 hidden">
+      <h2 class="text-2xl font-semibold mb-6">All Expenses</h2>
+      <div id="expenses-list" class="bg-zinc-900 rounded-3xl p-6"></div>
+    </div>
+
+    <!-- VENDORS VIEW -->
+    <div id="vendors-view" class="flex-1 p-8 hidden">
+      <div class="flex justify-between mb-6">
+        <h2 class="text-2xl font-semibold">Vendors Directory</h2>
+        <button onclick="addVendor()" class="bg-white text-zinc-950 px-5 py-2 rounded-2xl font-medium flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> Add Vendor
+        </button>
+      </div>
+      <div id="vendors-table" class="bg-zinc-900 rounded-3xl overflow-hidden"></div>
+    </div>
+  </div>
+
+  <!-- EVENT DETAIL MODAL -->
+  <div id="event-modal" onclick="if(event.target===this)closeModal()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center">
+    <div onclick="event.stopImmediatePropagation()" class="modal bg-zinc-900 w-full max-w-5xl mx-4 rounded-3xl max-h-[92vh] overflow-hidden">
+      <div class="px-8 py-6 border-b border-zinc-800 flex items-center justify-between">
+        <div>
+          <h2 id="modal-event-title" class="text-3xl font-semibold"></h2>
+          <p id="modal-event-subtitle" class="text-zinc-400"></p>
+        </div>
+        <button onclick="closeModal()" class="text-4xl text-zinc-400 hover:text-white">×</button>
+      </div>
+      
+      <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Summary Cards -->
+        <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-zinc-800 rounded-2xl p-5">
+            <p class="text-sm text-zinc-400">Total Billing</p>
+            <p id="modal-billing" class="text-4xl font-semibold mt-1">₹0</p>
+          </div>
+          <div class="bg-emerald-900/30 rounded-2xl p-5">
+            <p class="text-sm text-emerald-300">Received</p>
+            <p id="modal-received" class="text-4xl font-semibold mt-1 text-emerald-300">₹0</p>
+          </div>
+          <div class="bg-amber-900/30 rounded-2xl p-5">
+            <p class="text-sm text-amber-300">Pending</p>
+            <p id="modal-pending" class="text-4xl font-semibold mt-1 text-amber-300">₹0</p>
+          </div>
+          <div class="bg-red-900/30 rounded-2xl p-5">
+            <p class="text-sm text-red-300">Total Expenses</p>
+            <p id="modal-expenses" class="text-4xl font-semibold mt-1 text-red-300">₹0</p>
+          </div>
+          <div class="md:col-span-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-zinc-950 rounded-3xl p-6 flex justify-between items-center">
+            <div>
+              <p class="text-lg opacity-80">Event Profit</p>
+              <p id="modal-profit" class="text-5xl font-bold">₹0</p>
+            </div>
+            <i class="fa-solid fa-chart-line text-6xl opacity-20"></i>
+          </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div class="md:col-span-3">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-medium text-lg">Payments Received</h3>
+            <button onclick="openAddPayment()" class="text-cyan-400 flex items-center gap-1 text-sm">
+              <i class="fa-solid fa-plus"></i> Add Payment
+            </button>
+          </div>
+          <div id="modal-payments-list" class="bg-zinc-800 rounded-2xl p-4 min-h-[140px]"></div>
+        </div>
+
+        <!-- Expenses Section -->
+        <div class="md:col-span-3">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-medium text-lg">Expenses</h3>
+            <button onclick="openAddExpense()" class="text-cyan-400 flex items-center gap-1 text-sm">
+              <i class="fa-solid fa-plus"></i> Add Expense
+            </button>
+          </div>
+          <div id="modal-expenses-list" class="bg-zinc-800 rounded-2xl p-4 min-h-[140px]"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD EVENT MODAL -->
+  <div id="add-event-modal" onclick="if(event.target===this)closeAddEventModal()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center">
+    <div class="modal bg-zinc-900 w-full max-w-xl mx-4 rounded-3xl p-8">
+      <h3 class="text-2xl font-semibold mb-6">Create New Event</h3>
+      <form id="event-form" onsubmit="handleAddEvent(event)" class="grid grid-cols-2 gap-5">
+        <div class="col-span-2">
+          <label class="text-xs uppercase tracking-widest text-zinc-400">Event Date</label>
+          <input type="date" id="event-date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mt-1" required>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-widest text-zinc-400">Client Name</label>
+          <input type="text" id="client-name" placeholder="Client / Organizer" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mt-1" required>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-widest text-zinc-400">Mobile</label>
+          <input type="tel" id="client-mobile" placeholder="98xxxxxxxx" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mt-1" required>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-widest text-zinc-400">Venue</label>
+          <input type="text" id="venue" placeholder="Venue name" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mt-1" required>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-widest text-zinc-400">Event Type</label>
+          <select id="event-type" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mt-1">
+            <option value="Manav Seva">Manav Seva</option>
+            <option value="Christ Church">Christ Church</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Corporate Banquet">Corporate Banquet</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Lohar Wadi">Lohar Wadi</option>
+            <option value="Dadar">Dadar</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <label class="text-xs uppercase tracking-widest text-zinc-400">Total Billing Amount (₹)</label>
+          <input type="number" id="billing-amount" step="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 mt-1" required>
+        </div>
+        <div class="col-span-2 flex gap-4">
+          <button type="button" onclick="closeAddEventModal()" class="flex-1 py-4 border border-zinc-700 rounded-2xl font-medium">Cancel</button>
+          <button type="submit" class="flex-1 py-4 bg-cyan-500 hover:bg-cyan-400 text-zinc-950 rounded-2xl font-semibold">Create Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- QUICK ADD PAYMENT / EXPENSE (inside modal) -->
   <script>
-    let events = JSON.parse(localStorage.getItem('events')) || [];
-    let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+    // ==================== DATA STORAGE ====================
+    let events = JSON.parse(localStorage.getItem('events')) || []
+    let payments = JSON.parse(localStorage.getItem('payments')) || []
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || []
+    let vendors = JSON.parse(localStorage.getItem('vendors')) || []
+    let currentEventId = null
 
-    const eventForm = document.getElementById('event-form');
-    const expenseForm = document.getElementById('expense-form');
-    const eventsList = document.getElementById('events-list');
-    const eventSelect = document.getElementById('event-select');
-    const expenseList = document.getElementById('expense-list');
-    const eventCosting = document.getElementById('event-costing');
-    const searchInput = document.getElementById('search');
-
-    function generateEventCode() {
-      const now = new Date();
-      const dateStr = now.getFullYear().toString().slice(2) + 
-                     String(now.getMonth()+1).padStart(2,'0') + 
-                     String(now.getDate()).padStart(2,'0');
-      const count = events.length + 1;
-      return `EV-${dateStr}-${String(count).padStart(3,'0')}`;
+    // ==================== UTILITIES ====================
+    function generateId(prefix) {
+      const now = new Date()
+      const date = now.getFullYear().toString().slice(2) + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0')
+      return `${prefix}-${date}-${String(Math.floor(Math.random()*999)+1).padStart(3,'0')}`
     }
 
-    function saveData() {
-      localStorage.setItem('events', JSON.stringify(events));
-      localStorage.setItem('expenses', JSON.stringify(expenses));
-      renderAll();
+    function saveAll() {
+      localStorage.setItem('events', JSON.stringify(events))
+      localStorage.setItem('payments', JSON.stringify(payments))
+      localStorage.setItem('expenses', JSON.stringify(expenses))
+      localStorage.setItem('vendors', JSON.stringify(vendors))
+    }
+
+    function calculateEventSummary(eventId) {
+      const ev = events.find(e => e.id === eventId)
+      if (!ev) return { received: 0, pending: 0, expensesTotal: 0, profit: 0 }
+
+      const received = payments.filter(p => p.eventId === eventId).reduce((sum, p) => sum + Number(p.amount), 0)
+      const expTotal = expenses.filter(ex => ex.eventId === eventId).reduce((sum, ex) => sum + Number(ex.amount), 0)
+      
+      return {
+        received: received,
+        pending: Number(ev.billingAmount) - received,
+        expensesTotal: expTotal,
+        profit: Number(ev.billingAmount) - expTotal
+      }
+    }
+
+    // ==================== RENDER FUNCTIONS ====================
+    function renderDashboard() {
+      // Totals
+      const totalRevenue = events.reduce((sum, e) => sum + Number(e.billingAmount), 0)
+      const totalReceived = payments.reduce((sum, p) => sum + Number(p.amount), 0)
+      const totalExpensesAll = expenses.reduce((sum, ex) => sum + Number(ex.amount), 0)
+      const totalPending = totalRevenue - totalReceived
+      const totalProfit = totalRevenue - totalExpensesAll
+
+      document.getElementById('total-revenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`
+      document.getElementById('total-received').textContent = `₹${totalReceived.toLocaleString('en-IN')}`
+      document.getElementById('total-pending').textContent = `₹${totalPending.toLocaleString('en-IN')}`
+      document.getElementById('total-expenses').textContent = `₹${totalExpensesAll.toLocaleString('en-IN')}`
+      document.getElementById('total-profit').textContent = `₹${totalProfit.toLocaleString('en-IN')}`
+
+      // Upcoming Events (next 30 days)
+      const today = new Date()
+      const upcoming = events
+        .filter(e => new Date(e.date) >= today)
+        .sort((a,b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 5)
+
+      const upHTML = upcoming.length ? upcoming.map(e => {
+        const sum = calculateEventSummary(e.id)
+        return `
+          <div onclick="openEventModal('${e.id}')" class="flex justify-between items-center bg-zinc-800 hover:bg-zinc-700 rounded-2xl p-4 cursor-pointer">
+            <div>
+              <div class="font-medium">${e.client} • ${e.type}</div>
+              <div class="text-xs text-zinc-400">${new Date(e.date).toLocaleDateString('en-IN', {weekday:'short', month:'short', day:'numeric'})} • ${e.venue}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-emerald-400 text-xl">₹${Number(e.billingAmount).toLocaleString('en-IN')}</div>
+              <div class="text-xs ${sum.pending > 0 ? 'text-amber-400' : 'text-emerald-400'}">${sum.pending > 0 ? 'Pending ₹'+sum.pending : 'Fully Paid'}</div>
+            </div>
+          </div>`
+      }).join('') : `<p class="text-zinc-400 text-center py-6">No upcoming events</p>`
+      document.getElementById('upcoming-list').innerHTML = upHTML
+
+      // Overdue
+      const overdue = events
+        .filter(e => {
+          const sum = calculateEventSummary(e.id)
+          return sum.pending > 0 && new Date(e.date) < today
+        })
+        .sort((a,b) => new Date(a.date) - new Date(b.date))
+
+      const overdueHTML = overdue.length ? overdue.map(e => {
+        const sum = calculateEventSummary(e.id)
+        return `
+          <div onclick="openEventModal('${e.id}')" class="flex justify-between bg-red-900/20 border border-red-800/50 rounded-2xl p-4 cursor-pointer">
+            <div>
+              <div class="font-medium text-red-300">${e.client}</div>
+              <div class="text-xs text-zinc-400">${e.venue} • ${new Date(e.date).toLocaleDateString('en-IN')}</div>
+            </div>
+            <div class="text-right text-red-300 font-semibold">₹${sum.pending.toLocaleString('en-IN')}</div>
+          </div>`
+      }).join('') : `<p class="text-emerald-400 text-center py-8">No overdue payments 🎉</p>`
+      document.getElementById('overdue-list').innerHTML = overdueHTML
     }
 
     function renderEvents() {
-      eventsList.innerHTML = '';
-      eventSelect.innerHTML = '<option value="">Select Event</option>';
+      const container = document.getElementById('events-table')
+      let html = `
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-zinc-700 text-xs text-zinc-400">
+              <th class="text-left px-8 py-5">Event</th>
+              <th class="text-left px-4">Date</th>
+              <th class="text-left px-4">Client</th>
+              <th class="text-left px-4">Venue</th>
+              <th class="text-right px-4">Billing</th>
+              <th class="text-right px-4">Received</th>
+              <th class="text-right px-4">Pending</th>
+              <th class="text-right px-4">Profit</th>
+              <th class="w-12"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-800 text-sm">`
 
-      events.forEach((ev, i) => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
+      events.forEach(ev => {
+        const sum = calculateEventSummary(ev.id)
+        html += `
+          <tr onclick="openEventModal('${ev.id}')" class="hover:bg-zinc-800/70 cursor-pointer">
+            <td class="px-8 py-5 font-medium">${ev.id} • ${ev.type}</td>
+            <td class="px-4">${new Date(ev.date).toLocaleDateString('en-IN')}</td>
+            <td class="px-4">${ev.client}</td>
+            <td class="px-4">${ev.venue}</td>
+            <td class="px-4 text-right font-semibold">₹${Number(ev.billingAmount).toLocaleString('en-IN')}</td>
+            <td class="px-4 text-right text-emerald-400">₹${sum.received.toLocaleString('en-IN')}</td>
+            <td class="px-4 text-right ${sum.pending > 0 ? 'text-amber-400' : 'text-emerald-400'}">₹${sum.pending.toLocaleString('en-IN')}</td>
+            <td class="px-4 text-right font-semibold ${sum.profit >= 0 ? 'text-cyan-400' : 'text-red-400'}">₹${sum.profit.toLocaleString('en-IN')}</td>
+            <td><i class="fa-solid fa-chevron-right text-zinc-400"></i></td>
+          </tr>`
+      })
+      html += `</tbody></table>`
+      container.innerHTML = events.length ? html : `<div class="p-16 text-center text-zinc-400">No events yet. Create your first event!</div>`
+    }
+
+    function renderPayments() {
+      const container = document.getElementById('payments-list')
+      let html = `<div class="space-y-4">`
+      payments.forEach(p => {
+        const ev = events.find(e => e.id === p.eventId)
+        html += `
+          <div class="flex items-center justify-between bg-zinc-800 rounded-2xl px-6 py-4">
+            <div>
+              <div class="font-medium">${ev ? ev.client : 'Unknown Event'}</div>
+              <div class="text-xs text-zinc-400">${p.date} • ${p.mode}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold text-emerald-400 text-xl">₹${Number(p.amount).toLocaleString('en-IN')}</div>
+            </div>
+          </div>`
+      })
+      html += `</div>`
+      container.innerHTML = payments.length ? html : `<p class="text-zinc-400 text-center py-12">No payments recorded yet</p>`
+    }
+
+    function renderExpenses() {
+      const container = document.getElementById('expenses-list')
+      let html = `<div class="space-y-4">`
+      expenses.forEach(ex => {
+        const ev = events.find(e => e.id === ex.eventId)
+        html += `
+          <div class="flex items-center justify-between bg-zinc-800 rounded-2xl px-6 py-4">
+            <div>
+              <div class="font-medium">${ev ? ev.client : 'Unknown'}</div>
+              <div class="text-xs text-zinc-400">${ex.date} • ${ex.category} • ${ex.vendorName}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold text-red-400 text-xl">₹${Number(ex.amount).toLocaleString('en-IN')}</div>
+            </div>
+          </div>`
+      })
+      html += `</div>`
+      container.innerHTML = expenses.length ? html : `<p class="text-zinc-400 text-center py-12">No expenses recorded yet</p>`
+    }
+
+    function renderVendors() {
+      const container = document.getElementById('vendors-table')
+      let html = `
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-zinc-700 text-xs text-zinc-400">
+              <th class="text-left px-8 py-5">Vendor</th>
+              <th class="text-left px-4">Category</th>
+              <th class="text-left px-4">Contact</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-800">`
+      vendors.forEach(v => {
+        html += `
+          <tr class="hover:bg-zinc-800/70">
+            <td class="px-8 py-5 font-medium">${v.name}</td>
+            <td class="px-4">${v.category}</td>
+            <td class="px-4">${v.contact}</td>
+          </tr>`
+      })
+      html += `</tbody></table>`
+      container.innerHTML = vendors.length ? html : `<div class="p-16 text-center text-zinc-400">No vendors added yet</div>`
+    }
+
+    function renderEventModal(eventId) {
+      currentEventId = eventId
+      const ev = events.find(e => e.id === eventId)
+      if (!ev) return
+      const sum = calculateEventSummary(eventId)
+
+      document.getElementById('modal-event-title').textContent = `${ev.id} — ${ev.type}`
+      document.getElementById('modal-event-subtitle').innerHTML = `${ev.client} • ${ev.mobile} • ${ev.venue} • ${new Date(ev.date).toLocaleDateString('en-IN')}`
+
+      document.getElementById('modal-billing').textContent = `₹${Number(ev.billingAmount).toLocaleString('en-IN')}`
+      document.getElementById('modal-received').textContent = `₹${sum.received.toLocaleString('en-IN')}`
+      document.getElementById('modal-pending').textContent = `₹${sum.pending.toLocaleString('en-IN')}`
+      document.getElementById('modal-expenses').textContent = `₹${sum.expensesTotal.toLocaleString('en-IN')}`
+      document.getElementById('modal-profit').textContent = `₹${sum.profit.toLocaleString('en-IN')}`
+
+      // Payments in modal
+      const payHTML = payments.filter(p => p.eventId === eventId).map(p => `
+        <div class="flex justify-between py-3 border-b border-zinc-700 last:border-0">
+          <div class="text-sm">${p.date} • ${p.mode}</div>
+          <div class="font-semibold text-emerald-400">₹${Number(p.amount).toLocaleString('en-IN')}</div>
+        </div>`).join('') || `<p class="text-zinc-400 py-8 text-center">No payments yet for this event</p>`
+      document.getElementById('modal-payments-list').innerHTML = payHTML
+
+      // Expenses in modal
+      const expHTML = expenses.filter(ex => ex.eventId === eventId).map(ex => `
+        <div class="flex justify-between py-3 border-b border-zinc-700 last:border-0">
           <div>
-            <strong>${ev.code}</strong> — ${ev.date} — ${ev.venue}<br>
-            <small>${ev.type} | ${ev.client} | ${ev.contact}</small>
+            <div class="text-sm">${ex.date} • ${ex.category}</div>
+            <div class="text-xs text-zinc-400">${ex.vendorName}</div>
           </div>
-          <button class="delete-btn" data-type="event" data-index="${i}">Delete</button>
-        `;
-        eventsList.appendChild(div);
+          <div class="font-semibold text-red-400">₹${Number(ex.amount).toLocaleString('en-IN')}</div>
+        </div>`).join('') || `<p class="text-zinc-400 py-8 text-center">No expenses yet for this event</p>`
+      document.getElementById('modal-expenses-list').innerHTML = expHTML
 
-        const opt = document.createElement('option');
-        opt.value = ev.code;
-        opt.textContent = `${ev.code} - ${ev.venue} (${ev.date})`;
-        eventSelect.appendChild(opt);
-      });
-
-      // Delete listeners for events
-      document.querySelectorAll('[data-type="event"]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (confirm('Delete this event and all its expenses?')) {
-            const idx = parseInt(e.target.dataset.index);
-            const code = events[idx].code;
-            events.splice(idx, 1);
-            expenses = expenses.filter(exp => exp.eventCode !== code);
-            saveData();
-          }
-        });
-      });
+      document.getElementById('event-modal').classList.remove('hidden')
+      document.getElementById('event-modal').classList.add('flex')
     }
 
-    function renderExpenses(filtered = expenses) {
-      expenseList.innerHTML = '';
+    // ==================== VIEW SWITCHING ====================
+    function showView(view) {
+      document.querySelectorAll('#dashboard-view, #events-view, #payments-view, #expenses-view, #vendors-view').forEach(v => v.classList.add('hidden'))
+      document.getElementById(view + '-view').classList.remove('hidden')
+      document.getElementById('page-title').textContent = {
+        dashboard: 'Dashboard',
+        events: 'Events',
+        payments: 'Payments',
+        expenses: 'Expenses',
+        vendors: 'Vendors'
+      }[view]
 
-      filtered.forEach((exp, i) => {
-        const eventName = events.find(e => e.code === exp.eventCode)?.venue || exp.eventCode;
-        const div = document.createElement('div');
-        div.className = 'expense-item';
-        div.innerHTML = `
-          <div>
-            <strong>${eventName} (${exp.eventCode})</strong><br>
-            <small>${exp.date} • ${exp.mode} • ${exp.paidby}</small>
-            ${exp.notes ? `<br><small>${exp.notes}</small>` : ''}
-          </div>
-          <div style="text-align:right">
-            <strong>₹${parseFloat(exp.amount).toFixed(2)}</strong><br>
-            <button class="delete-btn" data-index="${i}">Delete</button>
-          </div>
-        `;
-        expenseList.appendChild(div);
-      });
-
-      // Delete listeners
-      document.querySelectorAll('#expense-list .delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (confirm('Delete expense?')) {
-            expenses.splice(parseInt(e.target.dataset.index), 1);
-            saveData();
-          }
-        });
-      });
+      // Re-render active view
+      if (view === 'dashboard') renderDashboard()
+      if (view === 'events') renderEvents()
+      if (view === 'payments') renderPayments()
+      if (view === 'expenses') renderExpenses()
+      if (view === 'vendors') renderVendors()
     }
 
-    function renderEventCosting() {
-      eventCosting.innerHTML = '';
-      const grouped = {};
-
-      expenses.forEach(exp => {
-        if (!grouped[exp.eventCode]) grouped[exp.eventCode] = 0;
-        grouped[exp.eventCode] += parseFloat(exp.amount || 0);
-      });
-
-      Object.keys(grouped).forEach(code => {
-        const ev = events.find(e => e.code === code);
-        if (!ev) return;
-        const total = grouped[code];
-
-        const div = document.createElement('div');
-        div.style = 'background:#252525; padding:15px; border-radius:8px; margin-bottom:12px;';
-        div.innerHTML = `
-          <strong>${ev.code} - ${ev.venue}</strong><br>
-          <small>${ev.date} | ${ev.type} | ${ev.client}</small>
-          <div class="total">Total Cost: ₹${total.toFixed(2)}</div>
-        `;
-        eventCosting.appendChild(div);
-      });
-
-      if (Object.keys(grouped).length === 0) {
-        eventCosting.innerHTML = '<p style="color:#777; text-align:center;">No expenses yet</p>';
-      }
+    // ==================== MODALS ====================
+    function openEventModal(id) {
+      renderEventModal(id)
     }
 
-    function renderAll() {
-      renderEvents();
-      renderExpenses();
-      renderEventCosting();
+    function closeModal() {
+      document.getElementById('event-modal').classList.add('hidden')
+      document.getElementById('event-modal').classList.remove('flex')
+      currentEventId = null
     }
 
-    // Register Event
-    eventForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+    function addNewEvent() {
+      document.getElementById('add-event-modal').classList.remove('hidden')
+      document.getElementById('add-event-modal').classList.add('flex')
+      document.getElementById('event-date').valueAsDate = new Date()
+    }
+
+    function closeAddEventModal() {
+      document.getElementById('add-event-modal').classList.add('hidden')
+      document.getElementById('add-event-modal').classList.remove('flex')
+    }
+
+    function handleAddEvent(e) {
+      e.preventDefault()
       const newEvent = {
-        code: generateEventCode(),
+        id: generateId('EV'),
         date: document.getElementById('event-date').value,
-        venue: document.getElementById('venue').value.trim(),
+        client: document.getElementById('client-name').value,
+        mobile: document.getElementById('client-mobile').value,
+        venue: document.getElementById('venue').value,
         type: document.getElementById('event-type').value,
-        client: document.getElementById('client-name').value.trim(),
-        contact: document.getElementById('contact').value.trim()
-      };
-      events.push(newEvent);
-      saveData();
-      eventForm.reset();
-    });
-
-    // Add Expense
-    expenseForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newExpense = {
-        eventCode: document.getElementById('event-select').value,
-        date: document.getElementById('exp-date').value,
-        amount: document.getElementById('amount').value,
-        mode: document.getElementById('mode').value,
-        paidby: document.getElementById('paidby').value.trim(),
-        notes: document.getElementById('notes').value.trim()
-      };
-      if (!newExpense.eventCode) {
-        alert("Please select an event");
-        return;
+        billingAmount: document.getElementById('billing-amount').value
       }
-      expenses.push(newExpense);
-      saveData();
-      expenseForm.reset();
-      document.getElementById('exp-date').valueAsDate = new Date();
-    });
+      events.unshift(newEvent)
+      saveAll()
+      closeAddEventModal()
+      showView('events')
+      renderEvents()
+      renderDashboard()
+    }
 
-    // Search
-    searchInput.addEventListener('input', () => {
-      const term = searchInput.value.toLowerCase();
-      const filtered = expenses.filter(exp => {
-        const ev = events.find(e => e.code === exp.eventCode);
-        return (ev && ev.venue.toLowerCase().includes(term)) ||
-               (exp.notes && exp.notes.toLowerCase().includes(term)) ||
-               exp.paidby.toLowerCase().includes(term);
-      });
-      renderExpenses(filtered);
-    });
+    function openAddPayment() {
+      closeModal()
+      const amount = prompt('Enter payment amount (₹)')
+      if (!amount) return
+      const mode = prompt('Payment Mode (Cash / UPI / Bank / Cheque)', 'UPI')
+      if (!mode) return
 
-    // Set default dates
-    document.getElementById('event-date').valueAsDate = new Date();
-    document.getElementById('exp-date').valueAsDate = new Date();
+      payments.unshift({
+        id: generateId('PAY'),
+        eventId: currentEventId,
+        date: new Date().toISOString().slice(0,10),
+        amount: amount,
+        mode: mode
+      })
+      saveAll()
+      renderEventModal(currentEventId)   // refresh modal
+      renderDashboard()
+    }
 
-    // Initial render
-    renderAll();
+    function openAddExpense() {
+      closeModal()
+      const amount = prompt('Expense amount (₹)')
+      if (!amount) return
+      const category = prompt('Category (Food / Decoration / Labor / Venue / Transport / Misc)', 'Food')
+      const vendor = prompt('Vendor Name', 'Local Supplier')
+
+      expenses.unshift({
+        id: generateId('EXP'),
+        eventId: currentEventId,
+        date: new Date().toISOString().slice(0,10),
+        vendorName: vendor,
+        category: category,
+        amount: amount,
+        notes: ''
+      })
+      saveAll()
+      renderEventModal(currentEventId)
+      renderDashboard()
+    }
+
+    function addVendor() {
+      const name = prompt('Vendor Name')
+      if (!name) return
+      const cat = prompt('Category (Food, Decoration, etc.)')
+      const contact = prompt('Contact Number')
+      vendors.unshift({ id: Date.now(), name, category: cat || 'Misc', contact: contact || '-' })
+      saveAll()
+      renderVendors()
+    }
+
+    function clearAllData() {
+      if (confirm('⚠️ This will delete ALL data permanently. Continue?')) {
+        localStorage.clear()
+        events = []; payments = []; expenses = []; vendors = []
+        showView('dashboard')
+      }
+    }
+
+    // ==================== INIT ====================
+    function init() {
+      // Tailwind script already loaded
+      showView('dashboard')
+      // Demo data if empty
+      if (events.length === 0) {
+        events = [
+          { id: "EV-260414-001", date: "2026-04-14", client: "Manav Seva Trust", mobile: "9876543210", venue: "Manav Seva Hall", type: "Manav Seva", billingAmount: "45000" },
+          { id: "EV-260407-002", date: "2026-04-07", client: "Christ Church", mobile: "9123456789", venue: "Christ Church Grounds", type: "Christ Church", billingAmount: "28000" }
+        ]
+        payments = [
+          { id: "PAY-260414-001", eventId: "EV-260414-001", date: "2026-04-10", amount: "20000", mode: "UPI" }
+        ]
+        expenses = [
+          { id: "EXP-260414-001", eventId: "EV-260414-001", date: "2026-04-12", vendorName: "Fresh Mart", category: "Food", amount: "12000", notes: "" }
+        ]
+        saveAll()
+      }
+      renderDashboard()
+    }
+
+    window.onload = init
   </script>
 </body>
 </html>
