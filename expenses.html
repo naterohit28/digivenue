@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flavor Fusion Pro v2.6 | Business Intelligence</title>
+    <title>Flavor Fusion Pro | Business Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; backdrop-filter: blur(4px); }
         .modal.active { display: flex; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .quick-btn { @apply bg-gray-100 hover:bg-orange-100 px-3 py-1 rounded text-sm font-medium transition; }
         #toast { position: fixed; bottom: 20px; right: 20px; display: none; z-index: 100; transition: all 0.3s; }
-        .mode-tag { @apply px-2 py-0.5 rounded-md text-[10px] font-bold uppercase; }
-        .logo-svg { height: 50px; width: auto; }
+        .logo-img { height: 50px; width: auto; }
+        /* Custom Scrollbar for better UI */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="bg-slate-50 text-slate-900 font-sans">
 
     <div id="toast" class="bg-slate-800 text-white px-6 py-3 rounded-2xl shadow-2xl font-bold flex items-center gap-3">
-        <span id="toast-msg">Action Successful</span>
+        <span id="toast-msg">Success</span>
     </div>
 
     <nav class="bg-white border-b p-3 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="logo-svg">
-                    <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="logo-img">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                         <path d="M124.9 334.8c-23.7-18.4-56.8-11.8-73.9 14.7-15.5 24.1-10.9 56 10.2 74.3 21.1 18.4 54.2 11.8 71.3-12.3 17.1-24.1 16.3-58.4-7.6-76.7z" fill="#334155"/>
                         <path d="M141.4 349.5l140.4-140.4 14.1 14.1-140.4 140.4z" fill="#334155"/>
                         <path d="M211.5 151.7c-50.5-50.5-132.4-50.5-182.9 0l182.9 182.9 14.1-14.1-14.1-14.1 14.1-14.1-14.1-14.1 14.1-14.1-14.1-14.1 14.1-14.1-14.1-14.1z" fill="#334155"/>
@@ -40,14 +41,14 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-black leading-none text-orange-600 tracking-tighter">FLAVOR FUSION</h1>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Next-Gen Catering Control</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Next-Gen Catering</p>
                 </div>
             </div>
             <div class="flex space-x-6">
-                <button onclick="switchTab('dashboard')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500">Dashboard</button>
-                <button onclick="switchTab('events')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500">Events</button>
-                <button onclick="switchTab('expenses')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500">Expenses</button>
-                <button onclick="switchTab('vendors')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500">Vendors</button>
+                <button onclick="switchTab('dashboard')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500 transition">Dashboard</button>
+                <button onclick="switchTab('events')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500 transition">Events</button>
+                <button onclick="switchTab('expenses')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500 transition">Expenses</button>
+                <button onclick="switchTab('vendors')" class="text-xs font-bold uppercase tracking-widest hover:text-orange-500 transition">Vendors</button>
             </div>
         </div>
     </nav>
@@ -55,7 +56,7 @@
     <main class="max-w-7xl mx-auto p-4 md:p-6">
         
         <section id="dashboard" class="tab-content active">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8" id="stats-grid"></div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8" id="stats-grid"></div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border">
                     <h2 class="text-lg font-black mb-4 flex items-center gap-2">
@@ -64,20 +65,20 @@
                     <div id="overdue-list" class="space-y-3"></div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border">
-                    <h2 class="text-lg font-bold mb-4 italic">Quick Actions</h2>
+                    <h2 class="text-lg font-bold mb-4 italic text-slate-400">Quick Actions</h2>
                     <div class="grid grid-cols-1 gap-3">
                         <button onclick="openEventModal()" class="w-full bg-blue-600 text-white p-3 rounded-xl font-bold">+ New Event</button>
                         <button onclick="openExpenseModal()" class="w-full bg-red-500 text-white p-3 rounded-xl font-bold">+ Record Expense</button>
-                        <button onclick="openVendorModal()" class="w-full bg-slate-800 text-white p-3 rounded-xl font-bold">+ New Vendor</button>
+                        <button onclick="openVendorModal()" class="w-full bg-slate-800 text-white p-3 rounded-xl font-bold">+ Add Vendor</button>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="events" class="tab-content">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <h2 class="text-2xl font-bold">Event Portfolio</h2>
-                <input type="text" id="event-search" oninput="renderEvents()" placeholder="Search client..." class="border p-2 rounded-xl text-sm w-full md:w-64 outline-none">
+                <input type="text" id="event-search" oninput="renderEvents()" placeholder="Search client name..." class="border p-2 rounded-xl text-sm w-full md:w-64 outline-none focus:border-orange-500">
             </div>
             <div id="events-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
@@ -88,10 +89,10 @@
                 <div class="w-px bg-slate-100"></div>
                 <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Spend</p><p id="exp-total-val" class="text-xl font-black text-red-600">₹0</p></div>
             </div>
-            <div id="expense-table-container" class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
                 <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b text-slate-500 text-xs font-bold uppercase tracking-widest">
-                        <tr><th class="p-4">Date</th><th class="p-4">Event</th><th class="p-4">Category</th><th class="p-4">Amount</th><th class="p-4 text-right">Action</th></tr>
+                    <thead class="bg-slate-50 border-b text-slate-500 text-[10px] font-black uppercase tracking-widest">
+                        <tr><th class="p-4">Date</th><th class="p-4">Event</th><th class="p-4">Head</th><th class="p-4">Amount</th><th class="p-4 text-right">Action</th></tr>
                     </thead>
                     <tbody id="expenses-table-body"></tbody>
                 </table>
@@ -101,7 +102,7 @@
         <section id="vendors" class="tab-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Vendor Directory</h2>
-                <button onclick="openVendorModal()" class="bg-slate-800 text-white px-5 py-2 rounded-xl font-bold">+ Add Vendor</button>
+                <button onclick="openVendorModal()" class="bg-slate-900 text-white px-5 py-2 rounded-xl font-bold">+ Add New Vendor</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="vendors-list"></div>
         </section>
@@ -113,237 +114,47 @@
 
     </main>
 
-    <div id="vendor-modal" class="modal items-center justify-center p-4">
-        <form onsubmit="handleVendorSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
-            <h3 id="vendor-modal-title" class="text-xl font-black mb-6">Vendor Details</h3>
-            <input type="hidden" id="edit-vendor-id">
-            
-            <div class="space-y-5">
-                <div>
-                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Business Name</label>
-                    <input type="text" id="vn-name" required class="w-full border-b py-2 outline-none font-bold focus:border-orange-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Category</label>
-                        <select id="vn-cat" onchange="updateHeads('vn-cat', 'vn-head')" required class="w-full border-b py-2 outline-none bg-transparent font-medium"></select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Sub-Head (Specialty)</label>
-                        <select id="vn-head" required class="w-full border-b py-2 outline-none font-bold"></select>
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Phone Number</label>
-                    <input type="tel" id="vn-phone" class="w-full border-b py-2 outline-none" placeholder="9876543210">
-                </div>
-            </div>
-
-            <div class="flex justify-end mt-8 space-x-4">
-                <button type="button" onclick="closeModals()" class="text-slate-400 font-bold">Cancel</button>
-                <button type="submit" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold">Save Vendor</button>
-            </div>
-        </form>
-    </div>
-
     <div id="event-modal" class="modal items-center justify-center p-4">
         <form onsubmit="handleEventSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
-            <h3 class="text-2xl font-bold mb-6">Event Details</h3>
+            <h3 id="event-modal-title" class="text-2xl font-bold mb-6">Event Details</h3>
             <input type="hidden" id="edit-event-id">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Client Name</label><input type="text" id="ev-client" required class="w-full border-b py-2 outline-none font-bold"></div>
-                <div><label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ev-date" required class="w-full border-b py-2 outline-none"></div>
-                <div><label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Mobile</label><input type="tel" id="ev-mobile" required class="w-full border-b py-2 outline-none"></div>
-                <div><label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Billing (₹)</label><input type="number" id="ev-billing" required class="w-full border-b py-2 outline-none font-bold text-blue-600"></div>
-                <div class="md:col-span-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Venue</label><input type="text" id="ev-venue" class="w-full border-b py-2 outline-none"></div>
+                <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</label><input type="text" id="ev-client" required class="w-full border-b py-2 focus:border-orange-500 outline-none font-bold"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Event Date</label><input type="date" id="ev-date" required class="w-full border-b py-2 outline-none font-bold"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mobile</label><input type="tel" id="ev-mobile" required class="w-full border-b py-2 outline-none font-bold"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Billing (₹)</label><input type="number" id="ev-billing" required class="w-full border-b py-2 outline-none font-black text-blue-600"></div>
+                <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Venue</label><input type="text" id="ev-venue" class="w-full border-b py-2 outline-none"></div>
             </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold">Cancel</button><button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold">Save</button></div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold">Save Event</button></div>
         </form>
     </div>
 
     <div id="expense-modal" class="modal items-center justify-center p-4">
         <form onsubmit="handleExpenseSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
             <h3 class="text-2xl font-bold mb-6">Record Expense</h3>
+            <input type="hidden" id="edit-expense-id">
             <div class="space-y-5">
-                <div><label class="text-xs font-bold uppercase tracking-widest text-slate-400">Select Event</label><select id="ex-event" required class="w-full border-b py-2 outline-none font-bold"></select></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Event</label><select id="ex-event" required class="w-full border-b py-2 outline-none font-bold"></select></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-xs font-bold uppercase tracking-widest text-slate-400">Category</label><select id="ex-cat" onchange="updateHeads('ex-cat', 'ex-head'); filterVendorsForExpense();" class="w-full border-b py-2 outline-none"></select></div>
-                    <div><label class="text-xs font-bold uppercase tracking-widest text-slate-400">Sub-Head</label><select id="ex-head" onchange="filterVendorsForExpense()" class="w-full border-b py-2 outline-none font-bold"></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</label><select id="ex-cat" onchange="updateHeads('ex-cat', 'ex-head')" required class="w-full border-b py-2 outline-none"></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sub-Head</label><select id="ex-head" required class="w-full border-b py-2 outline-none font-bold"></select></div>
                 </div>
-                <div><label class="text-xs font-bold uppercase tracking-widest text-slate-400">Amount (₹)</label><input type="number" id="ex-amount" required class="w-full border-b py-2 font-black text-red-500 text-xl outline-none"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (₹)</label><input type="number" id="ex-amount" required class="w-full border-b py-2 font-black text-red-600 text-2xl outline-none"></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-xs font-bold uppercase tracking-widest text-slate-400">Date</label><input type="date" id="ex-date" class="w-full border-b py-2 outline-none"></div>
-                    <div><label class="text-xs font-bold uppercase tracking-widest text-slate-400">Vendor</label><select id="ex-vendor" class="w-full border-b py-2 outline-none font-bold text-orange-600"></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</label><input type="date" id="ex-date" required class="w-full border-b py-2 outline-none"></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vendor</label><select id="ex-vendor" class="w-full border-b py-2 outline-none font-bold text-orange-600"></select></div>
                 </div>
             </div>
-            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold">Cancel</button><button type="submit" class="bg-red-500 text-white px-8 py-3 rounded-2xl font-bold">Save</button></div>
+            <div class="flex justify-end mt-8 space-x-4"><button type="button" onclick="closeModals()" class="font-bold text-slate-400">Cancel</button><button type="submit" class="bg-red-500 text-white px-8 py-3 rounded-2xl font-bold">Save Expense</button></div>
         </form>
     </div>
 
-    <script>
-        // --- DATA & DATABASE ---
-        const DB_KEYS = { EVENTS: 'ff_events_v2', EXPENSES: 'ff_exp_v2', PAYMENTS: 'ff_pay_v2', VENDORS: 'ff_ven_v2' };
-        
-        const expenseHeadsDB = {
-            "Raw Material": ["Grocery – किराणा", "Vegetable – भाजी", "Fruits", "Juice", "Water", "Ice + Milk", "Bread", "Pickle", "Sweet", "Dry Fruits", "Spices", "Oil / Ghee", "Paneer / Dairy"],
-            "Live Counter": ["Chaat", "Starter", "Dosa", "Chinese", "Ice Cream", "Paan Mukhwas", "Counter Setup", "Pav Bhaji", "Pizza", "Dessert", "Beverage"],
-            "Labour": ["Rojiya Labour", "Boys", "Ghati", "Cook", "Helper", "Roti Labour", "Cleaner", "PRO", "Supervisor", "Loading"],
-            "Operations": ["Transport", "Fuel / Diesel", "Gas", "Rented Material", "Disposable", "Packaging", "New Utensils", "Generator", "Water Tanker"],
-            "Admin": ["Royalty", "Office", "Phone", "Printing", "License", "Commission", "Marketing", "Tips", "Misc"],
-            "Adjustment": ["Damage", "Refund", "Staff Advance", "Cash Difference"]
-        };
-
-        let state = {
-            events: JSON.parse(localStorage.getItem(DB_KEYS.EVENTS)) || [],
-            expenses: JSON.parse(localStorage.getItem(DB_KEYS.EXPENSES)) || [],
-            payments: JSON.parse(localStorage.getItem(DB_KEYS.PAYMENTS)) || [],
-            vendors: JSON.parse(localStorage.getItem(DB_KEYS.VENDORS)) || []
-        };
-
-        // --- UTILS ---
-        function save() {
-            localStorage.setItem(DB_KEYS.EVENTS, JSON.stringify(state.events));
-            localStorage.setItem(DB_KEYS.EXPENSES, JSON.stringify(state.expenses));
-            localStorage.setItem(DB_KEYS.PAYMENTS, JSON.stringify(state.payments));
-            localStorage.setItem(DB_KEYS.VENDORS, JSON.stringify(state.vendors));
-            renderAll();
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            t.style.display = 'flex';
-            setTimeout(() => t.style.display = 'none', 3000);
-        }
-
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
-
-        function switchTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            renderAll();
-        }
-
-        function updateHeads(catId, subCatId) {
-            const cat = document.getElementById(catId).value;
-            const sub = document.getElementById(subCatId);
-            sub.innerHTML = (expenseHeadsDB[cat] || []).map(h => `<option value="${h}">${h}</option>`).join('');
-        }
-
-        // --- VENDOR CRUD ---
-        function openVendorModal(id = null) {
-            const m = document.getElementById('vendor-modal');
-            const form = m.querySelector('form');
-            form.reset();
-            const catSel = document.getElementById('vn-cat');
-            catSel.innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
-            updateHeads('vn-cat', 'vn-head');
-
-            if (id) {
-                const v = state.vendors.find(ven => ven.id === id);
-                document.getElementById('edit-vendor-id').value = id;
-                document.getElementById('vn-name').value = v.name;
-                document.getElementById('vn-cat').value = v.category;
-                updateHeads('vn-cat', 'vn-head');
-                document.getElementById('vn-head').value = v.specialty;
-                document.getElementById('vn-phone').value = v.phone || '';
-                document.getElementById('vendor-modal-title').innerText = "Edit Vendor";
-            } else {
-                document.getElementById('edit-vendor-id').value = "";
-                document.getElementById('vendor-modal-title').innerText = "Add New Vendor";
-            }
-            m.classList.add('active');
-        }
-
-        function handleVendorSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-vendor-id').value;
-            const data = {
-                id: id || "VN" + Date.now(),
-                name: document.getElementById('vn-name').value,
-                category: document.getElementById('vn-cat').value,
-                specialty: document.getElementById('vn-head').value,
-                phone: document.getElementById('vn-phone').value
-            };
-            if (id) state.vendors = state.vendors.map(v => v.id === id ? data : v);
-            else state.vendors.push(data);
-            save(); closeModals(); showToast("Vendor Saved");
-        }
-
-        function renderVendors() {
-            const list = document.getElementById('vendors-list');
-            list.innerHTML = state.vendors.map(v => `
-                <div class="bg-white p-5 rounded-2xl border shadow-sm group hover:border-orange-400 transition">
-                    <div class="flex justify-between items-start mb-2">
-                        <p class="font-black text-slate-800">${v.name}</p>
-                        <button onclick="openVendorModal('${v.id}')" class="text-blue-500 text-[10px] font-bold uppercase">Edit</button>
-                    </div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">${v.category}</p>
-                    <p class="text-[10px] font-black text-orange-600 uppercase mb-4">${v.specialty}</p>
-                    <div class="flex justify-between items-center pt-2 border-t">
-                        <span class="text-xs font-bold text-slate-400">${v.phone || '--'}</span>
-                        <a href="https://wa.me/91${v.phone}" target="_blank" class="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded font-bold">WhatsApp</a>
-                    </div>
-                </div>
-            `).join('') || '<div class="col-span-full text-center p-12 text-slate-400">No vendors added.</div>';
-        }
-
-        // --- EXPENSE CRUD ---
-        function filterVendorsForExpense() {
-            const head = document.getElementById('ex-head').value;
-            const cat = document.getElementById('ex-cat').value;
-            const vSel = document.getElementById('ex-vendor');
-            
-            let matches = state.vendors.filter(v => v.specialty === head);
-            if(matches.length === 0) matches = state.vendors.filter(v => v.category === cat);
-            
-            vSel.innerHTML = `<option value="">Generic / Self</option>` + matches.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
-            const others = state.vendors.filter(v => !matches.find(m => m.id === v.id));
-            if(others.length > 0) vSel.innerHTML += `<optgroup label="Others">` + others.map(v => `<option value="${v.id}">${v.name}</option>`).join('') + `</optgroup>`;
-        }
-
-        function openExpenseModal() {
-            const m = document.getElementById('expense-modal');
-            m.querySelector('form').reset();
-            document.getElementById('ex-event').innerHTML = state.events.map(e => `<option value="${e.id}">${e.client}</option>`).join('');
-            document.getElementById('ex-cat').innerHTML = Object.keys(expenseHeadsDB).map(c => `<option value="${c}">${c}</option>`).join('');
-            updateHeads('ex-cat', 'ex-head');
-            filterVendorsForExpense();
-            m.classList.add('active');
-        }
-
-        function handleExpenseSubmit(e) {
-            e.preventDefault();
-            const data = {
-                id: "EX" + Date.now() + Math.random().toString(36).substr(2,4),
-                eventId: document.getElementById('ex-event').value,
-                category: document.getElementById('ex-cat').value,
-                head: document.getElementById('ex-head').value,
-                amount: parseFloat(document.getElementById('ex-amount').value),
-                date: document.getElementById('ex-date').value || new Date().toISOString().split('T')[0],
-                vendorId: document.getElementById('ex-vendor').value
-            };
-            state.expenses.push(data);
-            save(); closeModals(); showToast("Expense Recorded");
-        }
-
-        // --- CORE RENDERING ---
-        function renderDashboard() {
-            const totalBill = state.events.reduce((s, e) => s + e.billing, 0);
-            const totalExp = state.expenses.reduce((s, e) => s + e.amount, 0);
-            const totalRec = state.payments.reduce((s, p) => s + p.amount, 0);
-            document.getElementById('stats-grid').innerHTML = `
-                <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Portfolio</p><p class="text-xl font-black">₹${totalBill.toLocaleString()}</p></div>
-                <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-[10px] font-bold text-red-400 uppercase tracking-widest">Expenses</p><p class="text-xl font-black text-red-600">₹${totalExp.toLocaleString()}</p></div>
-                <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-[10px] font-bold text-green-400 uppercase tracking-widest">Collected</p><p class="text-xl font-black text-green-600">₹${totalRec.toLocaleString()}</p></div>
-                <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100"><p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Pending</p><p class="text-xl font-black text-amber-700">₹${(totalBill - totalRec).toLocaleString()}</p></div>
-                <div class="bg-blue-600 p-5 rounded-2xl text-white shadow-lg"><p class="text-[10px] font-bold text-blue-200 uppercase tracking-widest">Est. Profit</p><p class="text-xl font-black">₹${(totalBill - totalExp).toLocaleString()}</p></div>
-            `;
-            const overdue = state.events.map(ev => {
-                const rec = state.payments.filter(p => p.eventId === ev.id).reduce((s, p) => s + p.amount, 0);
-                return { ...ev, pending: ev.billing - rec };
-            }).filter(e => e.pending > 0).sort((a,b) => b.pending - a.pending);
-            document.getElementById('overdue-list').innerHTML = overdue.map(e => `
-                <div class="flex justify-between items-center p-4 bg-amber-50 rounded-2xl border border-amber-100 cursor-pointer" onclick="showEventDetail('${e.id}')">
-                    <div><p class="font-bold">${e.client}</p><p class="text-[10px] font-bold text-amber-600">${e.date}</p></div>
-                    <p class="text-lg font-black text-amber-700">₹${e
+    <div id="vendor-modal" class="modal items-center justify-center p-4">
+        <form onsubmit="handleVendorSubmit(event)" class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
+            <h3 id="vendor-modal-title" class="text-xl font-black mb-6">Add New Vendor</h3>
+            <input type="hidden" id="edit-vendor-id">
+            <div class="space-y-5">
+                <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vendor Name</label><input type="text" id="vn-name" required class="w-full border-b py-2 outline-none font-bold focus:border-orange-500"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</label><select id="vn-cat" onchange="updateHeads('vn-cat', 'vn-head')" required class="w-full border-b py-2 outline-none"></select></div>
+                    <div><label class="text-[10px] font-
