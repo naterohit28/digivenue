@@ -3,29 +3,297 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Dashboard</title>
+  <title>IPL 2026 Fantasy League App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    body, html { 
-      margin: 0; 
-      padding: 0; 
-      height: 100%; 
-      overflow: hidden; 
-      background-color: #f0f2f5; 
+    /* BACKGROUND & APP COLORS */
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0; padding: 20px; min-height: 100vh;
     }
-    .iframe-container { 
-      width: 100%; 
-      height: 100vh; /* Fills the whole screen height */
+    .dashboard-container {
+      max-width: 1300px; margin: 0 auto;
+      background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+      border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      overflow: hidden; padding: 30px;
     }
-    iframe { 
-      width: 100%; 
-      height: 100%; 
-      border: none; 
+
+    /* HEADER & TABS */
+    .header { text-align: center; margin-bottom: 25px; }
+    .header h1 {
+      font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; margin: 0;
+      background: linear-gradient(to right, #fbbf24, #f59e0b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-transform: uppercase; letter-spacing: 2px;
+    }
+    
+    .update-banner {
+      display: inline-block; margin-top: 12px;
+      background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5; padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+    }
+    
+    .tab-bar {
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 25px;
+    }
+    .tab-bar::-webkit-scrollbar { height: 6px; }
+    .tab-bar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+    .tab-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+    .tab-button {
+      background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: all 0.2s; font-family: 'Inter', sans-serif;
+    }
+    .tab-button.active {
+      background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: #fbbf24;
+    }
+
+    /* DATA TABLES */
+    .table-container { 
+      overflow: auto; 
+      background: rgba(15, 23, 42, 0.6); 
+      border-radius: 12px; 
+      border: 1px solid rgba(255, 255, 255, 0.05); 
+      max-height: 75vh; 
+    }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+    
+    /* THE UNIFIED STICKY HEADER ROW */
+    th { 
+      background: #0f172a; 
+      color: #fbbf24; 
+      font-weight: 600; 
+      font-size: 14px; 
+      padding: 15px;
+      position: sticky; 
+      top: 0; 
+      z-index: 30; /* Higher than frozen columns */
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      white-space: nowrap;
+    }
+
+    td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #e2e8f0; white-space: nowrap; }
+
+    /* FROZEN COLUMN B (Name) */
+    .sticky-col1 { 
+      position: sticky; 
+      left: 0; 
+      background: #1e293b; 
+      z-index: 10; 
+      min-width: 180px; 
+      max-width: 180px;
+    }
+    
+    /* FROZEN COLUMN C (Total) */
+    .sticky-col2 { 
+      position: sticky; 
+      left: 180px; 
+      background: #1e293b; 
+      z-index: 10; 
+      font-weight: 800; 
+      color: #fbbf24; 
+      min-width: 100px; 
+      text-align: center;
+      border-right: 2px solid rgba(255,255,255,0.1);
+    }
+
+    /* Ensure frozen headers stay on top and have correct background */
+    th.sticky-col1, th.sticky-col2 { z-index: 40; background: #0f172a; }
+
+    tr:hover td { background: rgba(255,255,255,0.05); }
+
+    /* LEADERBOARD CARDS */
+    .leaderboard { display: flex; flex-direction: column; gap: 15px; }
+    .player-card {
+      background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); 
+      border-radius: 12px; padding: 20px;
+    }
+    .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 15px; }
+    .rank { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #334155; color: #cbd5e1; margin-right: 15px; }
+    .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; }
+    .total-score-card { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #fbbf24; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+    .stat-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; text-align: center; }
+    .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    .stat-value { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+
+    /* IFRAME */
+    .iframe-container { width: 100%; height: 75vh; border-radius: 12px; overflow: hidden; background: #fff; }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .loading { text-align: center; color: #94a3b8; padding: 40px; font-weight: 500; }
+
+    @media (max-width: 600px) {
+      .sticky-col1 { min-width: 120px; max-width: 120px; }
+      .sticky-col2 { min-width: 80px; left: 120px; }
     }
   </style>
 </head>
 <body>
-  <div class="iframe-container">
-    <iframe src="https://docs.google.com/spreadsheets/d/1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q/edit?rm=minimal" title="IPL Dashboard"></iframe>
+
+  <div class="dashboard-container">
+    <div class="header">
+      <h1>IPL 2026 Fantasy League</h1>
+      <div class="update-banner">Data is updated till Match 7</div>
+    </div>
+
+    <div class="tab-bar" id="tabBar"></div>
+    <div id="contentArea">
+      <div class="loading">Loading dashboard...</div>
+    </div>
   </div>
+
+  <script>
+    const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
+    
+    const TABS = [
+      { name: 'Leaderboard', gid: '1775142554', type: 'leaderboard' },
+      { name: 'Your Report Card', gid: '1383665756', type: 'iframe' }, 
+      { name: 'Match Scores', gid: '1509870547', type: 'datatable' },
+      { name: 'SS Scores', gid: '130216061', type: 'datatable' },
+      { name: 'Daily Score', gid: '1884747051', type: 'datatable' },
+      { name: 'IPL Player Points', gid: '1991041599', type: 'datatable' }
+    ];
+
+    const DASH_COLS = { name: 3, total: 13, match: 4, bonus: 5, star: 6, duo: 7, resurrector: 8, risk: 9, special: 10, superBonus: 11, superSelector: 12 };
+
+    let currentTab = TABS[0];
+
+    function renderTabs() {
+      const tabBar = document.getElementById('tabBar');
+      tabBar.innerHTML = '';
+      TABS.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className = `tab-button ${tab.name === currentTab.name ? 'active' : ''}`;
+        btn.innerText = tab.name;
+        btn.onclick = () => {
+          currentTab = tab;
+          renderTabs();
+          loadContent();
+        };
+        tabBar.appendChild(btn);
+      });
+    }
+
+    async function loadContent() {
+      const content = document.getElementById('contentArea');
+      
+      if (currentTab.type === 'leaderboard' || currentTab.type === 'datatable') {
+        content.innerHTML = '<div class="loading">Fetching live data...</div>';
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${currentTab.gid}`;
+        
+        try {
+          const res = await fetch(url);
+          const text = await res.text();
+          const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+          
+          if (currentTab.type === 'leaderboard') renderLeaderboard(json.table.rows);
+          else renderDataTable(json.table.rows, json.table.cols);
+        } catch (e) {
+          content.innerHTML = `<div class="loading">Error loading data. Check Sheet permissions.</div>`;
+        }
+      } 
+      else if (currentTab.type === 'iframe') {
+        const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${currentTab.gid}&rm=minimal&range=D2:R45`;
+        content.innerHTML = `<div class="iframe-container"><iframe src="${iframeUrl}"></iframe></div>`;
+      }
+    }
+
+    function renderDataTable(rows, cols) {
+      let html = '<div class="table-container"><table><thead><tr>';
+      const isPlayerPoints = currentTab.name === 'IPL Player Points';
+
+      // RENDER UNIFIED HEADER
+      cols.forEach((c, i) => {
+        if (isPlayerPoints) { if (i === 0 || i === 1) return; } 
+        else { if (i === 0 || i === 3) return; }
+        
+        let cls = '';
+        let label = c.label || '';
+        
+        if (isPlayerPoints) {
+          if (i === 2) cls = 'sticky-col1';
+          if (i === 3) { cls = 'sticky-col2'; label = 'Total Score'; }
+        } else {
+          if (i === 1) cls = 'sticky-col1';
+          if (i === 2) { cls = 'sticky-col2'; label = 'Total Score'; }
+        }
+        html += `<th class="${cls}">${label}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      // RENDER DATA ROWS
+      rows.forEach(row => {
+        html += '<tr>';
+        row.c.forEach((cell, i) => {
+          if (isPlayerPoints) { if (i === 0 || i === 1) return; } 
+          else { if (i === 0 || i === 3) return; }
+          
+          let cls = '';
+          if (isPlayerPoints) { if (i === 2) cls = 'sticky-col1'; if (i === 3) cls = 'sticky-col2'; }
+          else { if (i === 1) cls = 'sticky-col1'; if (i === 2) cls = 'sticky-col2'; }
+          
+          let val = cell ? (cell.f || cell.v || '') : '';
+          if (val === 'null' || val === null) val = '-';
+          html += `<td class="${cls}">${val}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      document.getElementById('contentArea').innerHTML = html;
+    }
+
+    function renderLeaderboard(rows) {
+      let html = '<div class="leaderboard">';
+      let validPlayers = [];
+      rows.forEach(row => {
+        const name = row.c[DASH_COLS.name]?.v;
+        if (name && name !== 'Participant' && name !== '0') {
+          validPlayers.push({
+            name, 
+            score: Math.round(row.c[DASH_COLS.total]?.v || 0),
+            match: Math.round(row.c[DASH_COLS.match]?.v || 0),
+            bonus: Math.round(row.c[DASH_COLS.bonus]?.v || 0),
+            star: Math.round(row.c[DASH_COLS.star]?.v || 0),
+            duo: Math.round(row.c[DASH_COLS.duo]?.v || 0),
+            resurrector: Math.round(row.c[DASH_COLS.resurrector]?.v || 0),
+            risk: Math.round(row.c[DASH_COLS.risk]?.v || 0),
+            special: Math.round(row.c[DASH_COLS.special]?.v || 0),
+            superBonus: Math.round(row.c[DASH_COLS.superBonus]?.v || 0),
+            superSelector: Math.round(row.c[DASH_COLS.superSelector]?.v || 0),
+          });
+        }
+      });
+      validPlayers.sort((a, b) => b.score - a.score);
+      validPlayers.forEach((p, i) => {
+        const rank = i + 1;
+        html += `
+          <div class="player-card">
+            <div class="card-header"><div><span class="rank ${rank <= 3 ? 'rank-1' : ''}">${rank}</span><span class="player-name">${p.name}</span></div><div class="total-score-card">${p.score.toLocaleString()}</div></div>
+            <div class="stats-grid">
+              <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match}</span></div>
+              <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus}</span></div>
+              <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star}</span></div>
+              <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo}</span></div>
+              <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector}</span></div>
+              <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk}</span></div>
+              <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special}</span></div>
+              <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus || '-'}</span></div>
+              <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector}</span></div>
+            </div>
+          </div>`;
+      });
+      document.getElementById('contentArea').innerHTML = html + '</div>';
+    }
+
+    renderTabs(); loadContent();
+  </script>
 </body>
 </html>
