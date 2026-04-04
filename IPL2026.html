@@ -1,134 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy Leaderboard</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  
-  <style>
-    /* =========================================
-       🎨 1. BACKGROUND & APP COLORS 
-       You can change the background colors below!
-       ========================================= */
-    body {
-      /* This creates the dark blue/slate background gradient */
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #f8fafc;
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
+<script>
+    const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
+    const GID = '1775142554'; 
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch(URL);
+        const text = await res.text();
+        
+        // Diagnostic: Check if Google sent an HTML login page instead of data
+        if (text.includes('<html')) {
+          throw new Error("Google is blocking access. The sheet is not set to 'Anyone with the link'.");
+        }
+
+        const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+        if (!jsonString) throw new Error("Could not parse the data from Google.");
+        
+        const json = JSON.parse(jsonString[1]);
+        const rows = json.table.rows;
+        let html = '';
+        let validPlayers = [];
+        
+        rows.forEach((row, index) => {
+          try {
+            // Safely check if the row and column C exist
+            if(row && row.c && row.c[2] && row.c[2].v) {
+              const name = String(row.c[2].v);
+              if (name !== 'Participant' && name.trim() !== '') {
+                
+                // Safely grab the other columns (fallback to 0 if empty)
+                const starPerformer = (row.c[5] && row.c[5].v) ? row.c[5].v : 0;
+                const dynamicDuo = (row.c[6] && row.c[6].v) ? row.c[6].v : 0;
+                const totalScore = (row.c[12] && row.c[12].v) ? row.c[12].v : 0;
+
+                const numericScore = typeof totalScore === 'number' ? totalScore : parseFloat(String(totalScore).replace(/,/g, '')) || 0;
+
+                validPlayers.push({
+                  name: name,
+                  score: numericScore, 
+                  displayScore: totalScore,
+                  starPerformer: starPerformer,
+                  dynamicDuo: dynamicDuo
+                });
+              }
+            }
+          } catch (rowError) {
+            console.log("Skipping a broken row at index: " + index);
+          }
+        });
+
+        if (validPlayers.length === 0) {
+          throw new Error("Connected to sheet, but couldn't find any player names in Column C.");
+        }
+
+        validPlayers.sort((a, b) => b.score - a.score);
+
+        validPlayers.forEach((player, index) => {
+          const rank = index + 1;
+          let rankClass = rank <= 3 ? `rank-${rank}` : '';
+          html += `
+            <div class="player-card">
+              <div class="rank ${rankClass}">${rank}</div>
+              <div class="player-info">
+                <div class="player-name">${player.name}</div>
+                <div class="player-stats">
+                  <span class="stat-badge">⭐ Star: ${player.starPerformer}</span>
+                  <span class="stat-badge">🤝 Duo: ${player.dynamicDuo}</span>
+                </div>
+              </div>
+              <div class="total-score">${player.displayScore.toLocaleString()}</div>
+            </div>
+          `;
+        });
+
+        document.getElementById('leaderboard').innerHTML = html;
+
+      } catch (error) {
+        // This will print the EXACT error on your screen
+        document.getElementById('leaderboard').innerHTML = `
+          <div style="background: rgba(220,38,38,0.2); border: 1px solid #ef4444; padding: 20px; border-radius: 10px; color: #fca5a5; text-align: center;">
+            <strong>Error:</strong> ${error.message}
+          </div>
+        `;
+      }
     }
 
-    /* The box that holds the leaderboard */
-    .dashboard-container {
-      max-width: 900px; /* Width of the leaderboard */
-      margin: 0 auto;
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      padding: 30px;
-    }
-
-    /* =========================================
-       📝 2. HEADER TEXT STYLING
-       ========================================= */
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 20px;
-    }
-    .header h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      margin: 0;
-      background: linear-gradient(to right, #fbbf24, #f59e0b); /* Gold text gradient */
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .header p {
-      color: #94a3b8;
-      font-size: 15px;
-      margin-top: 8px;
-    }
-
-    /* =========================================
-       🏆 3. PLAYER CARDS (THE ROWS)
-       ========================================= */
-    .leaderboard {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .player-card {
-      display: flex;
-      align-items: center;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 16px 24px;
-      transition: transform 0.2s, background 0.2s;
-    }
-
-    /* Hover effect when someone moves their mouse over a player */
-    .player-card:hover {
-      transform: translateY(-2px);
-      background: rgba(51, 65, 85, 0.8);
-      border-color: rgba(251, 191, 36, 0.4); /* Gold border on hover */
-    }
-
-    /* =========================================
-       🥇 4. RANK BADGES (1st, 2nd, 3rd)
-       ========================================= */
-    .rank {
-      font-family: 'Poppins', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: #334155;
-      color: #cbd5e1;
-      margin-right: 20px;
-      flex-shrink: 0;
-    }
-    
-    /* Special colors for Top 3 */
-    .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
-    .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
-    .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
-
-    /* =========================================
-       👤 5. PLAYER TEXT & STATS
-       ========================================= */
-    .player-info {
-      flex-grow: 1;
-    }
-    .player-name {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 18px;
-      color: #f8fafc;
-      margin-bottom: 4px;
-    }
-    .player-stats {
-      font-size: 12px;
-      color: #94a3b8;
-      display: flex;
-      gap: 15px;
-    }
-    .stat-badge {
-      background: rgba(255, 255
+    loadDashboard();
+    setInterval(loadDashboard, 60000);
+  </script>
