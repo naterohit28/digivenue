@@ -30,6 +30,7 @@
     .rank-cell { width: 35px; text-align: center; font-weight: 800; color: #fbbf24; }
     .name-cell { font-weight: 700; color: #fff; }
 
+    /* Report Card */
     .rc-container { max-width: 850px; margin: 0 auto; }
     .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:15px}
     .rcg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
@@ -47,7 +48,8 @@
     .rd{font-size:12px;color:#94a3b8; text-align:right; margin-right: 15px; font-style: italic; max-width: 250px; overflow: hidden; text-overflow: ellipsis;}
     .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fff;text-align:right;width:80px}
     .rv.dim{color:#64748b;font-weight:400}
-   
+    .rv.negative { color: #f87171 !important; font-weight: 700; }   /* Red for negatives */
+
     .gh{background:rgba(255,255,255,0.05);padding:8px 20px;font-size:10px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px}
     .rr.sub{background:rgba(251,191,36,0.05); border-top:1px solid rgba(251,191,36,0.1)}
     .rr.tot{background:rgba(251,191,36,0.15);padding:15px 20px}
@@ -130,7 +132,6 @@ function buildPlayers(rows){
 }
 
 function renderLB(rows){
-  // Safe banner update
   const bannerEl = document.getElementById('banner');
   const matchRow = rows.find(r => String(r).includes('Match'));
   if (matchRow) {
@@ -165,7 +166,7 @@ function renderLB(rows){
   document.getElementById('area').innerHTML = h + '</tbody></table></div>';
 }
 
-function renderDT(rows){ /* unchanged - your original logic works fine */ 
+function renderDT(rows){
   const isP = cur.key==='playerpoints';
   let h = '<div class="tw"><table><thead><tr>';
   const hdrs = rows[0];
@@ -184,14 +185,14 @@ function renderDT(rows){ /* unchanged - your original logic works fine */
       let cls = '';
       if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; }
       else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
-      h += `<td class="${cls}">${c||'—'}</td>`;
+      h += `<td class="${cls}">${fmt(c)}</td>`;
     });
     h += '</tr>';
   });
   document.getElementById('area').innerHTML = h + '</tbody></table></div>';
 }
 
-function renderRCShell(){ /* unchanged */ 
+function renderRCShell(){
   let names = players.map(p=>`<option value="${p.name}" ${p.name===rcName?'selected':''}>${p.name}</option>`).join('');
   let matches = ''; for(let i=1;i<=74;i++) matches+=`<option value="${i}" ${i===rcMatch?'selected':''}>Match ${i}</option>`;
   document.getElementById('area').innerHTML = `
@@ -209,13 +210,13 @@ async function fetchRC(){
   try {
     const res = await fetch(`${API}?id=${SHEET_ID}&tab=reportcard`);
     const d = await res.json();
-    const g = d.rows;
+    const g = d.rows || [];
     let col = -1;
-    for(let c=0; c<g[2].length; c++) { 
-      if(String(g[2][c]) == rcMatch) { col = c; break; } 
+    for(let c=0; c < (g[2] ? g[2].length : 0); c++) { 
+      if(String(g[2][c]).trim() == rcMatch) { col = c; break; } 
     }
 
-    const mapping = [ /* your mapping stays the same */ 
+    const mapping = [
       {l:'Match Related Points', r:9, sub:true},
       {l:'Match Points', r:4, dual:1}, {l:'Bonus Points', r:5}, {l:'Risk Incentive', r:6}, {l:'Special Incentive', r:7},
       {l:'SP Points (incl link effect)', r:15, sub:true},
@@ -233,25 +234,25 @@ async function fetchRC(){
 
     let rowsHTML = '';
     mapping.forEach(item => {
-      let nameVal = (item.dual && col > -1) ? (g[item.r]?.[col] || '') : '';
-      let scoreVal = col > -1 ? (g[item.r]?.[col+1] || '—') : '—';
-      if(item.sub && !item.dual) scoreVal = col > -1 ? g[item.r]?.[col+1] : '—';
-      rowsHTML += `<div class="rr ${item.sub?'sub':''}"><span class="rl">${item.l}</span><span class="rd">${nameVal}</span><span class="rv ${item.sub?'gold':''}">${fmt(scoreVal)}</span></div>`;
+      let nameVal = (item.dual && col > -1) ? (g[item.r] ? g[item.r][col] || '' : '') : '';
+      let scoreVal = col > -1 ? (g[item.r] ? g[item.r][col+1] || '—' : '—') : '—';
+      if(item.sub && !item.dual) scoreVal = col > -1 ? (g[item.r] ? g[item.r][col+1] || '—' : '—') : '—';
+      rowsHTML += `<div class="rr ${item.sub?'sub':''}"><span class="rl">${item.l}</span><span class="rd">${nameVal}</span><span class="rv ${isNegative(scoreVal) ? 'negative' : ''}">${fmt(scoreVal)}</span></div>`;
     });
 
     const pl = players.find(p=>p.name===rcName);
-    const matchTotal = col > -1 ? g[43]?.[col+1] : '—';
+    const matchTotal = col > -1 ? (g[43] ? g[43][col+1] : '—') : '—';
 
     document.getElementById('rcArea').innerHTML = `
       <div class="rccard">
         <div class="rchero">
-          <div class="rcav">${rcName[0]||'P'}</div>
+          <div class="rcav">${rcName ? rcName[0] : 'P'}</div>
           <div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Performance Report · Match ${rcMatch}</div></div>
           <div style="margin-left:auto"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:9px;text-transform:uppercase">Rank</div></div>
         </div>
         <div class="gh">Detailed Statistics</div>
         ${rowsHTML}
-        <div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv gold" style="font-size:22px">${fmt(matchTotal)}</span></div>
+        <div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv ${isNegative(matchTotal)?'negative':''} gold" style="font-size:22px">${fmt(matchTotal)}</span></div>
         <div class="rr tot"><span class="rl">Overall Season Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
       </div>`;
   } catch(e) {
@@ -259,12 +260,30 @@ async function fetchRC(){
   }
 }
 
-function pn(v){ if(!v || v==='—' || v==='-')return 0; return parseFloat(String(v).replace(/,/g,'')) || 0; }
-function fmt(v){ 
-  if(!v || v==='0' || v===0 || v==='-') return '<span class="dim">—</span>';
-  const num = pn(v);
-  return isNaN(num) ? `<span style="color:#fff">${v}</span>` : num.toLocaleString();
+// Improved number handling
+function pn(v){
+  if(!v || v==='—' || v==='-') return 0;
+  return parseFloat(String(v).replace(/,/g,'').replace(/[()]/g,'')) || 0;
 }
+
+function isNegative(v){
+  const str = String(v).trim();
+  return str.startsWith('-') || (str.startsWith('(') && str.endsWith(')'));
+}
+
+function fmt(v){
+  if(!v || v==='0' || v===0 || v==='-') return '<span class="dim">—</span>';
+  
+  const str = String(v).trim();
+  if (isNegative(str)) {
+    return `<span class="negative">(${str.replace(/[()-]/g,'')})</span>`;
+  }
+  
+  const num = pn(v);
+  if (isNaN(num)) return `<span style="color:#fff">${v}</span>`;
+  return num.toLocaleString();
+}
+
 function go(n){ cur = TABS.find(t=>t.name===n); load(); }
 
 load();
