@@ -16,16 +16,18 @@
     .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-size:13px}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
     
+    /* COMMON HEADER TABLE STYLES */
     .tw{overflow-x:auto;background:rgba(15,23,42,0.6);border-radius:10px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
-    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
-    th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:11px}
+    th,td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
+    th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:11px;letter-spacing:0.5px}
     
-    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:160px}
-    .sc2{position:sticky;left:160px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:90px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
+    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:180px} /* Rank & Name */
+    .sc2{position:sticky;left:180px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:100px;border-right:1px solid rgba(255,255,255,0.1);text-align:center} /* Season Total */
     th.sc1,th.sc2{z-index:15;background:#0f172a}
-    tr:hover td{background:rgba(255,255,255,0.03)}
+    tr:hover td{background:rgba(255,255,255,0.04)}
 
+    /* COMPACT REPORT CARD */
     .rc-container { max-width: 850px; margin: 0 auto; }
     .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:15px}
     .rcg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
@@ -39,9 +41,9 @@
     .rchn{font-size:20px;font-weight:700;color:#fff}
     .rcrn{font-size:32px;font-weight:800;color:#fbbf24;line-height:1}
 
-    .rr{display:flex;justify-content:space-between;align-items:center;padding:9px 20px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .rr{display:flex;justify-content:space-between;align-items:center;padding:8px 20px;border-bottom:1px solid rgba(255,255,255,0.03)}
     .rl{font-size:13px;color:#cbd5e1;font-weight:500; flex:1}
-    .rd{font-size:12px;color:#94a3b8; text-align:right; margin-right: 15px; font-style: italic; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .rd{font-size:12px;color:#94a3b8; text-align:right; margin-right: 15px; font-style: italic; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fff;text-align:right;width:80px}
     .rv.dim{color:#64748b;font-weight:400}
     
@@ -59,15 +61,26 @@
 <div class="wrap">
   <div class="header">
     <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">Connecting to Live Sheet...</div>
+    <div class="banner" id="banner">Syncing with Live Sheet...</div>
   </div>
   <div class="tab-bar" id="tabBar"></div>
   <div id="area"></div>
 </div>
 
 <script>
-// 🔴 Your URL is now integrated here
 const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
+
+/* ═══════════════════════════════════════════════════
+   FIXED MAPPING (Based on image_8f853c.png)
+   A:0, B:1, C:2, D:3, E:4, F:5, G:6, H:7, I:8, J:9, K:10, L:11, M:12
+═══════════════════════════════════════════════════ */
+const LC = {
+  rank: 0, arrow: 1, name: 2, match: 3, bonus: 4, 
+  star: 5, duo: 6, res: 7, risk: 8, spec: 9, 
+  supB: 10, sel: 11, total: 12
+};
+
+let cur=TABS[0], players=[], rcName='', rcMatch=7;
 
 const TABS = [
   {name:'Leaderboard', key:'leaderboard', type:'lb'},
@@ -78,20 +91,16 @@ const TABS = [
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-const LC={rank:1,name:2,match:3,bonus:4,star:5,duo:6,res:7,risk:8,spec:9,supB:10,sel:11,total:12};
-
-let cur=TABS[0], players=[], rcName='', rcMatch=7;
-
 async function load(){
   renderTabs();
-  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div>Crunching Stats...</div>';
+  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div>Updating...</div>';
   try {
     const res = await fetch(`${API}?id=1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q&tab=${cur.key}`);
     const d = await res.json();
     if(cur.type==='lb'){ buildPlayers(d.rows); renderLB(d.rows); }
     else if(cur.type==='rc'){ renderRCShell(); }
     else renderDT(d.rows);
-  } catch(e) { document.getElementById('area').innerHTML='<div class="loading">Connection Error. Verify Apps Script URL.</div>'; }
+  } catch(e) { document.getElementById('area').innerHTML='<div class="loading">Connection Lost. Please Refresh.</div>'; }
 }
 
 function renderTabs(){
@@ -100,33 +109,57 @@ function renderTabs(){
 
 function buildPlayers(rows){
   if(!rows) return;
+  // Look for rows where Column A has a number
   players = rows.filter(r => parseInt(r[LC.rank]) > 0).map(r => ({
-    rank: parseInt(r[LC.rank]), name: String(r[LC.name]).trim(), total: pn(r[LC.total])
+    rank: parseInt(r[LC.rank]), 
+    name: String(r[LC.name] || '—').trim(), 
+    total: pn(r[LC.total])
   })).sort((a,b)=>a.rank-b.rank);
 }
 
 function renderLB(rows){
+  // Banner Auto-Update
   const bRow = rows.find(r => r.some(c => String(c).includes('Match')));
   if(bRow) {
-    const matchTxt = String(bRow).match(/Match \d+/);
+    const matchTxt = String(bRow).match(/Match #?\s*\d+/i);
     if(matchTxt) document.getElementById('banner').innerText = 'Data Updated till ' + matchTxt[0];
   }
 
-  let h = '<div class="tw"><table><thead><tr><th class="sc1"># Name</th><th class="sc2">Season Total</th><th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurrect</th><th>Risk</th><th>Special</th><th>Sup Bonus</th><th>Selector</th></tr></thead><tbody>';
+  let h = '<div class="tw"><table><thead><tr>';
+  h += '<th class="sc1">Rank & Name</th><th class="sc2">Season Total</th>';
+  h += '<th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurrect</th><th>Risk</th><th>Special</th><th>Sup Bonus</th><th>Selector</th>';
+  h += '</tr></thead><tbody>';
+
   rows.forEach(row => {
     const rn = parseInt(row[LC.rank]);
-    if(isNaN(rn)) return;
+    if(isNaN(rn)) return; // Skip headers/empty rows
+
+    const changeArrow = String(row[LC.arrow] || '');
+    const colorClass = changeArrow.includes('▲') ? 'color:#4ade80' : changeArrow.includes('▼') ? 'color:#f87171' : 'color:#94a3b8';
+
     h += `<tr>
-            <td class="sc1"><span style="color:#fbbf24;margin-right:8px">#${rn}</span>${row[LC.name]}</td>
+            <td class="sc1">
+              <span style="color:#fbbf24;margin-right:6px">#${rn}</span>
+              <span style="${colorClass};margin-right:8px;font-size:10px">${changeArrow}</span>
+              <span>${row[LC.name] || '—'}</span>
+            </td>
             <td class="sc2">${fmt(row[LC.total])}</td>
-            <td>${fmt(row[LC.match])}</td><td>${fmt(row[LC.bonus])}</td><td>${fmt(row[LC.star])}</td><td>${fmt(row[LC.duo])}</td>
-            <td>${fmt(row[LC.res])}</td><td>${fmt(row[LC.risk])}</td><td>${fmt(row[LC.spec])}</td><td>${fmt(row[LC.supB])}</td><td>${fmt(row[LC.sel])}</td>
+            <td>${fmt(row[LC.match])}</td>
+            <td>${fmt(row[LC.bonus])}</td>
+            <td>${fmt(row[LC.star])}</td>
+            <td>${fmt(row[LC.duo])}</td>
+            <td>${fmt(row[LC.res])}</td>
+            <td>${fmt(row[LC.risk])}</td>
+            <td>${fmt(row[LC.spec])}</td>
+            <td>${fmt(row[LC.supB])}</td>
+            <td>${fmt(row[LC.sel])}</td>
           </tr>`;
   });
   document.getElementById('area').innerHTML = h + '</tbody></table></div>';
 }
 
 function renderDT(rows){
+  if(!rows || rows.length < 1) return;
   const isP = cur.key==='playerpoints';
   let h = '<div class="tw"><table><thead><tr>';
   const hdrs = rows[0];
@@ -198,10 +231,11 @@ async function fetchRC(){
   const matchTotal = col > -1 ? g[43][col+1] : '—';
   document.getElementById('rcArea').innerHTML = `
     <div class="rccard">
-      <div class="rchero"><div class="rcav">${rcName[0] || 'P'}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Match Analysis · Match ${rcMatch}</div></div><div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:9px;text-transform:uppercase">Rank</div></div></div>
+      <div class="rchero"><div class="rcav">${rcName[0] || 'P'}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Performance Report · Match ${rcMatch}</div></div><div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:9px;text-transform:uppercase">Rank</div></div></div>
+      <div class="gh">Detailed Statistics</div>
       ${rows}
       <div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv gold" style="font-size:22px">${fmt(matchTotal)}</span></div>
-      <div class="rr tot"><span class="rl">Season Total Score</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+      <div class="rr tot"><span class="rl">Overall Season Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
     </div>`;
 }
 
