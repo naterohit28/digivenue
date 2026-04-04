@@ -98,13 +98,21 @@
     const GID = '1775142554'; 
     const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
 
+    // ==========================================
+    // ⚙️ FIX: SHIFTED ALL COLUMNS BY +1
+    // ==========================================
+    const COL_NAME = 4;   // Shifted from 3 to 4 (Pulls 'Santanu Daga')
+    const COL_STAR = 7;   // Shifted from 6 to 7 (Pulls '3771')
+    const COL_DUO = 8;    // Shifted from 7 to 8 (Pulls '1276')
+    const COL_TOTAL = 15; // Shifted from 14 to 15 (Pulls Total Score '9179')
+
     async function loadDashboard() {
       try {
         const res = await fetch(URL);
         const text = await res.text();
         
         if (text.includes('<html')) {
-          throw new Error("Google is blocking access. Please open your Google Sheet, click the blue 'Share' button, and ensure it says 'Anyone with the link' and 'Viewer'.");
+          throw new Error("Google is blocking access. Please open your Google Sheet, click 'Share', and ensure it says 'Anyone with the link' and 'Viewer'.");
         }
 
         const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
@@ -117,68 +125,11 @@
         
         rows.forEach((row) => {
           try {
-            if(row && row.c && row.c[2] && row.c[2].v) {
-              const name = String(row.c[2].v);
+            if(row && row.c && row.c[COL_NAME] && row.c[COL_NAME].v) {
+              const name = String(row.c[COL_NAME].v);
+              
               if (name !== 'Participant' && name.trim() !== '') {
                 
-                const starPerformer = (row.c[5] && row.c[5].v) ? row.c[5].v : 0;
-                const dynamicDuo = (row.c[6] && row.c[6].v) ? row.c[6].v : 0;
-                const totalScore = (row.c[12] && row.c[12].v) ? row.c[12].v : 0;
-
-                const numericScore = typeof totalScore === 'number' ? totalScore : parseFloat(String(totalScore).replace(/,/g, '')) || 0;
-
-                validPlayers.push({
-                  name: name,
-                  score: numericScore, 
-                  displayScore: totalScore,
-                  starPerformer: starPerformer,
-                  dynamicDuo: dynamicDuo
-                });
-              }
-            }
-          } catch (rowError) {
-            console.log("Skipped a blank row.");
-          }
-        });
-
-        if (validPlayers.length === 0) {
-          throw new Error("Connected to sheet successfully, but couldn't find player names in Column C.");
-        }
-
-        validPlayers.sort((a, b) => b.score - a.score);
-
-        validPlayers.forEach((player, index) => {
-          const rank = index + 1;
-          let rankClass = rank <= 3 ? `rank-${rank}` : '';
-          html += `
-            <div class="player-card">
-              <div class="rank ${rankClass}">${rank}</div>
-              <div class="player-info">
-                <div class="player-name">${player.name}</div>
-                <div class="player-stats">
-                  <span class="stat-badge">⭐ Star: ${player.starPerformer}</span>
-                  <span class="stat-badge">🤝 Duo: ${player.dynamicDuo}</span>
-                </div>
-              </div>
-              <div class="total-score">${player.displayScore.toLocaleString()}</div>
-            </div>
-          `;
-        });
-
-        document.getElementById('leaderboard').innerHTML = html;
-
-      } catch (error) {
-        document.getElementById('leaderboard').innerHTML = `
-          <div style="background: rgba(220,38,38,0.2); border: 1px solid #ef4444; padding: 20px; border-radius: 10px; color: #fca5a5; text-align: center;">
-            <strong>Diagnostics:</strong> ${error.message}
-          </div>
-        `;
-      }
-    }
-
-    loadDashboard();
-    setInterval(loadDashboard, 60000);
-  </script>
-
-</body>
-</html>
+                const starPerformer = (row.c[COL_STAR] && row.c[COL_STAR].v) ? row.c[COL_STAR].v : 0;
+                const dynamicDuo = (row.c[COL_DUO] && row.c[COL_DUO].v) ? row.c[COL_DUO].v : 0;
+                const totalScore = (row.c[COL
