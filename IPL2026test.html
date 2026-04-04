@@ -6,235 +6,148 @@
   <title>IPL 2026 Fantasy League</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%); color:#f8fafc; font-family:'Inter',sans-serif; padding:20px; min-height:100vh; }
-    .dashboard-container { max-width:1200px; margin:0 auto; background:rgba(30,41,59,0.7); backdrop-filter:blur(10px); border-radius:20px; border:1px solid rgba(255,255,255,0.1); box-shadow:0 25px 50px -12px rgba(0,0,0,0.6); overflow:hidden; padding:30px; }
-
-    /* Header */
-    .header { text-align:center; margin-bottom:25px; }
-    .header h1 { font-family:'Poppins',sans-serif; font-size:32px; font-weight:800; background:linear-gradient(to right,#fbbf24,#f59e0b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-transform:uppercase; letter-spacing:2px; }
-    .update-banner { display:inline-block; margin-top:12px; background:rgba(220,38,38,0.1); border:1px solid rgba(239,68,68,0.5); color:#fca5a5; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; }
-
-    /* Tabs */
-    .tab-bar { display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:25px; }
-    .tab-bar::-webkit-scrollbar { height:6px; }
-    .tab-bar::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); border-radius:10px; }
-    .tab-button { background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid rgba(255,255,255,0.1); padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .2s; font-family:'Inter',sans-serif; flex-shrink:0; }
-    .tab-button:hover { background:rgba(255,255,255,0.1); color:#fff; }
-    .tab-button.active { background:rgba(251,191,36,0.1); color:#fbbf24; border-color:#fbbf24; }
-
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#f8fafc;font-family:'Inter',sans-serif;padding:20px;min-height:100vh}
+    .wrap{max-width:1200px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:20px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);overflow:hidden;padding:30px}
+    .header{text-align:center;margin-bottom:25px}
+    .header h1{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:2px}
+    .banner{display:inline-block;margin-top:12px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600}
+    .tab-bar{display:flex;gap:10px;overflow-x:auto;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:25px}
+    .tab-bar::-webkit-scrollbar{height:6px}
+    .tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:10px}
+    .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Inter',sans-serif;flex-shrink:0;font-size:14px}
+    .tab-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
+    .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
+    .loading{text-align:center;color:#94a3b8;padding:60px 20px;display:flex;flex-direction:column;align-items:center;gap:16px;font-size:15px}
+    .spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
     /* Leaderboard */
-    .leaderboard { display:flex; flex-direction:column; gap:15px; }
-    .player-card { background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:20px; transition:transform .2s; }
-    .player-card:hover { transform:translateY(-2px); background:rgba(51,65,85,0.8); border-color:rgba(251,191,36,0.4); }
-    .card-header { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px; }
-    .card-header-left { display:flex; align-items:center; }
-    .rank { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; width:45px; height:45px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:#334155; color:#cbd5e1; margin-right:15px; flex-shrink:0; }
-    .rank-1 { background:linear-gradient(135deg,#fbbf24,#d97706); color:#fff; box-shadow:0 0 15px rgba(251,191,36,0.5); }
-    .rank-2 { background:linear-gradient(135deg,#94a3b8,#64748b); color:#fff; }
-    .rank-3 { background:linear-gradient(135deg,#b45309,#78350f); color:#fff; }
-    .player-name { font-family:'Poppins',sans-serif; font-weight:600; font-size:20px; color:#f8fafc; }
-    .total-score { font-family:'Poppins',sans-serif; font-size:28px; font-weight:800; color:#fbbf24; }
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:10px; }
-    .stat-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); padding:8px; border-radius:8px; text-align:center; }
-    .stat-label { font-size:10px; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block; }
-    .stat-value { font-size:14px; font-weight:600; color:#e2e8f0; font-family:'Poppins',sans-serif; }
-
-    /* Data table */
-    .table-container { overflow-x:auto; background:rgba(15,23,42,0.6); border-radius:12px; border:1px solid rgba(255,255,255,0.05); max-height:70vh; }
-    table { width:100%; border-collapse:separate; border-spacing:0; text-align:left; white-space:nowrap; }
-    th,td { padding:12px 15px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; color:#e2e8f0; }
-    th { background:#0f172a; color:#fbbf24; font-weight:600; font-size:14px; position:sticky; top:0; z-index:10; border-bottom:2px solid rgba(255,255,255,0.1); }
-    .sc1 { position:sticky; left:0; background:#1e293b; z-index:5; font-weight:600; min-width:180px; max-width:180px; }
-    .sc2 { position:sticky; left:180px; background:#1e293b; z-index:5; font-weight:800; color:#fbbf24; min-width:100px; border-right:2px solid rgba(255,255,255,0.1); text-align:center; }
-    th.sc1,th.sc2 { z-index:15; background:#0f172a; }
-    tr:hover td { background:rgba(255,255,255,0.03); }
-    .loading { text-align:center; color:#94a3b8; padding:40px; font-weight:500; line-height:2; }
-
-    /* ═══════════════════════════════════════════════════════
-       REPORT CARD
-    ═══════════════════════════════════════════════════════ */
-
-    /* Selector bar */
-    .rc-bar { display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:20px; }
-    .rc-grp { display:flex; flex-direction:column; gap:6px; flex:1; min-width:160px; max-width:280px; }
-    .rc-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#475569; }
-    .rc-sel {
-      background:#0f172a; border:1px solid rgba(255,255,255,0.15); color:#f8fafc;
-      padding:10px 36px 10px 14px; border-radius:10px;
-      font-family:'Inter',sans-serif; font-size:14px; font-weight:500;
-      cursor:pointer; outline:none; appearance:none; -webkit-appearance:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position:right 12px center; background-color:#0f172a;
-      transition:border-color .2s;
-    }
-    .rc-sel:hover { border-color:rgba(251,191,36,0.4); }
-    .rc-sel:focus { border-color:#fbbf24; box-shadow:0 0 0 3px rgba(251,191,36,0.15); }
-    .rc-sel option { background:#1e293b; }
-
-    .rc-btn {
-      height:42px; padding:0 24px;
-      background:linear-gradient(135deg,#fbbf24,#f59e0b);
-      color:#0f172a; border:none; border-radius:10px;
-      font-family:'Poppins',sans-serif; font-size:14px; font-weight:700;
-      cursor:pointer; transition:all .2s; white-space:nowrap;
-      display:flex; align-items:center; gap:8px; flex-shrink:0;
-    }
-    .rc-btn:hover { transform:translateY(-1px); box-shadow:0 4px 20px rgba(251,191,36,0.4); }
-    .rc-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
-
-    /* Card */
-    .rc-card { background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; }
-
-    /* Hero */
-    .rc-hero { background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04)); border-bottom:1px solid rgba(251,191,36,0.15); padding:20px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-    .rc-avatar { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#fbbf24,#d97706); display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; color:#0f172a; flex-shrink:0; }
-    .rc-hero-name { font-family:'Poppins',sans-serif; font-size:22px; font-weight:700; color:#f8fafc; }
-    .rc-hero-sub { font-size:13px; color:#64748b; margin-top:2px; }
-    .rc-hero-rank { margin-left:auto; text-align:right; }
-    .rc-rank-num { font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; color:#fbbf24; line-height:1; }
-    .rc-rank-lbl { font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:1px; }
-
-    /* Chip strip */
-    .rc-chips-wrap { border-bottom:1px solid rgba(255,255,255,0.05); padding:14px 24px; }
-    .rc-sec-title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#475569; margin-bottom:10px; }
-    .rc-chips { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
-    .rc-chips::-webkit-scrollbar { height:3px; }
-    .rc-chips::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:2px; }
-    .rc-chip { flex-shrink:0; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:7px 13px; text-align:center; min-width:58px; cursor:pointer; transition:all .15s; }
-    .rc-chip:hover { border-color:rgba(251,191,36,0.4); background:rgba(251,191,36,0.06); }
-    .rc-chip.on { border-color:#fbbf24; background:rgba(251,191,36,0.12); }
-    .chip-lbl { font-size:10px; color:#64748b; text-transform:uppercase; letter-spacing:1px; }
-    .chip-val { font-family:'Poppins',sans-serif; font-size:14px; font-weight:700; margin-top:2px; color:#e2e8f0; }
-    .chip-val.pos { color:#4ade80; }
-    .chip-val.neg { color:#f87171; }
-
-    /* Group header */
-    .rc-gh { background:rgba(255,255,255,0.025); border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); padding:8px 24px; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#475569; }
-
-    /* Row */
-    .rc-row { display:flex; align-items:center; padding:12px 24px; border-bottom:1px solid rgba(255,255,255,0.035); transition:background .12s; }
-    .rc-row:hover { background:rgba(255,255,255,0.02); }
-    .rc-row.sub { background:rgba(251,191,36,0.04); border-top:1px solid rgba(251,191,36,0.08); border-bottom:1px solid rgba(251,191,36,0.08); }
-    .rc-row.total { background:linear-gradient(90deg,rgba(251,191,36,0.1),rgba(245,158,11,0.03)); border-top:2px solid rgba(251,191,36,0.25); padding:16px 24px; }
-
-    .row-icon { width:26px; text-align:center; font-size:14px; flex-shrink:0; }
-    .row-lbl { flex:1; font-size:13px; color:#94a3b8; margin-left:6px; }
-    .rc-row.sub .row-lbl { color:#fbbf24; font-weight:600; }
-    .rc-row.total .row-lbl { font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; color:#fbbf24; }
-
-    .row-val { font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; color:#e2e8f0; text-align:right; min-width:90px; }
-    .row-val.pos { color:#4ade80; }
-    .row-val.neg { color:#f87171; }
-    .row-val.dim { color:#475569; font-weight:400; font-size:13px; }
-    .row-val.gold { color:#fbbf24; }
-    .row-val.grand { color:#fbbf24; font-size:26px; }
-
-    .badge { font-size:11px; font-weight:600; padding:2px 10px; border-radius:20px; }
-    .badge.yes { background:rgba(74,222,128,0.15); color:#4ade80; border:1px solid rgba(74,222,128,0.3); }
-    .badge.no  { background:rgba(248,113,113,0.1); color:#f87171; border:1px solid rgba(248,113,113,0.25); }
-    .badge.neu { background:rgba(148,163,184,0.1); color:#94a3b8; border:1px solid rgba(148,163,184,0.2); }
-
-    /* Empty state */
-    .rc-empty { padding:50px 24px; text-align:center; }
-    .rc-empty-icon { font-size:44px; margin-bottom:12px; display:block; }
-    .rc-empty-ttl { font-family:'Poppins',sans-serif; font-size:17px; font-weight:600; color:#f8fafc; margin-bottom:8px; }
-    .rc-empty-sub { font-size:13px; color:#64748b; line-height:1.7; max-width:400px; margin:0 auto; }
-    .rc-empty-sub code { background:rgba(255,255,255,0.06); padding:2px 7px; border-radius:4px; font-size:12px; }
-
-    /* Notice */
-    .notice { background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:10px; padding:12px 16px; margin-bottom:16px; font-size:13px; color:#fcd34d; line-height:1.6; display:flex; gap:10px; align-items:flex-start; }
-
-    @keyframes spin { to { transform:rotate(360deg); } }
-    .spin { animation:spin .7s linear infinite; display:inline-block; }
-
-    @media(max-width:600px) {
-      .card-header { flex-direction:column; align-items:flex-start; gap:10px; }
-      .total-score { align-self:flex-start; margin-left:60px; font-size:24px; }
-      .stats-grid { grid-template-columns:repeat(3,1fr); }
-      .dashboard-container { padding:15px; }
-      .sc1 { min-width:120px; max-width:120px; }
-      .sc2 { min-width:80px; left:120px; }
-      .rc-bar { flex-direction:column; }
-      .rc-grp { max-width:100%; }
-      .rc-btn { width:100%; justify-content:center; }
-      .rc-row { padding:10px 16px; }
-      .rc-hero { padding:16px; }
-    }
+    .lb{display:flex;flex-direction:column;gap:14px}
+    .pc{background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:20px;transition:transform .2s}
+    .pc:hover{transform:translateY(-2px);background:rgba(51,65,85,0.8);border-color:rgba(251,191,36,0.4)}
+    .ph{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:15px;margin-bottom:15px}
+    .pl{display:flex;align-items:center;gap:0}
+    .rb{font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#334155;color:#cbd5e1;margin-right:15px;flex-shrink:0}
+    .rb.r1{background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;box-shadow:0 0 15px rgba(251,191,36,0.5)}
+    .rb.r2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+    .rb.r3{background:linear-gradient(135deg,#b45309,#78350f);color:#fff}
+    .pname{font-family:'Poppins',sans-serif;font-weight:600;font-size:20px;color:#f8fafc}
+    .pchange{font-size:12px;color:#64748b}
+    .pchange.up{color:#4ade80}.pchange.dn{color:#f87171}
+    .ptot{font-family:'Poppins',sans-serif;font-size:28px;font-weight:800;color:#fbbf24}
+    .sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px}
+    .sb{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:8px;border-radius:8px;text-align:center}
+    .sl{font-size:10px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px;display:block;letter-spacing:.5px}
+    .sv{font-size:14px;font-weight:600;color:#e2e8f0;font-family:'Poppins',sans-serif}
+    /* Table */
+    .tw{overflow-x:auto;background:rgba(15,23,42,0.6);border-radius:12px;border:1px solid rgba(255,255,255,0.05);max-height:70vh}
+    table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
+    th,td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:#e2e8f0}
+    th{background:#0f172a;color:#fbbf24;font-weight:600;font-size:13px;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1)}
+    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:170px;max-width:170px}
+    .sc2{position:sticky;left:170px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:100px;border-right:2px solid rgba(255,255,255,0.1);text-align:center}
+    th.sc1,th.sc2{z-index:15;background:#0f172a}
+    tr:hover td{background:rgba(255,255,255,0.025)}
+    /* RC */
+    .rc-bar{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
+    .rcg{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px;max-width:280px}
+    .rcl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
+    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:11px 36px 11px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:#0f172a;transition:border-color .2s}
+    .rcsel:hover{border-color:rgba(251,191,36,0.4)}.rcsel:focus{border-color:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,0.15)}.rcsel option{background:#1e293b}
+    .rcbtn{height:44px;padding:0 26px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(251,191,36,0.4)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .rccard{background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden}
+    .rchero{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04));border-bottom:1px solid rgba(251,191,36,0.15);padding:22px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+    .rcav{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
+    .rchn{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;color:#f8fafc}.rchs{font-size:13px;color:#64748b;margin-top:3px}
+    .rchr{margin-left:auto;text-align:right}.rcrn{font-family:'Poppins',sans-serif;font-size:38px;font-weight:800;color:#fbbf24;line-height:1}.rcrl{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+    .cw{border-bottom:1px solid rgba(255,255,255,0.05);padding:14px 26px}
+    .ct{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:10px}
+    .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+    .chips::-webkit-scrollbar{height:3px}.chips::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+    .chip{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 14px;text-align:center;min-width:60px;cursor:pointer;transition:all .15s}
+    .chip:hover{border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.06)}.chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.12)}
+    .cl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px}.cv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;margin-top:2px;color:#e2e8f0}
+    .cv.pos{color:#4ade80}.cv.neg{color:#f87171}
+    .gh{background:rgba(255,255,255,0.025);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:8px 26px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569}
+    .rr{display:flex;align-items:center;padding:12px 26px;border-bottom:1px solid rgba(255,255,255,0.035);transition:background .12s}
+    .rr:hover{background:rgba(255,255,255,0.02)}.rr.sub{background:rgba(251,191,36,0.04);border-top:1px solid rgba(251,191,36,0.08);border-bottom:1px solid rgba(251,191,36,0.08)}
+    .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.1),rgba(245,158,11,0.03));border-top:2px solid rgba(251,191,36,0.25);padding:18px 26px}
+    .ri{width:26px;font-size:14px;text-align:center;flex-shrink:0}
+    .rl{flex:1;font-size:13px;color:#94a3b8;margin-left:8px}.rr.sub .rl{color:#fbbf24;font-weight:600}.rr.tot .rl{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#fbbf24}
+    .rv{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#e2e8f0;text-align:right;min-width:90px}
+    .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.dim{color:#475569;font-weight:400;font-size:13px}.rv.gold{color:#fbbf24}.rv.grand{color:#fbbf24;font-size:26px}
+    .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+    .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3)}.badge.no{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.25)}.badge.neu{background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)}
+    .rce{padding:56px 24px;text-align:center}.rce-i{font-size:44px;margin-bottom:14px;display:block}.rce-t{font-family:'Poppins',sans-serif;font-size:17px;font-weight:600;color:#f8fafc;margin-bottom:8px}.rce-s{font-size:13px;color:#64748b;line-height:1.7;max-width:400px;margin:0 auto}
+    .err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:20px 24px;color:#fca5a5;font-size:14px;line-height:1.7}
+    .notice{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#fcd34d;line-height:1.6;display:flex;gap:10px}
+    @media(max-width:600px){.ph{flex-direction:column;align-items:flex-start;gap:10px}.ptot{margin-left:60px;font-size:24px}.sg{grid-template-columns:repeat(3,1fr)}.wrap{padding:16px}.sc1{min-width:120px;max-width:120px}.sc2{min-width:80px;left:120px}.rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}}
   </style>
 </head>
 <body>
-<div class="dashboard-container">
+<div class="wrap">
   <div class="header">
     <h1>IPL 2026 Fantasy League</h1>
-    <div class="update-banner">Data is updated till Match 7</div>
+    <div class="banner" id="banner">IPL 2026 Fantasy League</div>
   </div>
   <div class="tab-bar" id="tabBar"></div>
-  <div id="contentArea"><div class="loading">Loading dashboard…</div></div>
+  <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
 </div>
 
 <script>
-/* ════════════════════════════════════════════════════
-   CONFIG
-════════════════════════════════════════════════════ */
-const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
+/* ═══════════════════════════════════════════════════
+   STEP 1 — paste your Apps Script URL here after deploying
+═══════════════════════════════════════════════════ */
+const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
 
 const TABS = [
-  { name:'Leaderboard',       gid:'1775142554', type:'leaderboard' },
-  { name:'Your Report Card',  gid:'1383665756', type:'reportcard'  },
-  { name:'Match Scores',      gid:'1509870547', type:'datatable'   },
-  { name:'SS Scores',         gid:'130216061',  type:'datatable'   },
-  { name:'Daily Score',       gid:'1884747051', type:'datatable'   },
-  { name:'IPL Player Points', gid:'1991041599', type:'datatable'   },
+  {name:'Leaderboard',       key:'leaderboard',  type:'lb'},
+  {name:'Your Report Card',  key:'reportcard',   type:'rc'},
+  {name:'Match Scores',      key:'matchscores',  type:'dt'},
+  {name:'SS Scores',         key:'ssscores',     type:'dt'},
+  {name:'Daily Score',       key:'dailyscore',   type:'dt'},
+  {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-const DC = { name:3, match:4, bonus:5, star:6, duo:7, resurrector:8, risk:9, special:10, superBonus:11, superSelector:12, total:13 };
+/* Confirmed column indices from live sheet data */
+const LC={rank:1,arrow:2,name:3,match:4,bonus:5,star:6,duo:7,resurrector:8,risk:9,special:10,superBonus:11,superSelector:12,total:13};
 
-/* ── Report Card row definitions (exact order from Image 2) ── */
-const GROUPS = [
-  { title:'🏏 Match Related', rows:[
-    { key:'match_pts',    icon:'🏏', label:'Match Points'                          },
-    { key:'bonus_pts',    icon:'🎯', label:'Bonus Points'                          },
-    { key:'risk_inc',     icon:'⚡', label:'Risk Incentive'                        },
-    { key:'special_inc',  icon:'🎁', label:'Special Incentive'                     },
-    { key:'match_total',  icon:'➕', label:'Match Related Points', sub:true         },
+const GROUPS=[
+  {t:'🏏 Match Related',rows:[
+    {k:'match_pts',  i:'🏏',l:'Match Points'},
+    {k:'bonus_pts',  i:'🎯',l:'Bonus Points'},
+    {k:'risk_inc',   i:'⚡',l:'Risk Incentive'},
+    {k:'special_inc',i:'🎁',l:'Special Incentive'},
+    {k:'match_total',i:'➕',l:'Match Related Points',sub:1},
   ]},
-  { title:'⭐ Star Performer', rows:[
-    { key:'sp_indiv',     icon:'⭐', label:'SP Individual Performance'             },
-    { key:'sp_linked',    icon:'🔗', label:'Linked / Not Linked',  badge:true       },
-    { key:'sp_pts',       icon:'⭐', label:'SP Points (incl link effect)', sub:true },
+  {t:'⭐ Star Performer',rows:[
+    {k:'sp_indiv',  i:'⭐',l:'SP Individual Performance'},
+    {k:'sp_linked', i:'🔗',l:'Linked / Not Linked',badge:1},
+    {k:'sp_pts',    i:'⭐',l:'SP Points (incl link effect)',sub:1},
   ]},
-  { title:'👥 Dynamic Duo', rows:[
-    { key:'dd1_indiv',    icon:'👤', label:'D1 Individual Performance'             },
-    { key:'dd2_indiv',    icon:'👤', label:'D2 Individual Performance'             },
-    { key:'dd_prem',      icon:'💎', label:'Upfront Premium?',       badge:true      },
-    { key:'dd_pts',       icon:'👥', label:'DD Points (incl prem. effect)', sub:true },
+  {t:'👥 Dynamic Duo',rows:[
+    {k:'dd1_indiv', i:'👤',l:'D1 Individual Performance'},
+    {k:'dd2_indiv', i:'👤',l:'D2 Individual Performance'},
+    {k:'dd_prem',   i:'💎',l:'Upfront Premium?',badge:1},
+    {k:'dd_pts',    i:'👥',l:'DD Points (incl prem. effect)',sub:1},
   ]},
-  { title:'🔁 The Resurrector', rows:[
-    { key:'res1',         icon:'💀', label:'Ressurector 1'                          },
-    { key:'res2',         icon:'💀', label:'Ressurector 2'                          },
-    { key:'resurrector',  icon:'🔁', label:'THE RESURRECTOR',        sub:true        },
+  {t:'🔁 The Resurrector',rows:[
+    {k:'res1',       i:'💀',l:'Ressurector 1'},
+    {k:'res2',       i:'💀',l:'Ressurector 2'},
+    {k:'resurrector',i:'🔁',l:'THE RESURRECTOR',sub:1},
   ]},
-  { title:'🔮 Super Selector', rows:[
-    { key:'wk',           icon:'🧤', label:'Wicket Keeper'  },
-    { key:'vc',           icon:'🏅', label:'Vice Captain'   },
-    { key:'captain',      icon:'©️', label:'Captain'        },
-    { key:'bat1',         icon:'🏏', label:'Bat 1'          },
-    { key:'bat2',         icon:'🏏', label:'Bat 2'          },
-    { key:'bat3',         icon:'🏏', label:'Bat 3'          },
-    { key:'bow1',         icon:'🏐', label:'Bow 1'          },
-    { key:'bow2',         icon:'🏐', label:'Bow 2'          },
-    { key:'bow3',         icon:'🏐', label:'Bow 3'          },
-    { key:'ar1',          icon:'🔄', label:'All Rounder 1'  },
-    { key:'ar2',          icon:'🔄', label:'All Rounder 2'  },
-    { key:'play1',        icon:'▶️', label:'Play 1'         },
-    { key:'play2',        icon:'▶️', label:'Play 2'         },
-    { key:'super_sel',    icon:'🔮', label:'Super Selector', sub:true },
+  {t:'🔮 Super Selector',rows:[
+    {k:'wk',       i:'🧤',l:'Wicket Keeper'},{k:'vc',   i:'🏅',l:'Vice Captain'},{k:'captain',i:'🅒',l:'Captain'},
+    {k:'bat1',     i:'🏏',l:'Bat 1'},{k:'bat2',i:'🏏',l:'Bat 2'},{k:'bat3',i:'🏏',l:'Bat 3'},
+    {k:'bow1',     i:'🏐',l:'Bow 1'},{k:'bow2',i:'🏐',l:'Bow 2'},{k:'bow3',i:'🏐',l:'Bow 3'},
+    {k:'ar1',      i:'🔄',l:'All Rounder 1'},{k:'ar2',i:'🔄',l:'All Rounder 2'},
+    {k:'play1',    i:'▶️',l:'Play 1'},{k:'play2',i:'▶️',l:'Play 2'},
+    {k:'super_sel',i:'🔮',l:'Super Selector',sub:1},
   ]},
 ];
 
-/* Label → key mapping (lowercase, trimmed) */
-const LMAP = {
+const LMAP={
   'match points':'match_pts','bonus points':'bonus_pts',
   'risk incentive':'risk_inc','special incentive':'special_inc',
   'match related points':'match_total',
@@ -252,369 +165,218 @@ const LMAP = {
   'bat 1':'bat1','bat 2':'bat2','bat 3':'bat3',
   'bow 1':'bow1','bow 2':'bow2','bow 3':'bow3',
   'all rounder 1':'ar1','all rounder 2':'ar2',
-  'play 1':'play1','play 2':'play2',
-  'super selector':'super_sel',
+  'play 1':'play1','play 2':'play2','super selector':'super_sel',
 };
 
-/* ════════════════════════════════════════════════════
-   STATE
-════════════════════════════════════════════════════ */
-let currentTab    = TABS[0];
-let allPlayers    = [];
-let rcName        = '';
-let rcMatch       = 7;
+let cur=TABS[0], players=[], rcName='', rcMatch=7;
+const CACHE={}, TTL=60000;
 
-/* ════════════════════════════════════════════════════
-   FETCH  — fixed URL
-════════════════════════════════════════════════════ */
-async function gviz(gid) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}&headers=0`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Network error: HTTP ${res.status}`);
-  const txt = await res.text();
-  const m   = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-  if (!m) throw new Error(
-    'Could not read sheet data.\n\nPlease set the sheet to public:\nGoogle Sheets → Share → "Anyone with the link" → Viewer → Done'
-  );
-  return JSON.parse(m[1]);
+async function api(key){
+  if(API==='PASTE_YOUR_APPS_SCRIPT_URL_HERE') throw new Error('⚠ Apps Script URL not set. Open the HTML file and replace PASTE_YOUR_APPS_SCRIPT_URL_HERE with your deployed URL.');
+  const now=Date.now();
+  if(CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
+  const r=await fetch(API+'?tab='+encodeURIComponent(key));
+  if(!r.ok) throw new Error('Server error '+r.status);
+  const d=await r.json();
+  if(d.error) throw new Error(d.error);
+  CACHE[key]={d,ts:now};
+  return d;
 }
 
-function cv(cell) {
-  if (!cell) return '';
-  const v = (cell.f != null ? cell.f : cell.v != null ? cell.v : '');
-  return String(v).trim();
-}
-function cn(row, i) {
-  const c = row?.c?.[i]; if (!c || c.v == null) return 0;
-  if (typeof c.v === 'number') return c.v;
-  return parseFloat(String(c.v).replace(/,/g,'')) || 0;
-}
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmt(n) { return Number(n).toLocaleString('en-US'); }
-function fmtS(n) { if(n===0) return '—'; return (n>0?'+':'')+fmt(n); }
-
-/* ════════════════════════════════════════════════════
-   TABS
-════════════════════════════════════════════════════ */
-function renderTabs() {
-  document.getElementById('tabBar').innerHTML = TABS.map(t =>
-    `<button class="tab-button ${t.name===currentTab.name?'active':''}" onclick="switchTab('${t.name}')">${t.name}</button>`
+function tabs(){
+  document.getElementById('tabBar').innerHTML=TABS.map(t=>
+    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
   ).join('');
 }
-function switchTab(n) { currentTab=TABS.find(t=>t.name===n); renderTabs(); loadContent(); }
+function go(n){cur=TABS.find(t=>t.name===n);tabs();load();}
 
-/* ════════════════════════════════════════════════════
-   ROUTER
-════════════════════════════════════════════════════ */
-async function loadContent() {
-  const area = document.getElementById('contentArea');
-  if (currentTab.type==='leaderboard') {
-    area.innerHTML='<div class="loading">⟳ Fetching live data…</div>';
-    try { const j=await gviz(currentTab.gid); buildPlayers(j.table.rows||[]); renderLB(j.table.rows||[]); }
-    catch(e){ area.innerHTML=errBox(e.message); }
-    return;
+async function load(){
+  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
+  try{
+    const d=await api(cur.key);
+    if(cur.type==='lb'){buildPlayers(d.rows);renderLB(d.rows);}
+    else if(cur.type==='rc'){rcShell();}
+    else{renderDT(d.rows);}
+  }catch(e){set('<div class="err"><strong>Error loading data</strong><br>'+esc(e.message)+'</div>');}
+}
+
+function buildPlayers(rows){
+  players=[];
+  for(const row of rows){
+    const rn=parseInt(row[LC.rank]);
+    const nm=String(row[LC.name]||'').trim();
+    if(!nm||isNaN(rn)||nm==='Participant'||nm==='null') continue;
+    const ar=String(row[LC.arrow]||'');
+    players.push({rank:rn,name:nm,change:ar.includes('▲')?'up':ar.includes('▼')?'dn':'',arrowRaw:ar,
+      match:pn(row[LC.match]),bonus:pn(row[LC.bonus]),star:pn(row[LC.star]),duo:pn(row[LC.duo]),
+      resurrector:pn(row[LC.resurrector]),risk:pn(row[LC.risk]),special:pn(row[LC.special]),
+      superBonus:pn(row[LC.superBonus]),superSelector:pn(row[LC.superSelector]),total:pn(row[LC.total])});
   }
-  if (currentTab.type==='reportcard') { renderRCShell(); return; }
-  if (currentTab.type==='datatable') {
-    area.innerHTML='<div class="loading">⟳ Fetching live data…</div>';
-    try { const j=await gviz(currentTab.gid); renderDT(j.table.rows||[],j.table.cols||[]); }
-    catch(e){ area.innerHTML=errBox(e.message); }
+  players.sort((a,b)=>a.rank-b.rank);
+}
+
+function renderLB(rows){
+  // detect match number from header rows
+  for(const row of rows.slice(0,5)){
+    const m=row.join(' ').match(/match\s*#?\s*(\d+)/i);
+    if(m){document.getElementById('banner').textContent='Data is updated till Match '+m[1];break;}
   }
+  set('<div class="lb">'+players.map(p=>{
+    const rc=p.rank===1?'r1':p.rank===2?'r2':p.rank===3?'r3':'';
+    const an=p.arrowRaw.match(/\d+/)?.[0]||'';
+    const ct=p.change==='up'?'▲ '+an:p.change==='dn'?'▼ '+an:'◆';
+    return `<div class="pc">
+      <div class="ph">
+        <div class="pl"><div class="rb ${rc}">${p.rank}</div><div><div class="pname">${esc(p.name)}</div><div class="pchange ${p.change}">${ct}</div></div></div>
+        <div class="ptot">${fmt(p.total)}</div>
+      </div>
+      <div class="sg">
+        ${[['Match',p.match],['Bonus',p.bonus],['Star',p.star],['Duo',p.duo],['Resurrect',p.resurrector],['Risk',p.risk],['Special',p.special],['Sup Bonus',p.superBonus||'—'],['Selector',p.superSelector]]
+          .map(([l,v])=>'<div class="sb"><span class="sl">'+l+'</span><span class="sv">'+(typeof v==='number'?fmt(v):v)+'</span></div>').join('')}
+      </div>
+    </div>`;
+  }).join('')+'</div>');
 }
 
-function errBox(msg) {
-  return `<div class="loading" style="color:#f87171;white-space:pre-line">${esc(msg)}</div>`;
-}
-
-/* ════════════════════════════════════════════════════
-   LEADERBOARD
-════════════════════════════════════════════════════ */
-function buildPlayers(rows) {
-  allPlayers=[];
-  rows.forEach(row=>{
-    const nm=String(row.c?.[DC.name]?.v||'').trim();
-    if(!nm||nm==='Participant'||nm==='0'||nm==='null') return;
-    allPlayers.push({name:nm,score:cn(row,DC.total),match:cn(row,DC.match),bonus:cn(row,DC.bonus),star:cn(row,DC.star),duo:cn(row,DC.duo),resurrector:cn(row,DC.resurrector),risk:cn(row,DC.risk),special:cn(row,DC.special),superBonus:cn(row,DC.superBonus),superSelector:cn(row,DC.superSelector)});
-  });
-  allPlayers.sort((a,b)=>b.score-a.score);
-}
-
-function renderLB(rows) {
-  buildPlayers(rows);
-  document.getElementById('contentArea').innerHTML = '<div class="leaderboard">' +
-    allPlayers.map((p,i)=>{
-      const rk=i+1, rc=rk<=3?`rank-${rk}`:'';
-      return `<div class="player-card">
-        <div class="card-header">
-          <div class="card-header-left"><div class="rank ${rc}">${rk}</div><div class="player-name">${esc(p.name)}</div></div>
-          <div class="total-score">${fmt(Math.round(p.score))}</div>
-        </div>
-        <div class="stats-grid">
-          ${[['Match',p.match],['Bonus',p.bonus],['Star',p.star],['Duo',p.duo],['Resurrect',p.resurrector],['Risk',p.risk],['Special',p.special],['Sup Bonus',p.superBonus||'—'],['Selector',p.superSelector]]
-            .map(([l,v])=>`<div class="stat-box"><span class="stat-label">${l}</span><span class="stat-value">${typeof v==='number'?fmt(Math.round(v)):v}</span></div>`).join('')}
-        </div>
-      </div>`;
-    }).join('') + '</div>';
-}
-
-/* ════════════════════════════════════════════════════
-   DATA TABLE
-════════════════════════════════════════════════════ */
-function renderDT(rows,cols) {
-  const isP = currentTab.name==='IPL Player Points';
-  let h='<div class="table-container"><table><thead><tr>';
-  cols.forEach((c,i)=>{
-    if(isP){if(i===0||i===1) return;} else{if(i===0||i===3) return;}
-    let cls='',lbl=c.label||'';
-    if(isP){if(i===2) cls='sc1'; if(i===3){cls='sc2';lbl='Total Score';}}
-    else  {if(i===1) cls='sc1'; if(i===2){cls='sc2';lbl='Total Score';}}
+function renderDT(rows){
+  if(!rows||!rows.length){set('<div class="loading">No data</div>');return;}
+  const isP=cur.key==='playerpoints';
+  let hi=0;
+  for(let i=0;i<Math.min(5,rows.length);i++){if(rows[i].filter(c=>String(c||'').trim()).length>3){hi=i;break;}}
+  const hdrs=rows[hi];
+  const data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
+  let h='<div class="tw"><table><thead><tr>';
+  hdrs.forEach((hd,i)=>{
+    if(isP){if(i===0||i===1)return;}else{if(i===0)return;}
+    let cls='',lbl=String(hd||'').trim();
+    if(isP){if(i===2){cls='sc1';}if(i===3){cls='sc2';lbl='Total Score';}}
+    else{if(i===1){cls='sc1';}if(i===2){cls='sc2';}}
     h+=`<th class="${cls}">${esc(lbl)}</th>`;
   });
   h+='</tr></thead><tbody>';
-  rows.forEach(row=>{
+  data.forEach(row=>{
     h+='<tr>';
-    (row.c||[]).forEach((cell,i)=>{
-      if(isP){if(i===0||i===1) return;} else{if(i===0||i===3) return;}
+    row.forEach((c,i)=>{
+      if(isP){if(i===0||i===1)return;}else{if(i===0)return;}
       let cls='';
-      if(isP){if(i===2) cls='sc1'; if(i===3) cls='sc2';}
-      else  {if(i===1) cls='sc1'; if(i===2) cls='sc2';}
-      let val=cell?(cell.f||cell.v||''):'';
-      if(String(val)==='null') val='—';
-      h+=`<td class="${cls}">${esc(String(val))}</td>`;
+      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
+      else{if(i===1)cls='sc1';if(i===2)cls='sc2';}
+      let v=String(c||'').trim();
+      if(v==='null'||v==='undefined')v='—';
+      h+=`<td class="${cls}">${esc(v)}</td>`;
     });
     h+='</tr>';
   });
-  document.getElementById('contentArea').innerHTML = h+'</tbody></table></div>';
+  set(h+'</tbody></table></div>');
 }
 
-/* ════════════════════════════════════════════════════
-   REPORT CARD — shell (dropdowns)
-════════════════════════════════════════════════════ */
-function renderRCShell() {
-  const noPlayers = allPlayers.length===0;
-  let nameOpts='<option value="">— Select your name —</option>';
-  if (noPlayers) nameOpts+='<option disabled>Load Leaderboard first</option>';
-  else allPlayers.forEach(p=>{ nameOpts+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`; });
-
-  let matchOpts='';
-  for(let m=1;m<=74;m++) matchOpts+=`<option value="${m}" ${m===rcMatch?'selected':''}>${m}</option>`;
-
-  document.getElementById('contentArea').innerHTML = `
-    ${noPlayers?`<div class="notice">💡 <span>Player names are loaded from the <strong>Leaderboard</strong> tab. Click it first, then come back here.</span></div>`:''}
+function rcShell(){
+  const np=players.length===0;
+  let no='<option value="">— Select your name —</option>';
+  if(np) no+='<option disabled>⚠ Load Leaderboard first</option>';
+  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
+  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
+  set(`
+    ${np?'<div class="notice">💡 <span>Player names load from the <strong>Leaderboard</strong> tab — click it first.</span></div>':''}
     <div class="rc-bar">
-      <div class="rc-grp">
-        <div class="rc-lbl">Player</div>
-        <select class="rc-sel" id="rcSelName" onchange="rcName=this.value">${nameOpts}</select>
-      </div>
-      <div class="rc-grp" style="max-width:180px">
-        <div class="rc-lbl">Match</div>
-        <select class="rc-sel" id="rcSelMatch" onchange="rcMatch=parseInt(this.value)">${matchOpts}</select>
-      </div>
-      <button class="rc-btn" id="rcBtn" onclick="loadRC()">▶ View Report Card</button>
+      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
+      <div class="rcg" style="max-width:200px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
+      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View Report Card</button>
     </div>
-    <div id="rcArea">
-      <div class="rc-card">
-        <div class="rc-empty">
-          <span class="rc-empty-icon">📋</span>
-          <div class="rc-empty-ttl">Select a player and match above</div>
-          <div class="rc-empty-sub">Choose your name and match number, then click <strong>View Report Card</strong>.</div>
-        </div>
-      </div>
-    </div>`;
+    <div id="rcA"><div class="rccard"><div class="rce">
+      <span class="rce-i">📋</span>
+      <div class="rce-t">Select a player and match</div>
+      <div class="rce-s">Choose your name and match number, then click <strong>View Report Card</strong>.</div>
+    </div></div></div>`);
 }
 
-/* ════════════════════════════════════════════════════
-   REPORT CARD — load data
-════════════════════════════════════════════════════ */
-async function loadRC() {
-  rcName  = document.getElementById('rcSelName').value;
-  rcMatch = parseInt(document.getElementById('rcSelMatch').value);
-  if (!rcName) { setRCArea(`<div class="rc-card"><div class="rc-empty"><span class="rc-empty-icon">⚠️</span><div class="rc-empty-ttl">Please select a player</div></div></div>`); return; }
-
-  const btn = document.getElementById('rcBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spin">⟳</span> Loading…';
-
-  try {
-    const json   = await gviz('1383665756');
-    const rows   = json.table.rows || [];
-
-    /* Build a 2D grid of display values */
-    const grid   = rows.map(row => (row.c||[]).map(c=>cv(c)));
-    const nCols  = Math.max(0,...grid.map(r=>r.length));
-
-    /* ── Find the player name column ──────────────────────────
-       The RC sheet has player names in a column header row.
-       We scan across all columns of the first ~10 rows.        */
-    let nameRow=-1, nameCol=-1;
-    outer1: for(let r=0;r<Math.min(10,grid.length);r++){
-      for(let c=0;c<grid[r].length;c++){
-        if(grid[r][c].trim().toLowerCase()===rcName.trim().toLowerCase()){
-          nameRow=r; nameCol=c; break outer1;
-        }
-      }
+async function loadRC(){
+  rcName=document.getElementById('rcSN').value;
+  rcMatch=parseInt(document.getElementById('rcSM').value);
+  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Select a player first</div></div></div>');return;}
+  const b=document.getElementById('rcb');b.disabled=true;b.textContent='Loading…';
+  try{
+    const d=await api('reportcard');
+    const g=d.rows||[];
+    /* find name col */
+    let nR=-1,nC=-1;
+    for(let r=0;r<Math.min(10,g.length);r++){for(let c=0;c<g[r].length;c++){if(String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nR=r;nC=c;break;}}if(nC>=0)break;}
+    /* find match col */
+    let mR=-1,mC=-1;
+    const ms=String(rcMatch);
+    for(let r=0;r<Math.min(10,g.length);r++){for(let c=0;c<g[r].length;c++){const v=String(g[r][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();if(v===ms){mR=r;mC=c;break;}}if(mC>=0)break;}
+    /* chip totals */
+    const ct={};
+    if(mR>=0){for(let c=0;c<(g[mR]||[]).length;c++){const v=String(g[mR][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();const mn=parseInt(v);if(!isNaN(mn)&&mn>=1&&mn<=74){let tot=0;for(let r=mR+1;r<g.length;r++){const n=pn(g[r]?.[c]);if(!isNaN(n))tot+=n;}ct[mn]=Math.round(tot);}}}
+    /* score map */
+    const sm={};
+    const ds=Math.max(nR,mR)+1;
+    for(let r=ds;r<g.length;r++){
+      let lbl='';for(let c=0;c<=Math.min(3,g[r].length-1);c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
+      const k=LMAP[lbl.toLowerCase()];if(!k)continue;
+      let val='';
+      if(mC>=0&&g[r]?.[mC]!==undefined)val=g[r][mC]||'';
+      else if(nC>=0&&g[r]?.[nC]!==undefined)val=g[r][nC]||'';
+      sm[k]=String(val).trim();
     }
-
-    /* ── Find the match column ────────────────────────────────
-       Match headers appear as "c7", "Match 7", "7" etc.        */
-    let matchRow=-1, matchCol=-1;
-    const mStr=String(rcMatch);
-    outer2: for(let r=0;r<Math.min(10,grid.length);r++){
-      for(let c=0;c<grid[r].length;c++){
-        const v=grid[r][c].replace(/^c/i,'').replace(/^match\s*/i,'').trim();
-        if(v===mStr){ matchRow=r; matchCol=c; break outer2; }
-      }
-    }
-
-    /* ── Collect per-match totals for chip strip ──────────── */
-    const chipTotals={};
-    if(matchRow>=0){
-      for(let c=0;c<nCols;c++){
-        const v=(grid[matchRow]?.[c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();
-        const mn=parseInt(v);
-        if(!isNaN(mn)&&mn>=1&&mn<=74){
-          // use the corresponding column in nameCol if available, else sum all data rows
-          const colToRead = nameCol>=0 ? nameCol : c; // we read name column's data
-          // Actually sum the specific column c down from matchRow+1
-          let tot=0;
-          for(let r=matchRow+1;r<grid.length;r++){
-            const n=parseFloat((grid[r]?.[c]||'').replace(/,/g,''));
-            if(!isNaN(n)) tot+=n;
-          }
-          chipTotals[mn]=Math.round(tot);
-        }
-      }
-    }
-
-    /* ── Build score map ──────────────────────────────────── */
-    // Label is in leftmost non-empty column; value is in matchCol or nameCol
-    const scoreMap={};
-    const dataStart=Math.max(nameRow,matchRow)+1;
-    for(let r=dataStart;r<grid.length;r++){
-      // label: scan left columns for the row label
-      let rawLabel='';
-      for(let c=0;c<=Math.min(2,grid[r].length-1);c++){
-        if(grid[r][c].trim()){ rawLabel=grid[r][c].trim(); break; }
-      }
-      const key=LMAP[rawLabel.toLowerCase()];
-      if(!key) continue;
-
-      // value: prefer matchCol, fallback to nameCol
-      let rawVal='';
-      if(matchCol>=0 && grid[r]?.[matchCol]!==undefined) rawVal=grid[r][matchCol]||'';
-      else if(nameCol>=0 && grid[r]?.[nameCol]!==undefined) rawVal=grid[r][nameCol]||'';
-
-      scoreMap[key]=rawVal;
-    }
-
-    renderRC(scoreMap, chipTotals);
-  } catch(e) {
-    setRCArea(`<div class="rc-card"><div class="rc-empty">
-      <span class="rc-empty-icon">🔒</span>
-      <div class="rc-empty-ttl">Cannot load Report Card</div>
-      <div class="rc-empty-sub">${esc(e.message)}<br><br>Make sure the sheet is shared:<br><code>Share → Anyone with the link → Viewer</code></div>
-    </div></div>`);
-  }
-  btn.disabled=false; btn.innerHTML='▶ View Report Card';
+    renderRC(sm,ct);
+  }catch(e){setRC('<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">'+esc(e.message)+'</div></div></div>');}
+  b.disabled=false;b.textContent='▶ View Report Card';
 }
 
-/* ════════════════════════════════════════════════════
-   REPORT CARD — render vertical
-════════════════════════════════════════════════════ */
-function renderRC(sm, chipTotals) {
-  const player   = allPlayers.find(p=>p.name===rcName);
-  const rank     = player ? allPlayers.indexOf(player)+1 : 0;
-  const initials = rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-
-  /* Chip strip */
-  const mNums = Object.keys(chipTotals).map(Number).sort((a,b)=>a-b);
-  let chipHtml='';
+function renderRC(sm,chipT){
+  const pl=players.find(p=>p.name===rcName);
+  const rank=pl?.rank||0;
+  const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  const mNums=Object.keys(chipT).map(Number).sort((a,b)=>a-b);
+  let chips='';
   if(mNums.length>0){
-    chipHtml=`<div class="rc-chips-wrap">
-      <div class="rc-sec-title">Match Breakdown</div>
-      <div class="rc-chips">
-        ${mNums.map(m=>{
-          const s=chipTotals[m]||0;
-          const vc=s>0?'pos':s<0?'neg':'';
-          const on=m===rcMatch?'on':'';
-          return `<div class="rc-chip ${on}" onclick="rcJump(${m})">
-            <div class="chip-lbl">M${m}</div>
-            <div class="chip-val ${vc}">${s>0?'+':''}${s||'—'}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+    chips=`<div class="cw"><div class="ct">Match Breakdown</div><div class="chips">${mNums.map(m=>{const s=chipT[m]||0;const vc=s>0?'pos':s<0?'neg':'';return`<div class="chip ${m===rcMatch?'on':''}" onclick="rcJ(${m})"><div class="cl">M${m}</div><div class="cv ${vc}">${s>0?'+':''}${s||'—'}</div></div>`;}).join('')}</div></div>`;
   }
-
-  /* Groups */
-  let groupsHtml='';
-  GROUPS.forEach(g=>{
-    groupsHtml+=`<div class="rc-gh">${g.title}</div>`;
-    g.rows.forEach(rd=>{
-      const raw=sm[rd.key];
-      const num=parseFloat(String(raw||'').replace(/,/g,''));
-      const isNum=!isNaN(num);
-
-      let valHtml='';
+  let rows='';
+  GROUPS.forEach(grp=>{
+    rows+=`<div class="gh">${grp.t}</div>`;
+    grp.rows.forEach(rd=>{
+      const raw=sm[rd.k]||'';const num=pn(raw);const isN=!isNaN(num);
+      let vh='';
       if(rd.badge){
-        const s=String(raw||'').trim();
-        const isY=/yes|linked|true/i.test(s);
-        const isN=/no|not|false|0/i.test(s);
-        if(isY)       valHtml=`<span class="badge yes">${esc(s)}</span>`;
-        else if(isN)  valHtml=`<span class="badge no">${esc(s)}</span>`;
-        else if(s)    valHtml=`<span class="badge neu">${esc(s)}</span>`;
-        else          valHtml=`<span class="row-val dim">—</span>`;
-      } else if(isNum){
-        const cls=rd.sub?(num>0?'gold':'row-val gold'):(num>0?'pos':num<0?'neg':'dim');
-        valHtml=`<span class="row-val ${rd.sub?'gold':cls}">${num===0?'—':fmtS(num)}</span>`;
-      } else {
-        valHtml=`<span class="row-val dim">${esc(raw||'—')}</span>`;
-      }
-
-      groupsHtml+=`<div class="rc-row ${rd.sub?'sub':''}">
-        <div class="row-icon">${rd.icon}</div>
-        <div class="row-lbl">${rd.label}</div>
-        ${valHtml}
-      </div>`;
+        if(/yes|linked|true/i.test(raw))vh=`<span class="badge yes">${esc(raw)}</span>`;
+        else if(/no|not|false/i.test(raw))vh=`<span class="badge no">${esc(raw)}</span>`;
+        else if(raw)vh=`<span class="badge neu">${esc(raw)}</span>`;
+        else vh='<span class="rv dim">—</span>';
+      }else if(isN){const cls=rd.sub?'gold':num>0?'pos':num<0?'neg':'dim';vh=`<span class="rv ${cls}">${num===0?'—':fmtS(num)}</span>`;}
+      else{vh=`<span class="rv dim">${esc(raw)||'—'}</span>`;}
+      rows+=`<div class="rr ${rd.sub?'sub':''}"><span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${vh}</div>`;
     });
   });
-
-  const displayTotal = player ? Math.round(player.score) : 0;
-
-  setRCArea(`<div class="rc-card">
-    <div class="rc-hero">
-      <div class="rc-avatar">${initials}</div>
-      <div>
-        <div class="rc-hero-name">${esc(rcName)}</div>
-        <div class="rc-hero-sub">Report Card · Match ${rcMatch}</div>
-      </div>
-      ${rank>0?`<div class="rc-hero-rank">
-        <div class="rc-rank-num">#${rank}</div>
-        <div class="rc-rank-lbl">Season Rank</div>
-      </div>`:''}
+  setRC(`<div class="rccard">
+    <div class="rchero">
+      <div class="rcav">${init}</div>
+      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
+      ${rank>0?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
     </div>
-
-    ${chipHtml}
-
-    <div class="rc-gh" style="border-top:none">Score Breakdown — Match ${rcMatch}</div>
-    ${groupsHtml}
-
-    <div class="rc-row total">
-      <div class="row-icon">🏆</div>
-      <div class="row-lbl">Total (Cumulative)</div>
-      <div class="row-val grand">${fmt(displayTotal)}</div>
-    </div>
+    ${chips}
+    <div class="gh" style="border-top:none">Score Breakdown — Match ${rcMatch}</div>
+    ${rows}
+    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative)</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
   </div>`);
 }
 
-function rcJump(m){ rcMatch=m; document.getElementById('rcSelMatch').value=m; loadRC(); }
-function setRCArea(h){ document.getElementById('rcArea').innerHTML=h; }
+function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
+function setRC(h){document.getElementById('rcA').innerHTML=h;}
+function set(h){document.getElementById('area').innerHTML=h;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function pn(v){
+  if(v===null||v===undefined||v==='')return NaN;
+  const s=String(v).trim().replace(/,/g,'');
+  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
+  return parseFloat(s);
+}
+function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
+function fmtS(n){return n===0?'—':(n>0?'+':'')+n.toLocaleString('en-US');}
 
-/* ════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════ */
-renderTabs();
-loadContent();
-setInterval(()=>{ if(currentTab.type==='leaderboard') loadContent(); }, 120000);
+tabs();load();
+setInterval(()=>{if(cur.type==='lb')load();},120000);
 </script>
 </body>
 </html>
