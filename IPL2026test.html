@@ -113,18 +113,17 @@
     // ==========================================
     const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
     
-    // Fill in your GIDs here! I put '1775142554' for the Dashboard.
-    // Replace the '0's with the GIDs you find in your URL.
+    // TABS CONFIGURATION (Added your Report Card GID here!)
     const TABS = [
       { name: 'Dashboard', gid: '1775142554', type: 'leaderboard' },
-      { name: 'Your Report Card', gid: '0', type: 'table', hasDropdown: true, filterColIndex: 0 }, 
+      { name: 'Your Report Card', gid: '1383665756', type: 'table', hasDropdown: true, filterColIndex: 0 }, 
       { name: 'Match Scores', gid: '0', type: 'table' },
       { name: 'SS Scores', gid: '0', type: 'table' },
       { name: 'Daily Score', gid: '0', type: 'table' },
       { name: 'IPL Player Points', gid: '0', type: 'table' }
     ];
 
-    // Columns for the Dashboard Leaderboard (Shifted by +1 as we learned!)
+    // Columns for the Dashboard Leaderboard (Shifted by +1)
     const DASH_COLS = { name: 4, star: 7, duo: 8, total: 15 };
 
     // ==========================================
@@ -252,9 +251,9 @@
       const select = document.getElementById('nameFilter');
       filterContainer.style.display = 'block';
       
-      // Find all unique names in the specific column (Change filterColIndex in settings if name is not in Col A)
+      // Find all unique names in the specific column
       const uniqueNames = [...new Set(rawTableData.map(r => String(r[currentTab.filterColIndex]).trim()))]
-                          .filter(n => n !== '' && n !== 'null');
+                          .filter(n => n !== '' && n !== 'null' && n !== 'Participant'); // Clean up empty/header names
       
       select.innerHTML = '<option value="ALL">All Participants</option>';
       uniqueNames.sort().forEach(name => {
