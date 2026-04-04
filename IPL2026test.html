@@ -8,7 +8,7 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#f8fafc;font-family:'Inter',sans-serif;padding:20px;min-height:100vh}
-    .wrap{max-width:1200px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:20px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);overflow:hidden;padding:30px}
+    .wrap{max-width:1200px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:20px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);padding:30px}
     .header{text-align:center;margin-bottom:25px}
     .header h1{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:2px}
     .banner{display:inline-block;margin-top:12px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600}
@@ -16,17 +16,16 @@
     .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-size:14px}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
     
-    /* Table & Leaderboard Styles (Kept as per successful version) */
+    /* Table & Leaderboard */
     .tw{overflow-x:auto;background:rgba(15,23,42,0.6);border-radius:12px;border:1px solid rgba(255,255,255,0.05);max-height:70vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
     th,td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:#e2e8f0}
     th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1)}
     .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:170px}
     .sc2{position:sticky;left:170px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:100px;border-right:2px solid rgba(255,255,255,0.1);text-align:center}
-    th.sc1,th.sc2{z-index:15;background:#0f172a}
 
-    /* Report Card - Visibility & Alignment Fixes */
-    .rc-container { max-width: 900px; margin: 0 auto; } /* Centered alignment fix */
+    /* Report Card Alignment & Color Fixes */
+    .rc-container { max-width: 800px; margin: 0 auto; }
     .rc-bar{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
     .rcg{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px}
     .rcl{font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8}
@@ -34,32 +33,26 @@
     .rcbtn{height:44px;padding:0 26px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:10px;font-weight:700;cursor:pointer}
     
     .rccard{background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden}
-    .rchero{background:rgba(251,191,36,0.05);padding:25px;display:flex;align-items:center;gap:20px}
+    .rchero{background:rgba(251,191,36,0.08);padding:25px;display:flex;align-items:center;gap:20px}
     .rcav{width:60px;height:60px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#0f172a}
     .rchn{font-size:24px;font-weight:700;color:#fff}
     .rchr{margin-left:auto;text-align:right}
     .rcrn{font-size:40px;font-weight:800;color:#fbbf24;line-height:1}
 
-    .cw{padding:20px 25px;border-bottom:1px solid rgba(255,255,255,0.05)}
-    .ct{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-    .chips{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px}
-    .chip{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;text-align:center;min-width:70px;cursor:pointer}
-    .chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.15)}
-    
-    /* Brighter color codes for visibility */
-    .rl{flex:1;font-size:14px;color:#cbd5e1;margin-left:12px} /* Brighter gray for labels */
-    .rv{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#f8fafc;text-align:right;min-width:110px} /* White for values */
-    .rv.dim{color:#94a3b8;font-weight:400} /* Brighter dash */
+    /* SCORE ROWS ALIGNMENT */
+    .rr{display:flex;justify-content:space-between;align-items:center;padding:14px 25px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .rl{font-size:14px;color:#cbd5e1;font-weight:500} /* Brighter labels */
+    .rv{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#f8fafc;text-align:right;width:150px} /* Fixed width for alignment */
+    .rv.dim{color:#64748b;font-weight:400}
     .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.gold{color:#fbbf24}
     
     .gh{background:rgba(255,255,255,0.03);padding:10px 25px;font-size:11px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px}
-    .rr{display:flex;align-items:center;padding:14px 25px;border-bottom:1px solid rgba(255,255,255,0.03)}
     .rr.sub{background:rgba(251,191,36,0.03)}
-    .rr.tot{background:rgba(251,191,36,0.1);padding:20px 25px}
-    .rr.tot .rl{font-size:16px;font-weight:700;color:#fbbf24}
+    .rr.tot{background:rgba(251,191,36,0.12);padding:20px 25px}
     .rv.grand{font-size:28px;color:#fbbf24}
 
-    .loading,.spinner{display:flex;justify-content:center;align-items:center}.spinner{width:30px;height:30px;border:3px solid #334155;border-top-color:#fbbf24;border-radius:50%;animation:spin 1s infinite linear}
+    .loading{text-align:center;padding:50px;color:#94a3b8}
+    .spinner{width:30px;height:30px;border:3px solid #334155;border-top-color:#fbbf24;border-radius:50%;animation:spin 1s infinite linear;margin:0 auto 10px}
     @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
@@ -67,15 +60,16 @@
 <div class="wrap">
   <div class="header">
     <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">Data Updating...</div>
+    <div class="banner" id="banner">Fetching Latest Data...</div>
   </div>
   <div class="tab-bar" id="tabBar"></div>
   <div id="area"></div>
 </div>
 
 <script>
+// 🔴 REPLACE THIS URL with your actual Google Apps Script URL
 const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
-const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
+
 const TABS = [
   {name:'Leaderboard', key:'leaderboard', type:'lb'},
   {name:'Your Report Card', key:'reportcard', type:'rc'},
@@ -85,18 +79,30 @@ const TABS = [
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-const LC={rank:1,name:3,total:13,match:4,bonus:5,star:6,duo:7,resurrector:8,risk:9,special:10,superBonus:11,superSelector:12};
+// Column indices based on your sheet
+const LC={rank:1,name:3,total:13,match:4,bonus:5,star:6,duo:7,resurrector:8,risk:9,special:10};
 
 let cur=TABS[0], players=[], rcName='', rcMatch=7;
 
+// Function to render tabs immediately so they don't disappear
+function renderTabs(){
+  document.getElementById('tabBar').innerHTML = TABS.map(t => 
+    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
+  ).join('');
+}
+
 async function load(){
-  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div></div>';
-  try{
-    const d = await fetch(`${API}?tab=${cur.key}`).then(r=>r.json());
+  renderTabs();
+  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div>Updating...</div>';
+  try {
+    const res = await fetch(`${API}?tab=${cur.key}`);
+    const d = await res.json();
     if(cur.type==='lb'){ buildPlayers(d.rows); renderLB(d.rows); }
     else if(cur.type==='rc'){ renderRCShell(); }
     else renderDT(d.rows);
-  } catch(e){ document.getElementById('area').innerHTML='Error Loading Data'; }
+  } catch(e) { 
+    document.getElementById('area').innerHTML='<div class="loading">⚠ Error: Data could not be fetched. Check your Script URL.</div>'; 
+  }
 }
 
 function buildPlayers(rows){
@@ -106,16 +112,33 @@ function buildPlayers(rows){
 }
 
 function renderLB(rows){
-  // Banner Update
-  const bRow = rows.find(r => String(r).includes('Match'));
-  if(bRow) document.getElementById('banner').innerText = 'Data Updated till ' + String(bRow).match(/Match \d+/)[0];
+  try {
+    const bRow = rows.find(r => String(r).includes('Match'));
+    if(bRow) {
+      const matchTxt = String(bRow).match(/Match \d+/);
+      if(matchTxt) document.getElementById('banner').innerText = 'Data Updated till ' + matchTxt[0];
+    }
+  } catch(e) {}
 
   let h = '<div class="lb">';
   rows.forEach(row => {
     const rn = parseInt(row[LC.rank]);
     if(isNaN(rn)) return;
-    h += `<div class="pc"><div class="ph"><div class="pl"><div class="rb ${rn<=3?'r1':''}">${rn}</div><div class="pname">${row[LC.name]}</div></div><div class="ptot">${fmt(row[LC.total])}</div></div>
-    <div class="sg">${[['Match',row[LC.match]],['Bonus',row[LC.bonus]],['Star',row[LC.star]],['Duo',row[LC.duo]],['Resurrect',row[LC.resurrector]],['Risk',row[LC.risk]],['Special',row[LC.special]],['Selector',row[LC.superSelector]]].map(([l,v])=>`<div class="sb"><span class="sl">${l}</span><span class="sv">${fmt(v)}</span></div>`).join('')}</div></div>`;
+    h += `<div class="pc" style="margin-bottom:15px; background:rgba(15,23,42,0.6); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:10px;">
+               <div style="display:flex; align-items:center; gap:15px;">
+                 <div style="width:40px; height:40px; background:#fbbf24; color:#0f172a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800;">${rn}</div>
+                 <div style="font-weight:700; font-size:18px;">${row[LC.name]}</div>
+               </div>
+               <div style="font-size:22px; font-weight:800; color:#fbbf24;">${fmt(row[LC.total])}</div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+               <div style="text-align:center"><div style="font-size:10px; color:#94a3b8">MATCH</div><div style="font-weight:700">${fmt(row[LC.match])}</div></div>
+               <div style="text-align:center"><div style="font-size:10px; color:#94a3b8">BONUS</div><div style="font-weight:700">${fmt(row[LC.bonus])}</div></div>
+               <div style="text-align:center"><div style="font-size:10px; color:#94a3b8">STAR</div><div style="font-weight:700">${fmt(row[LC.star])}</div></div>
+               <div style="text-align:center"><div style="font-size:10px; color:#94a3b8">DUO</div><div style="font-weight:700">${fmt(row[LC.duo])}</div></div>
+            </div>
+          </div>`;
   });
   document.getElementById('area').innerHTML = h + '</div>';
 }
@@ -164,39 +187,49 @@ function renderRCShell(){
 async function fetchRC(){
   rcName = document.getElementById('selN').value;
   rcMatch = document.getElementById('selM').value;
-  document.getElementById('rcArea').innerHTML = '<div class="spinner"></div>';
+  document.getElementById('rcArea').innerHTML = '<div class="loading"><div class="spinner"></div>Calculating...</div>';
   const d = await fetch(`${API}?tab=reportcard`).then(r=>r.json());
   
-  // Find player data in Report Card sheet
   const g = d.rows;
   let mCol = -1;
   for(let c=0; c<g[1].length; c++) { if(String(g[2][c]) == rcMatch) mCol = c; }
   
-  const mapping = {
-    'Match Points': 4, 'Bonus Points': 5, 'Risk Incentive': 6, 'Special Incentive': 7, 'Match Related Points': 9,
-    'SP Individual Performance': 12, 'SP Points (incl link effect)': 15,
-    'D1 Individual Performance': 17, 'D2 Individual Performance': 18, 'DD Points (incl prem. effect)': 21,
-    'THE RESURRECTOR': 25, 'Super Selector': 41
-  };
+  // Updated Mapping based on your labels list
+  const mapping = [
+    {l:'Match Points', r:4}, {l:'Bonus Points', r:5}, {l:'Risk Incentive', r:6}, {l:'Special Incentive', r:7},
+    {l:'Match Related Points', r:9, sub:true},
+    {l:'SP Individual Performance', r:12}, {l:'Linked / Not Linked', r:13}, {l:'SP Points (incl link effect)', r:15, sub:true},
+    {l:'D1 Individual Performance', r:17}, {l:'D2 Individual Performance', r:18}, {l:'Upfront Premium?', r:20}, {l:'DD Points (incl prem. effect)', r:21, sub:true},
+    {l:'Ressurector 1', r:23}, {l:'Ressurector 2', r:24}, {l:'THE RESURRECTOR', r:25, sub:true},
+    {l:'Super Selector', r:41, sub:true}
+  ];
 
   let rowsHtml = '';
-  for(let label in mapping) {
-    let val = mCol > -1 ? g[mapping[label]][mCol] : '—';
-    let isSub = label.includes('Points') || label === 'THE RESURRECTOR' || label === 'Super Selector';
-    rowsHtml += `<div class="rr ${isSub?'sub':''}"><span class="rl">${label}</span><span class="rv">${fmt(val)}</span></div>`;
-  }
+  mapping.forEach(item => {
+    let val = mCol > -1 ? g[item.r][mCol] : '—';
+    rowsHtml += `<div class="rr ${item.sub?'sub':''}"><span class="rl">${item.l}</span><span class="rv">${fmt(val)}</span></div>`;
+  });
 
   const pl = players.find(p=>p.name===rcName);
   document.getElementById('rcArea').innerHTML = `
     <div class="rccard">
       <div class="rchero">
-        <div class="rcav">${rcName[0]}</div>
-        <div><div class="rchn">${rcName}</div><div style="color:#94a3b8">Match ${rcMatch}</div></div>
-        <div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:10px;text-transform:uppercase">Rank</div></div>
+        <div class="rcav">${rcName[0] || 'P'}</div>
+        <div><div class="rchn">${rcName}</div><div style="color:#94a3b8">Match Report · Match ${rcMatch}</div></div>
+        <div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:10px; text-transform:uppercase; color:#94a3b8">Season Rank</div></div>
       </div>
+      <div class="gh">Score Breakdown</div>
       ${rowsHtml}
-      <div class="rr tot"><span class="rl">Season Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+      <div class="rr tot"><span class="rl">Season Total Score</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
     </div>`;
 }
 
-function pn(v){ if(!v)return 0; return parseFloat(String(v).replace
+function pn(v){ if(!v || v==='—')return 0; return parseFloat(String(v).replace(/,/g,'')) || 0; }
+function fmt(v){ if(!v || v==='0' || v===0) return '<span class="dim">—</span>'; return v.toLocaleString(); }
+function go(n){ cur=TABS.find(t=>t.name===n); load(); }
+
+// Startup
+load();
+</script>
+</body>
+</html>
