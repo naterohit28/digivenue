@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy League Dashboard</title>
+  <title>IPL 2026 Fantasy League App</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
@@ -15,7 +15,7 @@
       margin: 0; padding: 20px; min-height: 100vh;
     }
     .dashboard-container {
-      max-width: 1100px; margin: 0 auto;
+      max-width: 1200px; margin: 0 auto;
       background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
       border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
@@ -35,8 +35,6 @@
       display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 25px;
     }
-    
-    /* Scrollbar hiding for tabs */
     .tab-bar::-webkit-scrollbar { height: 6px; }
     .tab-bar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
     .tab-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
@@ -44,37 +42,60 @@
     .tab-button {
       background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
       padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
-      white-space: nowrap; transition: all 0.2s;
+      white-space: nowrap; transition: all 0.2s; font-family: 'Inter', sans-serif;
     }
     .tab-button:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
     .tab-button.active {
       background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: #fbbf24;
     }
 
-    /* DASHBOARD CARDS (For Leaderboard) */
-    .leaderboard { display: flex; flex-direction: column; gap: 12px; }
+    /* DASHBOARD CARDS (Leaderboard) */
+    .leaderboard { display: flex; flex-direction: column; gap: 15px; }
     .player-card {
-      display: flex; align-items: center; background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;
-      padding: 16px 24px; transition: transform 0.2s;
+      background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); 
+      border-radius: 12px; padding: 20px; transition: transform 0.2s;
     }
     .player-card:hover {
       transform: translateY(-2px); background: rgba(51, 65, 85, 0.8);
       border-color: rgba(251, 191, 36, 0.4); 
     }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 15px;
+    }
+    .card-header-left { display: flex; align-items: center; }
     .rank {
       font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; width: 45px; height: 45px;
       display: flex; align-items: center; justify-content: center; border-radius: 50%;
-      background: #334155; color: #cbd5e1; margin-right: 20px; flex-shrink: 0;
+      background: #334155; color: #cbd5e1; margin-right: 15px; flex-shrink: 0;
     }
     .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
     .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
     .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
-    .player-info { flex-grow: 1; }
-    .player-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 4px; color: #f8fafc; }
-    .player-stats { font-size: 12px; color: #94a3b8; display: flex; gap: 15px; }
-    .stat-badge { background: rgba(255, 255, 255, 0.05); padding: 2px 8px; border-radius: 4px; }
-    .total-score { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 800; color: #fbbf24; }
+    .player-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 20px; color: #f8fafc; }
+    .total-score { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #fbbf24; text-align: right; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+    .stat-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; text-align: center; }
+    .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    .stat-value { font-size: 14px; font-weight: 600; color: #e2e8f0; font-family: 'Poppins', sans-serif;}
+
+    /* NATIVE DATA TABLES (With Frozen Columns) */
+    .table-container { 
+      overflow-x: auto; background: rgba(15, 23, 42, 0.6); 
+      border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); 
+      max-height: 70vh;
+    }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; white-space: nowrap; }
+    
+    th, td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #e2e8f0; }
+    th { background: #0f172a; color: #fbbf24; font-weight: 600; font-size: 14px; position: sticky; top: 0; z-index: 1; border-bottom: 2px solid rgba(255,255,255,0.1); }
+    tr:hover td { background: rgba(255,255,255,0.03); }
+
+    /* The "Freeze Panes" CSS for Col B (Name) and Col C (Total) */
+    .sticky-col1 { position: sticky; left: 0; background: #1e293b; z-index: 2; font-weight: 600; min-width: 130px; }
+    .sticky-col2 { position: sticky; left: 160px; background: #1e293b; z-index: 2; font-weight: 800; color: #fbbf24; min-width: 60px; border-right: 2px solid rgba(255,255,255,0.1); }
+    th.sticky-col1, th.sticky-col2 { z-index: 3; background: #0f172a; } /* Headers need higher z-index */
 
     /* IFRAME CONTAINER */
     .iframe-container { width: 100%; height: 75vh; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
@@ -83,12 +104,12 @@
     .loading { text-align: center; color: #94a3b8; padding: 40px; font-weight: 500; }
 
     @media (max-width: 600px) {
-      .player-card { padding: 12px 16px; }
-      .rank { width: 35px; height: 35px; font-size: 16px; margin-right: 15px; }
-      .player-name { font-size: 16px; }
-      .total-score { font-size: 20px; }
-      .player-stats { flex-direction: column; gap: 4px; }
+      .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .total-score { align-self: flex-start; margin-left: 60px; font-size: 24px;}
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
       .dashboard-container { padding: 15px; }
+      .sticky-col1 { min-width: 100px; left: 0; }
+      .sticky-col2 { min-width: 50px; left: 130px; }
     }
   </style>
 </head>
@@ -107,22 +128,23 @@
   </div>
 
   <script>
-    // ==========================================
-    // ⚙️ 1. SETUP YOUR GOOGLE SHEETS
-    // ==========================================
     const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
     
-    // ALL YOUR GIDS ARE NOW PLUGGED IN HERE!
     const TABS = [
       { name: 'Leaderboard', gid: '1775142554', type: 'leaderboard' },
       { name: 'Your Report Card', gid: '1383665756', type: 'iframe' }, 
-      { name: 'Match Scores', gid: '1509870547', type: 'iframe' },
-      { name: 'SS Scores', gid: '130216061', type: 'iframe' },
-      { name: 'Daily Score', gid: '1884747051', type: 'iframe' },
-      { name: 'IPL Player Points', gid: '1991041599', type: 'iframe' }
+      { name: 'Match Scores', gid: '1509870547', type: 'datatable' },
+      { name: 'SS Scores', gid: '130216061', type: 'datatable' },
+      { name: 'Daily Score', gid: '1884747051', type: 'datatable' },
+      { name: 'IPL Player Points', gid: '1991041599', type: 'datatable' }
     ];
 
-    const DASH_COLS = { name: 4, star: 7, duo: 8, total: 15 };
+    // Mapped exactly to your Dashboard Screenshot columns! (A=0, B=1, C=2, D=3...)
+    const DASH_COLS = { 
+      name: 3, match: 4, bonus: 5, star: 6, duo: 7, 
+      resurrector: 8, risk: 9, special: 10, 
+      superBonus: 11, superSelector: 12, total: 13 
+    };
 
     let currentTab = TABS[0];
 
@@ -145,9 +167,9 @@
     async function loadContent() {
       const content = document.getElementById('contentArea');
       
-      // IF IT IS THE DASHBOARD -> Fetch Raw Data
-      if (currentTab.type === 'leaderboard') {
-        content.innerHTML = '<div class="loading">Fetching live scores from Digivenue HQ...</div>';
+      // 1. DASHBOARD & DATA TABLES (Lightning Fast Data Fetch)
+      if (currentTab.type === 'leaderboard' || currentTab.type === 'datatable') {
+        content.innerHTML = '<div class="loading">Fetching live data from Digivenue HQ...</div>';
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${currentTab.gid}`;
         
         try {
@@ -157,20 +179,28 @@
           if (!jsonString) throw new Error("Could not parse data.");
           
           const json = JSON.parse(jsonString[1]);
-          renderLeaderboard(json.table.rows);
+          
+          if (currentTab.type === 'leaderboard') {
+            renderLeaderboard(json.table.rows);
+          } else {
+            renderDataTable(json.table.rows, json.table.cols);
+          }
         } catch (error) {
           content.innerHTML = `<div class="loading" style="color:#ef4444;">Error: ${error.message}</div>`;
         }
       } 
-      // IF IT IS ANY OTHER TAB -> Embed the actual Google Sheet
+      // 2. REPORT CARD (Embedded for Dropdown Access)
       else if (currentTab.type === 'iframe') {
-        content.innerHTML = '<div class="loading">Loading Sheet...</div>';
-        // Using widget=false&chrome=false&headers=false to hide Google menus
-        const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/htmlembed?gid=${currentTab.gid}&widget=false&chrome=false&headers=false`;
+        content.innerHTML = '<div class="loading">Loading Report Card...</div>';
         
-        // Slight delay so the "Loading" text shows up before the iframe blocks the screen
+        // Uses /edit to allow dropdowns, focuses on D2:R45 range
+        const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${currentTab.gid}&rm=minimal&range=D2:R45`;
+        
         setTimeout(() => {
           content.innerHTML = `
+            <div style="margin-bottom: 10px; font-size: 12px; color: #94a3b8; text-align: center;">
+              Use the dropdowns to view specific player data.
+            </div>
             <div class="iframe-container">
               <iframe src="${iframeUrl}" title="${currentTab.name}"></iframe>
             </div>
@@ -179,23 +209,63 @@
       }
     }
 
+    // NATIVE DATA TABLE RENDERER (With Frozen Columns!)
+    function renderDataTable(rows, cols) {
+      let html = '<div class="table-container"><table><thead><tr>';
+      
+      cols.forEach((c, i) => {
+        if (i === 0 || i === 3) return; // Hide Column A and Column D
+        
+        let cls = '';
+        if (i === 1) cls = 'sticky-col1'; // Freeze Column B (Name)
+        if (i === 2) cls = 'sticky-col2'; // Freeze Column C (Total Score)
+        
+        html += `<th class="${cls}">${c.label || ''}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      rows.forEach(row => {
+        html += '<tr>';
+        row.c.forEach((cell, i) => {
+          if (i === 0 || i === 3) return; // Hide Column A and Column D
+          
+          let cls = '';
+          if (i === 1) cls = 'sticky-col1'; // Freeze Column B
+          if (i === 2) cls = 'sticky-col2'; // Freeze Column C
+          
+          const val = cell ? (cell.f || cell.v || '') : '';
+          html += `<td class="${cls}">${val}</td>`;
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('contentArea').innerHTML = html;
+    }
+
+    const getVal = (row, colIndex) => {
+      if (row && row.c && row.c[colIndex] && row.c[colIndex].v !== null) return row.c[colIndex].v;
+      return 0;
+    };
+
     function renderLeaderboard(rows) {
       let html = '<div class="leaderboard">';
       let validPlayers = [];
       
       rows.forEach(row => {
-        if(row && row.c && row.c[DASH_COLS.name] && row.c[DASH_COLS.name].v) {
-          const name = String(row.c[DASH_COLS.name].v);
-          if (name !== 'Participant' && name.trim() !== '') {
-            const score = row.c[DASH_COLS.total] ? row.c[DASH_COLS.total].v : 0;
-            const numScore = typeof score === 'number' ? score : parseFloat(String(score).replace(/,/g, '')) || 0;
-            
-            validPlayers.push({
-              name: name, score: numScore, displayScore: score,
-              star: row.c[DASH_COLS.star] ? row.c[DASH_COLS.star].v : 0,
-              duo: row.c[DASH_COLS.duo] ? row.c[DASH_COLS.duo].v : 0
-            });
-          }
+        const name = getVal(row, DASH_COLS.name);
+        if (typeof name === 'string' && name !== 'Participant' && name.trim() !== '' && name !== '0') {
+          const rawTotal = getVal(row, DASH_COLS.total);
+          const numScore = typeof rawTotal === 'number' ? rawTotal : parseFloat(String(rawTotal).replace(/,/g, '')) || 0;
+          
+          validPlayers.push({
+            name: name, score: numScore, displayScore: rawTotal,
+            match: getVal(row, DASH_COLS.match), bonus: getVal(row, DASH_COLS.bonus),
+            star: getVal(row, DASH_COLS.star), duo: getVal(row, DASH_COLS.duo),
+            resurrector: getVal(row, DASH_COLS.resurrector), risk: getVal(row, DASH_COLS.risk),
+            special: getVal(row, DASH_COLS.special), superBonus: getVal(row, DASH_COLS.superBonus),
+            superSelector: getVal(row, DASH_COLS.superSelector),
+          });
         }
       });
 
@@ -206,28 +276,32 @@
         const rankClass = rank <= 3 ? `rank-${rank}` : '';
         html += `
           <div class="player-card">
-            <div class="rank ${rankClass}">${rank}</div>
-            <div class="player-info">
-              <div class="player-name">${p.name}</div>
-              <div class="player-stats">
-                <span class="stat-badge">⭐ Star: ${p.star}</span>
-                <span class="stat-badge">🤝 Duo: ${p.duo}</span>
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="rank ${rankClass}">${rank}</div>
+                <div class="player-name">${p.name}</div>
               </div>
+              <div class="total-score">${p.displayScore.toLocaleString()}</div>
             </div>
-            <div class="total-score">${p.displayScore.toLocaleString()}</div>
+            <div class="stats-grid">
+              <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match}</span></div>
+              <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus}</span></div>
+              <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star}</span></div>
+              <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo}</span></div>
+              <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector}</span></div>
+              <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk}</span></div>
+              <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special}</span></div>
+              <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus || '-'}</span></div>
+              <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector}</span></div>
+            </div>
           </div>`;
       });
       document.getElementById('contentArea').innerHTML = html + '</div>';
     }
 
-    // Initialize App
     renderTabs();
     loadContent();
-    
-    // Auto Refresh Leaderboard in the background every 2 minutes
-    setInterval(() => {
-      if(currentTab.type === 'leaderboard') loadContent();
-    }, 120000);
+    setInterval(() => { if(currentTab.type === 'leaderboard') loadContent(); }, 120000);
   </script>
 
 </body>
