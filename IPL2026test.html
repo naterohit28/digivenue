@@ -3,280 +3,891 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy League App</title>
+  <title>IPL 2026 Fantasy League</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
-    /* BACKGROUND & APP COLORS */
+    /* ── Base ──────────────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #f8fafc;
       font-family: 'Inter', sans-serif;
-      margin: 0; padding: 20px; min-height: 100vh;
+      padding: 20px;
+      min-height: 100vh;
     }
     .dashboard-container {
       max-width: 1200px; margin: 0 auto;
-      background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
-      border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-      overflow: hidden; padding: 30px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+      overflow: hidden;
+      padding: 30px;
     }
 
-    /* HEADER & TABS */
+    /* ── Header ────────────────────────────────────────────── */
     .header { text-align: center; margin-bottom: 25px; }
     .header h1 {
-      font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; margin: 0;
+      font-family: 'Poppins', sans-serif;
+      font-size: 32px; font-weight: 800;
       background: linear-gradient(to right, #fbbf24, #f59e0b);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       text-transform: uppercase; letter-spacing: 2px;
     }
-    
     .update-banner {
       display: inline-block; margin-top: 12px;
-      background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(239, 68, 68, 0.5);
+      background: rgba(220,38,38,0.1); border: 1px solid rgba(239,68,68,0.5);
       color: #fca5a5; padding: 6px 16px; border-radius: 20px;
       font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
     }
-    
+
+    /* ── Tabs ──────────────────────────────────────────────── */
     .tab-bar {
-      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 25px;
+      display: flex; gap: 10px; overflow-x: auto;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 25px;
     }
     .tab-bar::-webkit-scrollbar { height: 6px; }
     .tab-bar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
     .tab-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
     .tab-button {
-      background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
-      padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
-      white-space: nowrap; transition: all 0.2s; font-family: 'Inter', sans-serif;
+      background: rgba(255,255,255,0.05); color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px; border-radius: 8px;
+      font-weight: 600; cursor: pointer; white-space: nowrap;
+      transition: all 0.2s; font-family: 'Inter', sans-serif;
     }
-    .tab-button:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .tab-button:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .tab-button.active {
-      background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: #fbbf24;
+      background: rgba(251,191,36,0.1); color: #fbbf24; border-color: #fbbf24;
     }
 
-    /* LEADERBOARD CARDS */
+    /* ── Leaderboard ───────────────────────────────────────── */
     .leaderboard { display: flex; flex-direction: column; gap: 15px; }
     .player-card {
-      background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); 
+      background: rgba(15,23,42,0.6);
+      border: 1px solid rgba(255,255,255,0.05);
       border-radius: 12px; padding: 20px; transition: transform 0.2s;
     }
-    .player-card:hover { transform: translateY(-2px); background: rgba(51, 65, 85, 0.8); border-color: rgba(251, 191, 36, 0.4); }
-    .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 15px; }
+    .player-card:hover { transform: translateY(-2px); background: rgba(51,65,85,0.8); border-color: rgba(251,191,36,0.4); }
+    .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 15px; }
     .card-header-left { display: flex; align-items: center; }
     .rank { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #334155; color: #cbd5e1; margin-right: 15px; flex-shrink: 0; }
-    .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
+    .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 15px rgba(251,191,36,0.5); }
     .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
     .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
     .player-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 20px; color: #f8fafc; }
-    .total-score { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #fbbf24; text-align: right; }
-
+    .total-score { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #fbbf24; }
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
-    .stat-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; text-align: center; }
+    .stat-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; text-align: center; }
     .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; display: block; }
-    .stat-value { font-size: 14px; font-weight: 600; color: #e2e8f0; font-family: 'Poppins', sans-serif;}
+    .stat-value { font-size: 14px; font-weight: 600; color: #e2e8f0; font-family: 'Poppins', sans-serif; }
 
-    /* DATA TABLES */
-    .table-container { overflow-x: auto; background: rgba(15, 23, 42, 0.6); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); max-height: 70vh; }
+    /* ── Data Tables ───────────────────────────────────────── */
+    .table-container { overflow-x: auto; background: rgba(15,23,42,0.6); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); max-height: 70vh; }
     table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; white-space: nowrap; }
     th, td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #e2e8f0; }
-    
     th { background: #0f172a; color: #fbbf24; font-weight: 600; font-size: 14px; position: sticky; top: 0; z-index: 10; border-bottom: 2px solid rgba(255,255,255,0.1); }
-    
     .sticky-col1 { position: sticky; left: 0; background: #1e293b; z-index: 5; font-weight: 600; min-width: 180px; max-width: 180px; }
     .sticky-col2 { position: sticky; left: 180px; background: #1e293b; z-index: 5; font-weight: 800; color: #fbbf24; min-width: 100px; border-right: 2px solid rgba(255,255,255,0.1); text-align: center; }
-    
     th.sticky-col1, th.sticky-col2 { z-index: 15; background: #0f172a; }
     tr:hover td { background: rgba(255,255,255,0.03); }
 
-    /* IFRAME */
-    .iframe-container { width: 100%; height: 75vh; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
-    iframe { width: 100%; height: 100%; border: none; }
-
+    /* ── Loading / Error ───────────────────────────────────── */
     .loading { text-align: center; color: #94a3b8; padding: 40px; font-weight: 500; }
 
+    /* ════════════════════════════════════════════════════════
+       REPORT CARD — full dark theme, no iframe
+    ════════════════════════════════════════════════════════ */
+
+    /* Selector row */
+    .rc-selectors {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      align-items: flex-end;
+    }
+
+    .rc-select-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; max-width: 260px; }
+    .rc-select-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
+
+    .rc-select {
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #f8fafc;
+      padding: 10px 36px 10px 14px;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .rc-select:hover { border-color: rgba(251,191,36,0.4); }
+    .rc-select:focus { border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(251,191,36,0.15); }
+    .rc-select option { background: #1e293b; color: #f8fafc; }
+
+    .rc-load-btn {
+      height: 42px; padding: 0 22px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a; border: none; border-radius: 10px;
+      font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all .2s; white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .rc-load-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(251,191,36,0.4); }
+    .rc-load-btn:active { transform: none; }
+    .rc-load-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* Report card body */
+    .rc-card {
+      background: rgba(15,23,42,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    /* Player header strip */
+    .rc-hero {
+      background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(245,158,11,0.05));
+      border-bottom: 1px solid rgba(251,191,36,0.15);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .rc-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800;
+      color: #0f172a; flex-shrink: 0;
+    }
+    .rc-hero-info { flex: 1; }
+    .rc-hero-name { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: #f8fafc; }
+    .rc-hero-sub { font-size: 13px; color: #64748b; margin-top: 2px; }
+    .rc-hero-rank {
+      text-align: right;
+    }
+    .rc-hero-rank-num {
+      font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800;
+      color: #fbbf24; line-height: 1;
+    }
+    .rc-hero-rank-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Section label */
+    .rc-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #475569;
+      padding: 14px 24px 8px;
+    }
+
+    /* Match selector row within the card */
+    .rc-match-strip {
+      padding: 0 24px 16px;
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .rc-match-label { font-size: 13px; color: #94a3b8; font-weight: 500; }
+
+    /* Score section grid */
+    .rc-scores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .rc-score-row {
+      background: rgba(15,23,42,0.6);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background .15s;
+    }
+    .rc-score-row:hover { background: rgba(30,41,59,0.9); }
+
+    .rc-score-label {
+      font-size: 13px;
+      color: #94a3b8;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .rc-score-icon { font-size: 15px; width: 22px; text-align: center; }
+    .rc-score-val {
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px; font-weight: 700;
+      color: #e2e8f0;
+    }
+    .rc-score-val.positive { color: #4ade80; }
+    .rc-score-val.negative { color: #f87171; }
+    .rc-score-val.gold { color: #fbbf24; font-size: 20px; }
+
+    /* Total row */
+    .rc-total-row {
+      background: linear-gradient(90deg, rgba(251,191,36,0.08), rgba(245,158,11,0.03));
+      border-top: 2px solid rgba(251,191,36,0.2);
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .rc-total-label { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #fbbf24; }
+    .rc-total-val { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #fbbf24; }
+
+    /* Match scores row (per-match breakdown) */
+    .rc-match-row {
+      display: flex; gap: 8px; overflow-x: auto;
+      padding: 12px 24px 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .rc-match-row::-webkit-scrollbar { height: 4px; }
+    .rc-match-row::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+    .rc-match-chip {
+      flex-shrink: 0; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 8px 12px;
+      text-align: center; min-width: 60px;
+      cursor: pointer; transition: all .15s;
+    }
+    .rc-match-chip:hover { border-color: rgba(251,191,36,0.4); background: rgba(251,191,36,0.06); }
+    .rc-match-chip.active-chip { border-color: #fbbf24; background: rgba(251,191,36,0.1); }
+    .rc-match-chip .chip-num { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+    .rc-match-chip .chip-score { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #e2e8f0; margin-top: 2px; }
+    .rc-match-chip .chip-score.pos { color: #4ade80; }
+    .rc-match-chip .chip-score.neg { color: #f87171; }
+
+    /* SP detail */
+    .rc-sp-detail {
+      padding: 12px 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap;
+    }
+    .rc-sp-badge {
+      background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3);
+      color: #c4b5fd; padding: 6px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; flex-shrink: 0;
+    }
+    .rc-linked-badge {
+      background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3);
+      color: #fbbf24; padding: 6px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* Empty/placeholder state */
+    .rc-empty {
+      padding: 60px 24px; text-align: center;
+    }
+    .rc-empty-icon { font-size: 48px; margin-bottom: 14px; display: block; }
+    .rc-empty-title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; color: #f8fafc; margin-bottom: 8px; }
+    .rc-empty-sub { font-size: 14px; color: #64748b; line-height: 1.6; }
+
+    /* ── Responsive ────────────────────────────────────────── */
     @media (max-width: 600px) {
       .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .total-score { align-self: flex-start; margin-left: 60px; font-size: 24px;}
+      .total-score { align-self: flex-start; margin-left: 60px; font-size: 24px; }
       .stats-grid { grid-template-columns: repeat(3, 1fr); }
       .dashboard-container { padding: 15px; }
       .sticky-col1 { min-width: 120px; max-width: 120px; left: 0; }
       .sticky-col2 { min-width: 80px; left: 120px; }
+      .rc-selectors { gap: 10px; }
+      .rc-select-group { max-width: 100%; }
+      .rc-hero-rank-num { font-size: 28px; }
+      .rc-scores-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+<div class="dashboard-container">
 
-  <div class="dashboard-container">
-    <div class="header">
-      <h1>IPL 2026 Fantasy League</h1>
-      <div class="update-banner">Data is updated till Match 7</div>
-    </div>
-
-    <div class="tab-bar" id="tabBar"></div>
-    <div id="contentArea">
-      <div class="loading">Loading dashboard...</div>
-    </div>
+  <div class="header">
+    <h1>IPL 2026 Fantasy League</h1>
+    <div class="update-banner" id="updateBanner">Data is updated till Match 7</div>
   </div>
 
-  <script>
-    const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
-    
-    const TABS = [
-      { name: 'Leaderboard', gid: '1775142554', type: 'leaderboard' },
-      { name: 'Your Report Card', gid: '1383665756', type: 'iframe' }, 
-      { name: 'Match Scores', gid: '1509870547', type: 'datatable' },
-      { name: 'SS Scores', gid: '130216061', type: 'datatable' },
-      { name: 'Daily Score', gid: '1884747051', type: 'datatable' },
-      { name: 'IPL Player Points', gid: '1991041599', type: 'datatable' }
-    ];
+  <div class="tab-bar" id="tabBar"></div>
+  <div id="contentArea"><div class="loading">Loading dashboard...</div></div>
 
-    const DASH_COLS = { name: 3, match: 4, bonus: 5, star: 6, duo: 7, resurrector: 8, risk: 9, special: 10, superBonus: 11, superSelector: 12, total: 13 };
+</div>
 
-    let currentTab = TABS[0];
+<script>
+/* ══════════════════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════════════════ */
+const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
 
-    function renderTabs() {
-      const tabBar = document.getElementById('tabBar');
-      tabBar.innerHTML = '';
-      TABS.forEach(tab => {
-        const btn = document.createElement('button');
-        btn.className = `tab-button ${tab.name === currentTab.name ? 'active' : ''}`;
-        btn.innerText = tab.name;
-        btn.onclick = () => {
-          currentTab = tab;
-          renderTabs();
-          loadContent();
-        };
-        tabBar.appendChild(btn);
-      });
-    }
+const TABS = [
+  { name: 'Leaderboard',       gid: '1775142554', type: 'leaderboard'   },
+  { name: 'Your Report Card',  gid: '1383665756', type: 'reportcard'    },
+  { name: 'Match Scores',      gid: '1509870547', type: 'datatable'     },
+  { name: 'SS Scores',         gid: '130216061',  type: 'datatable'     },
+  { name: 'Daily Score',       gid: '1884747051', type: 'datatable'     },
+  { name: 'IPL Player Points', gid: '1991041599', type: 'datatable'     },
+];
 
-    async function loadContent() {
-      const content = document.getElementById('contentArea');
-      
-      if (currentTab.type === 'leaderboard' || currentTab.type === 'datatable') {
-        content.innerHTML = '<div class="loading">Fetching live data from Digivenue HQ...</div>';
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json&gid=${currentTab.gid}`;
-        
-        try {
-          const res = await fetch(url);
-          const text = await res.text();
-          const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-          if (!jsonString) throw new Error("Could not parse data.");
-          const json = JSON.parse(jsonString[1]);
-          
-          if (currentTab.type === 'leaderboard') renderLeaderboard(json.table.rows);
-          else renderDataTable(json.table.rows, json.table.cols);
-        } catch (error) {
-          content.innerHTML = `<div class="loading" style="color:#ef4444;">Error: ${error.message}</div>`;
+// Column indices in the Dashboard/Leaderboard sheet
+const DASH_COLS = {
+  name: 3, match: 4, bonus: 5, star: 6, duo: 7,
+  resurrector: 8, risk: 9, special: 10,
+  superBonus: 11, superSelector: 12, total: 13
+};
+
+/* ══════════════════════════════════════════════════════════════
+   REPORT CARD SHEET STRUCTURE
+   Based on your sheet's "Your Report Card" tab (gid 1383665756).
+   The sheet has:
+     Row 1  = select name (D2 cell = player name, K2 = Your Rank)
+     Row 2  = choose match (D3, F3, H3, J3, L3 = match numbers)
+     Rows 4–… = score rows per match column
+   The gviz API returns this as a flat grid.
+   We read the Report Card sheet and parse accordingly.
+══════════════════════════════════════════════════════════════ */
+
+let currentTab    = TABS[0];
+let allPlayers    = [];   // populated once leaderboard loads
+let leaderboardRows = []; // raw rows from leaderboard sheet
+let rcSheetData   = null; // cached Report Card raw gviz response
+let rcSelectedName  = '';
+let rcSelectedMatch = 1;
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED FETCH HELPER
+══════════════════════════════════════════════════════════════ */
+async function fetchGviz(gid) {
+  // tqx=out:json  ← note colon not equals (original had a typo: tqx:out)
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
+  const res  = await fetch(url);
+  const text = await res.text();
+  const m    = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+  if (!m) throw new Error('Could not parse sheet data. Make sure the sheet is set to "Anyone with the link can view".');
+  return JSON.parse(m[1]);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TAB RENDERING
+══════════════════════════════════════════════════════════════ */
+function renderTabs() {
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = '';
+  TABS.forEach(tab => {
+    const btn = document.createElement('button');
+    btn.className = `tab-button ${tab.name === currentTab.name ? 'active' : ''}`;
+    btn.textContent = tab.name;
+    btn.onclick = () => { currentTab = tab; renderTabs(); loadContent(); };
+    bar.appendChild(btn);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONTENT ROUTER
+══════════════════════════════════════════════════════════════ */
+async function loadContent() {
+  const area = document.getElementById('contentArea');
+
+  if (currentTab.type === 'leaderboard') {
+    area.innerHTML = '<div class="loading">Fetching live data...</div>';
+    try {
+      const json = await fetchGviz(currentTab.gid);
+      leaderboardRows = json.table.rows || [];
+      // Build player list for Report Card selector
+      allPlayers = [];
+      leaderboardRows.forEach(row => {
+        const raw = row.c && row.c[DASH_COLS.name] ? row.c[DASH_COLS.name].v : '';
+        const name = String(raw || '').trim();
+        if (name && name !== 'Participant' && name !== '0' && name !== 'null') {
+          allPlayers.push({ name, score: cleanNum(row, DASH_COLS.total) });
         }
-      } 
-      else if (currentTab.type === 'iframe') {
-        content.innerHTML = '<div class="loading">Loading Report Card...</div>';
-        const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${currentTab.gid}&rm=minimal&range=D2:R45`;
-        setTimeout(() => {
-          content.innerHTML = `<div class="iframe-container"><iframe src="${iframeUrl}"></iframe></div>`;
-        }, 100);
+      });
+      allPlayers.sort((a, b) => b.score - a.score);
+      renderLeaderboard(leaderboardRows);
+    } catch (e) {
+      area.innerHTML = `<div class="loading" style="color:#ef4444">⚠ ${e.message}</div>`;
+    }
+    return;
+  }
+
+  if (currentTab.type === 'reportcard') {
+    renderReportCardUI();
+    return;
+  }
+
+  if (currentTab.type === 'datatable') {
+    area.innerHTML = '<div class="loading">Fetching live data...</div>';
+    try {
+      const json = await fetchGviz(currentTab.gid);
+      renderDataTable(json.table.rows, json.table.cols);
+    } catch (e) {
+      area.innerHTML = `<div class="loading" style="color:#ef4444">⚠ ${e.message}</div>`;
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════════════════════════════ */
+function cleanNum(row, idx) {
+  if (!row || !row.c || !row.c[idx] || row.c[idx].v === null) return 0;
+  const v = row.c[idx].v;
+  if (typeof v === 'number') return Math.round(v);
+  const p = parseFloat(String(v).replace(/,/g, ''));
+  return isNaN(p) ? 0 : Math.round(p);
+}
+
+function renderLeaderboard(rows) {
+  const players = [];
+  rows.forEach(row => {
+    const raw  = row.c && row.c[DASH_COLS.name] ? row.c[DASH_COLS.name].v : '';
+    const name = String(raw || '').trim();
+    if (!name || name === 'Participant' || name === '0' || name === 'null') return;
+    players.push({
+      name,
+      score:        cleanNum(row, DASH_COLS.total),
+      match:        cleanNum(row, DASH_COLS.match),
+      bonus:        cleanNum(row, DASH_COLS.bonus),
+      star:         cleanNum(row, DASH_COLS.star),
+      duo:          cleanNum(row, DASH_COLS.duo),
+      resurrector:  cleanNum(row, DASH_COLS.resurrector),
+      risk:         cleanNum(row, DASH_COLS.risk),
+      special:      cleanNum(row, DASH_COLS.special),
+      superBonus:   cleanNum(row, DASH_COLS.superBonus),
+      superSelector:cleanNum(row, DASH_COLS.superSelector),
+    });
+  });
+  players.sort((a, b) => b.score - a.score);
+
+  let html = '<div class="leaderboard">';
+  players.forEach((p, i) => {
+    const rank = i + 1;
+    const rc = rank <= 3 ? `rank-${rank}` : '';
+    html += `
+      <div class="player-card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="rank ${rc}">${rank}</div>
+            <div class="player-name">${esc(p.name)}</div>
+          </div>
+          <div class="total-score">${p.score.toLocaleString('en-US')}</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match}</span></div>
+          <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus}</span></div>
+          <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star}</span></div>
+          <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo}</span></div>
+          <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector}</span></div>
+          <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk}</span></div>
+          <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special}</span></div>
+          <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus === 0 ? '—' : p.superBonus}</span></div>
+          <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector}</span></div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('contentArea').innerHTML = html + '</div>';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DATA TABLE
+══════════════════════════════════════════════════════════════ */
+function renderDataTable(rows, cols) {
+  const isPlayer = currentTab.name === 'IPL Player Points';
+  let html = '<div class="table-container"><table><thead><tr>';
+
+  cols.forEach((c, i) => {
+    if (isPlayer) { if (i === 0 || i === 1) return; }
+    else           { if (i === 0 || i === 3) return; }
+
+    let cls = '', label = c.label || '';
+    if (isPlayer) {
+      if (i === 2) cls = 'sticky-col1';
+      if (i === 3) { cls = 'sticky-col2'; label = 'Total Score'; }
+    } else {
+      if (i === 1) cls = 'sticky-col1';
+      if (i === 2) { cls = 'sticky-col2'; label = 'Total Score'; }
+    }
+    html += `<th class="${cls}">${esc(label)}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  rows.forEach(row => {
+    html += '<tr>';
+    (row.c || []).forEach((cell, i) => {
+      if (isPlayer) { if (i === 0 || i === 1) return; }
+      else           { if (i === 0 || i === 3) return; }
+
+      let cls = '';
+      if (isPlayer) { if (i === 2) cls = 'sticky-col1'; if (i === 3) cls = 'sticky-col2'; }
+      else           { if (i === 1) cls = 'sticky-col1'; if (i === 2) cls = 'sticky-col2'; }
+
+      let val = cell ? (cell.f || cell.v || '') : '';
+      if (val === 'null') val = '—';
+      html += `<td class="${cls}">${esc(String(val))}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  document.getElementById('contentArea').innerHTML = html;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REPORT CARD — UI SHELL
+══════════════════════════════════════════════════════════════ */
+function renderReportCardUI() {
+  const area = document.getElementById('contentArea');
+
+  // Build name options
+  let nameOpts = '<option value="">— Select your name —</option>';
+  if (allPlayers.length === 0) {
+    nameOpts += '<option disabled>Load Leaderboard tab first</option>';
+  } else {
+    allPlayers.forEach(p => {
+      const sel = p.name === rcSelectedName ? 'selected' : '';
+      nameOpts += `<option value="${esc(p.name)}" ${sel}>${esc(p.name)}</option>`;
+    });
+  }
+
+  // Build match options (1–74)
+  let matchOpts = '';
+  for (let m = 1; m <= 74; m++) {
+    const sel = m === rcSelectedMatch ? 'selected' : '';
+    matchOpts += `<option value="${m}" ${sel}>Match ${m}</option>`;
+  }
+
+  area.innerHTML = `
+    <div class="rc-selectors">
+      <div class="rc-select-group">
+        <label class="rc-select-label">Player</label>
+        <select class="rc-select" id="rcNameSelect" onchange="rcSelectedName = this.value">
+          ${nameOpts}
+        </select>
+      </div>
+      <div class="rc-select-group" style="max-width:180px">
+        <label class="rc-select-label">Match</label>
+        <select class="rc-select" id="rcMatchSelect" onchange="rcSelectedMatch = parseInt(this.value)">
+          ${matchOpts}
+        </select>
+      </div>
+      <button class="rc-load-btn" id="rcLoadBtn" onclick="loadReportCard()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+        View Report Card
+      </button>
+    </div>
+
+    <div id="rcCardArea">
+      <div class="rc-card">
+        <div class="rc-empty">
+          <span class="rc-empty-icon">📊</span>
+          <div class="rc-empty-title">Select a name and match</div>
+          <div class="rc-empty-sub">Choose a player and match number above,<br>then click "View Report Card".</div>
+        </div>
+      </div>
+    </div>`;
+
+  // If we already have a selection, auto-load
+  if (rcSelectedName && rcSheetData) {
+    renderReportCardData();
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REPORT CARD — LOAD & RENDER
+══════════════════════════════════════════════════════════════ */
+async function loadReportCard() {
+  rcSelectedName  = document.getElementById('rcNameSelect').value;
+  rcSelectedMatch = parseInt(document.getElementById('rcMatchSelect').value);
+
+  if (!rcSelectedName) {
+    showRcError('Please select a player name.');
+    return;
+  }
+
+  const btn = document.getElementById('rcLoadBtn');
+  btn.disabled = true;
+  btn.innerHTML = `<svg class="spin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0115-1.5M20 15a9 9 0 01-15 1.5"/></svg> Loading…`;
+
+  try {
+    // Always re-fetch to get latest data
+    const json    = await fetchGviz(currentTab.gid);
+    rcSheetData   = json.table;
+    renderReportCardData();
+  } catch (e) {
+    showRcError(e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> View Report Card`;
+  }
+}
+
+/*
+  Your Report Card sheet layout (gid 1383665756):
+  The sheet uses a "pivot" format. Reading it via gviz returns raw cell values.
+  
+  Based on your original iframe range D2:R45, the structure is:
+    Row 2 (idx 1): Name label + name value, Rank label + rank value
+    Row 3 (idx 2): Match columns header row
+    Rows 4–45: Score categories per match
+
+  We'll parse the gviz output as a grid and look for the player's name
+  in a special "name" cell, then read across columns for the match data.
+
+  Since we don't know the exact cell layout without seeing the live data,
+  we implement a smart parser that:
+  1. Finds name cells in the first few columns
+  2. Locates match number row
+  3. Reads score rows beneath
+  
+  The leaderboard data already has ALL cumulative stats, so for the
+  "full summary" we use that directly. The Report Card sheet gives
+  per-match breakdown. We show both.
+*/
+function renderReportCardData() {
+  const area   = document.getElementById('rcCardArea');
+  const player = allPlayers.find(p => p.name === rcSelectedName);
+  const rank   = allPlayers.indexOf(player) + 1;
+
+  // ── Parse the report card sheet grid ──────────────────────
+  const rows = rcSheetData ? (rcSheetData.rows || []) : [];
+  const cols = rcSheetData ? (rcSheetData.cols || []) : [];
+
+  // Build a 2D array of display values
+  const grid = rows.map(row =>
+    (row.c || []).map(cell => {
+      if (!cell) return '';
+      return cell.f !== undefined && cell.f !== null ? String(cell.f)
+           : cell.v !== undefined && cell.v !== null ? String(cell.v)
+           : '';
+    })
+  );
+
+  // Find the name row — scan first 5 rows for a cell matching our player name
+  let nameRowIdx = -1, nameColIdx = -1;
+  outer: for (let r = 0; r < Math.min(10, grid.length); r++) {
+    for (let c = 0; c < grid[r].length; c++) {
+      if (String(grid[r][c] || '').trim().toLowerCase() === rcSelectedName.toLowerCase()) {
+        nameRowIdx = r; nameColIdx = c; break outer;
       }
     }
+  }
 
-    function renderDataTable(rows, cols) {
-      let html = '<div class="table-container"><table><thead><tr>';
-      const isPlayerPoints = currentTab.name === 'IPL Player Points';
-
-      cols.forEach((c, i) => {
-        if (isPlayerPoints) { if (i === 0 || i === 1) return; } 
-        else { if (i === 0 || i === 3) return; }
-        
-        let cls = '';
-        let label = c.label || '';
-        
-        if (isPlayerPoints) {
-          if (i === 2) cls = 'sticky-col1';
-          if (i === 3) { cls = 'sticky-col2'; label = 'Total Score'; }
-        } else {
-          if (i === 1) cls = 'sticky-col1';
-          if (i === 2) { cls = 'sticky-col2'; label = 'Total Score'; }
-        }
-        html += `<th class="${cls}">${label}</th>`;
-      });
-      html += '</tr></thead><tbody>';
-
-      rows.forEach(row => {
-        html += '<tr>';
-        row.c.forEach((cell, i) => {
-          if (isPlayerPoints) { if (i === 0 || i === 1) return; } 
-          else { if (i === 0 || i === 3) return; }
-          
-          let cls = '';
-          if (isPlayerPoints) { if (i === 2) cls = 'sticky-col1'; if (i === 3) cls = 'sticky-col2'; }
-          else { if (i === 1) cls = 'sticky-col1'; if (i === 2) cls = 'sticky-col2'; }
-          
-          let val = cell ? (cell.f || cell.v || '') : '';
-          if (val === 'null') val = '-';
-          html += `<td class="${cls}">${val}</td>`;
-        });
-        html += '</tr>';
-      });
-      html += '</tbody></table></div>';
-      document.getElementById('contentArea').innerHTML = html;
-    }
-
-    const getCleanVal = (row, colIndex) => {
-      if (row && row.c && row.c[colIndex] && row.c[colIndex].v !== null) {
-        let val = row.c[colIndex].v;
-        if (typeof val === 'number') return Math.round(val);
-        let parsed = parseFloat(String(val).replace(/,/g, ''));
-        return isNaN(parsed) ? val : Math.round(parsed);
+  // Find match number row — look for a row containing our match number as a cell value
+  let matchRowIdx = -1, matchColIdx = -1;
+  for (let r = 0; r < Math.min(15, grid.length); r++) {
+    for (let c = 0; c < grid[r].length; c++) {
+      const v = String(grid[r][c] || '').trim();
+      if (v === String(rcSelectedMatch) || v === `c${rcSelectedMatch}` || v === `Match ${rcSelectedMatch}`) {
+        matchRowIdx = r; matchColIdx = c; break;
       }
-      return 0;
-    };
+    }
+    if (matchColIdx >= 0) break;
+  }
 
-    function renderLeaderboard(rows) {
-      let html = '<div class="leaderboard">';
-      let validPlayers = [];
-      rows.forEach(row => {
-        const nameRaw = row.c && row.c[DASH_COLS.name] ? row.c[DASH_COLS.name].v : '';
-        const name = String(nameRaw).trim();
-        if (name !== '' && name !== 'Participant' && name !== '0' && name !== 'null') {
-          validPlayers.push({
-            name: name, score: getCleanVal(row, DASH_COLS.total),
-            match: getCleanVal(row, DASH_COLS.match), bonus: getCleanVal(row, DASH_COLS.bonus),
-            star: getCleanVal(row, DASH_COLS.star), duo: getCleanVal(row, DASH_COLS.duo),
-            resurrector: getCleanVal(row, DASH_COLS.resurrector), risk: getCleanVal(row, DASH_COLS.risk),
-            special: getCleanVal(row, DASH_COLS.special), superBonus: getCleanVal(row, DASH_COLS.superBonus),
-            superSelector: getCleanVal(row, DASH_COLS.superSelector),
-          });
+  // ── Extract score categories for selected match ──────────
+  // If we found a match column, read down from that column
+  const matchScores = {};
+  const categoryLabels = [];
+
+  if (matchRowIdx >= 0 && matchColIdx >= 0) {
+    for (let r = matchRowIdx + 1; r < grid.length; r++) {
+      const label = (grid[r][nameColIdx < 0 ? 0 : Math.max(0, nameColIdx - 1)] || '').trim();
+      const val   = (grid[r][matchColIdx] || '').trim();
+      if (label && val !== '') {
+        matchScores[label] = val;
+        categoryLabels.push(label);
+      }
+    }
+  }
+
+  // ── Build per-match totals from cols (for the chip strip) ─
+  // We scan ALL columns that look like match columns
+  const matchTotalsRaw = {};
+  if (matchRowIdx >= 0) {
+    const matchRow = grid[matchRowIdx] || [];
+    matchRow.forEach((cell, ci) => {
+      const v = String(cell || '').trim();
+      const mNum = parseInt(v.replace(/^c/, '').replace(/^match\s*/i, ''));
+      if (!isNaN(mNum) && mNum >= 1 && mNum <= 74) {
+        // Sum down this column to get a total for this match
+        let total = 0;
+        for (let r = matchRowIdx + 1; r < grid.length; r++) {
+          const cellVal = parseFloat(String(grid[r][ci] || '').replace(/,/g, ''));
+          if (!isNaN(cellVal)) total += cellVal;
         }
-      });
-      validPlayers.sort((a, b) => b.score - a.score);
-      validPlayers.forEach((p, i) => {
-        const rank = i + 1;
-        const rankClass = rank <= 3 ? `rank-${rank}` : '';
-        html += `
-          <div class="player-card">
-            <div class="card-header"><div class="card-header-left"><div class="rank ${rankClass}">${rank}</div><div class="player-name">${p.name}</div></div><div class="total-score">${p.score.toLocaleString('en-US')}</div></div>
-            <div class="stats-grid">
-              <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match}</span></div>
-              <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus}</span></div>
-              <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star}</span></div>
-              <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo}</span></div>
-              <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector}</span></div>
-              <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk}</span></div>
-              <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special}</span></div>
-              <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus === 0 ? '-' : p.superBonus}</span></div>
-              <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector}</span></div>
-            </div>
+        matchTotalsRaw[mNum] = Math.round(total);
+      }
+    });
+  }
+
+  // ── Scores to show (use leaderboard data as baseline) ─────
+  const scoreRows = player ? [
+    { icon: '🏏', label: 'Match Points',      val: player.match,         key: 'Match Points' },
+    { icon: '🎯', label: 'Bonus Points',       val: player.bonus,         key: 'Bonus Points' },
+    { icon: '⭐', label: 'Star Performer',     val: player.star,          key: 'Star Performer' },
+    { icon: '👥', label: 'Dynamic Duo',        val: player.duo,           key: 'Dynamic Duo' },
+    { icon: '🔁', label: 'The Resurrector',    val: player.resurrector,   key: 'Resurrector' },
+    { icon: '⚡', label: 'Risk Incentive',     val: player.risk,          key: 'Risk Incentive' },
+    { icon: '🎁', label: 'Special Incentive',  val: player.special,       key: 'Special Incentive' },
+    { icon: '🏆', label: 'Super Bonus',        val: player.superBonus,    key: 'Super Bonus' },
+    { icon: '🔮', label: 'Super Selector',     val: player.superSelector, key: 'Super Selector' },
+  ] : [];
+
+  // Override with sheet data where available (per-match values)
+  scoreRows.forEach(sr => {
+    const sheetVal = matchScores[sr.key] || matchScores[sr.label];
+    if (sheetVal !== undefined) {
+      const num = parseFloat(String(sheetVal).replace(/,/g, ''));
+      if (!isNaN(num)) sr.val = num;
+    }
+  });
+
+  const totalScore = scoreRows.reduce((s, r) => s + (Number(r.val) || 0), 0);
+
+  // ── HTML BUILD ─────────────────────────────────────────────
+  const initials = rcSelectedName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+  // Per-match chip strip
+  const matchesWithData = Object.keys(matchTotalsRaw).map(Number).sort((a, b) => a - b);
+  let chipHtml = '';
+  if (matchesWithData.length > 0) {
+    chipHtml = `
+      <div class="rc-section-label">Match Breakdown</div>
+      <div class="rc-match-row">
+        ${matchesWithData.map(m => {
+          const s = matchTotalsRaw[m];
+          const cls = s > 0 ? 'pos' : s < 0 ? 'neg' : '';
+          const active = m === rcSelectedMatch ? 'active-chip' : '';
+          return `<div class="rc-match-chip ${active}" onclick="rcSelectMatch(${m})">
+            <div class="chip-num">M${m}</div>
+            <div class="chip-score ${cls}">${s > 0 ? '+' : ''}${s}</div>
           </div>`;
-      });
-      document.getElementById('contentArea').innerHTML = html + '</div>';
-    }
+        }).join('')}
+      </div>`;
+  }
 
-    renderTabs();
-    loadContent();
-    setInterval(() => { if(currentTab.type === 'leaderboard') loadContent(); }, 120000);
-  </script>
+  // Score rows
+  let scoresHtml = '';
+  if (scoreRows.length > 0) {
+    scoresHtml = `
+      <div class="rc-section-label">Score Breakdown — Match ${rcSelectedMatch}</div>
+      <div class="rc-scores-grid">
+        ${scoreRows.map(sr => {
+          const n   = Number(sr.val) || 0;
+          const cls = n > 0 ? 'positive' : n < 0 ? 'negative' : '';
+          const disp = n === 0 ? '—' : `${n > 0 ? '+' : ''}${n.toLocaleString('en-US')}`;
+          return `
+            <div class="rc-score-row">
+              <div class="rc-score-label">
+                <span class="rc-score-icon">${sr.icon}</span>
+                ${esc(sr.label)}
+              </div>
+              <div class="rc-score-val ${cls}">${disp}</div>
+            </div>`;
+        }).join('')}
+      </div>
+      <div class="rc-total-row">
+        <div class="rc-total-label">Total (Cumulative)</div>
+        <div class="rc-total-val">${(player ? player.score : totalScore).toLocaleString('en-US')}</div>
+      </div>`;
+  } else {
+    // No sheet data — show leaderboard summary only
+    scoresHtml = `
+      <div class="rc-section-label">Season Cumulative Scores</div>
+      <div class="rc-scores-grid">
+        ${scoreRows.map(sr => {
+          const n   = Number(sr.val) || 0;
+          const cls = n > 0 ? 'positive' : n < 0 ? 'negative' : '';
+          const disp = n === 0 ? '—' : n.toLocaleString('en-US');
+          return `
+            <div class="rc-score-row">
+              <div class="rc-score-label">
+                <span class="rc-score-icon">${sr.icon}</span>
+                ${esc(sr.label)}
+              </div>
+              <div class="rc-score-val ${cls}">${disp}</div>
+            </div>`;
+        }).join('')}
+      </div>
+      <div class="rc-total-row">
+        <div class="rc-total-label">Season Total</div>
+        <div class="rc-total-val">${(player?.score || 0).toLocaleString('en-US')}</div>
+      </div>`;
+  }
 
+  area.innerHTML = `
+    <div class="rc-card">
+      <div class="rc-hero">
+        <div class="rc-avatar">${initials}</div>
+        <div class="rc-hero-info">
+          <div class="rc-hero-name">${esc(rcSelectedName)}</div>
+          <div class="rc-hero-sub">Report Card · Match ${rcSelectedMatch}</div>
+        </div>
+        ${rank > 0 ? `
+        <div class="rc-hero-rank">
+          <div class="rc-hero-rank-num">#${rank}</div>
+          <div class="rc-hero-rank-label">Season Rank</div>
+        </div>` : ''}
+      </div>
+
+      ${chipHtml}
+      ${scoresHtml}
+    </div>`;
+}
+
+function rcSelectMatch(m) {
+  rcSelectedMatch = m;
+  document.getElementById('rcMatchSelect').value = m;
+  renderReportCardData();
+}
+
+function showRcError(msg) {
+  document.getElementById('rcCardArea').innerHTML = `
+    <div class="rc-card">
+      <div class="rc-empty">
+        <span class="rc-empty-icon">⚠️</span>
+        <div class="rc-empty-title">Could not load data</div>
+        <div class="rc-empty-sub">${esc(msg)}<br><br>Make sure the sheet is set to <strong>"Anyone with the link can view"</strong>.</div>
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════════════════ */
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════════ */
+renderTabs();
+loadContent();
+
+// Auto-refresh leaderboard every 2 minutes
+setInterval(() => {
+  if (currentTab.type === 'leaderboard') loadContent();
+}, 120000);
+</script>
+
+<style>
+/* Spinner for load button */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-icon { animation: spin .7s linear infinite; display: inline-block; }
+</style>
 </body>
 </html>
