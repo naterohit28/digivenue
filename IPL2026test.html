@@ -6,255 +6,670 @@
   <title>IPL 2026 Fantasy League</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* GLOBAL THEME */
+    /* ── GLOBAL ─────────────────────────────────────────────── */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
-    .wrap{max-width:1300px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);padding:15px}
-    
-    /* HEADER & BANNER */
+    .wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);padding:15px}
+
+    /* ── HEADER ─────────────────────────────────────────────── */
     .header{text-align:center;margin-bottom:15px}
     .header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
     .banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
-    
-    /* TABS */
+
+    /* ── TABS ───────────────────────────────────────────────── */
     .tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:15px}
-    .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:0.2s;font-size:12px}
+    .tab-bar::-webkit-scrollbar{height:4px}
+    .tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:4px}
+    .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0}
+    .tab-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
 
-    /* COMPACT TICKER TABLES */
+    /* ── LOADING ─────────────────────────────────────────────── */
+    .loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
+    .spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .err-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.7}
+
+    /* ── LEADERBOARD TABLE ──────────────────────────────────── */
     .tw{overflow:auto;background:rgba(15,23,42,0.6);border-radius:8px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
     th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
-    th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:10px}
-    
-    /* STICKY FREEZE PANES */
+    th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:10px;letter-spacing:.5px}
     .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:180px}
     .sc2{position:sticky;left:180px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:90px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
     th.sc1,th.sc2{z-index:15;background:#0f172a}
     tr:hover td{background:rgba(255,255,255,0.03)}
 
-    /* REPORT CARD COMPACT */
-    .rc-container{max-width:850px;margin:0 auto}
-    .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
-    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px;border-radius:6px;width:100%;outline:none;font-size:13px}
-    .rcbtn{height:38px;padding:0 20px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:13px}
-    .rccard{background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden}
-    .rchero{background:rgba(251,191,36,0.1);padding:12px 18px;display:flex;align-items:center;gap:15px;border-bottom:1px solid rgba(251,191,36,0.2)}
-    .rcav{width:40px;height:40px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#0f172a}
-    .rchn{font-size:18px;font-weight:700;color:#fff}
-    .rcrn{font-size:28px;font-weight:800;color:#fbbf24;line-height:1}
+    /* rank colors in table */
+    .rank-gold{color:#fbbf24;font-weight:800}
+    .rank-silver{color:#94a3b8;font-weight:800}
+    .rank-bronze{color:#b45309;font-weight:800}
+    .arr-up{color:#4ade80;font-size:10px}
+    .arr-dn{color:#f87171;font-size:10px}
+    .arr-eq{color:#64748b;font-size:10px}
+    .neg-val{color:#f87171}
+    .dim-val{color:#475569}
 
-    /* REPORT CARD ROWS */
-    .rr{display:flex;justify-content:space-between;align-items:center;padding:7px 18px;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .rl{font-size:12px;color:#cbd5e1;flex:1}
-    .rd{font-size:11px;color:#94a3b8;text-align:right;margin-right:15px;font-style:italic;max-width:220px;overflow:hidden;text-overflow:ellipsis}
-    .rv{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#fff;text-align:right;width:70px}
-    .rv.neg{color:#f87171 !important}
-    
-    .gh{background:rgba(255,255,255,0.05);padding:6px 18px;font-size:9px;font-weight:700;color:#fbbf24;text-transform:uppercase}
-    .rv.gold{color:#fbbf24}
-    .rv.grand{font-size:22px;color:#fbbf24}
+    /* ── REPORT CARD ─────────────────────────────────────────── */
+    .rc-container{max-width:860px;margin:0 auto}
+    .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+    .rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
+    .rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
+    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
+    .rcsel:hover{border-color:rgba(251,191,36,0.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
+    .rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
+    .rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,0.35)}
+    .rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-    /* LOADING STATES */
-    .loading{text-align:center;padding:30px;color:#94a3b8}
-    .spinner{width:20px;height:20px;border:2px solid #334155;border-top-color:#fbbf24;border-radius:50%;animation:spin 1s infinite linear;margin:0 auto 5px}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    /* card */
+    .rccard{background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
+
+    /* hero strip */
+    .rchero{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04));border-bottom:1px solid rgba(251,191,36,0.15);padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .rcav{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
+    .rchn{font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;color:#f8fafc}
+    .rchs{font-size:12px;color:#64748b;margin-top:2px}
+    .rchr{margin-left:auto;text-align:right}
+    .rcrn{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;color:#fbbf24;line-height:1}
+    .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+
+    /* chip strip */
+    .cw{border-bottom:1px solid rgba(255,255,255,0.05);padding:10px 18px}
+    .ct{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:8px}
+    .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+    .chips::-webkit-scrollbar{height:3px}
+    .chips::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+    .chip{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:6px 10px;text-align:center;min-width:52px;cursor:pointer;transition:.15s}
+    .chip:hover{border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.06)}.chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.12)}
+    .cl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+    .cv{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;margin-top:1px;color:#e2e8f0}
+    .cv.pos{color:#4ade80}.cv.neg{color:#f87171}
+
+    /* group header */
+    .gh{background:rgba(251,191,36,0.05);padding:5px 18px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04)}
+
+    /* score rows */
+    .rr{display:flex;align-items:center;padding:8px 18px;border-bottom:1px solid rgba(255,255,255,0.03);transition:background .1s}
+    .rr:hover{background:rgba(255,255,255,0.02)}
+    .rr.sub{background:rgba(251,191,36,0.04);border-top:1px solid rgba(251,191,36,0.08);border-bottom:1px solid rgba(251,191,36,0.08)}
+    .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.1),transparent);border-top:2px solid rgba(251,191,36,0.2);padding:12px 18px}
+    .ri{width:22px;font-size:13px;text-align:center;flex-shrink:0}
+    .rl{flex:1;font-size:12px;color:#94a3b8;margin-left:6px}
+    .rr.sub .rl{color:#fbbf24;font-weight:600}
+    .rr.tot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#fbbf24}
+    .rv{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#e2e8f0;text-align:right;min-width:80px}
+    .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.dim{color:#475569;font-weight:400;font-size:12px}
+    .rv.gold{color:#fbbf24}.rv.grand{color:#fbbf24;font-size:22px}
+    .badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+    .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3)}
+    .badge.no{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.25)}
+    .badge.neu{background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)}
+
+    /* empty / hint */
+    .rce{padding:40px 20px;text-align:center}
+    .rce-i{font-size:36px;margin-bottom:10px;display:block}
+    .rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
+    .rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
+
+    /* warn strip */
+    .warn{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:6px;padding:8px 14px;margin:0 18px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
+
+    /* mobile */
+    @media(max-width:600px){
+      .sc1{min-width:130px}.sc2{min-width:80px;left:130px}
+      .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
+      .rr{padding:7px 12px}.rchero{padding:12px}
+    }
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
     <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">Syncing Live Data...</div>
+    <div class="banner" id="banner">Syncing live data…</div>
   </div>
   <div class="tab-bar" id="tabBar"></div>
-  <div id="area"></div>
+  <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// ⚙️ SETUP & CONFIG
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+//  CONFIG — Apps Script proxy URL (handles all sheets, no CORS)
+// ═══════════════════════════════════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
-const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
 
+// ═══════════════════════════════════════════════════════════════
+//  TAB DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
 const TABS = [
-  {name:'Leaderboard', key:'leaderboard', type:'lb'},
-  {name:'Your Report Card', key:'reportcard', type:'rc'},
-  {name:'Match Scores', key:'matchscores', type:'dt'},
-  {name:'SS Scores', key:'ssscores', type:'dt'},
-  {name:'Daily Score', key:'dailyscore', type:'dt'},
+  {name:'Leaderboard',       key:'leaderboard',  type:'lb'},
+  {name:'Your Report Card',  key:'reportcard',   type:'rc'},
+  {name:'Match Scores',      key:'matchscores',  type:'dt'},
+  {name:'SS Scores',         key:'ssscores',     type:'dt'},
+  {name:'Daily Score',       key:'dailyscore',   type:'dt'},
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-// CLEAN TAB MAPPING CONFIG
-const DT_CONFIG = {
-  matchscores: { name: 1, total: 2 },
-  ssscores: { name: 1, total: 2 },
-  dailyscore: { name: 1, total: 2 },
-  playerpoints: { name: 2, total: 3 }
+// ═══════════════════════════════════════════════════════════════
+//  LEADERBOARD COLUMN MAP
+//  Confirmed from live sheet fetch:
+//  Col A(0)=empty  B(1)=rank  C(2)=arrow  D(3)=name
+//  E(4)=match  F(5)=bonus  G(6)=star  H(7)=duo
+//  I(8)=resurrector  J(9)=risk  K(10)=special
+//  L(11)=superBonus  M(12)=superSelector  N(13)=total
+//  (reward cols further right — O onwards)
+// ═══════════════════════════════════════════════════════════════
+const LC = {
+  rank:1, arrow:2, name:3,
+  match:4, bonus:5, star:6, duo:7,
+  resurrector:8, risk:9, special:10,
+  superBonus:11, superSelector:12, total:13,
+  // reward cols (may not exist in all rows)
+  dailyWin:15, weeklyWin:16, cumDaily:17, cumWeekly:18
 };
 
-// LEADERBOARD MAPPING (Col A to T)
-const LC = { 
-  rank: 0, arrow: 1, name: 2, match: 3, bonus: 4, star: 5, duo: 6, res: 7, 
-  risk: 8, spec: 9, supB: 10, sel: 11, total: 12,
-  dWin: 16, wWin: 17, cDWin: 18, cWWin: 19
+// ═══════════════════════════════════════════════════════════════
+//  REPORT CARD — row definitions (exact order from Image 2)
+// ═══════════════════════════════════════════════════════════════
+const GROUPS = [
+  {t:'🏏 Match Related', rows:[
+    {k:'match_pts',   i:'🏏', l:'Match Points'},
+    {k:'bonus_pts',   i:'🎯', l:'Bonus Points'},
+    {k:'risk_inc',    i:'⚡', l:'Risk Incentive'},
+    {k:'special_inc', i:'🎁', l:'Special Incentive'},
+    {k:'match_total', i:'➕', l:'Match Related Points', sub:1},
+  ]},
+  {t:'⭐ Star Performer', rows:[
+    {k:'sp_indiv',    i:'⭐', l:'SP Individual Performance'},
+    {k:'sp_linked',   i:'🔗', l:'Linked / Not Linked',          badge:1},
+    {k:'sp_pts',      i:'⭐', l:'SP Points (incl link effect)',  sub:1},
+  ]},
+  {t:'👥 Dynamic Duo', rows:[
+    {k:'dd1_indiv',   i:'👤', l:'D1 Individual Performance'},
+    {k:'dd2_indiv',   i:'👤', l:'D2 Individual Performance'},
+    {k:'dd_prem',     i:'💎', l:'Upfront Premium?',              badge:1},
+    {k:'dd_pts',      i:'👥', l:'DD Points (incl prem. effect)', sub:1},
+  ]},
+  {t:'🔁 The Resurrector', rows:[
+    {k:'res1',        i:'💀', l:'Ressurector 1'},
+    {k:'res2',        i:'💀', l:'Ressurector 2'},
+    {k:'resurrector', i:'🔁', l:'THE RESURRECTOR',               sub:1},
+  ]},
+  {t:'🔮 Super Selector', rows:[
+    {k:'wk',          i:'🧤', l:'Wicket Keeper'},
+    {k:'vc',          i:'🏅', l:'Vice Captain'},
+    {k:'captain',     i:'©️', l:'Captain'},
+    {k:'bat1',        i:'🏏', l:'Bat 1'},
+    {k:'bat2',        i:'🏏', l:'Bat 2'},
+    {k:'bat3',        i:'🏏', l:'Bat 3'},
+    {k:'bow1',        i:'🏐', l:'Bow 1'},
+    {k:'bow2',        i:'🏐', l:'Bow 2'},
+    {k:'bow3',        i:'🏐', l:'Bow 3'},
+    {k:'ar1',         i:'🔄', l:'All Rounder 1'},
+    {k:'ar2',         i:'🔄', l:'All Rounder 2'},
+    {k:'play1',       i:'▶️', l:'Play 1'},
+    {k:'play2',       i:'▶️', l:'Play 2'},
+    {k:'super_sel',   i:'🔮', l:'Super Selector', sub:1},
+  ]},
+];
+
+// RC label → key (used by proxy to return structured scoreMap)
+// This is also the client-side fallback label map
+const LMAP = {
+  'match points':'match_pts','bonus points':'bonus_pts',
+  'risk incentive':'risk_inc','special incentive':'special_inc',
+  'match related points':'match_total',
+  'sp individual performance':'sp_indiv',
+  'linked / not linked':'sp_linked','linked/not linked':'sp_linked',
+  'sp points (incl link effect)':'sp_pts',
+  'd1 individual performance':'dd1_indiv',
+  'd2 individual performance':'dd2_indiv',
+  'upfront premium?':'dd_prem','upfront premium':'dd_prem',
+  'dd points (incl prem. effect)':'dd_pts',
+  'ressurector 1':'res1','resurrector 1':'res1',
+  'ressurector 2':'res2','resurrector 2':'res2',
+  'the resurrector':'resurrector',
+  'wicket keeper':'wk','vice captain':'vc','captain':'captain',
+  'bat 1':'bat1','bat 2':'bat2','bat 3':'bat3',
+  'bow 1':'bow1','bow 2':'bow2','bow 3':'bow3',
+  'all rounder 1':'ar1','all rounder 2':'ar2',
+  'play 1':'play1','play 2':'play2','super selector':'super_sel',
 };
 
-let cur = TABS[0], players = [], rcName = '', rcMatch = 7;
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+let cur     = TABS[0];
+let players = [];
+let rcName  = '';
+let rcMatch = 7;
 
-// ═══════════════════════════════════════════════════
-// 🚀 CORE APP ENGINE
-// ═══════════════════════════════════════════════════
-async function load(){
+// Simple cache — 80 users share one proxy; client caches to reduce calls
+const CACHE = {};
+const TTL   = 60000; // 60 seconds
+
+// ═══════════════════════════════════════════════════════════════
+//  API HELPER (with cache)
+// ═══════════════════════════════════════════════════════════════
+async function apiGet(params) {
+  const cacheKey = JSON.stringify(params);
+  const now = Date.now();
+  if (CACHE[cacheKey] && now - CACHE[cacheKey].ts < TTL) return CACHE[cacheKey].d;
+
+  const qs  = Object.entries(params).map(([k,v]) => k+'='+encodeURIComponent(v)).join('&');
+  const res = await fetch(API + '?' + qs);
+  if (!res.ok) throw new Error('Server error ' + res.status);
+  const d = await res.json();
+  if (d.error) throw new Error(d.error);
+
+  CACHE[cacheKey] = {d, ts: now};
+  return d;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════════════
+function renderTabs() {
+  document.getElementById('tabBar').innerHTML = TABS.map(t =>
+    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="switchTab('${t.name}')">${t.name}</button>`
+  ).join('');
+}
+
+function switchTab(n) {
+  cur = TABS.find(t => t.name === n);
   renderTabs();
-  document.getElementById('area').innerHTML = '<div class="loading"><div class="spinner"></div>Updating...</div>';
-  try {
-    const res = await fetch(`${API}?id=${SHEET_ID}&tab=${cur.key}`);
-    const d = await res.json();
-    
-    updateBanner(d.rows);
+  loadContent();
+}
 
+// ═══════════════════════════════════════════════════════════════
+//  ROUTER
+// ═══════════════════════════════════════════════════════════════
+async function loadContent() {
+  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
+  try {
     if (cur.type === 'lb') {
+      const d = await apiGet({tab:'leaderboard'});
       buildPlayers(d.rows);
       renderLB(d.rows);
     } else if (cur.type === 'rc') {
+      // Auto-load player list from leaderboard if not already loaded
+      if (players.length === 0) {
+        try { const d = await apiGet({tab:'leaderboard'}); buildPlayers(d.rows); } catch(e){}
+      }
       renderRCShell();
     } else {
+      const d = await apiGet({tab: cur.key});
       renderDT(d.rows);
     }
-  } catch(e) { document.getElementById('area').innerHTML = '<div class="loading">Connection Error. Refresh.</div>'; }
+  } catch(e) {
+    set(`<div class="err-box"><strong>Error loading data</strong><br>${esc(e.message)}</div>`);
+  }
 }
 
-function updateBanner(rows) {
-  if (!rows || !rows[2]) return;
-  const matchRowText = rows[2].join(' ');
-  const m = matchRowText.match(/Match\s*#?\s*(\d+)/i);
-  if (m) document.getElementById('banner').innerText = `Data Updated till Match ${m[1]}`;
-}
-
-function renderTabs(){
-  document.getElementById('tabBar').innerHTML = TABS.map(t => `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`).join('');
-}
-
-function buildPlayers(rows){
-  players = rows.filter(r => r && !isNaN(parseInt(r[LC.rank]))).map(r => ({
-    rank: parseInt(r[LC.rank]), name: String(r[LC.name] || '').trim(), total: pn(r[LC.total])
-  })).sort((a,b) => a.rank - b.rank);
-}
-
-// 🏆 TICKER-STYLE LEADERBOARD
-function renderLB(rows){
-  let h = `<div class="tw"><table><thead><tr><th class="sc1">Rank & Name</th><th class="sc2">Total</th><th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurrect</th><th>Risk</th><th>Special</th><th>Sup Bonus</th><th>Selector</th><th>Daily Win</th><th>Weekly Win</th><th>Cum Daily</th><th>Cum Weekly</th></tr></thead><tbody>`;
-  
-  rows.filter(r => !isNaN(parseInt(r[LC.rank]))).forEach(row => {
+// ═══════════════════════════════════════════════════════════════
+//  LEADERBOARD
+// ═══════════════════════════════════════════════════════════════
+function buildPlayers(rows) {
+  players = [];
+  for (const row of rows) {
     const rn = parseInt(row[LC.rank]);
-    const arrow = String(row[LC.arrow] || '');
-    const arrowColor = arrow.includes('▲') ? '#4ade80' : arrow.includes('▼') ? '#f87171' : '#94a3b8';
-    
+    const nm = String(row[LC.name] || '').trim();
+    if (!nm || isNaN(rn) || nm === 'Participant' || nm === 'null') continue;
+    const ar = String(row[LC.arrow] || '');
+    players.push({
+      rank:          rn,
+      name:          nm,
+      change:        ar.includes('▲') ? 'up' : ar.includes('▼') ? 'dn' : '',
+      arrowRaw:      ar,
+      match:         pn(row[LC.match]),
+      bonus:         pn(row[LC.bonus]),
+      star:          pn(row[LC.star]),
+      duo:           pn(row[LC.duo]),
+      resurrector:   pn(row[LC.resurrector]),
+      risk:          pn(row[LC.risk]),
+      special:       pn(row[LC.special]),
+      superBonus:    pn(row[LC.superBonus]),
+      superSelector: pn(row[LC.superSelector]),
+      total:         pn(row[LC.total]),
+    });
+  }
+  players.sort((a, b) => a.rank - b.rank);
+}
+
+function renderLB(rows) {
+  // Detect banner match number
+  for (const row of rows.slice(0, 5)) {
+    const m = row.join(' ').match(/match\s*#?\s*(\d+)/i);
+    if (m) { document.getElementById('banner').textContent = 'Data Updated till Match ' + m[1]; break; }
+  }
+
+  // Table header
+  let h = `<div class="tw"><table><thead><tr>
+    <th class="sc1">Rank &amp; Name</th>
+    <th class="sc2">Total</th>
+    <th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th>
+    <th>Resurrect</th><th>Risk</th><th>Special</th>
+    <th>Sup Bonus</th><th>Selector</th>
+  </tr></thead><tbody>`;
+
+  players.forEach(p => {
+    const rankCls = p.rank===1?'rank-gold':p.rank===2?'rank-silver':p.rank===3?'rank-bronze':'';
+    const arrCls  = p.change==='up'?'arr-up':p.change==='dn'?'arr-dn':'arr-eq';
+    const an      = (p.arrowRaw.match(/\d+/) || [''])[0];
+    const arrTxt  = p.change==='up'?`▲${an}`:p.change==='dn'?`▼${an}`:'◆';
+
     h += `<tr>
-      <td class="sc1"><span style="color:#fbbf24;font-weight:800;margin-right:10px">#${rn}</span><span style="color:${arrowColor};font-size:9px;margin-right:8px">${arrow}</span>${row[LC.name]}</td>
-      <td class="sc2">${fmt(row[LC.total])}</td>
-      <td>${fmt(row[4])}</td><td>${fmt(row[5])}</td><td>${fmt(row[6])}</td><td>${fmt(row[7])}</td><td>${fmt(row[8])}</td><td>${fmt(row[9])}</td><td>${fmt(row[10])}</td><td>${fmt(row[11])}</td><td>${fmt(row[12])}</td>
-      <td>${fmt(row[LC.dWin])}</td><td>${fmt(row[LC.wWin])}</td><td>${fmt(row[LC.cDWin])}</td><td>${fmt(row[LC.cWWin])}</td>
+      <td class="sc1">
+        <span class="${rankCls}" style="margin-right:8px">#${p.rank}</span>
+        <span class="${arrCls}" style="margin-right:8px">${arrTxt}</span>
+        ${esc(p.name)}
+      </td>
+      <td class="sc2">${fmtCell(p.total)}</td>
+      <td>${fmtCell(p.match)}</td>
+      <td>${fmtCell(p.bonus)}</td>
+      <td>${fmtCell(p.star)}</td>
+      <td>${fmtCell(p.duo)}</td>
+      <td>${fmtCell(p.resurrector)}</td>
+      <td>${fmtCell(p.risk)}</td>
+      <td>${fmtCell(p.special)}</td>
+      <td>${fmtCell(p.superBonus)}</td>
+      <td>${fmtCell(p.superSelector)}</td>
     </tr>`;
   });
-  document.getElementById('area').innerHTML = h + '</tbody></table></div>';
+
+  set(h + '</tbody></table></div>');
 }
 
-// 📋 CLEAN DATA TABLE ENGINE
-function renderDT(rows){
-  if (!rows || rows.length < 3) return;
+// ═══════════════════════════════════════════════════════════════
+//  DATA TABLE (generic — Match Scores, SS Scores, Daily, Player Points)
+// ═══════════════════════════════════════════════════════════════
+function renderDT(rows) {
+  if (!rows || rows.length < 2) { set('<div class="loading">No data found.</div>'); return; }
+  const isP = cur.key === 'playerpoints';
 
-  const cfg = DT_CONFIG[cur.key] || { name: 1, total: 2 };
-  const hdrs = rows[1]; // Row 2 Header
+  // Find header row = first row with ≥3 non-empty cells
+  let hi = 0;
+  for (let i = 0; i < Math.min(5, rows.length); i++) {
+    if (rows[i].filter(c => String(c||'').trim()).length >= 3) { hi = i; break; }
+  }
+  const hdrs = rows[hi];
+  const data  = rows.slice(hi + 1).filter(r => r.some(c => String(c||'').trim()));
 
   let h = '<div class="tw"><table><thead><tr>';
-
-  // Ignore Column A (index 0), start loop from index 1 (Column B)
-  for (let i = 1; i < hdrs.length; i++) {
-    let cls = '';
-    if (i === cfg.name) cls = 'sc1';
-    if (i === cfg.total) cls = 'sc2';
-    h += `<th class="${cls}">${hdrs[i] || '—'}</th>`;
-  }
+  hdrs.forEach((hd, i) => {
+    if (isP) { if (i===0||i===1) return; } else { if (i===0) return; }
+    let cls = '', lbl = String(hd||'').trim();
+    if (isP) { if(i===2){cls='sc1';} if(i===3){cls='sc2';lbl='Total Score';} }
+    else     { if(i===1){cls='sc1';} if(i===2){cls='sc2';} }
+    h += `<th class="${cls}">${esc(lbl)}</th>`;
+  });
   h += '</tr></thead><tbody>';
 
-  // Skip spacing/header, start from Row 3
-  rows.slice(2).forEach(row => {
-    if (!row || !row[cfg.name]) return;
+  data.forEach(row => {
     h += '<tr>';
-    for (let i = 1; i < hdrs.length; i++) {
+    row.forEach((c, i) => {
+      if (isP) { if (i===0||i===1) return; } else { if (i===0) return; }
       let cls = '';
-      if (i === cfg.name) cls = 'sc1';
-      if (i === cfg.total) cls = 'sc2';
-      h += `<td class="${cls}">${fmt(row[i])}</td>`;
-    }
+      if (isP) { if(i===2) cls='sc1'; if(i===3) cls='sc2'; }
+      else     { if(i===1) cls='sc1'; if(i===2) cls='sc2'; }
+      let v = String(c||'').trim();
+      if (v==='null'||v==='undefined') v = '—';
+      h += `<td class="${cls}">${esc(v)}</td>`;
+    });
     h += '</tr>';
   });
-  document.getElementById('area').innerHTML = h + '</tbody></table></div>';
+
+  set(h + '</tbody></table></div>');
 }
 
-// 🎫 DUAL-COLUMN REPORT CARD
-function renderRCShell(){
-  let names = players.map(p=>`<option value="${p.name}" ${p.name===rcName?'selected':''}>${p.name}</option>`).join('');
-  let matches = ''; for(let i=1;i<=74;i++) matches+=`<option value="${i}" ${i===rcMatch?'selected':''}>Match ${i}</option>`;
-  document.getElementById('area').innerHTML = `<div class="rc-container"><div class="rc-bar"><div style="flex:1"><select class="rcsel" id="selN">${names}</select></div><div style="flex:0.5"><select class="rcsel" id="selM">${matches}</select></div><button class="rcbtn" onclick="fetchRC()">▶ View Report Card</button></div><div id="rcArea"></div></div>`;
-}
-
-async function fetchRC(){
-  rcName = document.getElementById('selN').value; rcMatch = document.getElementById('selM').value;
-  document.getElementById('rcArea').innerHTML = '<div class="spinner"></div>';
-  try {
-    const d = await fetch(`${API}?id=${SHEET_ID}&tab=reportcard`).then(r => r.json());
-    const g = d.rows || [];
-    let col = -1;
-    for(let c=0; c < (g[2] ? g[2].length : 0); c++) { if(String(g[2][c]).trim() == rcMatch) { col = c; break; } }
-    
-    const mapping = [
-      {l:'Match Related Points', r:9, sub:1}, {l:'Match Points', r:4, dual:1}, {l:'Bonus Points', r:5}, {l:'Risk Incentive', r:6}, {l:'Special Incentive', r:7},
-      {l:'SP Points (incl link effect)', r:15, sub:1}, {l:'Star Performer', r:12, dual:1}, {l:'Linked?', r:13},
-      {l:'DD Points (incl prem. effect)', r:21, sub:1}, {l:'Duo 1', r:17, dual:1}, {l:'Duo 2', r:18, dual:1}, {l:'Premium?', r:19},
-      {l:'THE RESURRECTOR', r:25, sub:1}, {l:'Resurrector 1', r:23, dual:1}, {l:'Resurrector 2', r:24, dual:1},
-      {l:'Super Selector Score', r:42, sub:1},
-      {l:'Wicket Keeper', r:28, dual:1}, {l:'Vice Captain', r:29, dual:1}, {l:'Captain', r:30, dual:1},
-      {l:'Bat 1', r:31, dual:1}, {l:'Bat 2', r:32, dual:1}, {l:'Bat 3', r:33, dual:1},
-      {l:'Bow 1', r:34, dual:1}, {l:'Bow 2', r:35, dual:1}, {l:'Bow 3', r:36, dual:1},
-      {l:'AR 1', r:37, dual:1}, {l:'AR 2', r:38, dual:1}, {l:'Play 1', r:39, dual:1}, {l:'Play 2', r:40, dual:1}
-    ];
-
-    let rowsHTML = '';
-    mapping.forEach(item => {
-      let nameVal = item.dual && col > -1 ? (g[item.r] ? g[item.r][col] || '' : '') : '';
-      let scoreVal = col > -1 ? (g[item.r] ? g[item.r][col+1] || '—' : '—') : '—';
-      rowsHTML += `<div class="rr ${item.sub?'sub':''}"><span class="rl">${item.l}</span><span class="rd">${nameVal}</span><span class="rv ${pn(scoreVal)<0?'neg':''} ${item.sub?'gold':''}">${fmt(scoreVal)}</span></div>`;
+// ═══════════════════════════════════════════════════════════════
+//  REPORT CARD — SHELL (dropdowns)
+// ═══════════════════════════════════════════════════════════════
+function renderRCShell() {
+  let no = '<option value="">— Select your name —</option>';
+  if (players.length === 0) {
+    no += '<option disabled>Loading names…</option>';
+  } else {
+    players.forEach(p => {
+      no += `<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;
     });
+  }
+  let mo = '';
+  for (let m = 1; m <= 74; m++) mo += `<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
 
-    const pl = players.find(p=>p.name===rcName);
-    const mTotal = col > -1 ? (g[44] ? g[44][col+1] : '—') : '—'; // Cell J45 = Index 44
+  set(`<div class="rc-container">
+    <div class="rc-bar">
+      <div class="rcg">
+        <div class="rcl">Player</div>
+        <select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select>
+      </div>
+      <div class="rcg" style="max-width:180px">
+        <div class="rcl">Match</div>
+        <select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select>
+      </div>
+      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
+    </div>
+    <div id="rcA">
+      <div class="rccard"><div class="rce">
+        <span class="rce-i">📋</span>
+        <div class="rce-t">Select player &amp; match</div>
+        <div class="rce-s">Pick a name and match number above, then tap <strong>View</strong>.</div>
+      </div></div>
+    </div>
+  </div>`);
+}
 
-    document.getElementById('rcArea').innerHTML = `
-      <div class="rccard"><div class="rchero"><div class="rcav">${rcName[0]}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Match ${rcMatch} Analysis</div></div><div style="margin-left:auto"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:8px;text-transform:uppercase">Rank</div></div></div>
-        <div class="gh">Details</div>
-        ${rowsHTML}
-        <div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv gold ${pn(mTotal)<0?'neg':''}" style="font-size:18px">${fmt(mTotal)}</span></div>
-        <div class="rr tot"><span class="rl">Season Cumulative Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+// ═══════════════════════════════════════════════════════════════
+//  REPORT CARD — LOAD (calls proxy with player+match params)
+// ═══════════════════════════════════════════════════════════════
+async function loadRC() {
+  rcName  = document.getElementById('rcSN').value;
+  rcMatch = parseInt(document.getElementById('rcSM').value);
+
+  if (!rcName) {
+    setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');
+    return;
+  }
+
+  const btn = document.getElementById('rcb');
+  btn.disabled = true; btn.textContent = '…';
+
+  try {
+    // ── KEY: proxy does server-side parsing, returns clean scoreMap ──────────
+    const d = await apiGet({tab:'reportcard', player:rcName, match:rcMatch});
+
+    // If proxy returned structured data (new proxy v2)
+    if (d.scoreMap !== undefined) {
+      renderRC(d.scoreMap, d.chipTotals||{}, d.playerCol >= 0, d.matchCol >= 0);
+      return;
+    }
+
+    // ── Fallback: if old proxy (returns raw rows), parse client-side ──────────
+    const g = d.rows || [];
+    const sm = {}, ct = {};
+    let nR=-1, nC=-1, mR=-1, mC=-1;
+    const ms = String(rcMatch);
+
+    // find name col
+    for (let r=0;r<Math.min(10,g.length);r++){
+      for (let c=0;c<g[r].length;c++){
+        if (String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nR=r;nC=c;break;}
+      }
+      if(nC>=0)break;
+    }
+    // find match col
+    for (let r=0;r<Math.min(10,g.length);r++){
+      for (let c=0;c<g[r].length;c++){
+        const v=String(g[r][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();
+        if(v===ms){mR=r;mC=c;break;}
+      }
+      if(mC>=0)break;
+    }
+    // chip totals
+    if(mR>=0){
+      for(let c=0;c<(g[mR]||[]).length;c++){
+        const v=String(g[mR][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();
+        const mn=parseInt(v);
+        if(!isNaN(mn)&&mn>=1&&mn<=74){
+          let tot=0;
+          for(let r=mR+1;r<g.length;r++){const n=pn(g[r]?.[c]);if(!isNaN(n))tot+=n;}
+          ct[mn]=Math.round(tot);
+        }
+      }
+    }
+    // score map
+    const ds=Math.max(nR,mR)+1;
+    for(let r=ds;r<g.length;r++){
+      let lbl='';
+      for(let c=0;c<=Math.min(3,g[r].length-1);c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
+      const k=LMAP[lbl.toLowerCase()];
+      if(!k)continue;
+      let val='';
+      if(mC>=0&&g[r]?.[mC]!==undefined)val=g[r][mC]||'';
+      else if(nC>=0&&g[r]?.[nC]!==undefined)val=g[r][nC]||'';
+      sm[k]=String(val).trim();
+    }
+    renderRC(sm, ct, nC>=0, mC>=0);
+
+  } catch(e) {
+    setRC(`<div class="rccard"><div class="rce">
+      <span class="rce-i">❌</span>
+      <div class="rce-t">Error loading Report Card</div>
+      <div class="rce-s">${esc(e.message)}</div>
+    </div></div>`);
+  }
+
+  btn.disabled = false; btn.textContent = '▶ View';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  REPORT CARD — RENDER
+// ═══════════════════════════════════════════════════════════════
+function renderRC(sm, chipTotals, foundPlayer, foundMatch) {
+  const pl   = players.find(p => p.name === rcName);
+  const rank = pl ? pl.rank : 0;
+  const init = rcName.split(' ').map(w => w[0]||'').join('').slice(0,2).toUpperCase();
+
+  // Chip strip
+  const mNums = Object.keys(chipTotals).map(Number).sort((a,b)=>a-b);
+  let chips = '';
+  if (mNums.length > 0) {
+    chips = `<div class="cw">
+      <div class="ct">Match Breakdown</div>
+      <div class="chips">
+        ${mNums.map(m => {
+          const s  = chipTotals[m] || 0;
+          const vc = s>0?'pos':s<0?'neg':'';
+          return `<div class="chip ${m===rcMatch?'on':''}" onclick="rcJ(${m})">
+            <div class="cl">M${m}</div>
+            <div class="cv ${vc}">${s>0?'+':''}${s||'—'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Warning if player/match not found
+  let warn = '';
+  if (!foundPlayer) warn = `<div class="warn">⚠ Player name not found in Report Card sheet. Names must match exactly.</div>`;
+  else if (!foundMatch) warn = `<div class="warn">⚠ Match ${rcMatch} data not available yet in Report Card sheet.</div>`;
+
+  // Score rows
+  let rows = '';
+  GROUPS.forEach(grp => {
+    rows += `<div class="gh">${grp.t}</div>`;
+    grp.rows.forEach(rd => {
+      const raw = sm[rd.k] || '';
+      const num = pn(raw);
+      const isN = !isNaN(num);
+      let vh = '';
+
+      if (rd.badge) {
+        if (/yes|linked|true/i.test(raw))   vh = `<span class="badge yes">${esc(raw)}</span>`;
+        else if (/no|not|false/i.test(raw)) vh = `<span class="badge no">${esc(raw)}</span>`;
+        else if (raw)                        vh = `<span class="badge neu">${esc(raw)}</span>`;
+        else                                 vh = `<span class="rv dim">—</span>`;
+      } else if (isN) {
+        const cls = rd.sub ? 'gold' : num>0?'pos':num<0?'neg':'dim';
+        vh = `<span class="rv ${cls}">${num===0?'—':fmtS(num)}</span>`;
+      } else {
+        vh = `<span class="rv dim">${esc(raw)||'—'}</span>`;
+      }
+
+      rows += `<div class="rr ${rd.sub?'sub':''}">
+        <span class="ri">${rd.i}</span>
+        <span class="rl">${rd.l}</span>
+        ${vh}
       </div>`;
-  } catch(e) { document.getElementById('rcArea').innerHTML = "Error loading Report Card."; }
+    });
+  });
+
+  setRC(`<div class="rccard">
+    <div class="rchero">
+      <div class="rcav">${init}</div>
+      <div>
+        <div class="rchn">${esc(rcName)}</div>
+        <div class="rchs">Report Card · Match ${rcMatch}</div>
+      </div>
+      ${rank>0?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
+    </div>
+    ${chips}
+    ${warn}
+    <div class="gh" style="border-top:none;color:#94a3b8">Score Breakdown — Match ${rcMatch}</div>
+    ${rows}
+    <div class="rr tot">
+      <span class="ri">🏆</span>
+      <span class="rl">Total (Cumulative)</span>
+      <span class="rv grand">${pl ? fmt(pl.total) : '—'}</span>
+    </div>
+  </div>`);
 }
 
-// 🔢 MATH & FORMATTING HELPERS
-function pn(v){ if(!v || v==='—' || v==='-') return 0; return parseFloat(String(v).replace(/,/g,'').replace(/[()]/g,'')) || 0; }
-function fmt(v){
-  if(!v || v==='0' || v===0 || v==='-') return '<span style="color:#64748b">—</span>';
-  const val = pn(v);
-  if (isNaN(val)) return `<span style="color:#fff">${v}</span>`;
-  return val < 0 ? `<span class="neg">(${Math.abs(val).toLocaleString()})</span>` : val.toLocaleString();
-}
-function go(n){ cur = TABS.find(t=>t.name===n); load(); }
+function rcJ(m) { rcMatch=m; document.getElementById('rcSM').value=m; loadRC(); }
+function setRC(h){ document.getElementById('rcA').innerHTML=h; }
+function set(h)  { document.getElementById('area').innerHTML=h; }
 
-load();
+// ═══════════════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Parse display number: "1,200" → 1200 | "(150)" → -150
+function pn(v) {
+  if (v===null||v===undefined||v==='') return NaN;
+  const s = String(v).trim().replace(/,/g,'');
+  if (/^\([\d.]+\)$/.test(s)) return -parseFloat(s.slice(1,-1));
+  return parseFloat(s);
+}
+
+// Format number for display (no sign)
+function fmt(n) {
+  const x = typeof n==='number' ? n : pn(n);
+  return isNaN(x) ? String(n||'—') : x.toLocaleString('en-US');
+}
+
+// Format with sign: +1,200 | -150 | — for zero
+function fmtS(n) {
+  if (n===0) return '—';
+  return (n>0?'+':'') + n.toLocaleString('en-US');
+}
+
+// Format for table cells — dim zero values
+function fmtCell(n) {
+  if (isNaN(n)||n===0) return '<span class="dim-val">—</span>';
+  if (n<0) return `<span class="neg-val">(${Math.abs(n).toLocaleString('en-US')})</span>`;
+  return n.toLocaleString('en-US');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+renderTabs();
+loadContent();
+// Auto-refresh leaderboard every 2 minutes silently
+setInterval(() => { if (cur.type==='lb') loadContent(); }, 120000);
 </script>
 </body>
 </html>
