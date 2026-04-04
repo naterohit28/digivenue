@@ -16,15 +16,24 @@
     .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-size:13px}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
     
+    /* Global Table & Leaderboard Ticker */
     .tw{overflow-x:auto;background:rgba(15,23,42,0.6);border-radius:10px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
-    th,td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
-    th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:11px}
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
+    th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:11px;letter-spacing:0.5px}
     
-    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:190px}
-    .sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:90px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
+    /* Fixed Column Styles */
+    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:160px}
+    .sc2{position:sticky;left:160px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:90px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
     th.sc1,th.sc2{z-index:15;background:#0f172a}
+    tr:hover td{background:rgba(255,255,255,0.03)}
 
+    /* Leaderboard Specific Compact Row */
+    .lb-row td { padding: 12px; font-family: 'Inter', sans-serif; }
+    .rank-cell { width: 35px; text-align: center; font-weight: 800; color: #fbbf24; }
+    .name-cell { font-weight: 700; color: #fff; }
+
+    /* Report Card Alignment */
     .rc-container { max-width: 850px; margin: 0 auto; }
     .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:15px}
     .rcg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
@@ -33,19 +42,20 @@
     .rcbtn{height:38px;padding:0 20px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
     
     .rccard{background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden}
-    .rchero{background:rgba(251,191,36,0.12);padding:15px 20px;display:flex;align-items:center;gap:15px;border-bottom:1px solid rgba(251,191,36,0.2)}
+    .rchero{background:rgba(251,191,36,0.1);padding:15px 20px;display:flex;align-items:center;gap:15px;border-bottom:1px solid rgba(251,191,36,0.2)}
     .rcav{width:45px;height:45px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#0f172a}
     .rchn{font-size:20px;font-weight:700;color:#fff}
     .rcrn{font-size:32px;font-weight:800;color:#fbbf24;line-height:1}
 
-    .rr{display:flex;justify-content:space-between;align-items:center;padding:8px 20px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .rr{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,0.03)}
     .rl{font-size:13px;color:#cbd5e1;font-weight:500; flex:1}
     .rd{font-size:12px;color:#94a3b8; text-align:right; margin-right: 15px; font-style: italic; max-width: 250px; overflow: hidden; text-overflow: ellipsis;}
     .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fff;text-align:right;width:80px}
+    .rv.dim{color:#64748b;font-weight:400}
     
     .gh{background:rgba(255,255,255,0.05);padding:8px 20px;font-size:10px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px}
-    .rr.sub{background:rgba(251,191,36,0.06); border-top:1px solid rgba(251,191,36,0.1)}
-    .rr.tot{background:rgba(251,191,36,0.2);padding:15px 20px}
+    .rr.sub{background:rgba(251,191,36,0.05); border-top:1px solid rgba(251,191,36,0.1)}
+    .rr.tot{background:rgba(251,191,36,0.15);padding:15px 20px}
     .rv.grand{font-size:24px;color:#fbbf24}
 
     .loading{text-align:center;padding:30px;color:#94a3b8}
@@ -65,34 +75,29 @@
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
-const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
-
 const TABS = [
-  {name:'Leaderboard', gid:'1775142554', type:'lb'},
-  {name:'Your Report Card', gid:'1383665756', type:'rc'},
-  {name:'Match Scores', gid:'1509870547', type:'dt'},
-  {name:'SS Scores', gid:'130216061', type:'dt'},
-  {name:'Daily Score', gid:'1884747051', type:'dt'},
-  {name:'IPL Player Points', gid:'1991041599', type:'dt'},
+  {name:'Leaderboard', key:'leaderboard', type:'lb'},
+  {name:'Your Report Card', key:'reportcard', type:'rc'},
+  {name:'Match Scores', key:'matchscores', type:'dt'},
+  {name:'SS Scores', key:'ssscores', type:'dt'},
+  {name:'Daily Score', key:'dailyscore', type:'dt'},
+  {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-// Based on image_8f853c.png: A=0(Rank), B=1(Arrow), C=2(Name), D=3(Match)... M=12(Total)
-const LC = { rank: 0, arrow: 1, name: 2, match: 3, bonus: 4, star: 5, duo: 6, res: 7, risk: 8, spec: 9, supB: 10, sel: 11, total: 12 };
+const LC={rank:1,name:3,total:13,match:4,bonus:5,star:6,duo:7,resurrector:8,risk:9,special:10,supBonus:11,supSel:12};
 
 let cur=TABS[0], players=[], rcName='', rcMatch=7;
 
 async function load(){
   renderTabs();
-  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div>Crunching Stats...</div>';
+  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div>Loading...</div>';
   try {
-    const res = await fetch(`${API}?id=${SHEET_ID}&gid=${cur.gid}`);
+    const res = await fetch(`${API}?tab=${cur.key}`);
     const d = await res.json();
-    if(!d.rows || d.rows.length === 0) throw new Error("No data returned");
-    
     if(cur.type==='lb'){ buildPlayers(d.rows); renderLB(d.rows); }
     else if(cur.type==='rc'){ renderRCShell(); }
     else renderDT(d.rows);
-  } catch(e) { document.getElementById('area').innerHTML='<div class="loading">Connection Error. Please Refresh.</div>'; }
+  } catch(e) { document.getElementById('area').innerHTML='Data Error'; }
 }
 
 function renderTabs(){
@@ -101,53 +106,47 @@ function renderTabs(){
 
 function buildPlayers(rows){
   players = rows.filter(r => parseInt(r[LC.rank]) > 0).map(r => ({
-    rank: parseInt(r[LC.rank]), name: String(r[LC.name] || '—').trim(), total: pn(r[LC.total])
+    rank: parseInt(r[LC.rank]), name: String(r[LC.name]).trim(), total: pn(r[LC.total])
   })).sort((a,b)=>a.rank-b.rank);
 }
 
 function renderLB(rows){
-  const bRow = rows.find(r => r.some(c => String(c).includes('Match')));
-  if(bRow) {
-    const matchTxt = String(bRow).join(' ').match(/Match #?\s*\d+/i);
-    if(matchTxt) document.getElementById('banner').innerText = 'Data Updated till ' + matchTxt[0];
-  }
+  const bRow = rows.find(r => String(r).includes('Match'));
+  if(bRow) document.getElementById('banner').innerText = 'Data Updated till ' + String(bRow).match(/Match \d+/)[0];
 
-  let h = '<div class="tw"><table><thead><tr>';
-  h += '<th class="sc1">Rank & Name</th><th class="sc2">Season Total</th>';
-  h += '<th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurrect</th><th>Risk</th><th>Special</th><th>Sup Bonus</th><th>Selector</th>';
-  h += '</tr></thead><tbody>';
-
+  let h = '<div class="tw"><table><thead><tr><th class="sc1">Rank & Name</th><th class="sc2">Total</th><th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurrect</th><th>Risk</th><th>Special</th><th>Sup Bonus</th><th>Selector</th></tr></thead><tbody>';
   rows.forEach(row => {
     const rn = parseInt(row[LC.rank]);
-    if(isNaN(rn)) return; 
-    const arrow = String(row[LC.arrow] || '');
-    const arrowColor = arrow.includes('▲') ? '#4ade80' : arrow.includes('▼') ? '#f87171' : '#94a3b8';
-    
-    h += `<tr><td class="sc1"><span style="color:#fbbf24;margin-right:8px">#${rn}</span><span style="color:${arrowColor};font-size:10px;margin-right:8px">${arrow}</span>${row[LC.name]}</td><td class="sc2">${fmt(row[LC.total])}</td><td>${fmt(row[LC.match])}</td><td>${fmt(row[LC.bonus])}</td><td>${fmt(row[LC.star])}</td><td>${fmt(row[LC.duo])}</td><td>${fmt(row[LC.res])}</td><td>${fmt(row[LC.risk])}</td><td>${fmt(row[LC.spec])}</td><td>${fmt(row[LC.supB])}</td><td>${fmt(row[LC.sel])}</td></tr>`;
+    if(isNaN(rn)) return;
+    h += `<tr class="lb-row">
+            <td class="sc1"><span class="rank-cell" style="margin-right:10px">#${rn}</span><span class="name-cell">${row[LC.name]}</span></td>
+            <td class="sc2">${fmt(row[LC.total])}</td>
+            <td>${fmt(row[LC.match])}</td><td>${fmt(row[LC.bonus])}</td><td>${fmt(row[LC.star])}</td><td>${fmt(row[LC.duo])}</td>
+            <td>${fmt(row[LC.resurrector])}</td><td>${fmt(row[LC.risk])}</td><td>${fmt(row[LC.special])}</td><td>${fmt(row[LC.supBonus])}</td><td>${fmt(row[LC.supSel])}</td>
+          </tr>`;
   });
   document.getElementById('area').innerHTML = h + '</tbody></table></div>';
 }
 
 function renderDT(rows){
-  // Dynamically find the first header row (skips empty rows at top)
-  let headerIndex = rows.findIndex(r => r.some(c => String(c).toLowerCase().includes('participant') || String(c).toLowerCase().includes('name')));
-  if(headerIndex === -1) headerIndex = 0;
-  
-  const isP = cur.name==='IPL Player Points';
+  const isP = cur.key==='playerpoints';
   let h = '<div class="tw"><table><thead><tr>';
-  const hdrs = rows[headerIndex];
+  const hdrs = rows[0];
   hdrs.forEach((hd,i)=>{
     if(isP ? (i<2) : (i===0 || i===3)) return;
-    let cls = ''; if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; } else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
+    let cls = '';
+    if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; }
+    else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
     h += `<th class="${cls}">${hd||''}</th>`;
   });
   h += '</tr></thead><tbody>';
-  rows.slice(headerIndex + 1).forEach(row => {
-    if(!row[LC.name] || row[LC.name] === 'Participant') return;
+  rows.slice(1).forEach(row => {
     h += '<tr>';
     row.forEach((c,i)=>{
       if(isP ? (i<2) : (i===0 || i===3)) return;
-      let cls = ''; if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; } else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
+      let cls = '';
+      if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; }
+      else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
       h += `<td class="${cls}">${c||'—'}</td>`;
     });
     h += '</tr>';
@@ -158,16 +157,19 @@ function renderDT(rows){
 function renderRCShell(){
   let names = players.map(p=>`<option value="${p.name}" ${p.name===rcName?'selected':''}>${p.name}</option>`).join('');
   let matches = ''; for(let i=1;i<=74;i++) matches+=`<option value="${i}" ${i===rcMatch?'selected':''}>Match ${i}</option>`;
-  document.getElementById('area').innerHTML = `<div class="rc-container"><div class="rc-bar"><div class="rcg"><div class="rcl">Participant</div><select class="rcsel" id="selN">${names}</select></div><div class="rcg"><div class="rcl">Match No.</div><select class="rcsel" id="selM">${matches}</select></div><button class="rcbtn" onclick="fetchRC()">▶ View Report Card</button></div><div id="rcArea"></div></div>`;
+  document.getElementById('area').innerHTML = `
+    <div class="rc-container">
+      <div class="rc-bar"><div class="rcg"><div class="rcl">Participant</div><select class="rcsel" id="selN">${names}</select></div><div class="rcg"><div class="rcl">Match No.</div><select class="rcsel" id="selM">${matches}</select></div><button class="rcbtn" onclick="fetchRC()">▶ View Report Card</button></div>
+      <div id="rcArea"></div>
+    </div>`;
 }
 
 async function fetchRC(){
   rcName = document.getElementById('selN').value; rcMatch = document.getElementById('selM').value;
   document.getElementById('rcArea').innerHTML = '<div class="spinner"></div>';
-  const d = await fetch(`${API}?id=${SHEET_ID}&gid=1383665756`).then(r=>r.json());
+  const d = await fetch(`${API}?tab=reportcard`).then(r=>r.json());
   const g = d.rows;
   let col = -1;
-  // Match number is in Row 3 (Index 2)
   for(let c=0; c<g[2].length; c++) { if(String(g[2][c]) == rcMatch) col = c; }
   
   const mapping = [
@@ -196,11 +198,17 @@ async function fetchRC(){
 
   const pl = players.find(p=>p.name===rcName);
   const matchTotal = col > -1 ? g[43][col+1] : '—';
-  document.getElementById('rcArea').innerHTML = `<div class="rccard"><div class="rchero"><div class="rcav">${rcName[0]}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Match Analysis · Match ${rcMatch}</div></div><div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:9px;text-transform:uppercase">Rank</div></div></div>${rows}<div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv gold" style="font-size:22px">${fmt(matchTotal)}</span></div><div class="rr tot"><span class="rl">Season Total Score</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div></div>`;
+  document.getElementById('rcArea').innerHTML = `
+    <div class="rccard">
+      <div class="rchero"><div class="rcav">${rcName[0]}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Match ${rcMatch}</div></div><div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:9px;text-transform:uppercase">Rank</div></div></div>
+      ${rows}
+      <div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800">MATCH GRAND TOTAL</span><span class="rv gold" style="font-size:20px">${fmt(matchTotal)}</span></div>
+      <div class="rr tot"><span class="rl">Season Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+    </div>`;
 }
 
 function pn(v){ if(!v || v==='—' || v==='-')return 0; return parseFloat(String(v).replace(/,/g,'')) || 0; }
-function fmt(v){ if(!v || v==='0' || v===0 || v === '-') return '<span style="color:#64748b">—</span>'; if(isNaN(pn(v))) return `<span style="color:#fff">${v}</span>`; return pn(v).toLocaleString(); }
+function fmt(v){ if(!v || v==='0' || v===0 || v === '-') return '<span class="dim">—</span>'; if(isNaN(pn(v))) return `<span style="color:#fff">${v}</span>`; return pn(v).toLocaleString(); }
 function go(n){ cur=TABS.find(t=>t.name===n); load(); }
 load();
 </script>
