@@ -9,31 +9,30 @@
     /* GLOBAL THEME */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
-    .wrap{max-width:1300px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);padding:15px}
+    .wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);padding:15px}
     
     /* HEADER & BANNER */
     .header{text-align:center;margin-bottom:15px}
     .header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
     .banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
     
-    /* TABS */
+    /* NAVIGATION */
     .tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:15px}
     .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:0.2s;font-size:12px}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
 
-    /* COMPACT TICKER TABLES */
+    /* TICKER TABLES & STICKY COLS */
     .tw{overflow:auto;background:rgba(15,23,42,0.6);border-radius:8px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
     th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
     th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:10px}
     
-    /* STICKY FREEZE PANES */
     .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:180px}
     .sc2{position:sticky;left:180px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:90px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
     th.sc1,th.sc2{z-index:15;background:#0f172a}
     tr:hover td{background:rgba(255,255,255,0.03)}
 
-    /* REPORT CARD COMPACT */
+    /* REPORT CARD */
     .rc-container{max-width:850px;margin:0 auto}
     .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
     .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px;border-radius:6px;width:100%;outline:none;font-size:13px}
@@ -43,16 +42,12 @@
     .rcav{width:40px;height:40px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#0f172a}
     .rchn{font-size:18px;font-weight:700;color:#fff}
     .rcrn{font-size:28px;font-weight:800;color:#fbbf24;line-height:1}
-
-    /* REPORT CARD ROWS */
     .rr{display:flex;justify-content:space-between;align-items:center;padding:7px 18px;border-bottom:1px solid rgba(255,255,255,0.03)}
     .rl{font-size:12px;color:#cbd5e1;flex:1}
     .rd{font-size:11px;color:#94a3b8;text-align:right;margin-right:15px;font-style:italic;max-width:220px;overflow:hidden;text-overflow:ellipsis}
     .rv{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#fff;text-align:right;width:70px}
     .rv.neg{color:#f87171 !important}
-    
     .gh{background:rgba(255,255,255,0.05);padding:6px 18px;font-size:9px;font-weight:700;color:#fbbf24;text-transform:uppercase}
-    .rv.gold{color:#fbbf24}
     .rv.grand{font-size:22px;color:#fbbf24}
 
     /* LOADING STATES */
@@ -72,9 +67,7 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// ⚙️ SETUP & CONFIG
-// ═══════════════════════════════════════════════════
+// ⚙️ SETUP
 const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
 const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
 
@@ -87,33 +80,17 @@ const TABS = [
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-// CLEAN TAB MAPPING CONFIG
-const DT_CONFIG = {
-  matchscores: { name: 1, total: 2 },
-  ssscores: { name: 1, total: 2 },
-  dailyscore: { name: 1, total: 2 },
-  playerpoints: { name: 2, total: 3 }
-};
-
-// LEADERBOARD MAPPING (Col A to T)
-const LC = { 
-  rank: 0, arrow: 1, name: 2, match: 3, bonus: 4, star: 5, duo: 6, res: 7, 
-  risk: 8, spec: 9, supB: 10, sel: 11, total: 12,
-  dWin: 16, wWin: 17, cDWin: 18, cWWin: 19
-};
-
 let cur = TABS[0], players = [], rcName = '', rcMatch = 7;
 
-// ═══════════════════════════════════════════════════
-// 🚀 CORE APP ENGINE
-// ═══════════════════════════════════════════════════
+// 🚀 CORE LOADING ENGINE
 async function load(){
   renderTabs();
-  document.getElementById('area').innerHTML = '<div class="loading"><div class="spinner"></div>Updating...</div>';
+  document.getElementById('area').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
   try {
     const res = await fetch(`${API}?id=${SHEET_ID}&tab=${cur.key}`);
     const d = await res.json();
     
+    // Update match banner from the first rows of Leaderboard/Dashboard data
     updateBanner(d.rows);
 
     if (cur.type === 'lb') {
@@ -124,14 +101,17 @@ async function load(){
     } else {
       renderDT(d.rows);
     }
-  } catch(e) { document.getElementById('area').innerHTML = '<div class="loading">Connection Error. Refresh.</div>'; }
+  } catch(e) { document.getElementById('area').innerHTML = "Failed to load data. Please refresh."; }
 }
 
 function updateBanner(rows) {
-  if (!rows || !rows[2]) return;
-  const matchRowText = rows[2].join(' ');
-  const m = matchRowText.match(/Match\s*#?\s*(\d+)/i);
-  if (m) document.getElementById('banner').innerText = `Data Updated till Match ${m[1]}`;
+  if (!rows) return;
+  // Scans for "Match #" text in the sheet to update the UI banner
+  const matchRow = rows.find(r => String(r).includes('Match'));
+  if (matchRow) {
+    const m = String(matchRow).match(/Match\s*#?\s*(\d+)/i);
+    if (m) document.getElementById('banner').innerText = `Data Updated till Match ${m[1]}`;
+  }
 }
 
 function renderTabs(){
@@ -139,64 +119,68 @@ function renderTabs(){
 }
 
 function buildPlayers(rows){
-  players = rows.filter(r => r && !isNaN(parseInt(r[LC.rank]))).map(r => ({
-    rank: parseInt(r[LC.rank]), name: String(r[LC.name] || '').trim(), total: pn(r[LC.total])
+  // Specifically for the Leaderboard mapping (Rank is Col A, Arrow Col B, Name Col C, Total Col M)
+  players = rows.filter(r => r && !isNaN(parseInt(r[0]))).map(r => ({
+    rank: parseInt(r[0]), name: String(r[2] || '').trim(), total: pn(r[12])
   })).sort((a,b) => a.rank - b.rank);
 }
 
-// 🏆 TICKER-STYLE LEADERBOARD
+// 🏆 TICKER LEADERBOARD
 function renderLB(rows){
   let h = `<div class="tw"><table><thead><tr><th class="sc1">Rank & Name</th><th class="sc2">Total</th><th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurrect</th><th>Risk</th><th>Special</th><th>Sup Bonus</th><th>Selector</th><th>Daily Win</th><th>Weekly Win</th><th>Cum Daily</th><th>Cum Weekly</th></tr></thead><tbody>`;
-  
-  rows.filter(r => !isNaN(parseInt(r[LC.rank]))).forEach(row => {
-    const rn = parseInt(row[LC.rank]);
-    const arrow = String(row[LC.arrow] || '');
+  rows.filter(r => !isNaN(parseInt(r[0]))).forEach(row => {
+    const rn = parseInt(row[0]);
+    const arrow = String(row[1] || '');
     const arrowColor = arrow.includes('▲') ? '#4ade80' : arrow.includes('▼') ? '#f87171' : '#94a3b8';
-    
     h += `<tr>
-      <td class="sc1"><span style="color:#fbbf24;font-weight:800;margin-right:10px">#${rn}</span><span style="color:${arrowColor};font-size:9px;margin-right:8px">${arrow}</span>${row[LC.name]}</td>
-      <td class="sc2">${fmt(row[LC.total])}</td>
-      <td>${fmt(row[4])}</td><td>${fmt(row[5])}</td><td>${fmt(row[6])}</td><td>${fmt(row[7])}</td><td>${fmt(row[8])}</td><td>${fmt(row[9])}</td><td>${fmt(row[10])}</td><td>${fmt(row[11])}</td><td>${fmt(row[12])}</td>
-      <td>${fmt(row[LC.dWin])}</td><td>${fmt(row[LC.wWin])}</td><td>${fmt(row[LC.cDWin])}</td><td>${fmt(row[LC.cWWin])}</td>
+      <td class="sc1"><span style="color:#fbbf24;font-weight:800;margin-right:10px">#${rn}</span><span style="color:${arrowColor};font-size:9px;margin-right:8px">${arrow}</span>${row[2]}</td>
+      <td class="sc2">${fmt(row[12])}</td>
+      <td>${fmt(row[3])}</td><td>${fmt(row[4])}</td><td>${fmt(row[5])}</td><td>${fmt(row[6])}</td><td>${fmt(row[7])}</td><td>${fmt(row[8])}</td><td>${fmt(row[9])}</td><td>${fmt(row[10])}</td><td>${fmt(row[11])}</td>
+      <td>${fmt(row[16])}</td><td>${fmt(row[17])}</td><td>${fmt(row[18])}</td><td>${fmt(row[19])}</td>
     </tr>`;
   });
   document.getElementById('area').innerHTML = h + '</tbody></table></div>';
 }
 
-// 📋 CLEAN DATA TABLE ENGINE
+// 📋 CLEAN DATA TABLE ENGINE (Optimized for index 0 and index 1)
 function renderDT(rows){
-  if (!rows || rows.length < 3) return;
+  if (!rows || rows.length < 2) return;
 
-  const cfg = DT_CONFIG[cur.key] || { name: 1, total: 2 };
-  const hdrs = rows[1]; // Row 2 Header
+  const cfg = { name: 0, total: 1 };
+  const hdrs = rows[0];
 
   let h = '<div class="tw"><table><thead><tr>';
 
-  // Ignore Column A (index 0), start loop from index 1 (Column B)
-  for (let i = 1; i < hdrs.length; i++) {
+  for (let i = 0; i < hdrs.length; i++) {
     let cls = '';
     if (i === cfg.name) cls = 'sc1';
     if (i === cfg.total) cls = 'sc2';
+
     h += `<th class="${cls}">${hdrs[i] || '—'}</th>`;
   }
+
   h += '</tr></thead><tbody>';
 
-  // Skip spacing/header, start from Row 3
-  rows.slice(2).forEach(row => {
-    if (!row || !row[cfg.name]) return;
+  rows.slice(1).forEach(row => {
+    if (!row) return;
+
     h += '<tr>';
-    for (let i = 1; i < hdrs.length; i++) {
+
+    for (let i = 0; i < hdrs.length; i++) {
       let cls = '';
       if (i === cfg.name) cls = 'sc1';
       if (i === cfg.total) cls = 'sc2';
-      h += `<td class="${cls}">${fmt(row[i])}</td>`;
+
+      h += `<td class="${cls}">${fmt(row[i] ?? '')}</td>`;
     }
+
     h += '</tr>';
   });
+
   document.getElementById('area').innerHTML = h + '</tbody></table></div>';
 }
 
-// 🎫 DUAL-COLUMN REPORT CARD
+// 🎫 REPORT CARD
 function renderRCShell(){
   let names = players.map(p=>`<option value="${p.name}" ${p.name===rcName?'selected':''}>${p.name}</option>`).join('');
   let matches = ''; for(let i=1;i<=74;i++) matches+=`<option value="${i}" ${i===rcMatch?'selected':''}>Match ${i}</option>`;
@@ -232,19 +216,12 @@ async function fetchRC(){
     });
 
     const pl = players.find(p=>p.name===rcName);
-    const mTotal = col > -1 ? (g[44] ? g[44][col+1] : '—') : '—'; // Cell J45 = Index 44
-
-    document.getElementById('rcArea').innerHTML = `
-      <div class="rccard"><div class="rchero"><div class="rcav">${rcName[0]}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Match ${rcMatch} Analysis</div></div><div style="margin-left:auto"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:8px;text-transform:uppercase">Rank</div></div></div>
-        <div class="gh">Details</div>
-        ${rowsHTML}
-        <div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv gold ${pn(mTotal)<0?'neg':''}" style="font-size:18px">${fmt(mTotal)}</span></div>
-        <div class="rr tot"><span class="rl">Season Cumulative Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
-      </div>`;
+    const mTotal = col > -1 ? (g[44] ? g[44][col+1] : '—') : '—'; 
+    document.getElementById('rcArea').innerHTML = `<div class="rccard"><div class="rchero"><div class="rcav">${rcName[0] || 'P'}</div><div><div class="rchn">${rcName}</div><div style="color:#94a3b8;font-size:11px">Match ${rcMatch} Analysis</div></div><div style="margin-left:auto;text-align:right"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:8px;text-transform:uppercase">Rank</div></div></div>${rowsHTML}<div class="rr sub" style="background:rgba(251,191,36,0.3)"><span class="rl" style="font-weight:800;color:#fff">MATCH GRAND TOTAL</span><span class="rv gold ${pn(mTotal)<0?'neg':''}" style="font-size:18px">${fmt(mTotal)}</span></div><div class="rr tot"><span class="rl">Season Total Score</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div></div>`;
   } catch(e) { document.getElementById('rcArea').innerHTML = "Error loading Report Card."; }
 }
 
-// 🔢 MATH & FORMATTING HELPERS
+// 🔢 HELPERS
 function pn(v){ if(!v || v==='—' || v==='-') return 0; return parseFloat(String(v).replace(/,/g,'').replace(/[()]/g,'')) || 0; }
 function fmt(v){
   if(!v || v==='0' || v===0 || v==='-') return '<span style="color:#64748b">—</span>';
@@ -253,7 +230,6 @@ function fmt(v){
   return val < 0 ? `<span class="neg">(${Math.abs(val).toLocaleString()})</span>` : val.toLocaleString();
 }
 function go(n){ cur = TABS.find(t=>t.name===n); load(); }
-
 load();
 </script>
 </body>
