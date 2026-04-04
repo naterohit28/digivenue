@@ -23,12 +23,20 @@
     }
 
     /* HEADER & TABS */
-    .header { text-align: center; margin-bottom: 20px; }
+    .header { text-align: center; margin-bottom: 25px; }
     .header h1 {
       font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; margin: 0;
       background: linear-gradient(to right, #fbbf24, #f59e0b);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       text-transform: uppercase; letter-spacing: 2px;
+    }
+    
+    /* NEW: GLOBAL DATA UPDATE BANNER */
+    .update-banner {
+      display: inline-block; margin-top: 12px;
+      background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5; padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
     }
     
     .tab-bar {
@@ -93,8 +101,9 @@
     tr:hover td { background: rgba(255,255,255,0.03); }
 
     /* The "Freeze Panes" CSS Classes */
-    .sticky-col1 { position: sticky; left: 0; background: #1e293b; z-index: 2; font-weight: 600; min-width: 130px; }
-    .sticky-col2 { position: sticky; left: 160px; background: #1e293b; z-index: 2; font-weight: 800; color: #fbbf24; min-width: 60px; border-right: 2px solid rgba(255,255,255,0.1); }
+    /* Col 1 = 180px wide. Col 2 starts at 180px. This prevents overlap! */
+    .sticky-col1 { position: sticky; left: 0; background: #1e293b; z-index: 2; font-weight: 600; min-width: 180px; max-width: 180px; }
+    .sticky-col2 { position: sticky; left: 180px; background: #1e293b; z-index: 2; font-weight: 800; color: #fbbf24; min-width: 80px; border-right: 2px solid rgba(255,255,255,0.1); text-align: center; }
     th.sticky-col1, th.sticky-col2 { z-index: 3; background: #0f172a; }
 
     /* IFRAME CONTAINER */
@@ -108,8 +117,8 @@
       .total-score { align-self: flex-start; margin-left: 60px; font-size: 24px;}
       .stats-grid { grid-template-columns: repeat(3, 1fr); }
       .dashboard-container { padding: 15px; }
-      .sticky-col1 { min-width: 100px; left: 0; }
-      .sticky-col2 { min-width: 50px; left: 130px; }
+      .sticky-col1 { min-width: 120px; max-width: 120px; left: 0; }
+      .sticky-col2 { min-width: 60px; left: 120px; }
     }
   </style>
 </head>
@@ -118,6 +127,7 @@
   <div class="dashboard-container">
     <div class="header">
       <h1>IPL 2026 Fantasy League</h1>
+      <div class="update-banner">Data is updated till Match 6</div>
     </div>
 
     <div class="tab-bar" id="tabBar"></div>
@@ -187,15 +197,15 @@
           content.innerHTML = `<div class="loading" style="color:#ef4444;">Error: ${error.message}</div>`;
         }
       } 
-      // REPORT CARD: Embedded specifically focusing on D2:R45 so dropdowns are clickable
+      // REPORT CARD: Fully zoomed into D2:R45 with native Google dropdowns active
       else if (currentTab.type === 'iframe') {
         content.innerHTML = '<div class="loading">Loading Report Card...</div>';
         const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${currentTab.gid}&rm=minimal&range=D2:R45`;
         
         setTimeout(() => {
           content.innerHTML = `
-            <div style="margin-bottom: 10px; font-size: 12px; color: #94a3b8; text-align: center;">
-              Use the dropdowns to view specific player data.
+            <div style="margin-bottom: 15px; font-size: 13px; color: #94a3b8; text-align: center;">
+              Use the Google dropdowns inside the sheet to select your name and match number.
             </div>
             <div class="iframe-container">
               <iframe src="${iframeUrl}" title="${currentTab.name}"></iframe>
@@ -206,35 +216,52 @@
     }
 
     // ==========================================
-    // 🛠️ EDIT 1: DYNAMIC FREEZE PANES
+    // 🛠️ DATA TABLES: DYNAMIC FREEZE PANES & INJECTED HEADERS
     // ==========================================
     function renderDataTable(rows, cols) {
       let html = '<div class="table-container"><table><thead><tr>';
       
-      // Check if we are on the IPL Player Points tab
       const isPlayerPoints = currentTab.name === 'IPL Player Points';
 
       cols.forEach((c, i) => {
-        // Hide Column A and D on regular tabs, but show everything on IPL Player Points
-        if (!isPlayerPoints && (i === 0 || i === 3)) return; 
-        
-        let cls = '';
+        // HIDE UNWANTED COLUMNS
         if (isPlayerPoints) {
-          if (i === 2) cls = 'sticky-col1'; // Freeze Col C
-          if (i === 3) cls = 'sticky-col2'; // Freeze Col D
+          if (i === 0 || i === 1) return; // Hide Spacer (A) and PlayerID (B)
         } else {
-          if (i === 1) cls = 'sticky-col1'; // Freeze Col B
-          if (i === 2) cls = 'sticky-col2'; // Freeze Col C
+          if (i === 0 || i === 3) return; // Hide Spacer (A) and Spacer (D)
         }
         
-        html += `<th class="${cls}">${c.label || ''}</th>`;
+        let cls = '';
+        let label = c.label || '';
+
+        // APPLY FREEZE PANES AND INJECT BLANK HEADERS
+        if (isPlayerPoints) {
+          if (i === 2) cls = 'sticky-col1'; // Name (Col C)
+          if (i === 3) {
+            cls = 'sticky-col2'; // Total Points (Col D)
+            if (!label) label = 'Total Score'; // Inject header if Google left it blank
+          }
+        } else {
+          if (i === 1) cls = 'sticky-col1'; // Name (Col B)
+          if (i === 2) {
+            cls = 'sticky-col2'; // Total Score (Col C)
+            if (!label) label = 'Total Score'; // Inject header if Google left it blank
+          }
+        }
+        
+        html += `<th class="${cls}">${label}</th>`;
       });
       html += '</tr></thead><tbody>';
 
       rows.forEach(row => {
         html += '<tr>';
         row.c.forEach((cell, i) => {
-          if (!isPlayerPoints && (i === 0 || i === 3)) return; 
+          // Hide same columns for the rows
+          if (isPlayerPoints) {
+            if (i === 0 || i === 1) return; 
+          } else {
+            if (i === 0 || i === 3) return; 
+          }
           
           let cls = '';
           if (isPlayerPoints) {
@@ -245,7 +272,11 @@
             if (i === 2) cls = 'sticky-col2'; 
           }
           
-          const val = cell ? (cell.f || cell.v || '') : '';
+          let val = cell ? (cell.f || cell.v || '') : '';
+          
+          // Small cleanup: if the cell value is literally "null", make it a dash
+          if (val === 'null') val = '-';
+
           html += `<td class="${cls}">${val}</td>`;
         });
         html += '</tr>';
@@ -256,12 +287,12 @@
     }
 
     // ==========================================
-    // 🛠️ EDIT 2: REMOVE DECIMALS (Leaderboard)
+    // 🛠️ LEADERBOARD: DECIMAL REMOVER & STAT CARDS
     // ==========================================
     const getCleanVal = (row, colIndex) => {
       if (row && row.c && row.c[colIndex] && row.c[colIndex].v !== null) {
         let val = row.c[colIndex].v;
-        // Force rounding to remove all decimals
+        // Strip decimals
         if (typeof val === 'number') return Math.round(val);
         let parsed = parseFloat(String(val).replace(/,/g, ''));
         return isNaN(parsed) ? val : Math.round(parsed);
@@ -274,12 +305,10 @@
       let validPlayers = [];
       
       rows.forEach(row => {
-        // Name doesn't need rounding, so we extract it directly
         const nameRaw = row.c && row.c[DASH_COLS.name] ? row.c[DASH_COLS.name].v : '';
         const name = String(nameRaw).trim();
         
         if (name !== '' && name !== 'Participant' && name !== '0' && name !== 'null') {
-          // Every single stat is now passed through the decimal-killer function!
           validPlayers.push({
             name: name, 
             score: getCleanVal(row, DASH_COLS.total),
@@ -296,14 +325,12 @@
         }
       });
 
-      // Sort by Total Score
       validPlayers.sort((a, b) => b.score - a.score);
 
       validPlayers.forEach((p, i) => {
         const rank = i + 1;
         const rankClass = rank <= 3 ? `rank-${rank}` : '';
         
-        // Use .toLocaleString() to keep commas (like 9,443) but decimals are gone!
         html += `
           <div class="player-card">
             <div class="card-header">
@@ -329,6 +356,7 @@
       document.getElementById('contentArea').innerHTML = html + '</div>';
     }
 
+    // Run the app!
     renderTabs();
     loadContent();
     setInterval(() => { if(currentTab.type === 'leaderboard') loadContent(); }, 120000);
