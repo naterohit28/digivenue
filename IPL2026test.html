@@ -3,81 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy Leaderboard</title>
-  
+  <title>IPL 2026 Multi-Tab Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
+    /* BACKGROUND & APP COLORS */
     body {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #f8fafc;
       font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
+      margin: 0; padding: 20px; min-height: 100vh;
     }
     .dashboard-container {
-      max-width: 900px; 
-      margin: 0 auto;
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 1000px; margin: 0 auto;
+      background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+      border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      padding: 30px;
+      overflow: hidden; padding: 30px;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 20px;
-    }
+
+    /* HEADER & TABS */
+    .header { text-align: center; margin-bottom: 20px; }
     .header h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      margin: 0;
+      font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; margin: 0;
       background: linear-gradient(to right, #fbbf24, #f59e0b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-transform: uppercase; letter-spacing: 2px;
     }
-    .header p { color: #94a3b8; font-size: 15px; margin-top: 8px; }
+    
+    .tab-bar {
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 25px;
+    }
+    .tab-button {
+      background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: all 0.2s;
+    }
+    .tab-button:hover { background: rgba(255, 255, 255, 0.1); }
+    .tab-button.active {
+      background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: #fbbf24;
+    }
+
+    /* DROPDOWN FILTER */
+    .filter-container {
+      margin-bottom: 20px; display: none; /* Hidden by default */
+    }
+    select {
+      background: rgba(15, 23, 42, 0.8); color: #fff; border: 1px solid #475569;
+      padding: 10px 15px; border-radius: 8px; font-family: 'Inter', sans-serif;
+      font-size: 16px; outline: none; cursor: pointer; width: 100%; max-width: 300px;
+    }
+
+    /* DASHBOARD CARDS */
     .leaderboard { display: flex; flex-direction: column; gap: 12px; }
     .player-card {
       display: flex; align-items: center; background: rgba(15, 23, 42, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;
-      padding: 16px 24px; transition: transform 0.2s, background 0.2s;
-    }
-    .player-card:hover {
-      transform: translateY(-2px); background: rgba(51, 65, 85, 0.8);
-      border-color: rgba(251, 191, 36, 0.4); 
+      padding: 16px 24px; transition: transform 0.2s;
     }
     .rank {
-      font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800;
-      width: 45px; height: 45px; display: flex; align-items: center;
-      justify-content: center; border-radius: 50%; background: #334155;
-      color: #cbd5e1; margin-right: 20px; flex-shrink: 0;
+      font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; width: 45px; height: 45px;
+      display: flex; align-items: center; justify-content: center; border-radius: 50%;
+      background: #334155; color: #cbd5e1; margin-right: 20px; flex-shrink: 0;
     }
     .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
     .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
     .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
     .player-info { flex-grow: 1; }
-    .player-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 18px; color: #f8fafc; margin-bottom: 4px; }
+    .player-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 4px; }
     .player-stats { font-size: 12px; color: #94a3b8; display: flex; gap: 15px; }
     .stat-badge { background: rgba(255, 255, 255, 0.05); padding: 2px 8px; border-radius: 4px; }
-    .total-score { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 800; color: #fbbf24; text-align: right; }
+    .total-score { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 800; color: #fbbf24; }
+
+    /* DATA TABLES (For other sheets) */
+    .table-container { overflow-x: auto; display: none; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: rgba(15, 23, 42, 0.8); color: #fbbf24; font-weight: 600; padding: 12px; border-bottom: 2px solid #334155; }
+    td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: #cbd5e1; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
     .loading { text-align: center; color: #94a3b8; padding: 40px; font-weight: 500; }
-    
-    @media (max-width: 600px) {
-      .player-card { padding: 12px 16px; }
-      .rank { width: 35px; height: 35px; font-size: 16px; margin-right: 15px; }
-      .player-name { font-size: 16px; }
-      .total-score { font-size: 20px; }
-      .player-stats { flex-direction: column; gap: 4px; }
-    }
   </style>
 </head>
 <body>
@@ -85,51 +91,209 @@
   <div class="dashboard-container">
     <div class="header">
       <h1>IPL 2026 Fantasy League</h1>
-      <p>Live Global Leaderboard</p>
     </div>
 
-    <div id="leaderboard" class="leaderboard">
-      <div class="loading">Fetching live scores from Digivenue HQ...</div>
+    <div class="tab-bar" id="tabBar">
+      </div>
+
+    <div class="filter-container" id="filterContainer">
+      <select id="nameFilter" onchange="applyFilter()">
+        <option value="ALL">All Participants</option>
+      </select>
+    </div>
+
+    <div id="contentArea">
+      <div class="loading">Fetching live data...</div>
     </div>
   </div>
 
   <script>
+    // ==========================================
+    // ⚙️ 1. SETUP YOUR GOOGLE SHEETS
+    // ==========================================
     const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
-    const GID = '1775142554'; 
-    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+    
+    // Fill in your GIDs here! I put '1775142554' for the Dashboard.
+    // Replace the '0's with the GIDs you find in your URL.
+    const TABS = [
+      { name: 'Dashboard', gid: '1775142554', type: 'leaderboard' },
+      { name: 'Your Report Card', gid: '0', type: 'table', hasDropdown: true, filterColIndex: 0 }, 
+      { name: 'Match Scores', gid: '0', type: 'table' },
+      { name: 'SS Scores', gid: '0', type: 'table' },
+      { name: 'Daily Score', gid: '0', type: 'table' },
+      { name: 'IPL Player Points', gid: '0', type: 'table' }
+    ];
+
+    // Columns for the Dashboard Leaderboard (Shifted by +1 as we learned!)
+    const DASH_COLS = { name: 4, star: 7, duo: 8, total: 15 };
 
     // ==========================================
-    // ⚙️ FIX: SHIFTED ALL COLUMNS BY +1
+    // 🧠 2. STATE & LOGIC
     // ==========================================
-    const COL_NAME = 4;   // Shifted from 3 to 4 (Pulls 'Santanu Daga')
-    const COL_STAR = 7;   // Shifted from 6 to 7 (Pulls '3771')
-    const COL_DUO = 8;    // Shifted from 7 to 8 (Pulls '1276')
-    const COL_TOTAL = 15; // Shifted from 14 to 15 (Pulls Total Score '9179')
+    let currentTab = TABS[0];
+    let rawTableData = []; 
+    let tableHeaders = [];
 
-    async function loadDashboard() {
+    // Render Tab Buttons
+    function renderTabs() {
+      const tabBar = document.getElementById('tabBar');
+      tabBar.innerHTML = '';
+      TABS.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className = `tab-button ${tab.name === currentTab.name ? 'active' : ''}`;
+        btn.innerText = tab.name;
+        btn.onclick = () => {
+          currentTab = tab;
+          renderTabs(); // Update active state
+          fetchData();
+        };
+        tabBar.appendChild(btn);
+      });
+    }
+
+    async function fetchData() {
+      const content = document.getElementById('contentArea');
+      const filterDiv = document.getElementById('filterContainer');
+      content.innerHTML = '<div class="loading">Fetching live data from Digivenue HQ...</div>';
+      filterDiv.style.display = 'none';
+
+      // If GID is 0, they haven't set it up yet.
+      if (currentTab.gid === '0') {
+        content.innerHTML = `<div class="loading" style="color:#ef4444;">Please replace the '0' GID for ${currentTab.name} in the code!</div>`;
+        return;
+      }
+
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${currentTab.gid}`;
+      
       try {
-        const res = await fetch(URL);
+        const res = await fetch(url);
         const text = await res.text();
-        
-        if (text.includes('<html')) {
-          throw new Error("Google is blocking access. Please open your Google Sheet, click 'Share', and ensure it says 'Anyone with the link' and 'Viewer'.");
-        }
-
         const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-        if (!jsonString) throw new Error("Could not parse the data from Google.");
+        if (!jsonString) throw new Error("Could not parse data.");
         
         const json = JSON.parse(jsonString[1]);
-        const rows = json.table.rows;
-        let html = '';
-        let validPlayers = [];
         
-        rows.forEach((row) => {
-          try {
-            if(row && row.c && row.c[COL_NAME] && row.c[COL_NAME].v) {
-              const name = String(row.c[COL_NAME].v);
-              
-              if (name !== 'Participant' && name.trim() !== '') {
-                
-                const starPerformer = (row.c[COL_STAR] && row.c[COL_STAR].v) ? row.c[COL_STAR].v : 0;
-                const dynamicDuo = (row.c[COL_DUO] && row.c[COL_DUO].v) ? row.c[COL_DUO].v : 0;
-                const totalScore = (row.c[COL
+        if (currentTab.type === 'leaderboard') {
+          renderLeaderboard(json.table.rows);
+        } else {
+          processTableData(json.table);
+        }
+      } catch (error) {
+        content.innerHTML = `<div class="loading" style="color:#ef4444;">Error: ${error.message}</div>`;
+      }
+    }
+
+    // ==========================================
+    // 🏆 3. LEADERBOARD VIEW
+    // ==========================================
+    function renderLeaderboard(rows) {
+      let html = '<div class="leaderboard">';
+      let validPlayers = [];
+      
+      rows.forEach(row => {
+        if(row && row.c && row.c[DASH_COLS.name] && row.c[DASH_COLS.name].v) {
+          const name = String(row.c[DASH_COLS.name].v);
+          if (name !== 'Participant' && name.trim() !== '') {
+            const score = row.c[DASH_COLS.total] ? row.c[DASH_COLS.total].v : 0;
+            const numScore = typeof score === 'number' ? score : parseFloat(String(score).replace(/,/g, '')) || 0;
+            
+            validPlayers.push({
+              name: name, score: numScore, displayScore: score,
+              star: row.c[DASH_COLS.star] ? row.c[DASH_COLS.star].v : 0,
+              duo: row.c[DASH_COLS.duo] ? row.c[DASH_COLS.duo].v : 0
+            });
+          }
+        }
+      });
+
+      validPlayers.sort((a, b) => b.score - a.score);
+
+      validPlayers.forEach((p, i) => {
+        const rank = i + 1;
+        const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        html += `
+          <div class="player-card">
+            <div class="rank ${rankClass}">${rank}</div>
+            <div class="player-info">
+              <div class="player-name">${p.name}</div>
+              <div class="player-stats">
+                <span class="stat-badge">⭐ Star: ${p.star}</span>
+                <span class="stat-badge">🤝 Duo: ${p.duo}</span>
+              </div>
+            </div>
+            <div class="total-score">${p.displayScore.toLocaleString()}</div>
+          </div>`;
+      });
+      document.getElementById('contentArea').innerHTML = html + '</div>';
+    }
+
+    // ==========================================
+    // 📊 4. GENERIC TABLE VIEW & DROPDOWN FILTER
+    // ==========================================
+    function processTableData(tableObj) {
+      // Get Headers
+      tableHeaders = tableObj.cols.map((col, i) => col.label || `Col ${i+1}`);
+      
+      // Get Rows
+      rawTableData = tableObj.rows.map(row => {
+        return row.c.map(cell => cell ? (cell.f || cell.v || '') : '');
+      }).filter(row => row.some(cell => cell !== '')); // Remove totally blank rows
+
+      // If this tab requires a dropdown filter
+      if (currentTab.hasDropdown) {
+        setupDropdown();
+      } else {
+        renderHTMLTable(rawTableData);
+      }
+    }
+
+    function setupDropdown() {
+      const filterContainer = document.getElementById('filterContainer');
+      const select = document.getElementById('nameFilter');
+      filterContainer.style.display = 'block';
+      
+      // Find all unique names in the specific column (Change filterColIndex in settings if name is not in Col A)
+      const uniqueNames = [...new Set(rawTableData.map(r => String(r[currentTab.filterColIndex]).trim()))]
+                          .filter(n => n !== '' && n !== 'null');
+      
+      select.innerHTML = '<option value="ALL">All Participants</option>';
+      uniqueNames.sort().forEach(name => {
+        select.innerHTML += `<option value="${name}">${name}</option>`;
+      });
+
+      applyFilter(); // Render initially
+    }
+
+    function applyFilter() {
+      const selectVal = document.getElementById('nameFilter').value;
+      if (selectVal === 'ALL') {
+        renderHTMLTable(rawTableData);
+      } else {
+        const filtered = rawTableData.filter(r => String(r[currentTab.filterColIndex]).trim() === selectVal);
+        renderHTMLTable(filtered);
+      }
+    }
+
+    function renderHTMLTable(rows) {
+      let html = '<div class="table-container"><table><thead><tr>';
+      tableHeaders.forEach(th => html += `<th>${th}</th>`);
+      html += '</tr></thead><tbody>';
+
+      rows.forEach(row => {
+        html += '<tr>';
+        row.forEach(cell => html += `<td>${cell}</td>`);
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('contentArea').innerHTML = html;
+      document.querySelector('.table-container').style.display = 'block';
+    }
+
+    // Start App
+    renderTabs();
+    fetchData();
+  </script>
+
+</body>
+</html>
