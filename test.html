@@ -105,14 +105,16 @@
   --shadow-lg:   0 12px 48px rgba(0,0,0,.5),0 4px 16px rgba(0,0,0,.3);
 }
 
-/* Smooth transition on theme switch */
+/* Smooth transition on theme switch — exclude display/visibility */
 *, *::before, *::after {
   transition: background-color .2s ease, border-color .2s ease, color .1s ease, box-shadow .2s ease;
 }
-/* Exempt transforms and opacity from the global transition */
+/* Exempt interactive elements — they need faster/custom transitions */
 .btn, .bk-card, .ld-card, .venue-card, .kpi-card, .nav-link, .f-chip,
-.cal-arr, .ld-btn, .sc-pp, .tb-btn {
-  transition: all .18s ease;
+.cal-arr, .ld-btn, .sc-pp, .tb-btn,
+.profile-panel, .profile-overlay, .modal, .ea-overlay {
+  transition: none;
+}
 }
 
 /* ════════════════════════════════════════════════════
@@ -2089,6 +2091,92 @@ body {
   #page-clientportal .cp-grid,
   #page-leadqr .qr-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
 }
+/* ════════════════════════════════════════════════════
+   COLOUR THEMES
+════════════════════════════════════════════════════ */
+[data-color="rose"]   { --navy:#7c1230; --navy-mid:#a01840; --navy-lit:#c94060; }
+[data-color="forest"] { --navy:#1a4a2e; --navy-mid:#236038; --navy-lit:#2f8050; }
+[data-color="royal"]  { --navy:#3a1a70; --navy-mid:#4e2490; --navy-lit:#6840b0; }
+[data-color="slate"]  { --navy:#002a54; --navy-mid:#003a75; --navy-lit:#1a5aab; }
+[data-color="rose"][data-theme="dark"]   { --navy:#d44060; --navy-mid:#e05070; --navy-lit:#f07090; }
+[data-color="forest"][data-theme="dark"] { --navy:#2f8050; --navy-mid:#3a9860; --navy-lit:#50b878; }
+[data-color="royal"][data-theme="dark"]  { --navy:#6840b0; --navy-mid:#8060d0; --navy-lit:#9e80e0; }
+
+/* ════════════════════════════════════════════════════
+   PROFILE / ACCOUNT PANEL
+════════════════════════════════════════════════════ */
+.profile-overlay {
+  position: fixed; inset: 0; z-index: 290;
+  background: transparent;
+  visibility: hidden; pointer-events: none;
+}
+.profile-overlay.open { visibility: visible; pointer-events: auto; }
+.profile-panel {
+  position: fixed; top: 62px; right: 14px; z-index: 300;
+  width: 300px; background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--r);
+  box-shadow: var(--shadow-lg);
+  visibility: hidden; pointer-events: none;
+  opacity: 0; transform: translateY(-8px) scale(.98);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  overflow: hidden; max-height: calc(100vh - 80px); overflow-y: auto;
+}
+.profile-panel.open {
+  visibility: visible; pointer-events: auto;
+  opacity: 1; transform: translateY(0) scale(1);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear 0s;
+}
+.pp-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  padding: 18px 18px 14px; position: relative;
+}
+.pp-avatar-lg {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-l));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: var(--navy);
+  margin-bottom: 10px; border: 3px solid rgba(255,255,255,.2);
+}
+.pp-name  { font-size: 16px; font-weight: 700; color: #fff; }
+.pp-role  { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
+.pp-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,.12); border: none; cursor: pointer;
+  color: #fff; font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.pp-close:hover { background: rgba(255,255,255,.25); }
+.pp-body { padding: 14px; }
+.pp-section { margin-bottom: 14px; }
+.pp-section-title {
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--faint); margin-bottom: 8px; padding-left: 2px;
+}
+.pp-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--r-sm);
+  font-size: 13px; cursor: pointer; transition: background .15s;
+  color: var(--text);
+}
+.pp-row:hover { background: var(--surface); }
+.pp-row-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+.pp-row-label { flex: 1; }
+.pp-row-val { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+.pp-divider { height: 1px; background: var(--border); margin: 8px 0; }
+.pp-swatches { display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 10px 2px; }
+.pp-swatch {
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  border: 3px solid transparent; transition: all .15s; flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+}
+.pp-swatch:hover { transform: scale(1.15); }
+.pp-swatch.active { border-color: var(--text); transform: scale(1.1); }
+.pp-swatch-slate  { background: #002a54; }
+.pp-swatch-rose   { background: #7c1230; }
+.pp-swatch-forest { background: #1a4a2e; }
+.pp-swatch-royal  { background: #3a1a70; }
+
 </style>
 </head>
 <body>
@@ -5495,7 +5583,7 @@ render();
 <div class="profile-overlay" id="profileOverlay" onclick="closeProfile()"></div>
 <div class="profile-panel" id="profilePanel">
   <div class="pp-header">
-    <div class="pp-avatar">DV</div>
+    <div class="pp-avatar-lg">DV</div>
     <div class="pp-name" id="ppName">Rohit Sharma</div>
     <div class="pp-role">Venue Manager · Ashraya Grand</div>
     <button class="pp-close" onclick="closeProfile()">✕</button>
@@ -5504,35 +5592,35 @@ render();
     <!-- Account info -->
     <div class="pp-section">
       <div class="pp-section-title">Account</div>
-      <div class="pp-row"><span class="pp-row-icon">📱</span>WhatsApp<span class="pp-row-val" id="ppPhone">+91 98765 43210</span></div>
-      <div class="pp-row"><span class="pp-row-icon">🏛️</span>Venue<span class="pp-row-val" id="ppVenue">Ashraya Grand</span></div>
-      <div class="pp-row"><span class="pp-row-icon">🗓️</span>Bookings<span class="pp-row-val" id="ppBookings">12 total</span></div>
+      <div class="pp-row"><span class="pp-row-icon">📱</span><span class="pp-row-label">WhatsApp</span><span class="pp-row-val" id="ppPhone">+91 98765 43210</span></div>
+      <div class="pp-row"><span class="pp-row-icon">🏛️</span><span class="pp-row-label">Venue</span><span class="pp-row-val" id="ppVenue">Ashraya Grand</span></div>
+      <div class="pp-row"><span class="pp-row-icon">🗓️</span><span class="pp-row-label">Bookings</span><span class="pp-row-val" id="ppBookings">12 total</span></div>
     </div>
     <div class="pp-divider"></div>
     <!-- Appearance -->
     <div class="pp-section">
       <div class="pp-section-title">Appearance</div>
-      <div class="pp-row" onclick="toggleTheme()" style="cursor:pointer">
+      <div class="pp-row" onclick="toggleTheme()">
         <span class="pp-row-icon" id="ppThemeIcon">🌙</span>
-        <span id="ppThemeLabel">Switch to Dark Mode</span>
+        <span class="pp-row-label" id="ppThemeLabel">Switch to Dark Mode</span>
       </div>
-      <div style="padding:6px 0 2px">
-        <div class="pp-section-title" style="padding-left:10px">Accent Colour</div>
+      <div style="padding:4px 0 2px">
+        <div class="pp-section-title">Accent Colour</div>
         <div class="pp-swatches">
           <div class="pp-swatch pp-swatch-slate active" data-color="slate"  onclick="setColorTheme('slate')"  title="Navy (Default)"></div>
-          <div class="pp-swatch pp-swatch-rose"          data-color="rose"   onclick="setColorTheme('rose')"   title="Rose"></div>
-          <div class="pp-swatch pp-swatch-forest"        data-color="forest" onclick="setColorTheme('forest')" title="Forest"></div>
-          <div class="pp-swatch pp-swatch-royal"         data-color="royal"  onclick="setColorTheme('royal')"  title="Royal Purple"></div>
+          <div class="pp-swatch pp-swatch-rose"         data-color="rose"   onclick="setColorTheme('rose')"   title="Rose Red"></div>
+          <div class="pp-swatch pp-swatch-forest"       data-color="forest" onclick="setColorTheme('forest')" title="Forest Green"></div>
+          <div class="pp-swatch pp-swatch-royal"        data-color="royal"  onclick="setColorTheme('royal')"  title="Royal Purple"></div>
         </div>
       </div>
     </div>
     <div class="pp-divider"></div>
-    <!-- Actions -->
+    <!-- Quick actions -->
     <div class="pp-section" style="margin-bottom:0">
-      <div class="pp-section-title">Actions</div>
-      <div class="pp-row" onclick="showPage('whatsapp',null);closeProfile()"><span class="pp-row-icon">💬</span>WhatsApp Broadcast</div>
-      <div class="pp-row" onclick="showPage('qr',null);closeProfile()"><span class="pp-row-icon">📱</span>My QR Lead Page</div>
-      <div class="pp-row" onclick="openEarlyAccess();closeProfile()"><span class="pp-row-icon">🚀</span>Upgrade Plan</div>
+      <div class="pp-section-title">Quick Actions</div>
+      <div class="pp-row" onclick="showPage('whatsapp',null);closeProfile()"><span class="pp-row-icon">💬</span><span class="pp-row-label">WhatsApp Broadcast</span></div>
+      <div class="pp-row" onclick="showPage('qr',null);closeProfile()"><span class="pp-row-icon">📱</span><span class="pp-row-label">My QR Lead Page</span></div>
+      <div class="pp-row" onclick="openEarlyAccess();closeProfile()"><span class="pp-row-icon">🚀</span><span class="pp-row-label">Upgrade Plan</span></div>
     </div>
   </div>
 </div>
