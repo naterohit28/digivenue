@@ -80,7 +80,7 @@
     .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; display: block; }
     .stat-value { font-size: 14px; font-weight: 600; color: #e2e8f0; font-family: 'Poppins', sans-serif;}
 
-    /* NATIVE DATA TABLES (With Frozen Columns) */
+    /* NATIVE DATA TABLES (With Dynamic Frozen Columns) */
     .table-container { 
       overflow-x: auto; background: rgba(15, 23, 42, 0.6); 
       border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); 
@@ -92,10 +92,10 @@
     th { background: #0f172a; color: #fbbf24; font-weight: 600; font-size: 14px; position: sticky; top: 0; z-index: 1; border-bottom: 2px solid rgba(255,255,255,0.1); }
     tr:hover td { background: rgba(255,255,255,0.03); }
 
-    /* The "Freeze Panes" CSS for Col B (Name) and Col C (Total) */
+    /* The "Freeze Panes" CSS Classes */
     .sticky-col1 { position: sticky; left: 0; background: #1e293b; z-index: 2; font-weight: 600; min-width: 130px; }
     .sticky-col2 { position: sticky; left: 160px; background: #1e293b; z-index: 2; font-weight: 800; color: #fbbf24; min-width: 60px; border-right: 2px solid rgba(255,255,255,0.1); }
-    th.sticky-col1, th.sticky-col2 { z-index: 3; background: #0f172a; } /* Headers need higher z-index */
+    th.sticky-col1, th.sticky-col2 { z-index: 3; background: #0f172a; }
 
     /* IFRAME CONTAINER */
     .iframe-container { width: 100%; height: 75vh; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
@@ -139,7 +139,6 @@
       { name: 'IPL Player Points', gid: '1991041599', type: 'datatable' }
     ];
 
-    // Mapped exactly to your Dashboard Screenshot columns! (A=0, B=1, C=2, D=3...)
     const DASH_COLS = { 
       name: 3, match: 4, bonus: 5, star: 6, duo: 7, 
       resurrector: 8, risk: 9, special: 10, 
@@ -167,7 +166,6 @@
     async function loadContent() {
       const content = document.getElementById('contentArea');
       
-      // 1. DASHBOARD & DATA TABLES (Lightning Fast Data Fetch)
       if (currentTab.type === 'leaderboard' || currentTab.type === 'datatable') {
         content.innerHTML = '<div class="loading">Fetching live data from Digivenue HQ...</div>';
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${currentTab.gid}`;
@@ -189,11 +187,9 @@
           content.innerHTML = `<div class="loading" style="color:#ef4444;">Error: ${error.message}</div>`;
         }
       } 
-      // 2. REPORT CARD (Embedded for Dropdown Access)
+      // REPORT CARD: Embedded specifically focusing on D2:R45 so dropdowns are clickable
       else if (currentTab.type === 'iframe') {
         content.innerHTML = '<div class="loading">Loading Report Card...</div>';
-        
-        // Uses /edit to allow dropdowns, focuses on D2:R45 range
         const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${currentTab.gid}&rm=minimal&range=D2:R45`;
         
         setTimeout(() => {
@@ -209,16 +205,27 @@
       }
     }
 
-    // NATIVE DATA TABLE RENDERER (With Frozen Columns!)
+    // ==========================================
+    // 🛠️ EDIT 1: DYNAMIC FREEZE PANES
+    // ==========================================
     function renderDataTable(rows, cols) {
       let html = '<div class="table-container"><table><thead><tr>';
       
+      // Check if we are on the IPL Player Points tab
+      const isPlayerPoints = currentTab.name === 'IPL Player Points';
+
       cols.forEach((c, i) => {
-        if (i === 0 || i === 3) return; // Hide Column A and Column D
+        // Hide Column A and D on regular tabs, but show everything on IPL Player Points
+        if (!isPlayerPoints && (i === 0 || i === 3)) return; 
         
         let cls = '';
-        if (i === 1) cls = 'sticky-col1'; // Freeze Column B (Name)
-        if (i === 2) cls = 'sticky-col2'; // Freeze Column C (Total Score)
+        if (isPlayerPoints) {
+          if (i === 2) cls = 'sticky-col1'; // Freeze Col C
+          if (i === 3) cls = 'sticky-col2'; // Freeze Col D
+        } else {
+          if (i === 1) cls = 'sticky-col1'; // Freeze Col B
+          if (i === 2) cls = 'sticky-col2'; // Freeze Col C
+        }
         
         html += `<th class="${cls}">${c.label || ''}</th>`;
       });
@@ -227,11 +234,16 @@
       rows.forEach(row => {
         html += '<tr>';
         row.c.forEach((cell, i) => {
-          if (i === 0 || i === 3) return; // Hide Column A and Column D
+          if (!isPlayerPoints && (i === 0 || i === 3)) return; 
           
           let cls = '';
-          if (i === 1) cls = 'sticky-col1'; // Freeze Column B
-          if (i === 2) cls = 'sticky-col2'; // Freeze Column C
+          if (isPlayerPoints) {
+            if (i === 2) cls = 'sticky-col1'; 
+            if (i === 3) cls = 'sticky-col2'; 
+          } else {
+            if (i === 1) cls = 'sticky-col1'; 
+            if (i === 2) cls = 'sticky-col2'; 
+          }
           
           const val = cell ? (cell.f || cell.v || '') : '';
           html += `<td class="${cls}">${val}</td>`;
@@ -243,8 +255,17 @@
       document.getElementById('contentArea').innerHTML = html;
     }
 
-    const getVal = (row, colIndex) => {
-      if (row && row.c && row.c[colIndex] && row.c[colIndex].v !== null) return row.c[colIndex].v;
+    // ==========================================
+    // 🛠️ EDIT 2: REMOVE DECIMALS (Leaderboard)
+    // ==========================================
+    const getCleanVal = (row, colIndex) => {
+      if (row && row.c && row.c[colIndex] && row.c[colIndex].v !== null) {
+        let val = row.c[colIndex].v;
+        // Force rounding to remove all decimals
+        if (typeof val === 'number') return Math.round(val);
+        let parsed = parseFloat(String(val).replace(/,/g, ''));
+        return isNaN(parsed) ? val : Math.round(parsed);
+      }
       return 0;
     };
 
@@ -253,27 +274,36 @@
       let validPlayers = [];
       
       rows.forEach(row => {
-        const name = getVal(row, DASH_COLS.name);
-        if (typeof name === 'string' && name !== 'Participant' && name.trim() !== '' && name !== '0') {
-          const rawTotal = getVal(row, DASH_COLS.total);
-          const numScore = typeof rawTotal === 'number' ? rawTotal : parseFloat(String(rawTotal).replace(/,/g, '')) || 0;
-          
+        // Name doesn't need rounding, so we extract it directly
+        const nameRaw = row.c && row.c[DASH_COLS.name] ? row.c[DASH_COLS.name].v : '';
+        const name = String(nameRaw).trim();
+        
+        if (name !== '' && name !== 'Participant' && name !== '0' && name !== 'null') {
+          // Every single stat is now passed through the decimal-killer function!
           validPlayers.push({
-            name: name, score: numScore, displayScore: rawTotal,
-            match: getVal(row, DASH_COLS.match), bonus: getVal(row, DASH_COLS.bonus),
-            star: getVal(row, DASH_COLS.star), duo: getVal(row, DASH_COLS.duo),
-            resurrector: getVal(row, DASH_COLS.resurrector), risk: getVal(row, DASH_COLS.risk),
-            special: getVal(row, DASH_COLS.special), superBonus: getVal(row, DASH_COLS.superBonus),
-            superSelector: getVal(row, DASH_COLS.superSelector),
+            name: name, 
+            score: getCleanVal(row, DASH_COLS.total),
+            match: getCleanVal(row, DASH_COLS.match),
+            bonus: getCleanVal(row, DASH_COLS.bonus),
+            star: getCleanVal(row, DASH_COLS.star),
+            duo: getCleanVal(row, DASH_COLS.duo),
+            resurrector: getCleanVal(row, DASH_COLS.resurrector),
+            risk: getCleanVal(row, DASH_COLS.risk),
+            special: getCleanVal(row, DASH_COLS.special),
+            superBonus: getCleanVal(row, DASH_COLS.superBonus),
+            superSelector: getCleanVal(row, DASH_COLS.superSelector),
           });
         }
       });
 
+      // Sort by Total Score
       validPlayers.sort((a, b) => b.score - a.score);
 
       validPlayers.forEach((p, i) => {
         const rank = i + 1;
         const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        
+        // Use .toLocaleString() to keep commas (like 9,443) but decimals are gone!
         html += `
           <div class="player-card">
             <div class="card-header">
@@ -281,18 +311,18 @@
                 <div class="rank ${rankClass}">${rank}</div>
                 <div class="player-name">${p.name}</div>
               </div>
-              <div class="total-score">${p.displayScore.toLocaleString()}</div>
+              <div class="total-score">${p.score.toLocaleString('en-US')}</div>
             </div>
             <div class="stats-grid">
-              <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match}</span></div>
-              <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus}</span></div>
-              <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star}</span></div>
-              <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo}</span></div>
-              <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector}</span></div>
-              <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk}</span></div>
-              <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special}</span></div>
-              <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus || '-'}</span></div>
-              <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector}</span></div>
+              <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus === 0 ? '-' : p.superBonus.toLocaleString('en-US')}</span></div>
+              <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector.toLocaleString('en-US')}</span></div>
             </div>
           </div>`;
       });
