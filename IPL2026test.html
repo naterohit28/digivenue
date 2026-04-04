@@ -13,370 +13,190 @@
     .header h1{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:2px}
     .banner{display:inline-block;margin-top:12px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600}
     .tab-bar{display:flex;gap:10px;overflow-x:auto;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:25px}
-    .tab-bar::-webkit-scrollbar{height:6px}
-    .tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:10px}
-    .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Inter',sans-serif;flex-shrink:0;font-size:14px}
-    .tab-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
+    .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-size:14px}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
-    .loading{text-align:center;color:#94a3b8;padding:60px 20px;display:flex;flex-direction:column;align-items:center;gap:16px;font-size:15px}
-    .spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    /* Leaderboard */
-    .lb{display:flex;flex-direction:column;gap:14px}
-    .pc{background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:20px;transition:transform .2s}
-    .pc:hover{transform:translateY(-2px);background:rgba(51,65,85,0.8);border-color:rgba(251,191,36,0.4)}
-    .ph{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:15px;margin-bottom:15px}
-    .pl{display:flex;align-items:center;gap:0}
-    .rb{font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#334155;color:#cbd5e1;margin-right:15px;flex-shrink:0}
-    .rb.r1{background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;box-shadow:0 0 15px rgba(251,191,36,0.5)}
-    .rb.r2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
-    .rb.r3{background:linear-gradient(135deg,#b45309,#78350f);color:#fff}
-    .pname{font-family:'Poppins',sans-serif;font-weight:600;font-size:20px;color:#f8fafc}
-    .pchange{font-size:12px;color:#64748b}
-    .pchange.up{color:#4ade80}.pchange.dn{color:#f87171}
-    .ptot{font-family:'Poppins',sans-serif;font-size:28px;font-weight:800;color:#fbbf24}
-    .sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px}
-    .sb{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:8px;border-radius:8px;text-align:center}
-    .sl{font-size:10px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px;display:block;letter-spacing:.5px}
-    .sv{font-size:14px;font-weight:600;color:#e2e8f0;font-family:'Poppins',sans-serif}
-    /* Table */
+    
+    /* Table & Leaderboard Styles (Kept as per successful version) */
     .tw{overflow-x:auto;background:rgba(15,23,42,0.6);border-radius:12px;border:1px solid rgba(255,255,255,0.05);max-height:70vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
     th,td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:#e2e8f0}
-    th{background:#0f172a;color:#fbbf24;font-weight:600;font-size:13px;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1)}
-    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:170px;max-width:170px}
+    th{background:#0f172a;color:#fbbf24;font-weight:600;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1)}
+    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:170px}
     .sc2{position:sticky;left:170px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:100px;border-right:2px solid rgba(255,255,255,0.1);text-align:center}
     th.sc1,th.sc2{z-index:15;background:#0f172a}
-    tr:hover td{background:rgba(255,255,255,0.025)}
-    /* RC */
+
+    /* Report Card - Visibility & Alignment Fixes */
+    .rc-container { max-width: 900px; margin: 0 auto; } /* Centered alignment fix */
     .rc-bar{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
-    .rcg{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px;max-width:280px}
-    .rcl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:11px 36px 11px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:#0f172a;transition:border-color .2s}
-    .rcsel:hover{border-color:rgba(251,191,36,0.4)}.rcsel:focus{border-color:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,0.15)}.rcsel option{background:#1e293b}
-    .rcbtn{height:44px;padding:0 26px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:8px;flex-shrink:0}
-    .rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(251,191,36,0.4)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-    .rccard{background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden}
-    .rchero{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04));border-bottom:1px solid rgba(251,191,36,0.15);padding:22px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-    .rcav{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
-    .rchn{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;color:#f8fafc}.rchs{font-size:13px;color:#64748b;margin-top:3px}
-    .rchr{margin-left:auto;text-align:right}.rcrn{font-family:'Poppins',sans-serif;font-size:38px;font-weight:800;color:#fbbf24;line-height:1}.rcrl{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
-    .cw{border-bottom:1px solid rgba(255,255,255,0.05);padding:14px 26px}
-    .ct{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:10px}
-    .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-    .chips::-webkit-scrollbar{height:3px}.chips::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
-    .chip{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 14px;text-align:center;min-width:60px;cursor:pointer;transition:all .15s}
-    .chip:hover{border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.06)}.chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.12)}
-    .cl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px}.cv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;margin-top:2px;color:#e2e8f0}
-    .cv.pos{color:#4ade80}.cv.neg{color:#f87171}
-    .gh{background:rgba(255,255,255,0.025);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:8px 26px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569}
-    .rr{display:flex;align-items:center;padding:12px 26px;border-bottom:1px solid rgba(255,255,255,0.035);transition:background .12s}
-    .rr:hover{background:rgba(255,255,255,0.02)}.rr.sub{background:rgba(251,191,36,0.04);border-top:1px solid rgba(251,191,36,0.08);border-bottom:1px solid rgba(251,191,36,0.08)}
-    .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.1),rgba(245,158,11,0.03));border-top:2px solid rgba(251,191,36,0.25);padding:18px 26px}
-    .ri{width:26px;font-size:14px;text-align:center;flex-shrink:0}
-    .rl{flex:1;font-size:13px;color:#94a3b8;margin-left:8px}.rr.sub .rl{color:#fbbf24;font-weight:600}.rr.tot .rl{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#fbbf24}
-    .rv{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#e2e8f0;text-align:right;min-width:90px}
-    .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.dim{color:#475569;font-weight:400;font-size:13px}.rv.gold{color:#fbbf24}.rv.grand{color:#fbbf24;font-size:26px}
-    .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
-    .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3)}.badge.no{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.25)}.badge.neu{background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)}
-    .rce{padding:56px 24px;text-align:center}.rce-i{font-size:44px;margin-bottom:14px;display:block}.rce-t{font-family:'Poppins',sans-serif;font-size:17px;font-weight:600;color:#f8fafc;margin-bottom:8px}.rce-s{font-size:13px;color:#64748b;line-height:1.7;max-width:400px;margin:0 auto}
-    .err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:20px 24px;color:#fca5a5;font-size:14px;line-height:1.7}
-    .notice{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#fcd34d;line-height:1.6;display:flex;gap:10px}
-    @media(max-width:600px){.ph{flex-direction:column;align-items:flex-start;gap:10px}.ptot{margin-left:60px;font-size:24px}.sg{grid-template-columns:repeat(3,1fr)}.wrap{padding:16px}.sc1{min-width:120px;max-width:120px}.sc2{min-width:80px;left:120px}.rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}}
+    .rcg{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px}
+    .rcl{font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8}
+    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.2);color:#fff;padding:11px;border-radius:10px;width:100%;outline:none}
+    .rcbtn{height:44px;padding:0 26px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:10px;font-weight:700;cursor:pointer}
+    
+    .rccard{background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden}
+    .rchero{background:rgba(251,191,36,0.05);padding:25px;display:flex;align-items:center;gap:20px}
+    .rcav{width:60px;height:60px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#0f172a}
+    .rchn{font-size:24px;font-weight:700;color:#fff}
+    .rchr{margin-left:auto;text-align:right}
+    .rcrn{font-size:40px;font-weight:800;color:#fbbf24;line-height:1}
+
+    .cw{padding:20px 25px;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .ct{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+    .chips{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px}
+    .chip{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;text-align:center;min-width:70px;cursor:pointer}
+    .chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.15)}
+    
+    /* Brighter color codes for visibility */
+    .rl{flex:1;font-size:14px;color:#cbd5e1;margin-left:12px} /* Brighter gray for labels */
+    .rv{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#f8fafc;text-align:right;min-width:110px} /* White for values */
+    .rv.dim{color:#94a3b8;font-weight:400} /* Brighter dash */
+    .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.gold{color:#fbbf24}
+    
+    .gh{background:rgba(255,255,255,0.03);padding:10px 25px;font-size:11px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px}
+    .rr{display:flex;align-items:center;padding:14px 25px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .rr.sub{background:rgba(251,191,36,0.03)}
+    .rr.tot{background:rgba(251,191,36,0.1);padding:20px 25px}
+    .rr.tot .rl{font-size:16px;font-weight:700;color:#fbbf24}
+    .rv.grand{font-size:28px;color:#fbbf24}
+
+    .loading,.spinner{display:flex;justify-content:center;align-items:center}.spinner{width:30px;height:30px;border:3px solid #334155;border-top-color:#fbbf24;border-radius:50%;animation:spin 1s infinite linear}
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
     <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">IPL 2026 Fantasy League</div>
+    <div class="banner" id="banner">Data Updating...</div>
   </div>
   <div class="tab-bar" id="tabBar"></div>
-  <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  <div id="area"></div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════
-   STEP 1 — paste your Apps Script URL here after deploying
-═══════════════════════════════════════════════════ */
 const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
-
+const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
 const TABS = [
-  {name:'Leaderboard',       key:'leaderboard',  type:'lb'},
-  {name:'Your Report Card',  key:'reportcard',   type:'rc'},
-  {name:'Match Scores',      key:'matchscores',  type:'dt'},
-  {name:'SS Scores',         key:'ssscores',     type:'dt'},
-  {name:'Daily Score',       key:'dailyscore',   type:'dt'},
+  {name:'Leaderboard', key:'leaderboard', type:'lb'},
+  {name:'Your Report Card', key:'reportcard', type:'rc'},
+  {name:'Match Scores', key:'matchscores', type:'dt'},
+  {name:'SS Scores', key:'ssscores', type:'dt'},
+  {name:'Daily Score', key:'dailyscore', type:'dt'},
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-/* Confirmed column indices from live sheet data */
-const LC={rank:1,arrow:2,name:3,match:4,bonus:5,star:6,duo:7,resurrector:8,risk:9,special:10,superBonus:11,superSelector:12,total:13};
-
-const GROUPS=[
-  {t:'🏏 Match Related',rows:[
-    {k:'match_pts',  i:'🏏',l:'Match Points'},
-    {k:'bonus_pts',  i:'🎯',l:'Bonus Points'},
-    {k:'risk_inc',   i:'⚡',l:'Risk Incentive'},
-    {k:'special_inc',i:'🎁',l:'Special Incentive'},
-    {k:'match_total',i:'➕',l:'Match Related Points',sub:1},
-  ]},
-  {t:'⭐ Star Performer',rows:[
-    {k:'sp_indiv',  i:'⭐',l:'SP Individual Performance'},
-    {k:'sp_linked', i:'🔗',l:'Linked / Not Linked',badge:1},
-    {k:'sp_pts',    i:'⭐',l:'SP Points (incl link effect)',sub:1},
-  ]},
-  {t:'👥 Dynamic Duo',rows:[
-    {k:'dd1_indiv', i:'👤',l:'D1 Individual Performance'},
-    {k:'dd2_indiv', i:'👤',l:'D2 Individual Performance'},
-    {k:'dd_prem',   i:'💎',l:'Upfront Premium?',badge:1},
-    {k:'dd_pts',    i:'👥',l:'DD Points (incl prem. effect)',sub:1},
-  ]},
-  {t:'🔁 The Resurrector',rows:[
-    {k:'res1',       i:'💀',l:'Ressurector 1'},
-    {k:'res2',       i:'💀',l:'Ressurector 2'},
-    {k:'resurrector',i:'🔁',l:'THE RESURRECTOR',sub:1},
-  ]},
-  {t:'🔮 Super Selector',rows:[
-    {k:'wk',       i:'🧤',l:'Wicket Keeper'},{k:'vc',   i:'🏅',l:'Vice Captain'},{k:'captain',i:'🅒',l:'Captain'},
-    {k:'bat1',     i:'🏏',l:'Bat 1'},{k:'bat2',i:'🏏',l:'Bat 2'},{k:'bat3',i:'🏏',l:'Bat 3'},
-    {k:'bow1',     i:'🏐',l:'Bow 1'},{k:'bow2',i:'🏐',l:'Bow 2'},{k:'bow3',i:'🏐',l:'Bow 3'},
-    {k:'ar1',      i:'🔄',l:'All Rounder 1'},{k:'ar2',i:'🔄',l:'All Rounder 2'},
-    {k:'play1',    i:'▶️',l:'Play 1'},{k:'play2',i:'▶️',l:'Play 2'},
-    {k:'super_sel',i:'🔮',l:'Super Selector',sub:1},
-  ]},
-];
-
-const LMAP={
-  'match points':'match_pts','bonus points':'bonus_pts',
-  'risk incentive':'risk_inc','special incentive':'special_inc',
-  'match related points':'match_total',
-  'sp individual performance':'sp_indiv',
-  'linked / not linked':'sp_linked','linked/not linked':'sp_linked',
-  'sp points (incl link effect)':'sp_pts','sp points (incl. link effect)':'sp_pts',
-  'd1 individual performance':'dd1_indiv',
-  'd2 individual performance':'dd2_indiv',
-  'upfront premium?':'dd_prem','upfront premium':'dd_prem',
-  'dd points (incl prem. effect)':'dd_pts','dd points (incl. prem. effect)':'dd_pts',
-  'ressurector 1':'res1','resurrector 1':'res1',
-  'ressurector 2':'res2','resurrector 2':'res2',
-  'the resurrector':'resurrector',
-  'wicket keeper':'wk','vice captain':'vc','captain':'captain',
-  'bat 1':'bat1','bat 2':'bat2','bat 3':'bat3',
-  'bow 1':'bow1','bow 2':'bow2','bow 3':'bow3',
-  'all rounder 1':'ar1','all rounder 2':'ar2',
-  'play 1':'play1','play 2':'play2','super selector':'super_sel',
-};
+const LC={rank:1,name:3,total:13,match:4,bonus:5,star:6,duo:7,resurrector:8,risk:9,special:10,superBonus:11,superSelector:12};
 
 let cur=TABS[0], players=[], rcName='', rcMatch=7;
-const CACHE={}, TTL=60000;
-
-async function api(key){
-  if(API==='PASTE_YOUR_APPS_SCRIPT_URL_HERE') throw new Error('⚠ Apps Script URL not set. Open the HTML file and replace PASTE_YOUR_APPS_SCRIPT_URL_HERE with your deployed URL.');
-  const now=Date.now();
-  if(CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
-  const r=await fetch(API+'?tab='+encodeURIComponent(key));
-  if(!r.ok) throw new Error('Server error '+r.status);
-  const d=await r.json();
-  if(d.error) throw new Error(d.error);
-  CACHE[key]={d,ts:now};
-  return d;
-}
-
-function tabs(){
-  document.getElementById('tabBar').innerHTML=TABS.map(t=>
-    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
-  ).join('');
-}
-function go(n){cur=TABS.find(t=>t.name===n);tabs();load();}
 
 async function load(){
-  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
+  document.getElementById('area').innerHTML='<div class="loading"><div class="spinner"></div></div>';
   try{
-    const d=await api(cur.key);
-    if(cur.type==='lb'){buildPlayers(d.rows);renderLB(d.rows);}
-    else if(cur.type==='rc'){rcShell();}
-    else{renderDT(d.rows);}
-  }catch(e){set('<div class="err"><strong>Error loading data</strong><br>'+esc(e.message)+'</div>');}
+    const d = await fetch(`${API}?tab=${cur.key}`).then(r=>r.json());
+    if(cur.type==='lb'){ buildPlayers(d.rows); renderLB(d.rows); }
+    else if(cur.type==='rc'){ renderRCShell(); }
+    else renderDT(d.rows);
+  } catch(e){ document.getElementById('area').innerHTML='Error Loading Data'; }
 }
 
 function buildPlayers(rows){
-  players=[];
-  for(const row of rows){
-    const rn=parseInt(row[LC.rank]);
-    const nm=String(row[LC.name]||'').trim();
-    if(!nm||isNaN(rn)||nm==='Participant'||nm==='null') continue;
-    const ar=String(row[LC.arrow]||'');
-    players.push({rank:rn,name:nm,change:ar.includes('▲')?'up':ar.includes('▼')?'dn':'',arrowRaw:ar,
-      match:pn(row[LC.match]),bonus:pn(row[LC.bonus]),star:pn(row[LC.star]),duo:pn(row[LC.duo]),
-      resurrector:pn(row[LC.resurrector]),risk:pn(row[LC.risk]),special:pn(row[LC.special]),
-      superBonus:pn(row[LC.superBonus]),superSelector:pn(row[LC.superSelector]),total:pn(row[LC.total])});
-  }
-  players.sort((a,b)=>a.rank-b.rank);
+  players = rows.filter(r => parseInt(r[LC.rank]) > 0).map(r => ({
+    rank: parseInt(r[LC.rank]), name: String(r[LC.name]).trim(), total: pn(r[LC.total])
+  })).sort((a,b)=>a.rank-b.rank);
 }
 
 function renderLB(rows){
-  // detect match number from header rows
-  for(const row of rows.slice(0,5)){
-    const m=row.join(' ').match(/match\s*#?\s*(\d+)/i);
-    if(m){document.getElementById('banner').textContent='Data is updated till Match '+m[1];break;}
-  }
-  set('<div class="lb">'+players.map(p=>{
-    const rc=p.rank===1?'r1':p.rank===2?'r2':p.rank===3?'r3':'';
-    const an=p.arrowRaw.match(/\d+/)?.[0]||'';
-    const ct=p.change==='up'?'▲ '+an:p.change==='dn'?'▼ '+an:'◆';
-    return `<div class="pc">
-      <div class="ph">
-        <div class="pl"><div class="rb ${rc}">${p.rank}</div><div><div class="pname">${esc(p.name)}</div><div class="pchange ${p.change}">${ct}</div></div></div>
-        <div class="ptot">${fmt(p.total)}</div>
-      </div>
-      <div class="sg">
-        ${[['Match',p.match],['Bonus',p.bonus],['Star',p.star],['Duo',p.duo],['Resurrect',p.resurrector],['Risk',p.risk],['Special',p.special],['Sup Bonus',p.superBonus||'—'],['Selector',p.superSelector]]
-          .map(([l,v])=>'<div class="sb"><span class="sl">'+l+'</span><span class="sv">'+(typeof v==='number'?fmt(v):v)+'</span></div>').join('')}
-      </div>
-    </div>`;
-  }).join('')+'</div>');
+  // Banner Update
+  const bRow = rows.find(r => String(r).includes('Match'));
+  if(bRow) document.getElementById('banner').innerText = 'Data Updated till ' + String(bRow).match(/Match \d+/)[0];
+
+  let h = '<div class="lb">';
+  rows.forEach(row => {
+    const rn = parseInt(row[LC.rank]);
+    if(isNaN(rn)) return;
+    h += `<div class="pc"><div class="ph"><div class="pl"><div class="rb ${rn<=3?'r1':''}">${rn}</div><div class="pname">${row[LC.name]}</div></div><div class="ptot">${fmt(row[LC.total])}</div></div>
+    <div class="sg">${[['Match',row[LC.match]],['Bonus',row[LC.bonus]],['Star',row[LC.star]],['Duo',row[LC.duo]],['Resurrect',row[LC.resurrector]],['Risk',row[LC.risk]],['Special',row[LC.special]],['Selector',row[LC.superSelector]]].map(([l,v])=>`<div class="sb"><span class="sl">${l}</span><span class="sv">${fmt(v)}</span></div>`).join('')}</div></div>`;
+  });
+  document.getElementById('area').innerHTML = h + '</div>';
 }
 
 function renderDT(rows){
-  if(!rows||!rows.length){set('<div class="loading">No data</div>');return;}
-  const isP=cur.key==='playerpoints';
-  let hi=0;
-  for(let i=0;i<Math.min(5,rows.length);i++){if(rows[i].filter(c=>String(c||'').trim()).length>3){hi=i;break;}}
-  const hdrs=rows[hi];
-  const data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
-  let h='<div class="tw"><table><thead><tr>';
+  const isP = cur.key==='playerpoints';
+  let h = '<div class="tw"><table><thead><tr>';
+  const hdrs = rows[0];
   hdrs.forEach((hd,i)=>{
-    if(isP){if(i===0||i===1)return;}else{if(i===0)return;}
-    let cls='',lbl=String(hd||'').trim();
-    if(isP){if(i===2){cls='sc1';}if(i===3){cls='sc2';lbl='Total Score';}}
-    else{if(i===1){cls='sc1';}if(i===2){cls='sc2';}}
-    h+=`<th class="${cls}">${esc(lbl)}</th>`;
+    if(isP ? (i<2) : (i===0 || i===3)) return;
+    let cls = '';
+    if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; }
+    else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
+    h += `<th class="${cls}">${hd||''}</th>`;
   });
-  h+='</tr></thead><tbody>';
-  data.forEach(row=>{
-    h+='<tr>';
+  h += '</tr></thead><tbody>';
+  rows.slice(1).forEach(row => {
+    h += '<tr>';
     row.forEach((c,i)=>{
-      if(isP){if(i===0||i===1)return;}else{if(i===0)return;}
-      let cls='';
-      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
-      else{if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      let v=String(c||'').trim();
-      if(v==='null'||v==='undefined')v='—';
-      h+=`<td class="${cls}">${esc(v)}</td>`;
+      if(isP ? (i<2) : (i===0 || i===3)) return;
+      let cls = '';
+      if(isP){ if(i===2)cls='sc1'; if(i===3)cls='sc2'; }
+      else { if(i===1)cls='sc1'; if(i===2)cls='sc2'; }
+      h += `<td class="${cls}">${c||'—'}</td>`;
     });
-    h+='</tr>';
+    h += '</tr>';
   });
-  set(h+'</tbody></table></div>');
+  document.getElementById('area').innerHTML = h + '</table></div>';
 }
 
-function rcShell(){
-  const np=players.length===0;
-  let no='<option value="">— Select your name —</option>';
-  if(np) no+='<option disabled>⚠ Load Leaderboard first</option>';
-  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
-  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
-  set(`
-    ${np?'<div class="notice">💡 <span>Player names load from the <strong>Leaderboard</strong> tab — click it first.</span></div>':''}
-    <div class="rc-bar">
-      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
-      <div class="rcg" style="max-width:200px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
-      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View Report Card</button>
-    </div>
-    <div id="rcA"><div class="rccard"><div class="rce">
-      <span class="rce-i">📋</span>
-      <div class="rce-t">Select a player and match</div>
-      <div class="rce-s">Choose your name and match number, then click <strong>View Report Card</strong>.</div>
-    </div></div></div>`);
+function renderRCShell(){
+  let names = players.map(p=>`<option value="${p.name}" ${p.name===rcName?'selected':''}>${p.name}</option>`).join('');
+  let matches = ''; for(let i=1;i<=74;i++) matches+=`<option value="${i}" ${i===rcMatch?'selected':''}>Match ${i}</option>`;
+  
+  document.getElementById('area').innerHTML = `
+    <div class="rc-container">
+      <div class="rc-bar">
+        <div class="rcg"><div class="rcl">Participant</div><select class="rcsel" id="selN">${names}</select></div>
+        <div class="rcg"><div class="rcl">Match No.</div><select class="rcsel" id="selM">${matches}</select></div>
+        <button class="rcbtn" onclick="fetchRC()">▶ View Report Card</button>
+      </div>
+      <div id="rcArea"></div>
+    </div>`;
 }
 
-async function loadRC(){
-  rcName=document.getElementById('rcSN').value;
-  rcMatch=parseInt(document.getElementById('rcSM').value);
-  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Select a player first</div></div></div>');return;}
-  const b=document.getElementById('rcb');b.disabled=true;b.textContent='Loading…';
-  try{
-    const d=await api('reportcard');
-    const g=d.rows||[];
-    /* find name col */
-    let nR=-1,nC=-1;
-    for(let r=0;r<Math.min(10,g.length);r++){for(let c=0;c<g[r].length;c++){if(String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nR=r;nC=c;break;}}if(nC>=0)break;}
-    /* find match col */
-    let mR=-1,mC=-1;
-    const ms=String(rcMatch);
-    for(let r=0;r<Math.min(10,g.length);r++){for(let c=0;c<g[r].length;c++){const v=String(g[r][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();if(v===ms){mR=r;mC=c;break;}}if(mC>=0)break;}
-    /* chip totals */
-    const ct={};
-    if(mR>=0){for(let c=0;c<(g[mR]||[]).length;c++){const v=String(g[mR][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();const mn=parseInt(v);if(!isNaN(mn)&&mn>=1&&mn<=74){let tot=0;for(let r=mR+1;r<g.length;r++){const n=pn(g[r]?.[c]);if(!isNaN(n))tot+=n;}ct[mn]=Math.round(tot);}}}
-    /* score map */
-    const sm={};
-    const ds=Math.max(nR,mR)+1;
-    for(let r=ds;r<g.length;r++){
-      let lbl='';for(let c=0;c<=Math.min(3,g[r].length-1);c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
-      const k=LMAP[lbl.toLowerCase()];if(!k)continue;
-      let val='';
-      if(mC>=0&&g[r]?.[mC]!==undefined)val=g[r][mC]||'';
-      else if(nC>=0&&g[r]?.[nC]!==undefined)val=g[r][nC]||'';
-      sm[k]=String(val).trim();
-    }
-    renderRC(sm,ct);
-  }catch(e){setRC('<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">'+esc(e.message)+'</div></div></div>');}
-  b.disabled=false;b.textContent='▶ View Report Card';
-}
+async function fetchRC(){
+  rcName = document.getElementById('selN').value;
+  rcMatch = document.getElementById('selM').value;
+  document.getElementById('rcArea').innerHTML = '<div class="spinner"></div>';
+  const d = await fetch(`${API}?tab=reportcard`).then(r=>r.json());
+  
+  // Find player data in Report Card sheet
+  const g = d.rows;
+  let mCol = -1;
+  for(let c=0; c<g[1].length; c++) { if(String(g[2][c]) == rcMatch) mCol = c; }
+  
+  const mapping = {
+    'Match Points': 4, 'Bonus Points': 5, 'Risk Incentive': 6, 'Special Incentive': 7, 'Match Related Points': 9,
+    'SP Individual Performance': 12, 'SP Points (incl link effect)': 15,
+    'D1 Individual Performance': 17, 'D2 Individual Performance': 18, 'DD Points (incl prem. effect)': 21,
+    'THE RESURRECTOR': 25, 'Super Selector': 41
+  };
 
-function renderRC(sm,chipT){
-  const pl=players.find(p=>p.name===rcName);
-  const rank=pl?.rank||0;
-  const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-  const mNums=Object.keys(chipT).map(Number).sort((a,b)=>a-b);
-  let chips='';
-  if(mNums.length>0){
-    chips=`<div class="cw"><div class="ct">Match Breakdown</div><div class="chips">${mNums.map(m=>{const s=chipT[m]||0;const vc=s>0?'pos':s<0?'neg':'';return`<div class="chip ${m===rcMatch?'on':''}" onclick="rcJ(${m})"><div class="cl">M${m}</div><div class="cv ${vc}">${s>0?'+':''}${s||'—'}</div></div>`;}).join('')}</div></div>`;
+  let rowsHtml = '';
+  for(let label in mapping) {
+    let val = mCol > -1 ? g[mapping[label]][mCol] : '—';
+    let isSub = label.includes('Points') || label === 'THE RESURRECTOR' || label === 'Super Selector';
+    rowsHtml += `<div class="rr ${isSub?'sub':''}"><span class="rl">${label}</span><span class="rv">${fmt(val)}</span></div>`;
   }
-  let rows='';
-  GROUPS.forEach(grp=>{
-    rows+=`<div class="gh">${grp.t}</div>`;
-    grp.rows.forEach(rd=>{
-      const raw=sm[rd.k]||'';const num=pn(raw);const isN=!isNaN(num);
-      let vh='';
-      if(rd.badge){
-        if(/yes|linked|true/i.test(raw))vh=`<span class="badge yes">${esc(raw)}</span>`;
-        else if(/no|not|false/i.test(raw))vh=`<span class="badge no">${esc(raw)}</span>`;
-        else if(raw)vh=`<span class="badge neu">${esc(raw)}</span>`;
-        else vh='<span class="rv dim">—</span>';
-      }else if(isN){const cls=rd.sub?'gold':num>0?'pos':num<0?'neg':'dim';vh=`<span class="rv ${cls}">${num===0?'—':fmtS(num)}</span>`;}
-      else{vh=`<span class="rv dim">${esc(raw)||'—'}</span>`;}
-      rows+=`<div class="rr ${rd.sub?'sub':''}"><span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${vh}</div>`;
-    });
-  });
-  setRC(`<div class="rccard">
-    <div class="rchero">
-      <div class="rcav">${init}</div>
-      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
-      ${rank>0?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
-    </div>
-    ${chips}
-    <div class="gh" style="border-top:none">Score Breakdown — Match ${rcMatch}</div>
-    ${rows}
-    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative)</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
-  </div>`);
+
+  const pl = players.find(p=>p.name===rcName);
+  document.getElementById('rcArea').innerHTML = `
+    <div class="rccard">
+      <div class="rchero">
+        <div class="rcav">${rcName[0]}</div>
+        <div><div class="rchn">${rcName}</div><div style="color:#94a3b8">Match ${rcMatch}</div></div>
+        <div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div style="font-size:10px;text-transform:uppercase">Rank</div></div>
+      </div>
+      ${rowsHtml}
+      <div class="rr tot"><span class="rl">Season Total</span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+    </div>`;
 }
 
-function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
-function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h){document.getElementById('area').innerHTML=h;}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function pn(v){
-  if(v===null||v===undefined||v==='')return NaN;
-  const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
-  return parseFloat(s);
-}
-function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
-function fmtS(n){return n===0?'—':(n>0?'+':'')+n.toLocaleString('en-US');}
-
-tabs();load();
-setInterval(()=>{if(cur.type==='lb')load();},120000);
-</script>
-</body>
-</html>
+function pn(v){ if(!v)return 0; return parseFloat(String(v).replace
