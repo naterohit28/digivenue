@@ -1,80 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy League</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
-    .wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);padding:15px}
-    .header{text-align:center;margin-bottom:15px}
-    .header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
-    .banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
-    .tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:15px}
-    .tab-btn{background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0;font-family:'Inter',sans-serif}
-    .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
-    .loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
-    .spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    
-    .tw{overflow:auto;background:rgba(15,23,42,0.6);border-radius:8px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
-    table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
-    th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
-    th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:10px;letter-spacing:.5px}
-    .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:190px}
-    .sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
-    th.sc1,th.sc2{z-index:15;background:#0f172a}
-    tr:hover td{background:rgba(255,255,255,0.03)}
-
-    /* ── REPORT CARD ─────────────────────────────────────────── */
-    .rc-wrap{max-width:920px;margin:0 auto}
-    .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
-    .rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
-    .rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;width:100%}
-    .rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
-    .rccard{background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
-    .rchero{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04));border-bottom:1px solid rgba(251,191,36,0.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#0f172a}
-    .rchn{font-size:20px;font-weight:700;color:#fff}
-    .rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
-    .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
-    
-    .chips{display:flex;gap:6px;overflow-x:auto;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.07)}
-    .chip{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 11px;text-align:center;min-width:54px;cursor:pointer}
-    .chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.13)}
-    
-    .gh{background:rgba(255,255,255,0.03);padding:6px 20px;font-size:10px;font-weight:800;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,0.06);letter-spacing:1px}
-    .rr{display:grid;grid-template-columns:28px 1fr auto 80px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
-    .ri{font-size:15px;text-align:center}
-    .rl{font-size:13px;font-weight:500;color:#cbd5e1}
-    .rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;max-width:220px;overflow:hidden;text-overflow:ellipsis}
-    .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
-    .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.gold{color:#fbbf24}
-    .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.14),transparent);border-top:2px solid rgba(251,191,36,0.35);padding:15px 20px}
-    .rv.grand{font-size:26px;color:#fbbf24}
-    .badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px}
-    .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.35)}
-    .badge.no{background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IPL 2026 Fantasy League</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
+.wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px rgba(0,0,0,.5);padding:15px}
+.header{text-align:center;margin-bottom:15px}
+.header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
+.banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,.1);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
+.tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
+.tab-bar::-webkit-scrollbar{height:4px}
+.tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
+.tab-btn{background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0;font-family:'Inter',sans-serif}
+.tab-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab-btn.active{background:rgba(251,191,36,.1);color:#fbbf24;border-color:#fbbf24}
+.loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
+.spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8;white-space:pre-wrap}
+/* tables */
+.tw{overflow:auto;background:rgba(15,23,42,.6);border-radius:8px;border:1px solid rgba(255,255,255,.05);max-height:75vh}
+table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
+th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#f8fafc}
+th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,.1);text-transform:uppercase;font-size:10px;letter-spacing:.5px}
+.sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:190px}
+.sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,.1);text-align:center}
+th.sc1,th.sc2{z-index:15;background:#0f172a}
+tr:hover td{background:rgba(255,255,255,.03)}
+.c-neg{color:#f87171!important;font-weight:700}
+.c-dim{color:#475569}
+.rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
+.ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
+/* RC */
+.rc-wrap{max-width:920px;margin:0 auto}
+.rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
+.rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
+.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
+.rcsel:hover{border-color:rgba(251,191,36,.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
+.rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
+.rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,.35)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.rccard{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.rchero{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.04));border-bottom:1px solid rgba(251,191,36,.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
+.rchn{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#fff}
+.rchs{font-size:12px;color:#94a3b8;margin-top:3px}
+.rchr{margin-left:auto;text-align:right}
+.rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
+.rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.gh{background:rgba(255,255,255,.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+/* row grid: icon | label | detail | score */
+.rr{display:grid;grid-template-columns:28px 1fr auto 90px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s}
+.rr:hover{background:rgba(255,255,255,.04)}
+.rr.sub{background:rgba(251,191,36,.07);border-top:1px solid rgba(251,191,36,.15);border-bottom:1px solid rgba(251,191,36,.15)}
+.rr.tot{background:linear-gradient(90deg,rgba(251,191,36,.14),transparent);border-top:2px solid rgba(251,191,36,.35);padding:15px 20px}
+.rr.dtot{background:linear-gradient(90deg,rgba(96,165,250,.1),transparent);border-top:2px solid rgba(96,165,250,.25);padding:13px 20px}
+.ri{font-size:15px;text-align:center}
+.rl{font-size:13px;font-weight:500;color:#cbd5e1}
+.rr.sub .rl{color:#fbbf24;font-weight:700}
+.rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
+.rr.dtot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
+.rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.rr.sub .rd,.rr.tot .rd,.rr.dtot .rd{visibility:hidden}
+.rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
+.rv.pos {color:#4ade80}
+.rv.neg {color:#f87171;font-weight:700}
+.rv.dim {color:#64748b;font-weight:400;font-size:12px}
+.rv.gold{color:#fbbf24;font-weight:700}
+.rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,.4)}
+.rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
+.badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.badge.yes{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.35)}
+.badge.no {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+.badge.neu{background:rgba(148,163,184,.1);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
+.rce{padding:44px 20px;text-align:center}
+.rce-i{font-size:38px;margin-bottom:10px;display:block}
+.rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
+.rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
+.warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:9px 14px;margin:0 20px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
+@media(max-width:600px){
+  .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
+  .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
+  .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 72px}.rd{max-width:110px}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
     <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">Syncing Scores...</div>
+    <div class="banner" id="banner">Syncing live data…</div>
   </div>
   <div class="tab-bar" id="tabBar"></div>
-  <div id="area"></div>
+  <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
 </div>
-
 <script>
-// 🎯 Updated API URL
 const API = 'https://script.google.com/macros/s/AKfycbz-Jj_RmSnxqxE9k_jwQoaQ-X-AL-tJp_T-k2lvwhrW4UlKSgdbl8mQRZJooco_VmyDzQ/exec';
-const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
-
 const TABS = [
   {name:'Leaderboard', key:'leaderboard', type:'lb'},
   {name:'Your Report Card', key:'reportcard', type:'rc'},
@@ -83,11 +108,27 @@ const TABS = [
   {name:'Daily Score', key:'dailyscore', type:'dt'},
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
-
+const LB_COLS = [
+  {re:'match', lbl:'Match' },
+  {re:'bonus', lbl:'Bonus' },
+  {re:'star performer', lbl:'SP' },
+  {re:'dynamic duo', lbl:'DD' },
+  {re:'resurrector', lbl:'Resurct' },
+  {re:'risk incentive', lbl:'RI' },
+  {re:'special incentive', lbl:'SI' },
+  {re:'super bonus', lbl:'SB' },
+  {re:'super selector', lbl:'SS' },
+  {re:'daily winner', lbl:'Daily' },
+  {re:'weekly winner', lbl:'Weekly' },
+  {re:'cum.*daily', lbl:'Total Daily' },
+  {re:'cum.*weekly', lbl:'Total Weekly'},
+];
 const RC_GROUPS = [
   {t:'🏏 Match Related', rows:[
-    {k:'match_pts', i:'🏏', l:'Match Points'}, {k:'bonus_pts', i:'🎯', l:'Bonus Points'},
-    {k:'risk_inc', i:'⚡', l:'Risk Incentive'}, {k:'special_inc', i:'🎁', l:'Special Incentive'},
+    {k:'match_pts', i:'🏏', l:'Match Points'},
+    {k:'bonus_pts', i:'🎯', l:'Bonus Points'},
+    {k:'risk_inc', i:'⚡', l:'Risk Incentive'},
+    {k:'special_inc', i:'🎁', l:'Special Incentive'},
     {k:'match_total', i:'➕', l:'Match Related Points', sub:1},
   ]},
   {t:'⭐ Star Performer', rows:[
@@ -102,157 +143,303 @@ const RC_GROUPS = [
     {k:'dd_pts', i:'👥', l:'DD Points (incl prem. effect)', sub:1},
   ]},
   {t:'🔁 The Resurrector', rows:[
-    {k:'res1', i:'💀', l:'Resurrector 1'}, {k:'res2', i:'💀', l:'Resurrector 2'},
-    {k:'resurrector', i:'🔁', l:'THE RESURRECTOR', sub:1},
+    {k:'res1', i:'💀', l:'Ressurector 1'},
+    {k:'res2', i:'💀', l:'Ressurector 2'},
+    {k:'resurrector',i:'🔁', l:'THE RESURRECTOR', sub:1},
   ]},
   {t:'🔮 Super Selector', rows:[
-    {k:'wk', i:'🧤', l:'Wicket Keeper'}, {k:'vc', i:'🏅', l:'Vice Captain'}, {k:'captain', i:'©️', l:'Captain'},
-    {k:'bat1', i:'🏏', l:'Bat 1'}, {k:'bat2', i:'🏏', l:'Bat 2'}, {k:'bat3', i:'🏏', l:'Bat 3'},
-    {k:'bow1', i:'🏐', l:'Bow 1'}, {k:'bow2', i:'🏐', l:'Bow 2'}, {k:'bow3', i:'🏐', l:'Bow 3'},
-    {k:'ar1', i:'🔄', l:'All Rounder 1'}, {k:'ar2', i:'🔄', l:'All Rounder 2'}, {k:'play1', i:'▶️', l:'Play 1'}, {k:'play2', i:'▶️', l:'Play 2'},
-    {k:'super_sel', i:'🔮', l:'Super Selector', sub:1},
+    {k:'wk', i:'🧤', l:'Wicket Keeper'},
+    {k:'vc', i:'🏅', l:'Vice Captain'},
+    {k:'captain', i:'©️', l:'Captain'},
+    {k:'bat1', i:'🏏', l:'Bat 1'},
+    {k:'bat2', i:'🏏', l:'Bat 2'},
+    {k:'bat3', i:'🏏', l:'Bat 3'},
+    {k:'bow1', i:'🏐', l:'Bow 1'},
+    {k:'bow2', i:'🏐', l:'Bow 2'},
+    {k:'bow3', i:'🏐', l:'Bow 3'},
+    {k:'ar1', i:'🔄', l:'All Rounder 1'},
+    {k:'ar2', i:'🔄', l:'All Rounder 2'},
+    {k:'play1', i:'▶️', l:'Play 1'},
+    {k:'play2', i:'▶️', l:'Play 2'},
+    {k:'super_sel',i:'🔮', l:'Super Selector', sub:1},
   ]},
 ];
-
 const RC_LMAP = {
-  'match points':'match_pts','bonus points':'bonus_pts','risk incentive':'risk_inc','special incentive':'special_inc','match related points':'match_total',
-  'sp individual performance':'sp_indiv','linked / not linked':'sp_linked','linked/not linked':'sp_linked','sp points (incl link effect)':'sp_pts',
-  'd1 individual performance':'dd1_indiv','d2 individual performance':'dd2_indiv','upfront premium?':'dd_prem','dd points (incl prem. effect)':'dd_pts',
-  'resurrector 1':'res1','ressurector 1':'res1','resurrector 2':'res2','ressurector 2':'res2','the resurrector':'resurrector',
-  'wicket keeper':'wk','vice captain':'vc','captain':'captain','bat 1':'bat1','bat 2':'bat2','bat 3':'bat3','bow 1':'bow1','bow 2':'bow2','bow 3':'bow3','all rounder 1':'ar1','all rounder 2':'ar2','play 1':'play1','play 2':'play2','super selector':'super_sel','total daily score':'daily_total'
+  'match points':'match_pts','bonus points':'bonus_pts',
+  'risk incentive':'risk_inc','special incentive':'special_inc',
+  'match related points':'match_total',
+  'sp individual performance':'sp_indiv',
+  'linked / not linked':'sp_linked','linked/not linked':'sp_linked',
+  'sp points (incl link effect)':'sp_pts','sp points (incl. link effect)':'sp_pts',
+  'd1 individual performance':'dd1_indiv','d2 individual performance':'dd2_indiv',
+  'upfront premium?':'dd_prem','upfront premium':'dd_prem',
+  'dd points (incl prem. effect)':'dd_pts','dd points (incl. prem. effect)':'dd_pts',
+  'ressurector 1':'res1','resurrector 1':'res1',
+  'ressurector 2':'res2','resurrector 2':'res2',
+  'the resurrector':'resurrector',
+  'wicket keeper':'wk','vice captain':'vc','captain':'captain',
+  'bat 1':'bat1','bat 2':'bat2','bat 3':'bat3',
+  'bow 1':'bow1','bow 2':'bow2','bow 3':'bow3',
+  'all rounder 1':'ar1','all rounder 2':'ar2',
+  'play 1':'play1','play 2':'play2','super selector':'super_sel',
+  'total daily score':'daily_total','daily total':'daily_total','total daily':'daily_total',
 };
-
 let cur=TABS[0], players=[], rcName='', rcMatch=7;
-
-async function loadContent(){
-  document.getElementById('area').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
-  try {
-    const res = await fetch(`${API}?id=${SHEET_ID}&tab=${cur.key}`);
-    const d = await res.json();
-    if(cur.type==='lb'){ buildPlayers(d.rows); renderLB(d.rows); }
-    else if(cur.type==='rc'){ if(!players.length) await fetchLBOnly(); renderRCShell(); }
-    else renderDT(d.rows);
-  } catch(e){ document.getElementById('area').innerHTML = '<div class="loading">Connection Error.</div>'; }
+const CACHE={}, TTL=60000;
+async function api(params, fresh=false){
+  const key=JSON.stringify(params), now=Date.now();
+  if(!fresh&&CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
+  const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+  const res=await fetch(API+'?'+qs);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const d=await res.json();
+  if(d.error) throw new Error(d.error);
+  if(!fresh) CACHE[key]={d,ts:now};
+  return d;
 }
-
-async function fetchLBOnly(){
-  const d = await fetch(`${API}?id=${SHEET_ID}&tab=leaderboard`).then(r=>r.json());
-  buildPlayers(d.rows);
+function renderTabs(){
+  document.getElementById('tabBar').innerHTML=TABS.map(t=>
+    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
+  ).join('');
 }
-
+function go(n){cur=TABS.find(t=>t.name===n);renderTabs();load();}
+async function load(){
+  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
+  try{
+    if(cur.type==='lb'){
+      const d=await api({tab:'leaderboard'});buildPlayers(d.rows);renderLB(d.rows);
+    }else if(cur.type==='rc'){
+      if(!players.length)try{const d=await api({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
+      renderRCShell();
+    }else{
+      const d=await api({tab:cur.key});renderDT(d.rows);
+    }
+  }catch(e){set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);}
+}
 function buildPlayers(rows){
-  players = rows.filter(r => r && !isNaN(parseInt(r[1]))).map(r => ({
-    rank: parseInt(r[1]), name: String(r[3] || '').trim(), total: pn(r[13])
-  })).sort((a,b)=>a.rank-b.rank);
-}
-
-function renderLB(rows){
-  let h = `<div class="tw"><table><thead><tr><th class="sc1">Rank & Name</th><th class="sc2">Total</th><th>Match</th><th>Bonus</th><th>Star</th><th>Duo</th><th>Resurct</th><th>RI</th><th>SI</th><th>SS</th><th>Daily</th><th>Weekly</th></tr></thead><tbody>`;
-  rows.filter(r => !isNaN(parseInt(r[1]))).forEach(row => {
-    h += `<tr><td class="sc1">#${row[1]} ${row[3]}</td><td class="sc2">${fmt(row[13])}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td><td>${row[7]}</td><td>${row[8]}</td><td>${row[9]}</td><td>${row[10]}</td><td>${row[12]}</td><td>${row[16]}</td><td>${row[17]}</td></tr>`;
-  });
-  document.getElementById('area').innerHTML = h + '</tbody></table></div>';
-}
-
-function renderDT(rows){
-  if (!rows || rows.length < 2) return;
-  const hdrs = rows[0];
-  let h = '<div class="tw"><table><thead><tr>';
-  for (let i = 1; i < hdrs.length; i++) {
-    let cls = (i === 1) ? 'sc1' : (i === 2) ? 'sc2' : '';
-    h += `<th class="${cls}">${hdrs[i]}</th>`;
+  players=[];
+  let hi=-1;
+  for(let i=0;i<Math.min(8,rows.length);i++){
+    const j=rows[i].join('|').toLowerCase();
+    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
   }
-  h += '</tr></thead><tbody>';
-  rows.slice(1).forEach(row => {
-    h += '<tr>';
-    for (let i = 1; i < row.length; i++) {
-      let cls = (i === 1) ? 'sc1' : (i === 2) ? 'sc2' : '';
-      h += `<td class="${cls}">${fmt(row[i])}</td>`;
-    }
-    h += '</tr>';
+  if(hi<0)return;
+  const h=rows[hi];
+  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
+  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
+  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
+  const iA=iR>=0?iR+1:-1;
+  rows.slice(hi+1).forEach(r=>{
+    const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();
+    if(!nm||isNaN(rn)||nm==='null')return;
+    players.push({rank:rn,name:nm,arw:iA>=0?String(r[iA]||''):'',total:pn(r[iT])});
   });
-  document.getElementById('area').innerHTML = h + '</tbody></table></div>';
+  players.sort((a,b)=>a.rank-b.rank);
 }
-
+function renderLB(rows){
+  for(const r of rows.slice(0,5)){
+    const m=r.join(' ').match(/match\s*#?\s*(\d+)/i);
+    if(m){document.getElementById('banner').textContent='Data Updated till Match '+m[1];break;}
+  }
+  let hi=-1;
+  for(let i=0;i<Math.min(8,rows.length);i++){
+    const j=rows[i].join('|').toLowerCase();
+    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
+  }
+  if(hi<0){set('<div class="loading">Header not found.</div>');return;}
+  const h=rows[hi];
+  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
+  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
+  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
+  const iA=iR>=0?iR+1:-1;
+  const sc=LB_COLS.map(d=>{const re=new RegExp(d.re,'i');const i=h.findIndex(v=>re.test(String(v||'')));return i>=0?{i,lbl:d.lbl}:null;}).filter(Boolean);
+  const dr=rows.slice(hi+1).filter(r=>{const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();return !isNaN(rn)&&nm&&nm!=='null';});
+  let html=`<div class="tw"><table><thead><tr>
+    <th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>
+    ${sc.map(c=>`<th>${c.lbl}</th>`).join('')}
+  </tr></thead><tbody>`;
+  dr.forEach(r=>{
+    const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim()),tot=pn(r[iT]),arw=iA>=0?String(r[iA]||''):'';
+    const rk=rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
+    const ac=arw.includes('▲')?'ar-up':arw.includes('▼')?'ar-dn':'ar-eq';
+    const an=(arw.match(/\d+/)||[''])[0];
+    const at=arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
+    html+=`<tr><td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td><td class="sc2">${fmtCell(tot)}</td>${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}</tr>`;
+  });
+  set(html+'</tbody></table></div>');
+}
+function renderDT(rows){
+  if(!rows||rows.length<2){set('<div class="loading">No data.</div>');return;}
+  const isP=cur.key==='playerpoints';
+  let hi=0;
+  for(let i=0;i<Math.min(5,rows.length);i++)if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
+  const hdrs=rows[hi],data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
+  let h='<div class="tw"><table><thead><tr>';
+  hdrs.forEach((hd,i)=>{
+    if(isP){if(i===0||i===1)return;}else if(i===0)return;
+    let cls='',lbl=String(hd||'').trim();
+    if(isP){if(i===2)cls='sc1';if(i===3){cls='sc2';lbl='Total Score';}}
+    else {if(i===1)cls='sc1';if(i===2)cls='sc2';}
+    h+=`<th class="${cls}">${esc(lbl)}</th>`;
+  });
+  h+='</tr></thead><tbody>';
+  data.forEach(r=>{
+    h+='<tr>';
+    r.forEach((c,i)=>{
+      if(isP){if(i===0||i===1)return;}else if(i===0)return;
+      let cls='';
+      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
+      else {if(i===1)cls='sc1';if(i===2)cls='sc2';}
+      const raw=String(c||'').trim(),n=pn(raw);
+      let disp=esc(raw===''||raw==='null'?'—':raw);
+      if(!isNaN(n)&&n<0) disp=`<span class="c-neg">${esc(raw)}</span>`;
+      else if(!isNaN(n)&&n===0)disp=`<span class="c-dim">—</span>`;
+      h+=`<td class="${cls}">${disp}</td>`;
+    });
+    h+='</tr>';
+  });
+  set(h+'</tbody></table></div>');
+}
 function renderRCShell(){
-  let no = '<option value="">— Select Player —</option>';
-  players.forEach(p => no += `<option value="${p.name}">${p.name}</option>`);
-  let mo = ''; for(let m=1; m<=74; m++) mo += `<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
-  document.getElementById('area').innerHTML = `<div class="rc-wrap"><div class="rc-bar"><div class="rcg"><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div><div class="rcg"><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div><button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button></div><div id="rcA"></div></div>`;
+  let no='<option value="">— Select your name —</option>';
+  if(!players.length)no+='<option disabled>Loading names…</option>';
+  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
+  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
+  set(`<div class="rc-wrap">
+    <div class="rc-bar">
+      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
+      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
+      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
+    </div>
+    <div id="rcA"><div class="rccard"><div class="rce">
+      <span class="rce-i">📋</span>
+      <div class="rce-t">Select player &amp; match</div>
+      <div class="rce-s">Pick a name and match number, then tap <strong>View</strong>.</div>
+    </div></div></div>
+  </div>`);
 }
-
 async function loadRC(){
-  if(!rcName) return;
-  const btn = document.getElementById('rcb'); btn.disabled=true;
-  try {
-    const d = await fetch(`${API}?id=${SHEET_ID}&tab=reportcard&player=${rcName}&match=${rcMatch}`).then(r=>r.json());
-    const g = d.rows || [];
-    const sm={}, dm={};
-    let detailC=-1, scoreC=-1, dailyTotal=null;
-
-    // Detection
-    for(let r=0; r<15; r++){
-      if(!g[r]) continue;
-      for(let c=0; c<g[r].length; c++){
-        const v = String(g[r][c]||'').trim();
-        if(v == String(rcMatch) && c > 0){ detailC=c; scoreC=c+1; break; }
-      }
-      if(detailC >= 0) break;
+  rcName =document.getElementById('rcSN').value;
+  rcMatch=parseInt(document.getElementById('rcSM').value);
+  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');return;}
+  const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='…';
+  try{
+    const d=await api({tab:'reportcard',player:rcName,match:rcMatch},true);
+    if(d.scoreMap!==undefined){
+      renderRC(d.scoreMap,d.detailMap||{},d.playerCol>=0,d.matchCol>=0,d.dailyTotal??null);
+    }else{
+      rcFallback(d.rows||[]);
     }
-    if(detailC < 0){ detailC=8; scoreC=9; }
-
-    // Mapping Loop
-    for(let r=0; r<g.length; r++){
-      let lblCol = -1;
-      for(let c=0; c<=3; c++){ if(g[r] && String(g[r][c]||'').trim()){ lblCol=c; break; } }
-      if(lblCol < 0) continue;
-      const key = RC_LMAP[String(g[r][lblCol]).trim().toLowerCase()];
-      if(!key) continue;
-
-      // 🎯 Fix Column Offset
-      const isShifted = ['res1','res2','resurrector','wk','vc','captain','bat1','bat2','bat3','bow1','bow2','bow3','ar1','ar2','play1','play2','super_sel'].includes(key);
-      const dIdx = isShifted ? detailC + 1 : detailC;
-      const sIdx = isShifted ? scoreC + 1 : scoreC;
-
-      if(key==='daily_total') dailyTotal=pn(g[r][sIdx]);
-      else {
-        dm[key] = String(g[r][dIdx] || '').trim();
-        sm[key] = String(g[r][sIdx] || '').trim();
-      }
-    }
-    renderRC(sm, dm, dailyTotal);
-  } catch(e){ document.getElementById('rcA').innerHTML = '<div class="loading">Data not available for this match.</div>'; }
-  finally { btn.disabled=false; }
+  }catch(e){
+    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">${esc(e.message)}</div></div></div>`);
+  }
+  btn.disabled=false;btn.textContent='▶ View';
 }
+function rcFallback(g){
+  const sm={},dm={};let sc=-1,dc=-1,dailyTotal=null;
+  const votes={};
+  for(let r=0;r<g.length;r++){
+    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
+    if(!RC_LMAP[lbl.toLowerCase()])continue;
+    for(let c=g[r].length-1;c>3;c--){const v=String(g[r][c]||'').trim();if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}}
+  }
+  let mx=0;Object.entries(votes).forEach(([c,v])=>{if(v>mx){mx=v;sc=+c;}});
+  dc=sc>0?sc-1:-1;
+  for(let r=2;r<g.length;r++){
+    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
+    const key=RC_LMAP[lbl.toLowerCase()];
+    if(key==='daily_total'){if(sc>=0)dailyTotal=pn(g[r][sc]);continue;}
+    if(!key)continue;
+    const det=dc>=0?String(g[r][dc]||'').trim():'';
+    const scv=sc>=0?String(g[r][sc]||'').trim():'';
+    if(key==='sp_linked'||key==='dd_prem'){detailMap[key]=det||scv;scoreMap[key]='';}
+    else{dm[key]=det;sm[key]=scv;}
+  }
+  renderRC(sm,dm,dc>=0,sc>=0,dailyTotal);
+}
+/* ── RENDER RC — chip strip REMOVED per user request ─── */
+function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
+  const pl =players.find(p=>p.name===rcName);
+  const rank=pl?pl.rank:0;
+  const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  // ── NO CHIP STRIP — removed per user request ──────────────
+  // warning
+  const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
+  let warn='';
+  if(!hasData&&!foundPlayer)warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
+  else if(!hasData&&!foundMatch)warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
+  // score rows
+  let rows='';
+  RC_GROUPS.forEach(grp=>{
+    rows+=`<div class="gh">${grp.t}</div>`;
+    grp.rows.forEach(rd=>{
+      const scoreRaw=sm[rd.k]||'';
+      const detail =dm[rd.k]||'';
+      const num =pn(scoreRaw);
+      const isNum =!isNaN(num);
+      
+      let vh='';
+      let dhContent=(!rd.sub&&!rd.badge&&detail)?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
 
-function renderRC(sm, dm, dailyTotal){
-  const pl = players.find(p=>p.name===rcName);
-  const init = rcName.split(' ').map(w=>w[0]).join('').toUpperCase();
-  let rows = '';
-  RC_GROUPS.forEach(grp => {
-    rows += `<div class="gh">${grp.t}</div>`;
-    grp.rows.forEach(rd => {
-      const score = sm[rd.k]||'', detail = dm[rd.k]||'', num = pn(score);
-      let vh = '';
       if(rd.badge){
-        const b = (detail||score).toLowerCase();
-        vh = `<span class="badge ${b.includes('yes')?'yes':'no'}">${detail||score}</span>`;
-      } else if(!isNaN(num)){
-        vh = `<span class="rv ${rd.sub?'gold':(num>0?'pos':'neg')}">${num===0?'—':(num>0?'+':'')+num.toLocaleString()}</span>`;
-      } else vh = '<span class="rv dim">—</span>';
-      rows += `<div class="rr ${rd.sub?'sub':''}"><span class="ri">${rd.i}</span><span class="rl">${rd.l}</span><span class="rd">${rd.sub?'':esc(detail)}</span>${vh}</div>`;
+        const txt=detail||scoreRaw;
+        if (/yes|linked|true/i.test(txt)) vh=`<span class="badge yes">${esc(txt)}</span>`;
+        else if(/no|not|false/i.test(txt)) vh=`<span class="badge no">${esc(txt)}</span>`;
+        else if(txt) vh=`<span class="badge neu">${esc(txt)}</span>`;
+        else vh=`<span class="rv dim">—</span>`;
+      }else if(isNum){
+        if(num===0) vh=`<span class="rv">0</span>`; // Do not hide 0
+        else if(rd.sub) vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
+        else vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`; // Negative numbers automatically get 'neg' (red) class
+      }else if(detail){
+        // If numeric value is empty -> show detailMap value (player name)
+        vh=`<span class="rv" style="font-size:12px; font-weight:500; color:#cbd5e1; white-space:normal; line-height:1.2;">${esc(detail)}</span>`;
+        dhContent=`<span class="rd"></span>`; // Hide the duplicate text from middle column
+      }else{
+        vh=`<span class="rv dim">—</span>`;
+      }
+      
+      const dh = dhContent;
+
+      rows+=`<div class="rr ${rd.sub?'sub':''}">
+        <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dh}${vh}
+      </div>`;
     });
   });
-  document.getElementById('rcA').innerHTML = `<div class="rccard"><div class="rchero"><div class="rcav">${init}</div><div><div class="rchn">${rcName}</div><div class="rchs">Match ${rcMatch} Analysis</div></div><div class="rchr"><div class="rcrn">#${pl?pl.rank:'—'}</div><div class="rcrl">Rank</div></div></div>${rows}<div class="rr tot"><span class="ri">🏆</span><span class="rl">Season Cumulative Score</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div></div>`;
+  const dh2=(dailyTotal!==null&&!isNaN(dailyTotal))
+    ?`<div class="rr dtot"><span class="ri">📅</span><span class="rl">Total Daily Score — Match ${rcMatch}</span><span class="rd"></span><span class="rv blue">${fmt(dailyTotal)}</span></div>`:'';
+  setRC(`<div class="rccard">
+    <div class="rchero">
+      <div class="rcav">${init}</div>
+      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
+      ${rank?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
+    </div>
+    ${warn}
+    <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">Score Breakdown — Match ${rcMatch}</div>
+    ${rows}
+    ${dh2}
+    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+  </div>`);
 }
-
-function pn(v){ if(!v || v==='—' || v==='-') return NaN; const s=String(v).replace(/,/g,''); return parseFloat(s); }
-function fmt(n){ const x=typeof n==='number'?n:pn(n); return isNaN(x)?'—':x.toLocaleString(); }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function go(n){ cur = TABS.find(t=>t.name===n); loadContent(); }
-
-renderTabs();
-loadContent();
+function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
+function setRC(h){document.getElementById('rcA').innerHTML=h;}
+function set(h){document.getElementById('area').innerHTML=h;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function pn(v){
+  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
+  const s=String(v).trim().replace(/,/g,'');
+  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
+  return parseFloat(s);
+}
+function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
+function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
+function fmtCell(n){
+  if(isNaN(n)||n===0)return`<span class="c-dim">—</span>`;
+  if(n<0)return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
+  return n.toLocaleString('en-US');
+}
+renderTabs();load();
+setInterval(()=>{if(cur.type==='lb')load();},120000);
 </script>
 </body>
 </html>
