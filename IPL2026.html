@@ -193,8 +193,13 @@ async function load(){
       if(!players.length)try{const d=await apiGet({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
       renderRCShell();
     }else{
-      const d=await apiGet({tab:cur.key});renderDT(d.rows);
-    }
+  // 🔥 FIX: SHOW DETAIL IF NO SCORE
+  if(detail){
+    vh = `<span class="rv">${esc(detail)}</span>`;
+  } else {
+    vh = `<span class="rv dim">—</span>`;
+  }
+}
   }catch(e){set(`<div class="err">⚠ ${esc(e.message)}</div>`);}
 }
 
