@@ -6,17 +6,17 @@
   <title>IPL 2026 Fantasy League</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ── RESET & BASE ────────────────────────────────────────── */
+    /* ── RESET & BASE ─────────────────────────────────────────── */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
     .wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,0.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);padding:15px}
 
-    /* ── HEADER ──────────────────────────────────────────────── */
+    /* ── HEADER ───────────────────────────────────────────────── */
     .header{text-align:center;margin-bottom:15px}
     .header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
     .banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,0.1);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
 
-    /* ── TABS ────────────────────────────────────────────────── */
+    /* ── TABS ─────────────────────────────────────────────────── */
     .tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:15px}
     .tab-bar::-webkit-scrollbar{height:4px}
     .tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:4px}
@@ -24,97 +24,105 @@
     .tab-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
     .tab-btn.active{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:#fbbf24}
 
-    /* ── LOADING / ERROR ─────────────────────────────────────── */
+    /* ── LOADING / ERROR ──────────────────────────────────────── */
     .loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
     .spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .err-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8}
 
-    /* ── TABLES (leaderboard + data tabs) ───────────────────── */
+    /* ── DATA TABLES (Leaderboard + other tabs) ───────────────── */
     .tw{overflow:auto;background:rgba(15,23,42,0.6);border-radius:8px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
     table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
     th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;color:#f8fafc}
     th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,0.1);text-transform:uppercase;font-size:10px;letter-spacing:.5px}
-    /* sticky name col */
     .sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:190px}
-    /* sticky total col */
     .sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
     th.sc1,th.sc2{z-index:15;background:#0f172a}
     tr:hover td{background:rgba(255,255,255,0.03)}
-    /* value colours */
-    .v-neg{color:#f87171}
-    .v-dim{color:#475569}
-    .v-gold{color:#fbbf24;font-weight:800}
-    /* rank colours */
-    .rk-1{color:#fbbf24;font-weight:800}
-    .rk-2{color:#94a3b8;font-weight:800}
-    .rk-3{color:#b45309;font-weight:800}
-    /* arrow colours */
-    .ar-up{color:#4ade80;font-size:10px}
-    .ar-dn{color:#f87171;font-size:10px}
-    .ar-eq{color:#64748b;font-size:10px}
+    .v-neg{color:#f87171}.v-dim{color:#475569}.v-gold{color:#fbbf24;font-weight:800}
+    .rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
+    .ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
 
-    /* ── REPORT CARD ─────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════════
+       REPORT CARD — improved readability
+    ══════════════════════════════════════════════════════════ */
     .rc-wrap{max-width:860px;margin:0 auto}
     .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
     .rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
     .rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
+    .rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
     .rcsel:hover{border-color:rgba(251,191,36,0.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
     .rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
     .rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,0.35)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
     /* card */
     .rccard{background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
-    /* hero */
-    .rchero{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04));border-bottom:1px solid rgba(251,191,36,0.15);padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .rcav{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
-    .rchn{font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;color:#f8fafc}
-    .rchs{font-size:11px;color:#64748b;margin-top:2px}
+
+    /* hero strip */
+    .rchero{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.04));border-bottom:1px solid rgba(251,191,36,0.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
+    .rchn{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#ffffff}
+    .rchs{font-size:12px;color:#94a3b8;margin-top:3px}
     .rchr{margin-left:auto;text-align:right}
-    .rcrn{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;color:#fbbf24;line-height:1}
-    .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+    .rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
+    .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
     /* chip strip */
-    .cw{border-bottom:1px solid rgba(255,255,255,0.05);padding:10px 18px}
+    .cw{border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 20px}
     .ct{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:8px}
-    .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+    .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px}
     .chips::-webkit-scrollbar{height:3px}.chips::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
-    .chip{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:6px 10px;text-align:center;min-width:52px;cursor:pointer;transition:.15s}
-    .chip:hover{border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.06)}.chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.12)}
+    .chip{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 11px;text-align:center;min-width:54px;cursor:pointer;transition:.15s}
+    .chip:hover{border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.07)}.chip.on{border-color:#fbbf24;background:rgba(251,191,36,0.13)}
     .cl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
-    .cv{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;margin-top:1px;color:#e2e8f0}
+    .cv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;margin-top:2px;color:#e2e8f0}
     .cv.pos{color:#4ade80}.cv.neg{color:#f87171}
+
     /* group header */
-    .gh{background:rgba(251,191,36,0.05);padding:5px 18px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04)}
-    /* score rows */
-    .rr{display:flex;align-items:center;padding:8px 18px;border-bottom:1px solid rgba(255,255,255,0.03);transition:background .1s}
-    .rr:hover{background:rgba(255,255,255,0.015)}
-    .rr.sub{background:rgba(251,191,36,0.04);border-top:1px solid rgba(251,191,36,0.08);border-bottom:1px solid rgba(251,191,36,0.08)}
-    .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.1),transparent);border-top:2px solid rgba(251,191,36,0.2);padding:12px 18px}
-    .ri{width:22px;font-size:13px;text-align:center;flex-shrink:0}
-    .rl{flex:1;font-size:12px;color:#94a3b8;margin-left:6px}
-    .rr.sub .rl{color:#fbbf24;font-weight:600}
-    .rr.tot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#fbbf24}
-    .rv{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#e2e8f0;text-align:right;min-width:80px}
-    .rv.pos{color:#4ade80}.rv.neg{color:#f87171}.rv.dim{color:#475569;font-weight:400;font-size:12px}
-    .rv.gold{color:#fbbf24}.rv.grand{color:#fbbf24;font-size:22px}
-    .badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
-    .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3)}
-    .badge.no{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.25)}
-    .badge.neu{background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)}
-    .rce{padding:40px 20px;text-align:center}
-    .rce-i{font-size:36px;margin-bottom:10px;display:block}
+    .gh{background:rgba(255,255,255,0.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)}
+
+    /* score rows — improved readability */
+    .rr{display:flex;align-items:center;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.06);transition:background .12s}
+    .rr:hover{background:rgba(255,255,255,0.04)}
+    .rr.sub{background:rgba(251,191,36,0.07);border-top:1px solid rgba(251,191,36,0.15);border-bottom:1px solid rgba(251,191,36,0.15)}
+    .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.14),transparent);border-top:2px solid rgba(251,191,36,0.35);padding:15px 20px}
+
+    /* icon */
+    .ri{width:26px;font-size:15px;text-align:center;flex-shrink:0}
+
+    /* label — high contrast */
+    .rl{flex:1;font-size:13px;font-weight:500;color:#cbd5e1;margin-left:8px;letter-spacing:0.1px}
+    .rr.sub .rl{color:#fbbf24;font-weight:700;font-size:13px}
+    .rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
+
+    /* value — brighter, bold */
+    .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right;min-width:90px}
+    .rv.pos {color:#4ade80}
+    .rv.neg {color:#f87171;font-weight:700}   /* RED — negative */
+    .rv.dim {color:#64748b;font-weight:400;font-size:12px}
+    .rv.gold{color:#fbbf24;font-weight:700}
+    .rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,0.4)}
+
+    /* badges */
+    .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+    .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.35)}
+    .badge.no {background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
+    .badge.neu{background:rgba(148,163,184,0.1);color:#cbd5e1;border:1px solid rgba(148,163,184,0.25)}
+
+    /* empty / hint */
+    .rce{padding:44px 20px;text-align:center}
+    .rce-i{font-size:38px;margin-bottom:10px;display:block}
     .rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
     .rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
-    .warn{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:6px;padding:8px 14px;margin:0 18px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
 
-    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    /* warning strip */
+    .warn{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:6px;padding:9px 14px;margin:0 20px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
+
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
     @media(max-width:600px){
       .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
-      .rc-bar{flex-direction:column}.rcg{max-width:100%}
-      .rcbtn{width:100%;justify-content:center}
-      .rr{padding:7px 12px}.rchero{padding:12px}
+      .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
+      .rr{padding:9px 14px}.rchero{padding:13px}
     }
   </style>
 </head>
@@ -143,32 +151,24 @@ const TABS = [
   {name:'IPL Player Points', key:'playerpoints', type:'dt'},
 ];
 
-/* ════════════════════════════════════════════════════════════════
-   LEADERBOARD COLUMN DEFINITIONS
-   Maps what the sheet calls each column → the short display label.
-   Matching is done by case-insensitive substring against the
-   actual header row — zero hardcoded indexes.
-════════════════════════════════════════════════════════════════ */
+/* Leaderboard column map — regex matched against live header row, zero hardcoded indexes */
 const LB_COL_DEFS = [
-  {match:'match',             label:'Match'        },
-  {match:'bonus',             label:'Bonus'        },
-  {match:'star performer',    label:'SP'           },
-  {match:'dynamic duo',       label:'DD'           },
-  {match:'resurrector',       label:'Resurct'      },
-  {match:'risk incentive',    label:'RI'           },
-  {match:'special incentive', label:'SI'           },
-  {match:'super bonus',       label:'SB'           },
-  {match:'super selector',    label:'SS'           },
-  {match:'daily winner',      label:'Daily'        },
-  {match:'weekly winner',     label:'Weekly'       },
-  {match:'cum.*daily',        label:'Total Daily'  },
-  {match:'cum.*weekly',       label:'Total Weekly' },
+  {match:'match',             label:'Match'       },
+  {match:'bonus',             label:'Bonus'       },
+  {match:'star performer',    label:'SP'          },
+  {match:'dynamic duo',       label:'DD'          },
+  {match:'resurrector',       label:'Resurct'     },
+  {match:'risk incentive',    label:'RI'          },
+  {match:'special incentive', label:'SI'          },
+  {match:'super bonus',       label:'SB'          },
+  {match:'super selector',    label:'SS'          },
+  {match:'daily winner',      label:'Daily'       },
+  {match:'weekly winner',     label:'Weekly'      },
+  {match:'cum.*daily',        label:'Total Daily' },
+  {match:'cum.*weekly',       label:'Total Weekly'},
 ];
 
-/* ════════════════════════════════════════════════════════════════
-   REPORT CARD ROW DEFINITIONS
-   Exact order from the sheet (confirmed from Image 2)
-════════════════════════════════════════════════════════════════ */
+/* Report Card row definitions — exact order from the sheet */
 const RC_GROUPS = [
   {t:'🏏 Match Related', rows:[
     {k:'match_pts',   i:'🏏', l:'Match Points'},
@@ -236,13 +236,10 @@ const RC_LMAP = {
    STATE
 ════════════════════════════════════════════════════════════════ */
 let cur     = TABS[0];
-let players = [];   // built from leaderboard rows
+let players = [];
 let rcName  = '';
 let rcMatch = 7;
-
-// 60-second client cache — reduces proxy hits when 80 users are active
-const CACHE = {};
-const TTL   = 60000;
+const CACHE = {}, TTL = 60000; // 60s cache for 80 concurrent users
 
 /* ════════════════════════════════════════════════════════════════
    API HELPER
@@ -291,103 +288,78 @@ async function loadContent() {
     }
   } catch(e) {
     set(`<div class="err-box"><strong>Error loading data</strong><br>${esc(e.message)}<br><br>
-      Make sure the Apps Script is deployed and the sheet is accessible.</div>`);
+      Make sure the Apps Script is deployed and the sheet is publicly accessible.</div>`);
   }
 }
 
 /* ════════════════════════════════════════════════════════════════
-   BUILD PLAYERS (for RC dropdown + season total display)
-   Uses dynamic header detection — no hardcoded indexes.
+   BUILD PLAYERS — dynamic header detection, no hardcoded indexes
 ════════════════════════════════════════════════════════════════ */
 function buildPlayers(rows) {
   players = [];
-  // Find header row: first row containing "participant" or "rank" + "total"
   let hi = -1;
-  for (let i = 0; i < Math.min(8, rows.length); i++) {
+  for (let i=0; i<Math.min(8,rows.length); i++) {
     const j = rows[i].join('|').toLowerCase();
     if (j.includes('participant') || (j.includes('rank') && j.includes('total'))) { hi=i; break; }
   }
   if (hi < 0) return;
-
-  const hdr = rows[hi];
+  const hdr    = rows[hi];
   const iRank  = hdr.findIndex(h => /^rank$/i.test(String(h||'').trim()));
   const iName  = hdr.findIndex(h => /participant/i.test(String(h||'')));
   const iTotal = hdr.findIndex(h => /^total$/i.test(String(h||'').trim()));
-  const iArrow = (iRank >= 0) ? iRank + 1 : -1; // unlabelled col right after rank
-
+  const iArrow = iRank >= 0 ? iRank + 1 : -1;
   for (const row of rows.slice(hi+1)) {
     const rn = parseInt(row[iRank]);
     const nm = String(row[iName]||'').trim();
     if (!nm || isNaN(rn) || nm==='null') continue;
-    players.push({
-      rank:     rn,
-      name:     nm,
-      arrowRaw: iArrow >= 0 ? String(row[iArrow]||'') : '',
-      total:    pn(row[iTotal]),
-    });
+    players.push({ rank:rn, name:nm, arrowRaw: iArrow>=0 ? String(row[iArrow]||'') : '', total:pn(row[iTotal]) });
   }
   players.sort((a,b) => a.rank - b.rank);
 }
 
 /* ════════════════════════════════════════════════════════════════
-   RENDER LEADERBOARD
-   Fully dynamic — no hardcoded column indexes anywhere.
+   RENDER LEADERBOARD — all column indexes derived from header row
 ════════════════════════════════════════════════════════════════ */
 function renderLB(rows) {
-  // ── Update banner ─────────────────────────────────────────
   for (const row of rows.slice(0,5)) {
     const m = row.join(' ').match(/match\s*#?\s*(\d+)/i);
     if (m) { document.getElementById('banner').textContent='Data Updated till Match '+m[1]; break; }
   }
-
-  // ── Find header row ───────────────────────────────────────
   let hi = -1;
   for (let i=0; i<Math.min(8,rows.length); i++) {
     const j = rows[i].join('|').toLowerCase();
-    if (j.includes('participant')||(j.includes('rank')&&j.includes('total'))) { hi=i; break; }
+    if (j.includes('participant') || (j.includes('rank') && j.includes('total'))) { hi=i; break; }
   }
   if (hi < 0) { set('<div class="loading">Could not find header row.</div>'); return; }
-
-  const hdr = rows[hi];
-
-  // ── Locate special columns by text ───────────────────────
+  const hdr    = rows[hi];
   const iRank  = hdr.findIndex(h => /^rank$/i.test(String(h||'').trim()));
   const iName  = hdr.findIndex(h => /participant/i.test(String(h||'')));
   const iTotal = hdr.findIndex(h => /^total$/i.test(String(h||'').trim()));
-  const iArrow = (iRank >= 0) ? iRank + 1 : -1;
-
-  // ── Map score columns dynamically from LB_COL_DEFS ───────
+  const iArrow = iRank >= 0 ? iRank + 1 : -1;
   const scoreCols = LB_COL_DEFS.map(def => {
     const re  = new RegExp(def.match, 'i');
     const idx = hdr.findIndex(h => re.test(String(h||'')));
     return idx >= 0 ? {idx, label:def.label} : null;
   }).filter(Boolean);
-
-  // ── Filter valid data rows ────────────────────────────────
   const dataRows = rows.slice(hi+1).filter(row => {
     const rn = parseInt(row[iRank]);
     const nm = String(row[iName]||'').trim();
     return !isNaN(rn) && nm && nm !== 'null';
   });
-
-  // ── Build HTML ────────────────────────────────────────────
   let h = `<div class="tw"><table><thead><tr>
     <th class="sc1">Rank &amp; Name</th>
     <th class="sc2">Total</th>
     ${scoreCols.map(c=>`<th>${c.label}</th>`).join('')}
   </tr></thead><tbody>`;
-
   dataRows.forEach(row => {
     const rank     = parseInt(row[iRank]);
     const name     = esc(String(row[iName]||'').trim());
     const total    = pn(row[iTotal]);
     const arrowRaw = iArrow >= 0 ? String(row[iArrow]||'') : '';
-
-    const rkCls = rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
-    const arCls = arrowRaw.includes('▲')?'ar-up':arrowRaw.includes('▼')?'ar-dn':'ar-eq';
-    const arNum = (arrowRaw.match(/\d+/)||[''])[0];
-    const arTxt = arrowRaw.includes('▲')?`▲${arNum}`:arrowRaw.includes('▼')?`▼${arNum}`:'◆';
-
+    const rkCls    = rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
+    const arCls    = arrowRaw.includes('▲')?'ar-up':arrowRaw.includes('▼')?'ar-dn':'ar-eq';
+    const arNum    = (arrowRaw.match(/\d+/)||[''])[0];
+    const arTxt    = arrowRaw.includes('▲')?`▲${arNum}`:arrowRaw.includes('▼')?`▼${arNum}`:'◆';
     h += `<tr>
       <td class="sc1">
         <span class="${rkCls}" style="margin-right:7px">#${rank}</span>
@@ -395,29 +367,25 @@ function renderLB(rows) {
         ${name}
       </td>
       <td class="sc2">${fmtCell(total)}</td>
-      ${scoreCols.map(c => `<td>${fmtCell(pn(row[c.idx]))}</td>`).join('')}
+      ${scoreCols.map(c=>`<td>${fmtCell(pn(row[c.idx]))}</td>`).join('')}
     </tr>`;
   });
-
   set(h + '</tbody></table></div>');
 }
 
 /* ════════════════════════════════════════════════════════════════
-   GENERIC DATA TABLE (Match Scores, SS Scores, Daily, Player Pts)
+   GENERIC DATA TABLE
 ════════════════════════════════════════════════════════════════ */
 function renderDT(rows) {
   if (!rows||rows.length<2) { set('<div class="loading">No data found.</div>'); return; }
   const isP = cur.key === 'playerpoints';
-
-  // Find header row (≥3 non-empty cells)
   let hi=0;
   for (let i=0;i<Math.min(5,rows.length);i++) {
     if (rows[i].filter(c=>String(c||'').trim()).length>=3) { hi=i; break; }
   }
   const hdrs = rows[hi];
   const data  = rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
-
-  let h = '<div class="tw"><table><thead><tr>';
+  let h='<div class="tw"><table><thead><tr>';
   hdrs.forEach((hd,i)=>{
     if(isP){if(i===0||i===1)return;}else{if(i===0)return;}
     let cls='',lbl=String(hd||'').trim();
@@ -447,11 +415,10 @@ function renderDT(rows) {
 ════════════════════════════════════════════════════════════════ */
 function renderRCShell() {
   let no='<option value="">— Select your name —</option>';
-  if(players.length===0) no+='<option disabled>Loading names…</option>';
+  if (players.length===0) no+='<option disabled>Loading names…</option>';
   else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
   let mo='';
-  for(let m=1;m<=74;m++) mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
-
+  for (let m=1;m<=74;m++) mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
   set(`<div class="rc-wrap">
     <div class="rc-bar">
       <div class="rcg"><div class="rcl">Player</div>
@@ -462,21 +429,16 @@ function renderRCShell() {
       </div>
       <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
     </div>
-    <div id="rcA">
-      <div class="rccard"><div class="rce">
-        <span class="rce-i">📋</span>
-        <div class="rce-t">Select player &amp; match</div>
-        <div class="rce-s">Pick a name and match number above, then tap <strong>View</strong>.</div>
-      </div></div>
-    </div>
+    <div id="rcA"><div class="rccard"><div class="rce">
+      <span class="rce-i">📋</span>
+      <div class="rce-t">Select player &amp; match</div>
+      <div class="rce-s">Pick a name and match number above, then tap <strong>View</strong>.</div>
+    </div></div></div>
   </div>`);
 }
 
 /* ════════════════════════════════════════════════════════════════
    REPORT CARD — LOAD
-   Calls proxy with player+match params → proxy returns structured
-   scoreMap (new proxy v2). Falls back to client-side parse if
-   old proxy returns raw rows.
 ════════════════════════════════════════════════════════════════ */
 async function loadRC() {
   rcName  = document.getElementById('rcSN').value;
@@ -485,50 +447,35 @@ async function loadRC() {
     setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');
     return;
   }
-  const btn = document.getElementById('rcb');
+  const btn=document.getElementById('rcb');
   btn.disabled=true; btn.textContent='…';
-
   try {
     const d = await apiGet({tab:'reportcard', player:rcName, match:rcMatch});
-
-    // ── NEW PROXY (v2): returns structured scoreMap ───────────
+    // New proxy v2 — structured scoreMap
     if (d.scoreMap !== undefined) {
       renderRC(d.scoreMap, d.chipTotals||{}, d.playerCol>=0, d.matchCol>=0);
       return;
     }
-
-    // ── OLD PROXY FALLBACK: raw rows → parse client-side ──────
-    const g=d.rows||[];
-    const sm={}, ct={};
+    // Old proxy fallback — parse raw rows client-side
+    const g=d.rows||[], sm={}, ct={};
     let nR=-1,nC=-1,mR=-1,mC=-1;
     const ms=String(rcMatch);
-
     for(let r=0;r<Math.min(10,g.length);r++){
-      for(let c=0;c<g[r].length;c++){
-        if(String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nR=r;nC=c;break;}
-      } if(nC>=0)break;
+      for(let c=0;c<g[r].length;c++){if(String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nR=r;nC=c;break;}}if(nC>=0)break;
     }
     for(let r=0;r<Math.min(10,g.length);r++){
-      for(let c=0;c<g[r].length;c++){
-        const v=String(g[r][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();
-        if(v===ms){mR=r;mC=c;break;}
-      } if(mC>=0)break;
+      for(let c=0;c<g[r].length;c++){const v=String(g[r][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();if(v===ms){mR=r;mC=c;break;}}if(mC>=0)break;
     }
     if(mR>=0){
       for(let c=0;c<(g[mR]||[]).length;c++){
         const v=String(g[mR][c]||'').replace(/^c/i,'').replace(/^match\s*/i,'').trim();
         const mn=parseInt(v);
-        if(!isNaN(mn)&&mn>=1&&mn<=74){
-          let tot=0;
-          for(let r=mR+1;r<g.length;r++){const n=pn(g[r]?.[c]);if(!isNaN(n))tot+=n;}
-          ct[mn]=Math.round(tot);
-        }
+        if(!isNaN(mn)&&mn>=1&&mn<=74){let tot=0;for(let r=mR+1;r<g.length;r++){const n=pn(g[r]?.[c]);if(!isNaN(n))tot+=n;}ct[mn]=Math.round(tot);}
       }
     }
     const ds=Math.max(nR,mR)+1;
     for(let r=ds;r<g.length;r++){
-      let lbl='';
-      for(let c=0;c<=Math.min(3,g[r].length-1);c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
+      let lbl='';for(let c=0;c<=Math.min(3,g[r].length-1);c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
       const k=RC_LMAP[lbl.toLowerCase()];if(!k)continue;
       let val='';
       if(mC>=0&&g[r]?.[mC]!==undefined)val=g[r][mC]||'';
@@ -536,7 +483,6 @@ async function loadRC() {
       sm[k]=String(val).trim();
     }
     renderRC(sm, ct, nC>=0, mC>=0);
-
   } catch(e) {
     setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span>
       <div class="rce-t">Error loading Report Card</div>
@@ -547,56 +493,73 @@ async function loadRC() {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   REPORT CARD — RENDER
+   REPORT CARD — RENDER  (improved readability)
 ════════════════════════════════════════════════════════════════ */
 function renderRC(sm, chipTotals, foundPlayer, foundMatch) {
-  const pl   = players.find(p=>p.name===rcName);
-  const rank = pl?pl.rank:0;
+  const pl   = players.find(p => p.name === rcName);
+  const rank = pl ? pl.rank : 0;
   const init = rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
-  // Chip strip
+  // ── Chip strip ──────────────────────────────────────────────
   const mNums = Object.keys(chipTotals).map(Number).sort((a,b)=>a-b);
-  let chips='';
-  if(mNums.length>0){
-    chips=`<div class="cw"><div class="ct">Match Breakdown</div><div class="chips">
-      ${mNums.map(m=>{
-        const s=chipTotals[m]||0;
-        const vc=s>0?'pos':s<0?'neg':'';
-        return`<div class="chip ${m===rcMatch?'on':''}" onclick="rcJ(${m})">
-          <div class="cl">M${m}</div><div class="cv ${vc}">${s>0?'+':''}${s||'—'}</div>
-        </div>`;
-      }).join('')}
-    </div></div>`;
+  let chips = '';
+  if (mNums.length > 0) {
+    chips = `<div class="cw">
+      <div class="ct">Match Breakdown</div>
+      <div class="chips">
+        ${mNums.map(m => {
+          const s  = chipTotals[m] || 0;
+          const vc = s>0?'pos':s<0?'neg':'';
+          return `<div class="chip ${m===rcMatch?'on':''}" onclick="rcJ(${m})">
+            <div class="cl">M${m}</div>
+            <div class="cv ${vc}">${s>0?'+':''}${s||'—'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
   }
 
-  // Warning strip
-  let warn='';
-  if(!foundPlayer)
-    warn=`<div class="warn">⚠ Player name not found in Report Card sheet. Names must match exactly.</div>`;
-  else if(!foundMatch)
-    warn=`<div class="warn">⚠ Match ${rcMatch} data not available yet in Report Card sheet.</div>`;
+  // ── Warning strip ────────────────────────────────────────────
+  let warn = '';
+  if (!foundPlayer)
+    warn = `<div class="warn">⚠ Player name not found in Report Card sheet — names must match exactly.</div>`;
+  else if (!foundMatch)
+    warn = `<div class="warn">⚠ Match ${rcMatch} data not entered yet in the Report Card sheet.</div>`;
 
-  // Score rows
-  let rows='';
-  RC_GROUPS.forEach(grp=>{
-    rows+=`<div class="gh">${grp.t}</div>`;
-    grp.rows.forEach(rd=>{
-      const raw=sm[rd.k]||'';
-      const num=pn(raw);
-      const isN=!isNaN(num);
-      let vh='';
-      if(rd.badge){
-        if(/yes|linked|true/i.test(raw))      vh=`<span class="badge yes">${esc(raw)}</span>`;
-        else if(/no|not|false/i.test(raw))    vh=`<span class="badge no">${esc(raw)}</span>`;
-        else if(raw)                           vh=`<span class="badge neu">${esc(raw)}</span>`;
-        else                                   vh=`<span class="rv dim">—</span>`;
-      } else if(isN){
-        const cls=rd.sub?'gold':num>0?'pos':num<0?'neg':'dim';
-        vh=`<span class="rv ${cls}">${num===0?'—':fmtS(num)}</span>`;
+  // ── Score rows ───────────────────────────────────────────────
+  let rows = '';
+  RC_GROUPS.forEach(grp => {
+    rows += `<div class="gh">${grp.t}</div>`;
+    grp.rows.forEach(rd => {
+      const raw = sm[rd.k] || '';
+      const num = pn(raw);
+      const isN = !isNaN(num);
+      let vh = '';
+
+      if (rd.badge) {
+        // Linked / Not Linked, Upfront Premium
+        if      (/yes|linked|true/i.test(raw))  vh = `<span class="badge yes">${esc(raw)}</span>`;
+        else if (/no|not|false/i.test(raw))     vh = `<span class="badge no">${esc(raw)}</span>`;
+        else if (raw)                            vh = `<span class="badge neu">${esc(raw)}</span>`;
+        else                                     vh = `<span class="rv dim">—</span>`;
+
+      } else if (isN) {
+        if (num === 0) {
+          vh = `<span class="rv dim">—</span>`;
+        } else if (rd.sub) {
+          // Subtotal rows: gold positive, RED negative, plain number (no sign)
+          const cls = num < 0 ? 'neg' : 'gold';
+          vh = `<span class="rv ${cls}">${fmt(num)}</span>`;
+        } else {
+          // Regular rows: green positive (signed), RED negative
+          const cls = num > 0 ? 'pos' : 'neg';
+          vh = `<span class="rv ${cls}">${fmtS(num)}</span>`;
+        }
       } else {
-        vh=`<span class="rv dim">${esc(raw)||'—'}</span>`;
+        vh = `<span class="rv dim">${esc(raw)||'—'}</span>`;
       }
-      rows+=`<div class="rr ${rd.sub?'sub':''}">
+
+      rows += `<div class="rr ${rd.sub?'sub':''}">
         <span class="ri">${rd.i}</span>
         <span class="rl">${rd.l}</span>
         ${vh}
@@ -604,56 +567,70 @@ function renderRC(sm, chipTotals, foundPlayer, foundMatch) {
     });
   });
 
+  // ── Full card ────────────────────────────────────────────────
   setRC(`<div class="rccard">
+
     <div class="rchero">
       <div class="rcav">${init}</div>
-      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
-      ${rank>0?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
+      <div>
+        <div class="rchn">${esc(rcName)}</div>
+        <div class="rchs">Report Card · Match ${rcMatch}</div>
+      </div>
+      ${rank>0 ? `<div class="rchr">
+        <div class="rcrn">#${rank}</div>
+        <div class="rcrl">Season Rank</div>
+      </div>` : ''}
     </div>
+
     ${chips}
     ${warn}
-    <div class="gh" style="color:#94a3b8">Score Breakdown — Match ${rcMatch}</div>
+
+    <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">
+      Score Breakdown — Match ${rcMatch}
+    </div>
+
     ${rows}
+
     <div class="rr tot">
       <span class="ri">🏆</span>
-      <span class="rl">Total (Cumulative)</span>
-      <span class="rv grand">${pl?fmt(pl.total):'—'}</span>
+      <span class="rl">Total (Cumulative Season Score)</span>
+      <span class="rv grand">${pl ? fmt(pl.total) : '—'}</span>
     </div>
+
   </div>`);
 }
-
-function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
-function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h){document.getElementById('area').innerHTML=h;}
 
 /* ════════════════════════════════════════════════════════════════
    UTILITIES
 ════════════════════════════════════════════════════════════════ */
+function rcJ(m){ rcMatch=m; document.getElementById('rcSM').value=m; loadRC(); }
+function setRC(h){ document.getElementById('rcA').innerHTML=h; }
+function set(h)  { document.getElementById('area').innerHTML=h; }
+
 function esc(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-// Parse display number: "1,200"→1200  "(150)"→-150  "-"/"—"→NaN
+// "1,200"→1200  "(150)"→-150  "-"/"—"→NaN
 function pn(v){
-  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
+  if(v===null||v===undefined||v===''||v==='-'||v==='—') return NaN;
   const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
+  if(/^\([\d.]+\)$/.test(s)) return -parseFloat(s.slice(1,-1));
   return parseFloat(s);
 }
-// Format number (no sign), NaN/0 → dimmed dash
+// Plain number, no sign
 function fmt(n){
   const x=typeof n==='number'?n:pn(n);
   return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');
 }
-// Format with sign: +1,200 / -150 / — for zero
+// Signed: +1,200 / -150 / — for zero
 function fmtS(n){
-  if(n===0)return '—';
-  return(n>0?'+':'')+n.toLocaleString('en-US');
+  if(n===0) return '—';
+  return (n>0?'+':'')+n.toLocaleString('en-US');
 }
-// Format for table cells: dim zero, red negative
+// Table cells: dim zero, red negative in brackets
 function fmtCell(n){
-  if(isNaN(n))return `<span class="v-dim">—</span>`;
-  if(n===0)   return `<span class="v-dim">—</span>`;
-  if(n<0)     return `<span class="v-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
+  if(isNaN(n)||n===0) return `<span class="v-dim">—</span>`;
+  if(n<0)             return `<span class="v-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
   return n.toLocaleString('en-US');
 }
 
@@ -662,7 +639,6 @@ function fmtCell(n){
 ════════════════════════════════════════════════════════════════ */
 renderTabs();
 loadContent();
-// Silent leaderboard refresh every 2 minutes
 setInterval(()=>{ if(cur.type==='lb') loadContent(); }, 120000);
 </script>
 </body>
