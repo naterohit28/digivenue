@@ -32,15 +32,12 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 .rk1{color:#fbbf24;font-weight:800}.rk2{color:#94a3b8;font-weight:800}.rk3{color:#b45309;font-weight:800}
 .aru{color:#4ade80;font-size:10px}.ard{color:#f87171;font-size:10px}.are{color:#64748b;font-size:10px}
 .cneg{color:#f87171!important;font-weight:700}.cdim{color:#475569}
-
-/* ── REPORT CARD ──────────────────────────────────── */
+/* REPORT CARD */
 .rc-wrap{max-width:920px;margin:0 auto}
 .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
 .rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
 .rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a}
+.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a}
 .rcsel option{background:#1e293b}
 .rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;flex-shrink:0}
 .rcbtn:hover{transform:translateY(-1px)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
@@ -53,8 +50,6 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 .rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
 .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
 .gh{background:rgba(251,191,36,0.07);padding:6px 20px;font-size:10px;font-weight:800;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,0.06);letter-spacing:1px}
-
-/* 3-col grid: icon | label | detail | score */
 .rr{display:grid;grid-template-columns:28px 1fr auto 90px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.06);transition:background .1s}
 .rr:hover{background:rgba(255,255,255,0.03)}
 .rr.sub{background:rgba(251,191,36,0.07);border-top:1px solid rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.12)}
@@ -65,17 +60,15 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 .rr.sub .rl{color:#fbbf24;font-weight:700}
 .rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
 .rr.dtot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
-/* detail col — always present */
 .rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
 .rr.sub .rd,.rr.tot .rd,.rr.dtot .rd{visibility:hidden}
-/* score col */
 .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
-.rv.pos{color:#4ade80}
-.rv.neg{color:#f87171;font-weight:700}
+.rv.pos{color:#4ade80}.rv.neg{color:#f87171;font-weight:700}
 .rv.dim{color:#64748b;font-weight:400;font-size:12px}
 .rv.gold{color:#fbbf24;font-weight:700}
 .rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,0.4)}
 .rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
+.rv.detail{font-size:12px;color:#94a3b8;font-style:italic;font-weight:400}
 .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
 .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.35)}
 .badge.no{background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
@@ -104,7 +97,7 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxGGkm0LOmdqUtNp7KS9AFQmLjLrQf-fAWam-30QvASnHJC4Y9lez52QtMoTpqoQ4-1SA/exec';
 
-const TABS = [
+const TABS=[
   {name:'Leaderboard',       key:'leaderboard',  type:'lb'},
   {name:'Your Report Card',  key:'reportcard',   type:'rc'},
   {name:'Match Scores',      key:'matchscores',  type:'dt'},
@@ -163,24 +156,21 @@ const RC_GROUPS=[
   ]},
 ];
 
-/* ── STATE ────────────────────────────────────────── */
-let cur=TABS[0], players=[], rcName='', rcMatch=7;
-const CACHE={}, TTL=60000;
+let cur=TABS[0],players=[],rcName='',rcMatch=7;
+const CACHE={},TTL=60000;
 
-/* ── API ──────────────────────────────────────────── */
-async function apiGet(params, fresh=false){
-  const key=JSON.stringify(params), now=Date.now();
-  if(!fresh && CACHE[key] && now-CACHE[key].ts<TTL) return CACHE[key].d;
+async function apiGet(params,fresh=false){
+  const key=JSON.stringify(params),now=Date.now();
+  if(!fresh&&CACHE[key]&&now-CACHE[key].ts<TTL)return CACHE[key].d;
   const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
   const res=await fetch(API+'?'+qs);
-  if(!res.ok) throw new Error('HTTP '+res.status);
+  if(!res.ok)throw new Error('HTTP '+res.status);
   const d=await res.json();
-  if(d.error) throw new Error(d.error);
-  if(!fresh) CACHE[key]={d,ts:now};
+  if(d.error)throw new Error(d.error);
+  if(!fresh)CACHE[key]={d,ts:now};
   return d;
 }
 
-/* ── TABS ─────────────────────────────────────────── */
 function renderTabs(){
   document.getElementById('tabBar').innerHTML=TABS.map(t=>
     `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
@@ -188,58 +178,54 @@ function renderTabs(){
 }
 function go(n){cur=TABS.find(t=>t.name===n);renderTabs();load();}
 
-/* ── ROUTER ───────────────────────────────────────── */
 async function load(){
   set('<div class="loading"><div class="spinner"></div>Loading…</div>');
   try{
     if(cur.type==='lb'){
-      const d=await apiGet({tab:'leaderboard'});
-      buildPlayers(d.rows); renderLB(d.rows);
+      const d=await apiGet({tab:'leaderboard'});buildPlayers(d.rows);renderLB(d.rows);
     }else if(cur.type==='rc'){
-      if(!players.length) try{const d=await apiGet({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
+      if(!players.length)try{const d=await apiGet({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
       renderRCShell();
     }else{
-      const d=await apiGet({tab:cur.key}); renderDT(d.rows);
+      const d=await apiGet({tab:cur.key});renderDT(d.rows);
     }
-  }catch(e){ set(`<div class="err">⚠ ${esc(e.message)}</div>`); }
+  }catch(e){set(`<div class="err">⚠ ${esc(e.message)}</div>`);}
 }
 
-/* ── PLAYERS ──────────────────────────────────────── */
 function buildPlayers(rows){
-  if(!Array.isArray(rows)) return;
+  if(!Array.isArray(rows))return;
   players=[];
   let hi=-1;
   for(let i=0;i<Math.min(8,rows.length);i++){
-    if(!Array.isArray(rows[i])) continue;
+    if(!Array.isArray(rows[i]))continue;
     const j=rows[i].join('|').toLowerCase();
     if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
   }
-  if(hi<0) return;
+  if(hi<0)return;
   const h=rows[hi];
   const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
   const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
   const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
   const iA=iR>=0?iR+1:-1;
   for(const row of rows.slice(hi+1)){
-    if(!Array.isArray(row)) continue;
-    const rn=parseInt(row[iR]), nm=String(row[iN]||'').trim();
-    if(!nm||isNaN(rn)||nm==='null') continue;
+    if(!Array.isArray(row))continue;
+    const rn=parseInt(row[iR]),nm=String(row[iN]||'').trim();
+    if(!nm||isNaN(rn)||nm==='null')continue;
     players.push({rank:rn,name:nm,arw:iA>=0?String(row[iA]||''):'',total:pn(row[iT])});
   }
   players.sort((a,b)=>a.rank-b.rank);
 }
 
-/* ── LEADERBOARD ──────────────────────────────────── */
 function renderLB(rows){
   if(!Array.isArray(rows)){set('<div class="loading">No data.</div>');return;}
   for(const r of rows.slice(0,5)){
-    if(!Array.isArray(r)) continue;
+    if(!Array.isArray(r))continue;
     const m=r.join(' ').match(/match\s*#?\s*(\d+)/i);
     if(m){document.getElementById('banner').textContent='Data Updated till Match '+m[1];break;}
   }
   let hi=-1;
   for(let i=0;i<Math.min(8,rows.length);i++){
-    if(!Array.isArray(rows[i])) continue;
+    if(!Array.isArray(rows[i]))continue;
     const j=rows[i].join('|').toLowerCase();
     if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
   }
@@ -249,16 +235,9 @@ function renderLB(rows){
   const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
   const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
   const iA=iR>=0?iR+1:-1;
-  const sc=LB_COLS.map(d=>{
-    const re=new RegExp(d.re,'i');
-    const i=h.findIndex(v=>re.test(String(v||'')));
-    return i>=0?{i,lbl:d.lbl}:null;
-  }).filter(Boolean);
+  const sc=LB_COLS.map(d=>{const re=new RegExp(d.re,'i');const i=h.findIndex(v=>re.test(String(v||'')));return i>=0?{i,lbl:d.lbl}:null;}).filter(Boolean);
   const dr=rows.slice(hi+1).filter(r=>Array.isArray(r)&&!isNaN(parseInt(r[iR]))&&String(r[iN]||'').trim()&&String(r[iN]||'').trim()!=='null');
-  let html=`<div class="tw"><table><thead><tr>
-    <th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>
-    ${sc.map(c=>`<th>${c.lbl}</th>`).join('')}
-  </tr></thead><tbody>`;
+  let html=`<div class="tw"><table><thead><tr><th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>${sc.map(c=>`<th>${c.lbl}</th>`).join('')}</tr></thead><tbody>`;
   for(const r of dr){
     const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim()),tot=pn(r[iT]);
     const arw=iA>=0?String(r[iA]||''):'';
@@ -266,30 +245,23 @@ function renderLB(rows){
     const ac=arw.includes('▲')?'aru':arw.includes('▼')?'ard':'are';
     const an=(arw.match(/\d+/)||[''])[0];
     const at=arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
-    html+=`<tr>
-      <td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td>
-      <td class="sc2">${fmtCell(tot)}</td>
-      ${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}
-    </tr>`;
+    html+=`<tr><td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td><td class="sc2">${fmtCell(tot)}</td>${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}</tr>`;
   }
   set(html+'</tbody></table></div>');
 }
 
-/* ── DATA TABLE ───────────────────────────────────── */
 function renderDT(rows){
   if(!Array.isArray(rows)||rows.length<2){set('<div class="loading">No data.</div>');return;}
   const isP=cur.key==='playerpoints';
   let hi=0;
-  for(let i=0;i<Math.min(5,rows.length);i++)
-    if(Array.isArray(rows[i])&&rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
+  for(let i=0;i<Math.min(5,rows.length);i++)if(Array.isArray(rows[i])&&rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
   const hdrs=rows[hi]||[];
   const data=rows.slice(hi+1).filter(r=>Array.isArray(r)&&r.some(c=>String(c||'').trim()));
   let h='<div class="tw"><table><thead><tr>';
   hdrs.forEach((hd,i)=>{
     if(isP){if(i===0||i===1)return;}else if(i===0)return;
     let cls='',lbl=String(hd||'').trim();
-    if(isP){if(i===2){cls='sc1';}if(i===3){cls='sc2';lbl='Total Score';}}
-    else    {if(i===1){cls='sc1';}if(i===2){cls='sc2';}}
+    if(isP){if(i===2){cls='sc1';}if(i===3){cls='sc2';lbl='Total Score';}}else{if(i===1){cls='sc1';}if(i===2){cls='sc2';}}
     h+=`<th class="${cls}">${esc(lbl)}</th>`;
   });
   h+='</tr></thead><tbody>';
@@ -298,12 +270,11 @@ function renderDT(rows){
     row.forEach((c,i)=>{
       if(isP){if(i===0||i===1)return;}else if(i===0)return;
       let cls='';
-      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
-      else    {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      const raw=String(c||'').trim(), n=pn(raw);
+      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}else{if(i===1)cls='sc1';if(i===2)cls='sc2';}
+      const raw=String(c||'').trim(),n=pn(raw);
       let disp=esc(raw===''||raw==='null'?'—':raw);
-      if(!isNaN(n)&&n<0) disp=`<span class="cneg">${esc(raw)}</span>`;
-      else if(!isNaN(n)&&n===0) disp=`<span class="cdim">—</span>`;
+      if(!isNaN(n)&&n<0)disp=`<span class="cneg">${esc(raw)}</span>`;
+      else if(!isNaN(n)&&n===0)disp=`<span class="cdim">—</span>`;
       h+=`<td class="${cls}">${disp}</td>`;
     });
     h+='</tr>';
@@ -311,19 +282,15 @@ function renderDT(rows){
   set(h+'</tbody></table></div>');
 }
 
-/* ── RC SHELL ─────────────────────────────────────── */
 function renderRCShell(){
   let no='<option value="">— Select your name —</option>';
-  if(!players.length) no+='<option disabled>Loading names…</option>';
+  if(!players.length)no+='<option disabled>Loading names…</option>';
   else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
-  let mo='';
-  for(let m=1;m<=74;m++) mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
+  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
   set(`<div class="rc-wrap">
     <div class="rc-bar">
-      <div class="rcg"><div class="rcl">Player</div>
-        <select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
-      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div>
-        <select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
+      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
+      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
       <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
     </div>
     <div id="rcA"><div class="rccard"><div class="rce">
@@ -334,11 +301,11 @@ function renderRCShell(){
   </div>`);
 }
 
-/* ── RC LOAD ──────────────────────────────────────────────────
-   Always fresh=true — no caching for RC.
-   The proxy sets the sheet dropdowns then waits 2.5s for formulas.
-   Changing player or match always calls this fresh.
-────────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════
+   RC LOAD — always fresh, no cache
+   The proxy sets the sheet dropdowns and returns the recalculated data.
+   Changing player OR match then clicking View always gets fresh data.
+════════════════════════════════════════════════════════════════ */
 async function loadRC(){
   rcName =document.getElementById('rcSN').value;
   rcMatch=parseInt(document.getElementById('rcSM').value);
@@ -346,101 +313,81 @@ async function loadRC(){
     setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');
     return;
   }
-  const btn=document.getElementById('rcb');
-  btn.disabled=true;
-  btn.textContent='Loading…';
+  const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='Loading…';
   try{
-    const d=await apiGet({tab:'reportcard',player:rcName,match:rcMatch}, true);
+    // Always fresh — proxy sets dropdown & waits 3s for ALL formulas
+    const d=await apiGet({tab:'reportcard',player:rcName,match:rcMatch},true);
     if(d.scoreMap!==undefined){
-      renderRC(d.scoreMap, d.detailMap||{}, d.dailyTotal??null);
+      renderRC(d.scoreMap,d.detailMap||{},d.dailyTotal??null);
+      // Log debug info to console for diagnosis
+      if(d.debug)console.log('RC Debug:',JSON.stringify(d.debug,null,2));
     }else{
-      throw new Error('Re-deploy the Apps Script — old proxy returned raw rows');
+      throw new Error('Re-deploy Apps Script — unexpected response format');
     }
   }catch(e){
-    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span>
-      <div class="rce-t">Error loading Report Card</div>
-      <div class="rce-s">${esc(e.message)}</div>
-    </div></div>`);
+    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">${esc(e.message)}</div></div></div>`);
   }
-  btn.disabled=false;
-  btn.textContent='▶ View';
+  btn.disabled=false;btn.textContent='▶ View';
 }
 
-/* ── RC RENDER ────────────────────────────────────────────────
-   FIXED: the else block now shows detail when score is empty.
-   This is the confirmed root cause of blank Super Selector rows.
+/* ════════════════════════════════════════════════════════════════
+   RC RENDER — 3-column layout with confirmed fix:
    
-   Row structure:
-     icon | label | detail (Col I) | score (Col J)
+   When score is empty but detail exists (Super Selector rows):
+     → show detail text (player name) in the score column
    
-   Logic per row:
-     badge → show Yes/No badge
-     numeric score → show colored number
-     no score but has detail → show detail text in score column  ← THE FIX
-     nothing → show dimmed dash
-────────────────────────────────────────────────────────────── */
-function renderRC(sm, dm, dailyTotal){
-  const pl  =players.find(p=>p.name===rcName);
+   This is the confirmed fix for SS blank rows.
+════════════════════════════════════════════════════════════════ */
+function renderRC(sm,dm,dailyTotal){
+  const pl=players.find(p=>p.name===rcName);
   const rank=pl?pl.rank:0;
   const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
   const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—')
              ||Object.values(dm).some(v=>v&&v!=='');
   let warn='';
-  if(!hasData) warn=`<div class="warn">⚠ No data found. The sheet may not have data for this player/match yet.</div>`;
+  if(!hasData)warn=`<div class="warn">⚠ No data found for this player/match. Sheet may not have data entered yet.</div>`;
 
   let rows='';
   RC_GROUPS.forEach(grp=>{
     rows+=`<div class="gh">${grp.t}</div>`;
     grp.rows.forEach(rd=>{
-      const scoreRaw = sm[rd.k] || '';  // Col J numeric
-      const detail   = dm[rd.k] || '';  // Col I player name / text
-      const num      = pn(scoreRaw);
-      const isNum    = !isNaN(num);
+      const scoreRaw=sm[rd.k]||'';
+      const detail  =dm[rd.k]||'';
+      const num     =pn(scoreRaw);
+      const isNum   =!isNaN(num);
 
-      /* ── Score cell (right column) ─────────────────────────── */
+      /* ── Score/value cell (right column) ─────────────────── */
       let vh='';
-
       if(rd.badge){
-        // Badge rows (Linked/Not Linked, Premium): show Yes/No
         const txt=detail||scoreRaw;
         if     (/yes|linked|true/i.test(txt))  vh=`<span class="badge yes">${esc(txt)}</span>`;
         else if(/no|not|false/i.test(txt))     vh=`<span class="badge no">${esc(txt)}</span>`;
         else if(txt)                            vh=`<span class="badge neu">${esc(txt)}</span>`;
         else                                    vh=`<span class="rv dim">—</span>`;
-
       }else if(isNum){
-        // Has a numeric score
         if(num===0)     vh=`<span class="rv dim">—</span>`;
         else if(rd.sub) vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
         else            vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
-
       }else{
-        // ── THE FIX ────────────────────────────────────────────
-        // No numeric score. Previously this always showed "—".
-        // Now: if detail text exists (e.g. "Sanju Samson"), show it.
-        // This makes Super Selector player names visible.
+        /* ── THE FIX: no score → show detail if available ──── */
         if(detail){
-          vh=`<span class="rv" style="font-size:12px;color:#94a3b8;font-style:italic">${esc(detail)}</span>`;
+          vh=`<span class="rv detail">${esc(detail)}</span>`;
         }else{
           vh=`<span class="rv dim">—</span>`;
         }
       }
 
-      /* ── Detail cell (middle column) ───────────────────────── */
-      // For sub/badge rows: hidden. For regular rows: show detail.
-      // Since the fix above already shows detail in the score column
-      // when there's no score, we keep the middle column for cases
-      // where BOTH detail AND score exist (e.g. SP row).
-      const dh=(!rd.sub&&!rd.badge)
-        ?`<span class="rd">${esc(detail)}</span>`
-        :`<span class="rd"></span>`;
+      /* ── Detail cell (middle column) ─────────────────────── */
+      // Show when BOTH detail AND score exist (e.g. SP row has name + score)
+      // Hide when only one or the other (sub rows, SS player-only rows)
+      const showDetail=(!rd.sub&&!rd.badge&&detail&&isNum);
+      const dh=showDetail?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
 
       rows+=`<div class="rr ${rd.sub?'sub':''}">
         <span class="ri">${rd.i}</span>
         <span class="rl">${rd.l}</span>
-        ${dh}
-        ${vh}
+        ${dh}${vh}
       </div>`;
     });
   });
@@ -459,33 +406,28 @@ function renderRC(sm, dm, dailyTotal){
     <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">Score Breakdown — Match ${rcMatch}</div>
     ${rows}
     ${dh2}
-    <div class="rr tot">
-      <span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span>
-      <span class="rd"></span>
-      <span class="rv grand">${pl?fmt(pl.total):'—'}</span>
-    </div>
+    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
   </div>`);
 }
 
 function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h) {document.getElementById('area').innerHTML=h;}
+function set(h){document.getElementById('area').innerHTML=h;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function pn(v){
-  if(v===null||v===undefined||v===''||v==='-'||v==='—') return NaN;
+  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
   const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s)) return -parseFloat(s.slice(1,-1));
+  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
   return parseFloat(s);
 }
 function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
 function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
 function fmtCell(n){
-  if(isNaN(n)||n===0) return`<span class="cdim">—</span>`;
-  if(n<0) return`<span class="cneg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
+  if(isNaN(n)||n===0)return`<span class="cdim">—</span>`;
+  if(n<0)return`<span class="cneg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
   return n.toLocaleString('en-US');
 }
 
-renderTabs();
-load();
+renderTabs();load();
 setInterval(()=>{if(cur.type==='lb')load();},120000);
 </script>
 </body>
