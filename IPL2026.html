@@ -21,7 +21,7 @@
     .loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
     .spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .err-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8}
+    .err-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8;white-space:pre-wrap}
 
     /* ── TABLES ─────────────────────────────────────────────── */
     .tw{overflow:auto;background:rgba(15,23,42,0.6);border-radius:8px;border:1px solid rgba(255,255,255,0.05);max-height:75vh}
@@ -32,7 +32,7 @@
     .sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
     th.sc1,th.sc2{z-index:15;background:#0f172a}
     tr:hover td{background:rgba(255,255,255,0.03)}
-    .v-neg{color:#f87171}.v-dim{color:#475569}
+    .v-neg{color:#f87171!important;font-weight:700}.v-dim{color:#475569}
     .rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
     .ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
 
@@ -55,7 +55,6 @@
     .rchr{margin-left:auto;text-align:right}
     .rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
     .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-    /* chips */
     .cw{border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 20px}
     .ct{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:8px}
     .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px}
@@ -65,66 +64,31 @@
     .cl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
     .cv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;margin-top:2px;color:#e2e8f0}
     .cv.pos{color:#4ade80}.cv.neg{color:#f87171}
-    /* group header */
     .gh{background:rgba(255,255,255,0.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)}
-
-    /* ── Row: 4-column grid ─────────────────────────────────
-       icon (28px) | label (flex) | detail/italic (auto) | score (80px)
-    ─────────────────────────────────────────────────────── */
-    .rr{
-      display:grid;
-      grid-template-columns:28px 1fr auto 80px;
-      align-items:center;
-      gap:8px;
-      padding:11px 20px;
-      border-bottom:1px solid rgba(255,255,255,0.06);
-      transition:background .12s;
-    }
+    /* Row grid: icon | label | detail | score */
+    .rr{display:grid;grid-template-columns:28px 1fr auto 85px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.06);transition:background .12s}
     .rr:hover{background:rgba(255,255,255,0.04)}
     .rr.sub{background:rgba(251,191,36,0.07);border-top:1px solid rgba(251,191,36,0.15);border-bottom:1px solid rgba(251,191,36,0.15)}
     .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,0.14),transparent);border-top:2px solid rgba(251,191,36,0.35);padding:15px 20px}
     .rr.daily-tot{background:linear-gradient(90deg,rgba(96,165,250,0.1),transparent);border-top:2px solid rgba(96,165,250,0.25);padding:13px 20px}
-
-    /* icon */
     .ri{font-size:15px;text-align:center}
-
-    /* label (Col D) */
     .rl{font-size:13px;font-weight:500;color:#cbd5e1}
-    .rr.sub       .rl{color:#fbbf24;font-weight:700}
-    .rr.tot       .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
+    .rr.sub .rl{color:#fbbf24;font-weight:700}
+    .rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
     .rr.daily-tot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
-
-    /* detail (Col I — player name, "Yes", "PBKS" etc.) */
-    .rd{
-      font-size:11px;
-      color:#94a3b8;
-      font-style:italic;
-      text-align:right;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:220px;
-    }
-    /* hide detail column on subtotal / total rows */
-    .rr.sub       .rd,
-    .rr.tot       .rd,
-    .rr.daily-tot .rd{visibility:hidden}
-
-    /* score (Col J — numeric points) */
+    .rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+    .rr.sub .rd,.rr.tot .rd,.rr.daily-tot .rd{visibility:hidden}
     .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
-    .rv.pos {color:#4ade80}
-    .rv.neg {color:#f87171;font-weight:700}
-    .rv.dim {color:#64748b;font-weight:400;font-size:12px}
+    .rv.pos{color:#4ade80}
+    .rv.neg{color:#f87171;font-weight:700}   /* RED — critical for negative values */
+    .rv.dim{color:#64748b;font-weight:400;font-size:12px}
     .rv.gold{color:#fbbf24;font-weight:700}
     .rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,0.4)}
     .rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
-
-    /* badges */
     .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
     .badge.yes{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.35)}
-    .badge.no {background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
+    .badge.no{background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
     .badge.neu{background:rgba(148,163,184,0.1);color:#cbd5e1;border:1px solid rgba(148,163,184,0.25)}
-
     .rce{padding:44px 20px;text-align:center}
     .rce-i{font-size:38px;margin-bottom:10px;display:block}
     .rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
@@ -134,8 +98,7 @@
     @media(max-width:600px){
       .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
       .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
-      .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 70px}
-      .rd{max-width:120px}
+      .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 70px}.rd{max-width:110px}
     }
   </style>
 </head>
@@ -151,9 +114,9 @@
 
 <script>
 /* ════════════════════════════════════════════════════════════════
-   CONFIG
+   CONFIG — updated Apps Script URL
 ════════════════════════════════════════════════════════════════ */
-const API = 'https://script.google.com/macros/s/AKfycbzm3ScYdmSRgcXhMVB3xv9fKVdLVfUl3w7jlyY03byNZZtvFnw8ZKydLglbpo3XJH3TSQ/exec';
+const API = 'https://script.google.com/macros/s/AKfycbz-Jj_RmSnxqxE9k_jwQoaQ-X-AL-tJp_T-k2lvwhrW4UlKSgdbl8mQRZJooco_VmyDzQ/exec';
 
 const TABS = [
   {name:'Leaderboard',       key:'leaderboard',  type:'lb'},
@@ -228,11 +191,11 @@ const RC_LMAP = {
   'match related points':'match_total',
   'sp individual performance':'sp_indiv',
   'linked / not linked':'sp_linked','linked/not linked':'sp_linked',
-  'sp points (incl link effect)':'sp_pts','sp points (incl. link effect)':'sp_pts',
+  'sp points (incl link effect)':'sp_pts',
   'd1 individual performance':'dd1_indiv',
   'd2 individual performance':'dd2_indiv',
   'upfront premium?':'dd_prem','upfront premium':'dd_prem',
-  'dd points (incl prem. effect)':'dd_pts','dd points (incl. prem. effect)':'dd_pts',
+  'dd points (incl prem. effect)':'dd_pts',
   'ressurector 1':'res1','resurrector 1':'res1',
   'ressurector 2':'res2','resurrector 2':'res2',
   'the resurrector':'resurrector',
@@ -260,7 +223,7 @@ async function apiGet(params){
   const res=await fetch(API+'?'+qs);
   if(!res.ok)throw new Error('Server error '+res.status);
   const d=await res.json();
-  if(d.error)throw new Error(d.error);
+  if(d.error)throw new Error(d.error+'\n'+(d.stack||''));
   CACHE[key]={d,ts:now};
   return d;
 }
@@ -290,7 +253,7 @@ async function loadContent(){
       const d=await apiGet({tab:cur.key});renderDT(d.rows);
     }
   }catch(e){
-    set(`<div class="err-box"><strong>Error loading data</strong><br>${esc(e.message)}</div>`);
+    set(`<div class="err-box">⚠ Error loading data:\n${esc(e.message)}</div>`);
   }
 }
 
@@ -319,7 +282,7 @@ function buildPlayers(rows){
 }
 
 /* ════════════════════════════════════════════════════════════════
-   LEADERBOARD
+   LEADERBOARD — negative values preserved (v-neg class)
 ════════════════════════════════════════════════════════════════ */
 function renderLB(rows){
   for(const row of rows.slice(0,5)){
@@ -367,7 +330,7 @@ function renderLB(rows){
 }
 
 /* ════════════════════════════════════════════════════════════════
-   GENERIC DATA TABLE
+   DATA TABLES — negative values preserved
 ════════════════════════════════════════════════════════════════ */
 function renderDT(rows){
   if(!rows||rows.length<2){set('<div class="loading">No data.</div>');return;}
@@ -391,8 +354,13 @@ function renderDT(rows){
       let cls='';
       if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
       else    {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      let v=String(c||'').trim();if(v==='null'||v==='undefined')v='—';
-      h+=`<td class="${cls}">${esc(v)}</td>`;
+      let v=String(c||'').trim();
+      if(v==='null'||v==='undefined')v='—';
+      // Highlight negative values in data tables too
+      const n=pn(v);
+      if(!isNaN(n)&&n<0) v=`<span class="v-neg">${esc(String(c||'').trim())}</span>`;
+      else v=esc(v);
+      h+=`<td class="${cls}">${v}</td>`;
     });
     h+='</tr>';
   });
@@ -426,40 +394,9 @@ function renderRCShell(){
 }
 
 /* ════════════════════════════════════════════════════════════════
-   REPORT CARD — LOAD & PARSE
-
-   CONFIRMED SHEET STRUCTURE (from Image 2):
-   ┌───┬─────────────────────────────┬──────────────────────────┬──────┐
-   │ A │ Row label (col 0 in array)  │ Col I (detail / name)    │ ColJ │
-   ├───┼─────────────────────────────┼──────────────────────────┼──────┤
-   │   │ Select Your Name            │ Ram Iyengar (dropdown)   │      │
-   │   │ Choose Match                │ 7 (dropdown)             │      │
-   │   │ Match Points                │ PBKS                     │  300 │
-   │   │ SP Individual Performance   │ Cooper Connolly PBKS 2x  │  177 │
-   │   │ Linked / Not Linked         │ Yes                      │      │
-   │   │ SP Points (incl link effect)│                          │  708 │
-   │   │ Wicket Keeper               │ Sanju Samson             │   19 │
-   │   │ Bat 1                       │ Ayush Mhatre             │  326 │
-   │   │ Super Selector              │                          │  795 │
-   └───┴─────────────────────────────┴──────────────────────────┴──────┘
-
-   KEY INSIGHT: Col I and Col J are FIXED columns in the sheet.
-   The "match" header (Choose Match = 7) is in Col I row 2.
-   ALL data rows use:
-     Col I (fixed) = player name / detail text
-     Col J (fixed) = numeric score
-
-   So we DON'T need to find a match column — we just need to find
-   which ROWS belong to which match. The sheet filters rows by the
-   dropdown in I2. The proxy already returns only the relevant rows
-   when called with player+match params.
-
-   For the raw rows fallback: scan rows to find:
-     - The "label column" (col with row labels like "Match Points")
-     - The "detail column" = the column right after the label col
-       that has text values (player names)
-     - The "score column"  = the column right after detail col
-       that has numeric values
+   REPORT CARD — LOAD
+   Uses new proxy that sets dropdowns and reads correctly.
+   Falls back to smart column detection if proxy returns raw rows.
 ════════════════════════════════════════════════════════════════ */
 async function loadRC(){
   rcName =document.getElementById('rcSN').value;
@@ -469,146 +406,70 @@ async function loadRC(){
     return;
   }
   const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='…';
+
+  // Clear cache for RC to always get fresh data (dropdown-driven sheets change)
+  const cacheKey=JSON.stringify({tab:'reportcard',player:rcName,match:rcMatch});
+  delete CACHE[cacheKey];
+
   try{
     const d=await apiGet({tab:'reportcard',player:rcName,match:rcMatch});
 
-    // ── New proxy v3 returns structured data ──────────────────
+    // ── Proxy v5/v6: structured response ─────────────────────
     if(d.scoreMap!==undefined){
-      renderRC(d.scoreMap,d.detailMap||{},d.chipTotals||{},d.playerCol>=0,d.matchCol>=0,d.dailyTotal??null);
+      renderRC(d.scoreMap, d.detailMap||{}, d.chipTotals||{},
+               d.playerCol>=0, d.matchCol>=0, d.dailyTotal??null);
       return;
     }
 
-    // ── Fallback: raw rows — smart column detection ───────────
+    // ── Fallback: old proxy raw rows ──────────────────────────
     const g=d.rows||[];
-
-    /*
-      SMART COLUMN DETECTION STRATEGY:
-      
-      Instead of finding a "match column" header (which fails for SS rows),
-      we scan ALL rows to determine which column indices are used for:
-        - labels (col A equivalent)
-        - detail text (player names — Col I)
-        - scores (numeric — Col J)
-      
-      Method:
-      1. Find label column: first non-empty col in most rows (usually index 0 or nearby)
-      2. Scan known label rows to find which column has the score for each row
-      3. The detail column is always one col to the LEFT of the score col
-
-      Simpler approach that works for this specific sheet:
-      The sheet always puts:
-        - Row label at the leftmost non-empty col (0-3)
-        - Player name/detail at a consistent col (we detect it)
-        - Score at detail+1
-
-      We detect the "score column" by finding the first row with a known
-      label (e.g. "Match Points") and scanning right from the label col
-      to find the first numeric value. That column is the score col.
-      The col before it is the detail col.
-    */
-
-    const sm={}, dm={}, ct={};
-    let detailC=-1, scoreC=-1;
-    let mR=-1, nC=-1;
+    const sm={},dm={},ct={};
+    let detailC=-1,scoreC=-1;
     let dailyTotal=null;
 
-    // Step 1: find player name column (row with player name in it)
-    for(let r=0;r<Math.min(10,g.length);r++){
-      for(let c=0;c<g[r].length;c++){
-        if(String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nC=c;break;}
-      }if(nC>=0)break;
-    }
-
-    // Step 2: find match number row (row containing the selected match number
-    // as an isolated cell — e.g. cell value "7" when match=7)
+    // Find player name and match number in header area
+    let nR=-1,nC=-1,mR=-1,mC=-1;
     const ms=String(rcMatch);
     for(let r=0;r<Math.min(10,g.length);r++){
       for(let c=0;c<g[r].length;c++){
-        const v=String(g[r][c]||'').trim();
-        // Match the selected match number as a standalone value
-        if(v===ms&&c>0){mR=r;break;}
-      }if(mR>=0)break;
-    }
-
-    // Step 3: dynamically detect detailC and scoreC
-    // Scan data rows: for each known label, find where the score is
-    // The score column is the RIGHTMOST column that has a numeric value
-    // for rows where we expect scores. We check multiple rows to confirm.
-    //
-    // Key observation from Image 2:
-    // - Label is at col 0 (or wherever left-most)
-    // - Detail (player name) is at a fixed col (Col I = typically index 8)
-    // - Score is at Col J = detail + 1 (typically index 9)
-    //
-    // We detect this by scanning known-label rows and finding numeric values.
-    const dataStart=Math.max(nC>=0?0:0, mR>=0?mR+1:0);
-
-    // Detect columns: scan first 20 data rows
-    const scoreColCandidates={};
-    for(let r=dataStart;r<Math.min(dataStart+30,g.length);r++){
-      // Find label
-      let labelC=-1;
-      for(let c=0;c<=3;c++){if(String(g[r][c]||'').trim()){labelC=c;break;}}
-      if(labelC<0)continue;
-      const lbl=String(g[r][labelC]||'').trim();
-      if(!RC_LMAP[lbl.toLowerCase()])continue; // only check known label rows
-
-      // Find rightmost numeric value in this row (that's the score col)
-      for(let c=g[r].length-1;c>labelC;c--){
-        const v=String(g[r][c]||'').trim();
-        if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){
-          scoreColCandidates[c]=(scoreColCandidates[c]||0)+1;
-          break;
-        }
+        if(String(g[r][c]||'').trim().toLowerCase()===rcName.toLowerCase()){nR=r;nC=c;}
+        const v=String(g[r][c]||'').trim().replace(/^c/i,'').replace(/^match\s*/i,'').trim();
+        if(v===ms&&c>3){mR=r;mC=c;}
       }
     }
 
-    // The most common rightmost-numeric col is our scoreC
-    let maxVotes=0;
-    Object.entries(scoreColCandidates).forEach(([c,votes])=>{
-      if(votes>maxVotes){maxVotes=votes;scoreC=parseInt(c);}
-    });
-    detailC=scoreC-1; // detail is always one col left of score
+    // Score col detection: scan known-label rows for rightmost numeric value
+    const votes={};
+    for(let r=Math.max(nR,mR)+1;r<g.length;r++){
+      let lbl='';
+      for(let c=0;c<=3;c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
+      if(!RC_LMAP[lbl.toLowerCase()])continue;
+      for(let c=g[r].length-1;c>3;c--){
+        const v=String(g[r][c]||'').trim();
+        if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}
+      }
+    }
+    let maxV=0;
+    Object.entries(votes).forEach(([c,v])=>{if(v>maxV){maxV=v;scoreC=parseInt(c);}});
+    detailC=scoreC>=0?scoreC-1:-1;
 
-    // Fallback: if detection failed, use indices 8,9 (absolute Col I, Col J)
-    if(scoreC<0){detailC=8;scoreC=9;}
+    // mC takes priority if found
+    if(mC>=0){scoreC=mC;detailC=mC-1;}
 
-    // Step 4: chip totals — sum scoreC for each match's data rows
-    // We detect match boundaries by looking for rows where the label col
-    // has a match-number-like value
-    // For simplicity with the raw proxy, build chips from the current match only
-    // (chip totals require multiple match columns which raw proxy doesn't return per-match)
-    // The new proxy v3 handles this properly.
-
-    // Step 5: build score map and detail map
-    for(let r=0;r<g.length;r++){
-      // Find label col
-      let labelC=-1;
-      for(let c=0;c<=3;c++){if(String(g[r][c]||'').trim()){labelC=c;break;}}
-      if(labelC<0)continue;
-      const lbl=String(g[r][labelC]||'').trim();
+    const ds=Math.max(nR>=0?nR:0,mR>=0?mR:0)+1;
+    for(let r=ds;r<g.length;r++){
+      let lbl='';
+      for(let c=0;c<=3;c++){if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}}
       const key=RC_LMAP[lbl.toLowerCase()];
-
-      if(key==='daily_total'){
-        dailyTotal=pn(g[r]?.[scoreC]);
-        continue;
-      }
+      if(key==='daily_total'){if(scoreC>=0)dailyTotal=pn(g[r][scoreC]);continue;}
       if(!key)continue;
-
-      // Detail (Col I): player name / Yes / PBKS etc.
-      dm[key]=String(g[r][detailC]||'').trim();
-      // Score (Col J): numeric points
-      sm[key]=String(g[r][scoreC] ||'').trim();
+      dm[key]=detailC>=0?String(g[r][detailC]||'').trim():'';
+      sm[key]=scoreC>=0?String(g[r][scoreC]||'').trim():'';
     }
 
-    // Build chip totals from raw data (sum all score rows)
-    // We can only do current match total without multi-match column data
-    let matchTotal=0;
-    Object.values(sm).forEach(v=>{const n=pn(v);if(!isNaN(n))matchTotal+=n;});
-    // Only show the chip for the current match
-    if(matchTotal!==0)ct[rcMatch]=Math.round(matchTotal);
-
-    renderRC(sm,dm,ct,nC>=0||detailC>=0,scoreC>=0,dailyTotal);
+    let tot=0;Object.values(sm).forEach(v=>{const n=pn(v);if(!isNaN(n))tot+=n;});
+    if(tot!==0)ct[rcMatch]=Math.round(tot);
+    renderRC(sm,dm,ct,nC>=0,mC>=0,dailyTotal);
 
   }catch(e){
     setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span>
@@ -621,7 +482,8 @@ async function loadRC(){
 
 /* ════════════════════════════════════════════════════════════════
    REPORT CARD — RENDER
-   Shows all 3 columns: label | detail (player name) | score
+   All 3 columns shown: label | detail (Col I) | score (Col J)
+   Negative values preserved and shown in red throughout.
 ════════════════════════════════════════════════════════════════ */
 function renderRC(sm,dm,chipTotals,foundPlayer,foundMatch,dailyTotal){
   const pl=players.find(p=>p.name===rcName);
@@ -642,44 +504,47 @@ function renderRC(sm,dm,chipTotals,foundPlayer,foundMatch,dailyTotal){
     </div></div>`;
   }
 
-  // Warning — only if genuinely nothing was found
-  const hasAnyData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
+  // Warning only if genuinely no data
+  const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
   let warn='';
-  if(!hasAnyData&&!foundPlayer)
-    warn=`<div class="warn">⚠ Player name not found in Report Card sheet. Check exact spelling matches.</div>`;
-  else if(!hasAnyData&&!foundMatch)
-    warn=`<div class="warn">⚠ Match ${rcMatch} data not entered yet in the Report Card sheet.</div>`;
+  if(!hasData&&!foundPlayer)
+    warn=`<div class="warn">⚠ Player not found in Report Card sheet. Check exact spelling.</div>`;
+  else if(!hasData&&!foundMatch)
+    warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the Report Card sheet.</div>`;
 
   // Score rows
   let rows='';
   RC_GROUPS.forEach(grp=>{
     rows+=`<div class="gh">${grp.t}</div>`;
     grp.rows.forEach(rd=>{
-      const scoreRaw = sm[rd.k]||'';  // Col J — numeric score
-      const detail   = dm[rd.k]||'';  // Col I — player name / description
-      const num      = pn(scoreRaw);
-      const isNum    = !isNaN(num);
+      const scoreRaw=sm[rd.k]||'';   // Col J — numeric score
+      const detail  =dm[rd.k]||'';   // Col I — player name / description
+      const num     =pn(scoreRaw);
+      const isNum   =!isNaN(num);
 
-      // ── Score cell (Col J) ───────────────────────────────────
+      // ── Score value ──────────────────────────────────────────
       let vh='';
       if(rd.badge){
-        // Badge rows: Col I has "Yes"/"No" text (not Col J)
-        const badgeTxt=detail||scoreRaw;
-        if     (/yes|linked|true/i.test(badgeTxt))  vh=`<span class="badge yes">${esc(badgeTxt)}</span>`;
-        else if(/no|not|false/i.test(badgeTxt))     vh=`<span class="badge no">${esc(badgeTxt)}</span>`;
-        else if(badgeTxt)                            vh=`<span class="badge neu">${esc(badgeTxt)}</span>`;
-        else                                         vh=`<span class="rv dim">—</span>`;
+        // Badge rows: "Yes"/"No" comes from detail col (Col I)
+        const txt=detail||scoreRaw;
+        if     (/yes|linked|true/i.test(txt))  vh=`<span class="badge yes">${esc(txt)}</span>`;
+        else if(/no|not|false/i.test(txt))     vh=`<span class="badge no">${esc(txt)}</span>`;
+        else if(txt)                            vh=`<span class="badge neu">${esc(txt)}</span>`;
+        else                                   vh=`<span class="rv dim">—</span>`;
       }else if(isNum){
-        if(num===0)vh=`<span class="rv dim">—</span>`;
-        else if(rd.sub)vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
-        else           vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
+        if(num===0)       vh=`<span class="rv dim">—</span>`;
+        else if(rd.sub){
+          // Subtotal: gold if positive, RED if negative — both are important
+          vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
+        }else{
+          // Regular rows: green +n or RED -n
+          vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
+        }
       }else{
         vh=`<span class="rv dim">—</span>`;
       }
 
-      // ── Detail cell (Col I) ──────────────────────────────────
-      // Show for all rows except subtotals and badge rows
-      // (badge rows show their detail as the badge itself)
+      // ── Detail (player name, Col I) ──────────────────────────
       const detailHtml=(!rd.sub&&!rd.badge&&detail)
         ?`<span class="rd">${esc(detail)}</span>`
         :`<span class="rd"></span>`;
@@ -700,7 +565,7 @@ function renderRC(sm,dm,chipTotals,foundPlayer,foundMatch,dailyTotal){
         <span class="rl">Total Daily Score — Match ${rcMatch}</span>
         <span class="rd"></span>
         <span class="rv blue">${fmt(dailyTotal)}</span>
-      </div>`:' ';
+      </div>`:'';
 
   setRC(`<div class="rccard">
     <div class="rchero">
@@ -714,8 +579,7 @@ function renderRC(sm,dm,chipTotals,foundPlayer,foundMatch,dailyTotal){
     ${rows}
     ${dailyHtml}
     <div class="rr tot">
-      <span class="ri">🏆</span>
-      <span class="rl">Total (Cumulative Season Score)</span>
+      <span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span>
       <span class="rd"></span>
       <span class="rv grand">${pl?fmt(pl.total):'—'}</span>
     </div>
@@ -730,6 +594,9 @@ function set(h){document.getElementById('area').innerHTML=h;}
    UTILITIES
 ════════════════════════════════════════════════════════════════ */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Parse display number: "1,200"→1200, "(100)"→-100, "-"→NaN
+// IMPORTANT: preserves negatives
 function pn(v){
   if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
   const s=String(v).trim().replace(/,/g,'');
@@ -738,6 +605,7 @@ function pn(v){
 }
 function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
 function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
+// Table cells: red negative, dim zero
 function fmtCell(n){
   if(isNaN(n)||n===0)return`<span class="v-dim">—</span>`;
   if(n<0)return`<span class="v-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
