@@ -6,27 +6,23 @@
 <title>IPL 2026 Fantasy League</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ── reset ─────────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
 .wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px rgba(0,0,0,.5);padding:15px}
-/* ── header ────────────────────────────────────────────────── */
 .header{text-align:center;margin-bottom:15px}
 .header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
 .banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,.1);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
-/* ── tabs ──────────────────────────────────────────────────── */
 .tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
 .tab-bar::-webkit-scrollbar{height:4px}
 .tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
 .tab-btn{background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0;font-family:'Inter',sans-serif}
 .tab-btn:hover{background:rgba(255,255,255,.1);color:#fff}
 .tab-btn.active{background:rgba(251,191,36,.1);color:#fbbf24;border-color:#fbbf24}
-/* ── loading/error ─────────────────────────────────────────── */
 .loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
 .spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8;white-space:pre-wrap}
-/* ── shared table styles ───────────────────────────────────── */
+/* tables */
 .tw{overflow:auto;background:rgba(15,23,42,.6);border-radius:8px;border:1px solid rgba(255,255,255,.05);max-height:75vh}
 table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
 th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#f8fafc}
@@ -35,29 +31,20 @@ th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-inde
 .sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,.1);text-align:center}
 th.sc1,th.sc2{z-index:15;background:#0f172a}
 tr:hover td{background:rgba(255,255,255,.03)}
-/* colour helpers used everywhere */
-.c-neg{color:#f87171!important;font-weight:700}   /* RED  negatives */
-.c-dim{color:#475569}                              /* grey zeros     */
-.c-pos{color:#4ade80}                              /* green positive */
-.c-gold{color:#fbbf24;font-weight:700}
+.c-neg{color:#f87171!important;font-weight:700}
+.c-dim{color:#475569}
 .rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
 .ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
-
-/* ═══════════════════════════════════════════════════════════
-   REPORT CARD
-═══════════════════════════════════════════════════════════ */
+/* RC */
 .rc-wrap{max-width:920px;margin:0 auto}
 .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
 .rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
 .rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
+.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
 .rcsel:hover{border-color:rgba(251,191,36,.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
 .rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
 .rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,.35)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .rccard{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
-/* hero */
 .rchero{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.04));border-bottom:1px solid rgba(251,191,36,.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
 .rchn{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#fff}
@@ -65,53 +52,36 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .rchr{margin-left:auto;text-align:right}
 .rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
 .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-/* chips */
-.cw{border-bottom:1px solid rgba(255,255,255,.07);padding:12px 20px}
-.ct{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:8px}
-.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px}
-.chips::-webkit-scrollbar{height:3px}.chips::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
-.chip{flex-shrink:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:7px 11px;text-align:center;min-width:54px;cursor:pointer;transition:.15s}
-.chip:hover{border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.07)}.chip.on{border-color:#fbbf24;background:rgba(251,191,36,.13)}
-.cl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
-.cv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;margin-top:2px;color:#e2e8f0}
-.cv.pos{color:#4ade80}.cv.neg{color:#f87171}
-/* group header */
 .gh{background:rgba(255,255,255,.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-/* rows — 4-col grid: icon | label | detail | score */
+/* row grid: icon | label | detail | score */
 .rr{display:grid;grid-template-columns:28px 1fr auto 90px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s}
 .rr:hover{background:rgba(255,255,255,.04)}
 .rr.sub{background:rgba(251,191,36,.07);border-top:1px solid rgba(251,191,36,.15);border-bottom:1px solid rgba(251,191,36,.15)}
 .rr.tot{background:linear-gradient(90deg,rgba(251,191,36,.14),transparent);border-top:2px solid rgba(251,191,36,.35);padding:15px 20px}
 .rr.dtot{background:linear-gradient(90deg,rgba(96,165,250,.1),transparent);border-top:2px solid rgba(96,165,250,.25);padding:13px 20px}
 .ri{font-size:15px;text-align:center}
-/* label (Col D) */
 .rl{font-size:13px;font-weight:500;color:#cbd5e1}
 .rr.sub  .rl{color:#fbbf24;font-weight:700}
 .rr.tot  .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
 .rr.dtot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
-/* detail (Col I) */
 .rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
 .rr.sub  .rd,.rr.tot .rd,.rr.dtot .rd{visibility:hidden}
-/* score (Col J) */
 .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
 .rv.pos {color:#4ade80}
-.rv.neg {color:#f87171;font-weight:700}    /* ← RED negatives */
+.rv.neg {color:#f87171;font-weight:700}
 .rv.dim {color:#64748b;font-weight:400;font-size:12px}
 .rv.gold{color:#fbbf24;font-weight:700}
 .rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,.4)}
 .rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
-/* badges */
 .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
 .badge.yes{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.35)}
 .badge.no {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)}
 .badge.neu{background:rgba(148,163,184,.1);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
-/* empty + warn */
 .rce{padding:44px 20px;text-align:center}
 .rce-i{font-size:38px;margin-bottom:10px;display:block}
 .rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
 .rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
 .warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:9px 14px;margin:0 20px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
-/* mobile */
 @media(max-width:600px){
   .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
   .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
@@ -129,9 +99,6 @@ tr:hover td{background:rgba(255,255,255,.03)}
   <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
 </div>
 <script>
-/* ═══════════════════════════════════════════════════════════
-   CONFIG
-═══════════════════════════════════════════════════════════ */
 const API = 'https://script.google.com/macros/s/AKfycbz-Jj_RmSnxqxE9k_jwQoaQ-X-AL-tJp_T-k2lvwhrW4UlKSgdbl8mQRZJooco_VmyDzQ/exec';
 
 const TABS = [
@@ -222,19 +189,12 @@ const RC_LMAP = {
   'total daily score':'daily_total','daily total':'daily_total','total daily':'daily_total',
 };
 
-/* ═══════════════════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════════════════ */
 let cur=TABS[0], players=[], rcName='', rcMatch=7;
 const CACHE={}, TTL=60000;
 
-/* ═══════════════════════════════════════════════════════════
-   API HELPER
-   RC always bypasses cache — server sets dropdown each call.
-═══════════════════════════════════════════════════════════ */
 async function api(params, fresh=false){
   const key=JSON.stringify(params), now=Date.now();
-  if(!fresh && CACHE[key] && now-CACHE[key].ts<TTL) return CACHE[key].d;
+  if(!fresh&&CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
   const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
   const res=await fetch(API+'?'+qs);
   if(!res.ok) throw new Error('HTTP '+res.status);
@@ -244,40 +204,27 @@ async function api(params, fresh=false){
   return d;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   TABS
-═══════════════════════════════════════════════════════════ */
 function renderTabs(){
-  document.getElementById('tabBar').innerHTML=
-    TABS.map(t=>`<button class="tab-btn ${t.name===cur.name?'active':''}"
-      onclick="go('${t.name}')">${t.name}</button>`).join('');
+  document.getElementById('tabBar').innerHTML=TABS.map(t=>
+    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
+  ).join('');
 }
 function go(n){cur=TABS.find(t=>t.name===n);renderTabs();load();}
 
-/* ═══════════════════════════════════════════════════════════
-   ROUTER
-═══════════════════════════════════════════════════════════ */
 async function load(){
   set('<div class="loading"><div class="spinner"></div>Loading…</div>');
   try{
     if(cur.type==='lb'){
-      const d=await api({tab:'leaderboard'});
-      buildPlayers(d.rows); renderLB(d.rows);
+      const d=await api({tab:'leaderboard'});buildPlayers(d.rows);renderLB(d.rows);
     }else if(cur.type==='rc'){
-      if(!players.length) try{const d=await api({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
+      if(!players.length)try{const d=await api({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
       renderRCShell();
     }else{
-      const d=await api({tab:cur.key});
-      renderDT(d.rows);
+      const d=await api({tab:cur.key});renderDT(d.rows);
     }
-  }catch(e){
-    set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);
-  }
+  }catch(e){set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);}
 }
 
-/* ═══════════════════════════════════════════════════════════
-   PLAYERS
-═══════════════════════════════════════════════════════════ */
 function buildPlayers(rows){
   players=[];
   let hi=-1;
@@ -299,9 +246,6 @@ function buildPlayers(rows){
   players.sort((a,b)=>a.rank-b.rank);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   LEADERBOARD
-═══════════════════════════════════════════════════════════ */
 function renderLB(rows){
   for(const r of rows.slice(0,5)){
     const m=r.join(' ').match(/match\s*#?\s*(\d+)/i);
@@ -318,44 +262,28 @@ function renderLB(rows){
   const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
   const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
   const iA=iR>=0?iR+1:-1;
-  const sc=LB_COLS.map(d=>{
-    const re=new RegExp(d.re,'i');
-    const i=h.findIndex(v=>re.test(String(v||'')));
-    return i>=0?{i,lbl:d.lbl}:null;
-  }).filter(Boolean);
-  const dr=rows.slice(hi+1).filter(r=>{
-    const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();
-    return !isNaN(rn)&&nm&&nm!=='null';
-  });
+  const sc=LB_COLS.map(d=>{const re=new RegExp(d.re,'i');const i=h.findIndex(v=>re.test(String(v||'')));return i>=0?{i,lbl:d.lbl}:null;}).filter(Boolean);
+  const dr=rows.slice(hi+1).filter(r=>{const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();return !isNaN(rn)&&nm&&nm!=='null';});
   let html=`<div class="tw"><table><thead><tr>
     <th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>
     ${sc.map(c=>`<th>${c.lbl}</th>`).join('')}
   </tr></thead><tbody>`;
   dr.forEach(r=>{
-    const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim());
-    const tot=pn(r[iT]),arw=iA>=0?String(r[iA]||''):'';
+    const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim()),tot=pn(r[iT]),arw=iA>=0?String(r[iA]||''):'';
     const rk=rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
     const ac=arw.includes('▲')?'ar-up':arw.includes('▼')?'ar-dn':'ar-eq';
     const an=(arw.match(/\d+/)||[''])[0];
     const at=arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
-    html+=`<tr>
-      <td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td>
-      <td class="sc2">${fmtCell(tot)}</td>
-      ${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}
-    </tr>`;
+    html+=`<tr><td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td><td class="sc2">${fmtCell(tot)}</td>${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}</tr>`;
   });
   set(html+'</tbody></table></div>');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   DATA TABLE (Match Scores / SS / Daily / Player Points)
-═══════════════════════════════════════════════════════════ */
 function renderDT(rows){
   if(!rows||rows.length<2){set('<div class="loading">No data.</div>');return;}
   const isP=cur.key==='playerpoints';
   let hi=0;
-  for(let i=0;i<Math.min(5,rows.length);i++)
-    if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
+  for(let i=0;i<Math.min(5,rows.length);i++)if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
   const hdrs=rows[hi],data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
   let h='<div class="tw"><table><thead><tr>';
   hdrs.forEach((hd,i)=>{
@@ -373,11 +301,10 @@ function renderDT(rows){
       let cls='';
       if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
       else    {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      const raw=String(c||'').trim();
-      const n=pn(raw);
+      const raw=String(c||'').trim(),n=pn(raw);
       let disp=esc(raw===''||raw==='null'?'—':raw);
       if(!isNaN(n)&&n<0)  disp=`<span class="c-neg">${esc(raw)}</span>`;
-      else if(!isNaN(n)&&n===0) disp=`<span class="c-dim">—</span>`;
+      else if(!isNaN(n)&&n===0)disp=`<span class="c-dim">—</span>`;
       h+=`<td class="${cls}">${disp}</td>`;
     });
     h+='</tr>';
@@ -385,22 +312,15 @@ function renderDT(rows){
   set(h+'</tbody></table></div>');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   RC SHELL
-═══════════════════════════════════════════════════════════ */
 function renderRCShell(){
   let no='<option value="">— Select your name —</option>';
-  if(!players.length) no+='<option disabled>Loading names…</option>';
-  else players.forEach(p=>{
-    no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;
-  });
-  let mo='';for(let m=1;m<=74;m++) mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
+  if(!players.length)no+='<option disabled>Loading names…</option>';
+  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
+  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
   set(`<div class="rc-wrap">
     <div class="rc-bar">
-      <div class="rcg"><div class="rcl">Player</div>
-        <select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
-      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div>
-        <select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
+      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
+      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
       <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
     </div>
     <div id="rcA"><div class="rccard"><div class="rce">
@@ -411,224 +331,131 @@ function renderRCShell(){
   </div>`);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   RC LOAD  — always fresh (no cache) so dropdown re-fires
-═══════════════════════════════════════════════════════════ */
 async function loadRC(){
   rcName =document.getElementById('rcSN').value;
   rcMatch=parseInt(document.getElementById('rcSM').value);
-  if(!rcName){
-    setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');
-    return;
-  }
+  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');return;}
   const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='…';
   try{
-    const d=await api({tab:'reportcard',player:rcName,match:rcMatch}, true /* fresh */);
+    const d=await api({tab:'reportcard',player:rcName,match:rcMatch},true);
     if(d.scoreMap!==undefined){
-      renderRC(d.scoreMap, d.detailMap||{}, d.chipTotals||{},
-               d.playerCol>=0, d.matchCol>=0, d.dailyTotal??null);
+      renderRC(d.scoreMap,d.detailMap||{},d.playerCol>=0,d.matchCol>=0,d.dailyTotal??null);
     }else{
-      // old proxy: raw rows fallback
       rcFallback(d.rows||[]);
     }
   }catch(e){
-    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span>
-      <div class="rce-t">Error loading Report Card</div>
-      <div class="rce-s">${esc(e.message)}</div>
-    </div></div>`);
+    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">${esc(e.message)}</div></div></div>`);
   }
   btn.disabled=false;btn.textContent='▶ View';
 }
 
-/* ── fallback for old proxy (raw rows) ──────────────────── */
 function rcFallback(g){
-  const sm={},dm={},ct={};
-  let sc=-1,dc=-1,dailyTotal=null;
+  const sm={},dm={};let sc=-1,dc=-1,dailyTotal=null;
   const votes={};
   for(let r=0;r<g.length;r++){
-    let lbl='';
-    for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
+    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
     if(!RC_LMAP[lbl.toLowerCase()])continue;
-    for(let c=g[r].length-1;c>3;c--){
-      const v=String(g[r][c]||'').trim();
-      if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}
-    }
+    for(let c=g[r].length-1;c>3;c--){const v=String(g[r][c]||'').trim();if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}}
   }
   let mx=0;Object.entries(votes).forEach(([c,v])=>{if(v>mx){mx=v;sc=+c;}});
   dc=sc>0?sc-1:-1;
-  const ds=2;
-  for(let r=ds;r<g.length;r++){
-    let lbl='';
-    for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
+  for(let r=2;r<g.length;r++){
+    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
     const key=RC_LMAP[lbl.toLowerCase()];
     if(key==='daily_total'){if(sc>=0)dailyTotal=pn(g[r][sc]);continue;}
     if(!key)continue;
-    dm[key]=dc>=0?String(g[r][dc]||'').trim():'';
-    sm[key]=sc>=0?String(g[r][sc]||'').trim():'';
+    const det=dc>=0?String(g[r][dc]||'').trim():'';
+    const scv=sc>=0?String(g[r][sc]||'').trim():'';
+    if(key==='sp_linked'||key==='dd_prem'){detailMap[key]=det||scv;scoreMap[key]='';}
+    else{dm[key]=det;sm[key]=scv;}
   }
-  let tot=0;Object.values(sm).forEach(v=>{const n=pn(v);if(!isNaN(n))tot+=n;});
-  if(tot)ct[rcMatch]=Math.round(tot);
-  renderRC(sm,dm,ct,dc>=0,sc>=0,dailyTotal);
+  renderRC(sm,dm,dc>=0,sc>=0,dailyTotal);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   RC RENDER
-   Three displayed columns per row:
-     icon  |  label (Col D)  |  detail (Col I)  |  score (Col J)
-   
-   Negative values → RED in every case.
-   Chip strip     → ONLY matches ≤ rcMatch.
-═══════════════════════════════════════════════════════════ */
-function renderRC(sm, dm, chipTotals, foundPlayer, foundMatch, dailyTotal){
+/* ── RENDER RC — chip strip REMOVED per user request ─── */
+function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
   const pl  =players.find(p=>p.name===rcName);
   const rank=pl?pl.rank:0;
   const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
-  /* chip strip — filter to ≤ rcMatch */
-  const mNums=Object.keys(chipTotals).map(Number)
-    .filter(m=>m<=rcMatch)            // ← FIX: no future matches
-    .sort((a,b)=>a-b);
-  let chips='';
-  if(mNums.length){
-    chips=`<div class="cw"><div class="ct">Match Breakdown</div><div class="chips">
-      ${mNums.map(m=>{
-        const s=chipTotals[m]||0, vc=s>0?'pos':s<0?'neg':'';
-        return `<div class="chip ${m===rcMatch?'on':''}" onclick="rcJ(${m})">
-          <div class="cl">M${m}</div>
-          <div class="cv ${vc}">${s>0?'+':''}${s||'—'}</div>
-        </div>`;
-      }).join('')}
-    </div></div>`;
-  }
+  // ── NO CHIP STRIP — removed per user request ──────────────
 
-  /* warning */
+  // warning
   const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
   let warn='';
-  if(!hasData&&!foundPlayer)
-    warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
-  else if(!hasData&&!foundMatch)
-    warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
+  if(!hasData&&!foundPlayer)warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
+  else if(!hasData&&!foundMatch)warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
 
-  /* score rows */
+  // score rows
   let rows='';
   RC_GROUPS.forEach(grp=>{
     rows+=`<div class="gh">${grp.t}</div>`;
     grp.rows.forEach(rd=>{
-      const scoreRaw = sm[rd.k]||'';   // Col J — raw string "(100)" or "300"
-      const detail   = dm[rd.k]||'';   // Col I — player name / "Yes" / "PBKS"
-      const num      = pn(scoreRaw);
-      const isNum    = !isNaN(num);
-
-      /* score cell */
+      const scoreRaw=sm[rd.k]||'';
+      const detail  =dm[rd.k]||'';
+      const num     =pn(scoreRaw);
+      const isNum   =!isNaN(num);
       let vh='';
+
       if(rd.badge){
-        // badge rows: Yes/No from Col I
         const txt=detail||scoreRaw;
         if     (/yes|linked|true/i.test(txt))  vh=`<span class="badge yes">${esc(txt)}</span>`;
         else if(/no|not|false/i.test(txt))     vh=`<span class="badge no">${esc(txt)}</span>`;
         else if(txt)                            vh=`<span class="badge neu">${esc(txt)}</span>`;
         else                                    vh=`<span class="rv dim">—</span>`;
       }else if(isNum){
-        if(num===0){
-          vh=`<span class="rv dim">—</span>`;
-        }else if(rd.sub){
-          // subtotal: gold +ve, RED -ve  (both matter!)
-          vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
-        }else{
-          // regular: +green or −RED
-          vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
-        }
+        if(num===0)       vh=`<span class="rv dim">—</span>`;
+        else if(rd.sub)   vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
+        else              vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
       }else{
         vh=`<span class="rv dim">—</span>`;
       }
 
-      /* detail cell (Col I) — hidden on sub/tot rows */
-      const dh=(!rd.sub&&!rd.badge&&detail)
-        ?`<span class="rd">${esc(detail)}</span>`
-        :`<span class="rd"></span>`;
+      const dh=(!rd.sub&&!rd.badge&&detail)?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
 
       rows+=`<div class="rr ${rd.sub?'sub':''}">
-        <span class="ri">${rd.i}</span>
-        <span class="rl">${rd.l}</span>
-        ${dh}
-        ${vh}
+        <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dh}${vh}
       </div>`;
     });
   });
 
-  /* daily total */
   const dh2=(dailyTotal!==null&&!isNaN(dailyTotal))
-    ?`<div class="rr dtot">
-        <span class="ri">📅</span>
-        <span class="rl">Total Daily Score — Match ${rcMatch}</span>
-        <span class="rd"></span>
-        <span class="rv blue">${fmt(dailyTotal)}</span>
-      </div>`:'';
+    ?`<div class="rr dtot"><span class="ri">📅</span><span class="rl">Total Daily Score — Match ${rcMatch}</span><span class="rd"></span><span class="rv blue">${fmt(dailyTotal)}</span></div>`:'';
 
   setRC(`<div class="rccard">
     <div class="rchero">
       <div class="rcav">${init}</div>
-      <div><div class="rchn">${esc(rcName)}</div>
-           <div class="rchs">Report Card · Match ${rcMatch}</div></div>
+      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
       ${rank?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
     </div>
-    ${chips}
     ${warn}
     <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">Score Breakdown — Match ${rcMatch}</div>
     ${rows}
     ${dh2}
-    <div class="rr tot">
-      <span class="ri">🏆</span>
-      <span class="rl">Total (Cumulative Season Score)</span>
-      <span class="rd"></span>
-      <span class="rv grand">${pl?fmt(pl.total):'—'}</span>
-    </div>
+    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
   </div>`);
 }
 
 function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
 function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h) {document.getElementById('area').innerHTML=h;}
-
-/* ═══════════════════════════════════════════════════════════
-   UTILITIES
-═══════════════════════════════════════════════════════════ */
-function esc(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
-                      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* pn — parse display number
-   "1,200" → 1200  |  "(100)" → -100  |  "-" → NaN
-   CRITICAL: preserves negatives throughout the app            */
+function set(h){document.getElementById('area').innerHTML=h;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function pn(v){
-  if(v===null||v===undefined||v===''||v==='-'||v==='—') return NaN;
+  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
   const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s)) return -parseFloat(s.slice(1,-1));
+  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
   return parseFloat(s);
 }
-
-function fmt(n){
-  const x=typeof n==='number'?n:pn(n);
-  return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');
-}
-function fmtS(n){
-  if(n===0)return'—';
-  return(n>0?'+':'')+n.toLocaleString('en-US');
-}
-/* table cells: RED for negatives (preserves bracket display), dim for zero */
+function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
+function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
 function fmtCell(n){
-  if(isNaN(n)||n===0) return`<span class="c-dim">—</span>`;
-  if(n<0) return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
+  if(isNaN(n)||n===0)return`<span class="c-dim">—</span>`;
+  if(n<0)return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
   return n.toLocaleString('en-US');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════════════════ */
-renderTabs();
-load();
-setInterval(()=>{if(cur.type==='lb')load();}, 120000);
+renderTabs();load();
+setInterval(()=>{if(cur.type==='lb')load();},120000);
 </script>
 </body>
 </html>
