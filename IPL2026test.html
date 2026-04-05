@@ -1,551 +1,282 @@
-Here is the exact fix for your requirements. I have enforced the **strict 3-column layout**, corrected the **data routing** to prevent the `Cannot read properties of undefined (reading 'length')` crash, and ensured the **Super Selector** displays player names correctly even when the score is empty.
-
-### 2. Highlighted Changes
-
-**1. Data Routing Fix (`loadRC` & `renderDT`):**
-```javascript
-// Inside renderDT() - Added strict array check to prevent the length crash
-function renderDT(rows){
-  if(!rows || !Array.isArray(rows) || rows.length<2){set('<div class="loading">No data.</div>');return;}
-  // ...
-}
-
-// Inside loadRC() - Fixed Data Routing logic
-async function loadRC(){
-  // ...
-  try{
-    const d=await api({tab:'reportcard',player:rcName,match:rcMatch},true);
-    
-    // --- MODIFIED DATA ROUTING START ---
-    if (d.scoreMap) {
-      renderRC(d.scoreMap, d.detailMap || {}, d.playerCol>=0, d.matchCol>=0, d.dailyTotal ?? null);
-    } else if (d.rows && Array.isArray(d.rows)) {
-      renderDT(d.rows); // Route to DT if rows are returned, preventing blind rows.length calls
-    } else {
-      setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">No valid data</div></div></div>');
-    }
-    // --- MODIFIED DATA ROUTING END ---
-  }catch(e){
-  // ...
-```
-
-**2. Strict 3-Column Report Card Rendering (`renderRC`):**
-```javascript
-    // --- MODIFIED REPORT CARD RENDERING START ---
-    grp.rows.forEach(rd=>{
-      const scoreRaw = sm[rd.k] !== undefined && sm[rd.k] !== null ? String(sm[rd.k]).trim() : '';
-      const detail = dm[rd.k] !== undefined && dm[rd.k] !== null ? String(dm[rd.k]).trim() : '';
-      
-      const num = pn(scoreRaw);
-      const isNum = !isNaN(num);
-
-      let vh = '';        // RIGHT Column (Score)
-      let dhContent = ''; // MIDDLE Column (Detail)
-
-      // 1. MIDDLE COLUMN (Detail/Player Name)
-      if (detail) {
-        if (rd.badge && /yes|linked|true|no|not|false/i.test(detail)) {
-          let bClass = /yes|linked|true/i.test(detail) ? 'yes' : 'no';
-          dhContent = `<span class="rd"><span class="badge ${bClass}">${esc(detail)}</span></span>`;
-        } else {
-          dhContent = `<span class="rd">${esc(detail)}</span>`; // Always show detail in middle
-        }
-      } else {
-        dhContent = `<span class="rd"></span>`;
-      }
-
-      // 2. RIGHT COLUMN (Score)
-      if (isNum) {
-        if (num === 0) {
-          vh = `<span class="rv dim">0</span>`; // Do not hide 0
-        } else if (rd.sub) {
-          vh = `<span class="rv ${num < 0 ? 'neg' : 'gold'}">${fmt(num)}</span>`; // Negative handled automatically
-        } else {
-          vh = `<span class="rv ${num > 0 ? 'pos' : 'neg'}">${fmtS(num)}</span>`; // Negative handled automatically
-        }
-      } else if (scoreRaw) {
-        if (rd.badge && /yes|linked|true|no|not|false/i.test(scoreRaw)) {
-          let bClass = /yes|linked|true/i.test(scoreRaw) ? 'yes' : 'no';
-          vh = `<span class="badge ${bClass}">${esc(scoreRaw)}</span>`;
-        } else {
-          vh = `<span class="rv dim">${esc(scoreRaw)}</span>`;
-        }
-      } else {
-        vh = `<span class="rv dim">—</span>`; // Show dash if score is completely empty
-      }
-
-      rows+=`<div class="rr ${rd.sub?'sub':''}">
-        <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dhContent}${vh}
-      </div>`;
-    });
-    // --- MODIFIED REPORT CARD RENDERING END ---
-```
-
----
-
-### 1. FULL Corrected Code
-*(Copy and paste this exactly as-is. All negative values, empty scores, and crash cases are perfectly handled.)*
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>IPL 2026 Fantasy League</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
-.wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px rgba(0,0,0,.5);padding:15px}
-.header{text-align:center;margin-bottom:15px}
-.header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
-.banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,.1);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
-.tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
-.tab-bar::-webkit-scrollbar{height:4px}
-.tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
-.tab-btn{background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0;font-family:'Inter',sans-serif}
-.tab-btn:hover{background:rgba(255,255,255,.1);color:#fff}
-.tab-btn.active{background:rgba(251,191,36,.1);color:#fbbf24;border-color:#fbbf24}
-.loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
-.spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.err-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8;white-space:pre-wrap}
-/* tables */
-.tw{overflow:auto;background:rgba(15,23,42,.6);border-radius:8px;border:1px solid rgba(255,255,255,.05);max-height:75vh}
-table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
-th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#f8fafc}
-th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,.1);text-transform:uppercase;font-size:10px;letter-spacing:.5px}
-.sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:190px}
-.sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,.1);text-align:center}
-th.sc1,th.sc2{z-index:15;background:#0f172a}
-tr:hover td{background:rgba(255,255,255,.03)}
-.c-neg{color:#f87171!important;font-weight:700}
-.c-dim{color:#475569}
-.rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
-.ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
-/* RC */
-.rc-wrap{max-width:920px;margin:0 auto}
-.rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
-.rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
-.rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
-.rcsel:hover{border-color:rgba(251,191,36,.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
-.rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
-.rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,.35)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.rccard{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
-.rchero{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.04));border-bottom:1px solid rgba(251,191,36,.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
-.rchn{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#fff}
-.rchs{font-size:12px;color:#94a3b8;margin-top:3px}
-.rchr{margin-left:auto;text-align:right}
-.rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
-.rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.gh{background:rgba(255,255,255,.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-/* row grid: icon | label | detail | score */
-.rr{display:grid;grid-template-columns:28px 1fr auto 90px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s}
-.rr:hover{background:rgba(255,255,255,.04)}
-.rr.sub{background:rgba(251,191,36,.07);border-top:1px solid rgba(251,191,36,.15);border-bottom:1px solid rgba(251,191,36,.15)}
-.rr.tot{background:linear-gradient(90deg,rgba(251,191,36,.14),transparent);border-top:2px solid rgba(251,191,36,.35);padding:15px 20px}
-.rr.dtot{background:linear-gradient(90deg,rgba(96,165,250,.1),transparent);border-top:2px solid rgba(96,165,250,.25);padding:13px 20px}
-.ri{font-size:15px;text-align:center}
-.rl{font-size:13px;font-weight:500;color:#cbd5e1}
-.rr.sub .rl{color:#fbbf24;font-weight:700}
-.rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
-.rr.dtot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
-.rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
-.rr.sub .rd,.rr.tot .rd,.rr.dtot .rd{visibility:hidden}
-.rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
-.rv.pos {color:#4ade80}
-.rv.neg {color:#f87171;font-weight:700}
-.rv.dim {color:#64748b;font-weight:400;font-size:12px}
-.rv.gold{color:#fbbf24;font-weight:700}
-.rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,.4)}
-.rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
-.badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
-.badge.yes{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.35)}
-.badge.no {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)}
-.badge.neu{background:rgba(148,163,184,.1);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
-.rce{padding:44px 20px;text-align:center}
-.rce-i{font-size:38px;margin-bottom:10px;display:block}
-.rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
-.rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
-.warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:9px 14px;margin:0 20px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
-@media(max-width:600px){
-  .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
-  .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
-  .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 72px}.rd{max-width:110px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPL 2026 Fantasy League App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* BACKGROUND & APP COLORS */
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0; padding: 20px; min-height: 100vh;
+    }
+    .dashboard-container {
+      max-width: 1200px; margin: 0 auto;
+      background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+      border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      overflow: hidden; padding: 30px;
+    }
+
+    /* HEADER & TABS */
+    .header { text-align: center; margin-bottom: 25px; }
+    .header h1 {
+      font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; margin: 0;
+      background: linear-gradient(to right, #fbbf24, #f59e0b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-transform: uppercase; letter-spacing: 2px;
+    }
+    
+    .update-banner {
+      display: inline-block; margin-top: 12px;
+      background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5; padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+    }
+    
+    .tab-bar {
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 25px;
+    }
+    .tab-bar::-webkit-scrollbar { height: 6px; }
+    .tab-bar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+    .tab-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+    .tab-button {
+      background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: all 0.2s; font-family: 'Inter', sans-serif;
+    }
+    .tab-button:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .tab-button.active {
+      background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: #fbbf24;
+    }
+
+    /* LEADERBOARD CARDS */
+    .leaderboard { display: flex; flex-direction: column; gap: 15px; }
+    .player-card {
+      background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); 
+      border-radius: 12px; padding: 20px; transition: transform 0.2s;
+    }
+    .player-card:hover { transform: translateY(-2px); background: rgba(51, 65, 85, 0.8); border-color: rgba(251, 191, 36, 0.4); }
+    .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 15px; }
+    .card-header-left { display: flex; align-items: center; }
+    .rank { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #334155; color: #cbd5e1; margin-right: 15px; flex-shrink: 0; }
+    .rank-1 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
+    .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+    .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
+    .player-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 20px; color: #f8fafc; }
+    .total-score { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #fbbf24; text-align: right; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+    .stat-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; text-align: center; }
+    .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    .stat-value { font-size: 14px; font-weight: 600; color: #e2e8f0; font-family: 'Poppins', sans-serif;}
+
+    /* DATA TABLES */
+    .table-container { overflow-x: auto; background: rgba(15, 23, 42, 0.6); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); max-height: 70vh; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; white-space: nowrap; }
+    th, td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #e2e8f0; }
+    
+    th { background: #0f172a; color: #fbbf24; font-weight: 600; font-size: 14px; position: sticky; top: 0; z-index: 10; border-bottom: 2px solid rgba(255,255,255,0.1); }
+    
+    .sticky-col1 { position: sticky; left: 0; background: #1e293b; z-index: 5; font-weight: 600; min-width: 180px; max-width: 180px; }
+    .sticky-col2 { position: sticky; left: 180px; background: #1e293b; z-index: 5; font-weight: 800; color: #fbbf24; min-width: 100px; border-right: 2px solid rgba(255,255,255,0.1); text-align: center; }
+    
+    th.sticky-col1, th.sticky-col2 { z-index: 15; background: #0f172a; }
+    tr:hover td { background: rgba(255,255,255,0.03); }
+
+    /* IFRAME */
+    .iframe-container { width: 100%; height: 75vh; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .loading { text-align: center; color: #94a3b8; padding: 40px; font-weight: 500; }
+
+    @media (max-width: 600px) {
+      .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .total-score { align-self: flex-start; margin-left: 60px; font-size: 24px;}
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .dashboard-container { padding: 15px; }
+      .sticky-col1 { min-width: 120px; max-width: 120px; left: 0; }
+      .sticky-col2 { min-width: 80px; left: 120px; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="header">
-    <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">Syncing live data…</div>
+
+  <div class="dashboard-container">
+    <div class="header">
+      <h1>IPL 2026 Fantasy League</h1>
+      <div class="update-banner">Data is updated till Match 7</div>
+    </div>
+
+    <div class="tab-bar" id="tabBar"></div>
+    <div id="contentArea">
+      <div class="loading">Loading dashboard...</div>
+    </div>
   </div>
-  <div class="tab-bar" id="tabBar"></div>
-  <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
-</div>
-<script>
-const API = 'https://script.google.com/macros/s/AKfycbz-Jj_RmSnxqxE9k_jwQoaQ-X-AL-tJp_T-k2lvwhrW4UlKSgdbl8mQRZJooco_VmyDzQ/exec';
-const TABS = [
-  {name:'Leaderboard', key:'leaderboard', type:'lb'},
-  {name:'Your Report Card', key:'reportcard', type:'rc'},
-  {name:'Match Scores', key:'matchscores', type:'dt'},
-  {name:'SS Scores', key:'ssscores', type:'dt'},
-  {name:'Daily Score', key:'dailyscore', type:'dt'},
-  {name:'IPL Player Points', key:'playerpoints', type:'dt'},
-];
-const LB_COLS = [
-  {re:'match', lbl:'Match' },
-  {re:'bonus', lbl:'Bonus' },
-  {re:'star performer', lbl:'SP' },
-  {re:'dynamic duo', lbl:'DD' },
-  {re:'resurrector', lbl:'Resurct' },
-  {re:'risk incentive', lbl:'RI' },
-  {re:'special incentive', lbl:'SI' },
-  {re:'super bonus', lbl:'SB' },
-  {re:'super selector', lbl:'SS' },
-  {re:'daily winner', lbl:'Daily' },
-  {re:'weekly winner', lbl:'Weekly' },
-  {re:'cum.*daily', lbl:'Total Daily' },
-  {re:'cum.*weekly', lbl:'Total Weekly'},
-];
-const RC_GROUPS = [
-  {t:'🏏 Match Related', rows:[
-    {k:'match_pts', i:'🏏', l:'Match Points'},
-    {k:'bonus_pts', i:'🎯', l:'Bonus Points'},
-    {k:'risk_inc', i:'⚡', l:'Risk Incentive'},
-    {k:'special_inc', i:'🎁', l:'Special Incentive'},
-    {k:'match_total', i:'➕', l:'Match Related Points', sub:1},
-  ]},
-  {t:'⭐ Star Performer', rows:[
-    {k:'sp_indiv', i:'⭐', l:'SP Individual Performance'},
-    {k:'sp_linked', i:'🔗', l:'Linked / Not Linked', badge:1},
-    {k:'sp_pts', i:'⭐', l:'SP Points (incl link effect)', sub:1},
-  ]},
-  {t:'👥 Dynamic Duo', rows:[
-    {k:'dd1_indiv', i:'👤', l:'D1 Individual Performance'},
-    {k:'dd2_indiv', i:'👤', l:'D2 Individual Performance'},
-    {k:'dd_prem', i:'💎', l:'Upfront Premium?', badge:1},
-    {k:'dd_pts', i:'👥', l:'DD Points (incl prem. effect)', sub:1},
-  ]},
-  {t:'🔁 The Resurrector', rows:[
-    {k:'res1', i:'💀', l:'Ressurector 1'},
-    {k:'res2', i:'💀', l:'Ressurector 2'},
-    {k:'resurrector',i:'🔁', l:'THE RESURRECTOR', sub:1},
-  ]},
-  {t:'🔮 Super Selector', rows:[
-    {k:'wk', i:'🧤', l:'Wicket Keeper'},
-    {k:'vc', i:'🏅', l:'Vice Captain'},
-    {k:'captain', i:'©️', l:'Captain'},
-    {k:'bat1', i:'🏏', l:'Bat 1'},
-    {k:'bat2', i:'🏏', l:'Bat 2'},
-    {k:'bat3', i:'🏏', l:'Bat 3'},
-    {k:'bow1', i:'🏐', l:'Bow 1'},
-    {k:'bow2', i:'🏐', l:'Bow 2'},
-    {k:'bow3', i:'🏐', l:'Bow 3'},
-    {k:'ar1', i:'🔄', l:'All Rounder 1'},
-    {k:'ar2', i:'🔄', l:'All Rounder 2'},
-    {k:'play1', i:'▶️', l:'Play 1'},
-    {k:'play2', i:'▶️', l:'Play 2'},
-    {k:'super_sel',i:'🔮', l:'Super Selector', sub:1},
-  ]},
-];
-const RC_LMAP = {
-  'match points':'match_pts','bonus points':'bonus_pts',
-  'risk incentive':'risk_inc','special incentive':'special_inc',
-  'match related points':'match_total',
-  'sp individual performance':'sp_indiv',
-  'linked / not linked':'sp_linked','linked/not linked':'sp_linked',
-  'sp points (incl link effect)':'sp_pts','sp points (incl. link effect)':'sp_pts',
-  'd1 individual performance':'dd1_indiv','d2 individual performance':'dd2_indiv',
-  'upfront premium?':'dd_prem','upfront premium':'dd_prem',
-  'dd points (incl prem. effect)':'dd_pts','dd points (incl. prem. effect)':'dd_pts',
-  'ressurector 1':'res1','resurrector 1':'res1',
-  'ressurector 2':'res2','resurrector 2':'res2',
-  'the resurrector':'resurrector',
-  'wicket keeper':'wk','vice captain':'vc','captain':'captain',
-  'bat 1':'bat1','bat 2':'bat2','bat 3':'bat3',
-  'bow 1':'bow1','bow 2':'bow2','bow 3':'bow3',
-  'all rounder 1':'ar1','all rounder 2':'ar2',
-  'play 1':'play1','play 2':'play2','super selector':'super_sel',
-  'total daily score':'daily_total','daily total':'daily_total','total daily':'daily_total',
-};
-let cur=TABS[0], players=[], rcName='', rcMatch=7;
-const CACHE={}, TTL=60000;
-async function api(params, fresh=false){
-  const key=JSON.stringify(params), now=Date.now();
-  if(!fresh&&CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
-  const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
-  const res=await fetch(API+'?'+qs);
-  if(!res.ok) throw new Error('HTTP '+res.status);
-  const d=await res.json();
-  if(d.error) throw new Error(d.error);
-  if(!fresh) CACHE[key]={d,ts:now};
-  return d;
-}
-function renderTabs(){
-  document.getElementById('tabBar').innerHTML=TABS.map(t=>
-    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
-  ).join('');
-}
-function go(n){cur=TABS.find(t=>t.name===n);renderTabs();load();}
-async function load(){
-  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
-  try{
-    if(cur.type==='lb'){
-      const d=await api({tab:'leaderboard'});buildPlayers(d.rows);renderLB(d.rows);
-    }else if(cur.type==='rc'){
-      if(!players.length)try{const d=await api({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
-      renderRCShell();
-    }else{
-      const d=await api({tab:cur.key});renderDT(d.rows);
-    }
-  }catch(e){set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);}
-}
-function buildPlayers(rows){
-  players=[];
-  let hi=-1;
-  for(let i=0;i<Math.min(8,rows.length);i++){
-    const j=rows[i].join('|').toLowerCase();
-    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
-  }
-  if(hi<0)return;
-  const h=rows[hi];
-  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
-  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
-  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
-  const iA=iR>=0?iR+1:-1;
-  rows.slice(hi+1).forEach(r=>{
-    const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();
-    if(!nm||isNaN(rn)||nm==='null')return;
-    players.push({rank:rn,name:nm,arw:iA>=0?String(r[iA]||''):'',total:pn(r[iT])});
-  });
-  players.sort((a,b)=>a.rank-b.rank);
-}
-function renderLB(rows){
-  for(const r of rows.slice(0,5)){
-    const m=r.join(' ').match(/match\s*#?\s*(\d+)/i);
-    if(m){document.getElementById('banner').textContent='Data Updated till Match '+m[1];break;}
-  }
-  let hi=-1;
-  for(let i=0;i<Math.min(8,rows.length);i++){
-    const j=rows[i].join('|').toLowerCase();
-    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
-  }
-  if(hi<0){set('<div class="loading">Header not found.</div>');return;}
-  const h=rows[hi];
-  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
-  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
-  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
-  const iA=iR>=0?iR+1:-1;
-  const sc=LB_COLS.map(d=>{const re=new RegExp(d.re,'i');const i=h.findIndex(v=>re.test(String(v||'')));return i>=0?{i,lbl:d.lbl}:null;}).filter(Boolean);
-  const dr=rows.slice(hi+1).filter(r=>{const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();return !isNaN(rn)&&nm&&nm!=='null';});
-  let html=`<div class="tw"><table><thead><tr>
-    <th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>
-    ${sc.map(c=>`<th>${c.lbl}</th>`).join('')}
-  </tr></thead><tbody>`;
-  dr.forEach(r=>{
-    const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim()),tot=pn(r[iT]),arw=iA>=0?String(r[iA]||''):'';
-    const rk=rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
-    const ac=arw.includes('▲')?'ar-up':arw.includes('▼')?'ar-dn':'ar-eq';
-    const an=(arw.match(/\d+/)||[''])[0];
-    const at=arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
-    html+=`<tr><td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td><td class="sc2">${fmtCell(tot)}</td>${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}</tr>`;
-  });
-  set(html+'</tbody></table></div>');
-}
-function renderDT(rows){
-  if(!rows || !Array.isArray(rows) || rows.length<2){set('<div class="loading">No data.</div>');return;}
-  const isP=cur.key==='playerpoints';
-  let hi=0;
-  for(let i=0;i<Math.min(5,rows.length);i++)if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
-  const hdrs=rows[hi],data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
-  let h='<div class="tw"><table><thead><tr>';
-  hdrs.forEach((hd,i)=>{
-    if(isP){if(i===0||i===1)return;}else if(i===0)return;
-    let cls='',lbl=String(hd||'').trim();
-    if(isP){if(i===2)cls='sc1';if(i===3){cls='sc2';lbl='Total Score';}}
-    else {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-    h+=`<th class="${cls}">${esc(lbl)}</th>`;
-  });
-  h+='</tr></thead><tbody>';
-  data.forEach(r=>{
-    h+='<tr>';
-    r.forEach((c,i)=>{
-      if(isP){if(i===0||i===1)return;}else if(i===0)return;
-      let cls='';
-      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
-      else {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      const raw=String(c||'').trim(),n=pn(raw);
-      let disp=esc(raw===''||raw==='null'?'—':raw);
-      if(!isNaN(n)&&n<0) disp=`<span class="c-neg">${esc(raw)}</span>`;
-      else if(!isNaN(n)&&n===0)disp=`<span class="c-dim">—</span>`;
-      h+=`<td class="${cls}">${disp}</td>`;
-    });
-    h+='</tr>';
-  });
-  set(h+'</tbody></table></div>');
-}
-function renderRCShell(){
-  let no='<option value="">— Select your name —</option>';
-  if(!players.length)no+='<option disabled>Loading names…</option>';
-  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
-  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
-  set(`<div class="rc-wrap">
-    <div class="rc-bar">
-      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
-      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
-      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
-    </div>
-    <div id="rcA"><div class="rccard"><div class="rce">
-      <span class="rce-i">📋</span>
-      <div class="rce-t">Select player &amp; match</div>
-      <div class="rce-s">Pick a name and match number, then tap <strong>View</strong>.</div>
-    </div></div></div>
-  </div>`);
-}
-async function loadRC(){
-  rcName =document.getElementById('rcSN').value;
-  rcMatch=parseInt(document.getElementById('rcSM').value);
-  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');return;}
-  const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='…';
-  try{
-    const d=await api({tab:'reportcard',player:rcName,match:rcMatch},true);
+
+  <script>
+    const SHEET_ID = '1SErG-urDF7KqwU5inV6wwaqJfADXjY73Xss5BRDYY-Q';
     
-    // --- DATA ROUTING FIX ---
-    if (d.scoreMap) {
-      renderRC(d.scoreMap, d.detailMap || {}, true, true, d.dailyTotal ?? null);
-    } else if (d.rows && Array.isArray(d.rows)) {
-      renderDT(d.rows); // User explicitly requested rendering rows if they bypass scoreMap
-    } else {
-      setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">No valid data found</div></div></div>');
+    const TABS = [
+      { name: 'Leaderboard', gid: '1775142554', type: 'leaderboard' },
+      { name: 'Your Report Card', gid: '1383665756', type: 'iframe' }, 
+      { name: 'Match Scores', gid: '1509870547', type: 'datatable' },
+      { name: 'SS Scores', gid: '130216061', type: 'datatable' },
+      { name: 'Daily Score', gid: '1884747051', type: 'datatable' },
+      { name: 'IPL Player Points', gid: '1991041599', type: 'datatable' }
+    ];
+
+    const DASH_COLS = { name: 3, match: 4, bonus: 5, star: 6, duo: 7, resurrector: 8, risk: 9, special: 10, superBonus: 11, superSelector: 12, total: 13 };
+
+    let currentTab = TABS[0];
+
+    function renderTabs() {
+      const tabBar = document.getElementById('tabBar');
+      tabBar.innerHTML = '';
+      TABS.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className = `tab-button ${tab.name === currentTab.name ? 'active' : ''}`;
+        btn.innerText = tab.name;
+        btn.onclick = () => {
+          currentTab = tab;
+          renderTabs();
+          loadContent();
+        };
+        tabBar.appendChild(btn);
+      });
     }
-  }catch(e){
-    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">${esc(e.message)}</div></div></div>`);
-  }
-  btn.disabled=false;btn.textContent='▶ View';
-}
-function rcFallback(g){
-  const sm={},dm={};let sc=-1,dc=-1,dailyTotal=null;
-  const votes={};
-  for(let r=0;r<g.length;r++){
-    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
-    if(!RC_LMAP[lbl.toLowerCase()])continue;
-    for(let c=g[r].length-1;c>3;c--){const v=String(g[r][c]||'').trim();if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}}
-  }
-  let mx=0;Object.entries(votes).forEach(([c,v])=>{if(v>mx){mx=v;sc=+c;}});
-  dc=sc>0?sc-1:-1;
-  for(let r=2;r<g.length;r++){
-    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
-    const key=RC_LMAP[lbl.toLowerCase()];
-    if(key==='daily_total'){if(sc>=0)dailyTotal=pn(g[r][sc]);continue;}
-    if(!key)continue;
-    const det=dc>=0?String(g[r][dc]||'').trim():'';
-    const scv=sc>=0?String(g[r][sc]||'').trim():'';
-    if(key==='sp_linked'||key==='dd_prem'){dm[key]=det||scv;sm[key]='';}
-    else{dm[key]=det;sm[key]=scv;}
-  }
-  renderRC(sm,dm,dc>=0,sc>=0,dailyTotal);
-}
-function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
-  const pl =players.find(p=>p.name===rcName);
-  const rank=pl?pl.rank:0;
-  const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-  
-  const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
-  let warn='';
-  if(!hasData&&!foundPlayer)warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
-  else if(!hasData&&!foundMatch)warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
-  
-  let rows='';
-  RC_GROUPS.forEach(grp=>{
-    rows+=`<div class="gh">${grp.t}</div>`;
-    grp.rows.forEach(rd=>{
-      // --- STRICT 3-COLUMN REPORT CARD RENDERING FIX ---
-      const scoreRaw = sm[rd.k] !== undefined && sm[rd.k] !== null ? String(sm[rd.k]).trim() : '';
-      const detail = dm[rd.k] !== undefined && dm[rd.k] !== null ? String(dm[rd.k]).trim() : '';
+
+    async function loadContent() {
+      const content = document.getElementById('contentArea');
       
-      const num = pn(scoreRaw);
-      const isNum = !isNaN(num);
-
-      let vh = '';        // RIGHT Column (Score)
-      let dhContent = ''; // MIDDLE Column (Detail)
-
-      // 1. MIDDLE COLUMN (Detail/Player Name)
-      if (detail) {
-        if (rd.badge && /yes|linked|true|no|not|false/i.test(detail)) {
-          let bClass = /yes|linked|true/i.test(detail) ? 'yes' : 'no';
-          dhContent = `<span class="rd"><span class="badge ${bClass}">${esc(detail)}</span></span>`;
-        } else {
-          dhContent = `<span class="rd">${esc(detail)}</span>`; // Always show detail in middle
+      if (currentTab.type === 'leaderboard' || currentTab.type === 'datatable') {
+        content.innerHTML = '<div class="loading">Fetching live data from Digivenue HQ...</div>';
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json&gid=${currentTab.gid}`;
+        
+        try {
+          const res = await fetch(url);
+          const text = await res.text();
+          const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+          if (!jsonString) throw new Error("Could not parse data.");
+          const json = JSON.parse(jsonString[1]);
+          
+          if (currentTab.type === 'leaderboard') renderLeaderboard(json.table.rows);
+          else renderDataTable(json.table.rows, json.table.cols);
+        } catch (error) {
+          content.innerHTML = `<div class="loading" style="color:#ef4444;">Error: ${error.message}</div>`;
         }
-      } else {
-        dhContent = `<span class="rd"></span>`;
+      } 
+      else if (currentTab.type === 'iframe') {
+        content.innerHTML = '<div class="loading">Loading Report Card...</div>';
+        const iframeUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${currentTab.gid}&rm=minimal&range=D2:R45`;
+        setTimeout(() => {
+          content.innerHTML = `<div class="iframe-container"><iframe src="${iframeUrl}"></iframe></div>`;
+        }, 100);
       }
+    }
 
-      // 2. RIGHT COLUMN (Score)
-      if (isNum) {
-        if (num === 0) {
-          vh = `<span class="rv dim">0</span>`; // Do not hide 0
-        } else if (rd.sub) {
-          vh = `<span class="rv ${num < 0 ? 'neg' : 'gold'}">${fmt(num)}</span>`; // Negative handled automatically by pn() and neg class
+    function renderDataTable(rows, cols) {
+      let html = '<div class="table-container"><table><thead><tr>';
+      const isPlayerPoints = currentTab.name === 'IPL Player Points';
+
+      cols.forEach((c, i) => {
+        if (isPlayerPoints) { if (i === 0 || i === 1) return; } 
+        else { if (i === 0 || i === 3) return; }
+        
+        let cls = '';
+        let label = c.label || '';
+        
+        if (isPlayerPoints) {
+          if (i === 2) cls = 'sticky-col1';
+          if (i === 3) { cls = 'sticky-col2'; label = 'Total Score'; }
         } else {
-          vh = `<span class="rv ${num > 0 ? 'pos' : 'neg'}">${fmtS(num)}</span>`;
+          if (i === 1) cls = 'sticky-col1';
+          if (i === 2) { cls = 'sticky-col2'; label = 'Total Score'; }
         }
-      } else if (scoreRaw) {
-        if (rd.badge && /yes|linked|true|no|not|false/i.test(scoreRaw)) {
-          let bClass = /yes|linked|true/i.test(scoreRaw) ? 'yes' : 'no';
-          vh = `<span class="badge ${bClass}">${esc(scoreRaw)}</span>`;
-        } else {
-          vh = `<span class="rv dim">${esc(scoreRaw)}</span>`;
-        }
-      } else {
-        vh = `<span class="rv dim">—</span>`; // Show dash if score is completely empty
+        html += `<th class="${cls}">${label}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      rows.forEach(row => {
+        html += '<tr>';
+        row.c.forEach((cell, i) => {
+          if (isPlayerPoints) { if (i === 0 || i === 1) return; } 
+          else { if (i === 0 || i === 3) return; }
+          
+          let cls = '';
+          if (isPlayerPoints) { if (i === 2) cls = 'sticky-col1'; if (i === 3) cls = 'sticky-col2'; }
+          else { if (i === 1) cls = 'sticky-col1'; if (i === 2) cls = 'sticky-col2'; }
+          
+          let val = cell ? (cell.f || cell.v || '') : '';
+          if (val === 'null') val = '-';
+          html += `<td class="${cls}">${val}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      document.getElementById('contentArea').innerHTML = html;
+    }
+
+    const getCleanVal = (row, colIndex) => {
+      if (row && row.c && row.c[colIndex] && row.c[colIndex].v !== null) {
+        let val = row.c[colIndex].v;
+        if (typeof val === 'number') return Math.round(val);
+        let parsed = parseFloat(String(val).replace(/,/g, ''));
+        return isNaN(parsed) ? val : Math.round(parsed);
       }
+      return 0;
+    };
 
-      rows+=`<div class="rr ${rd.sub?'sub':''}">
-        <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dhContent}${vh}
-      </div>`;
-    });
-  });
-  const dh2=(dailyTotal!==null&&!isNaN(dailyTotal))
-    ?`<div class="rr dtot"><span class="ri">📅</span><span class="rl">Total Daily Score — Match ${rcMatch}</span><span class="rd"></span><span class="rv blue">${fmt(dailyTotal)}</span></div>`:'';
-  setRC(`<div class="rccard">
-    <div class="rchero">
-      <div class="rcav">${init}</div>
-      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
-      ${rank?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
-    </div>
-    ${warn}
-    <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">Score Breakdown — Match ${rcMatch}</div>
-    ${rows}
-    ${dh2}
-    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
-  </div>`);
-}
-function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
-function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h){document.getElementById('area').innerHTML=h;}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function pn(v){
-  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
-  const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
-  return parseFloat(s);
-}
-function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
-function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
-function fmtCell(n){
-  if(isNaN(n)||n===0)return`<span class="c-dim">—</span>`;
-  if(n<0)return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
-  return n.toLocaleString('en-US');
-}
-renderTabs();load();
-setInterval(()=>{if(cur.type==='lb')load();},120000);
-</script>
+    function renderLeaderboard(rows) {
+      let html = '<div class="leaderboard">';
+      let validPlayers = [];
+      rows.forEach(row => {
+        const nameRaw = row.c && row.c[DASH_COLS.name] ? row.c[DASH_COLS.name].v : '';
+        const name = String(nameRaw).trim();
+        if (name !== '' && name !== 'Participant' && name !== '0' && name !== 'null') {
+          validPlayers.push({
+            name: name, score: getCleanVal(row, DASH_COLS.total),
+            match: getCleanVal(row, DASH_COLS.match), bonus: getCleanVal(row, DASH_COLS.bonus),
+            star: getCleanVal(row, DASH_COLS.star), duo: getCleanVal(row, DASH_COLS.duo),
+            resurrector: getCleanVal(row, DASH_COLS.resurrector), risk: getCleanVal(row, DASH_COLS.risk),
+            special: getCleanVal(row, DASH_COLS.special), superBonus: getCleanVal(row, DASH_COLS.superBonus),
+            superSelector: getCleanVal(row, DASH_COLS.superSelector),
+          });
+        }
+      });
+      validPlayers.sort((a, b) => b.score - a.score);
+      validPlayers.forEach((p, i) => {
+        const rank = i + 1;
+        const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        html += `
+          <div class="player-card">
+            <div class="card-header"><div class="card-header-left"><div class="rank ${rankClass}">${rank}</div><div class="player-name">${p.name}</div></div><div class="total-score">${p.score.toLocaleString('en-US')}</div></div>
+            <div class="stats-grid">
+              <div class="stat-box"><span class="stat-label">Match</span><span class="stat-value">${p.match}</span></div>
+              <div class="stat-box"><span class="stat-label">Bonus</span><span class="stat-value">${p.bonus}</span></div>
+              <div class="stat-box"><span class="stat-label">Star</span><span class="stat-value">${p.star}</span></div>
+              <div class="stat-box"><span class="stat-label">Duo</span><span class="stat-value">${p.duo}</span></div>
+              <div class="stat-box"><span class="stat-label">Resurrect</span><span class="stat-value">${p.resurrector}</span></div>
+              <div class="stat-box"><span class="stat-label">Risk</span><span class="stat-value">${p.risk}</span></div>
+              <div class="stat-box"><span class="stat-label">Special</span><span class="stat-value">${p.special}</span></div>
+              <div class="stat-box"><span class="stat-label">Sup Bonus</span><span class="stat-value">${p.superBonus === 0 ? '-' : p.superBonus}</span></div>
+              <div class="stat-box"><span class="stat-label">Selector</span><span class="stat-value">${p.superSelector}</span></div>
+            </div>
+          </div>`;
+      });
+      document.getElementById('contentArea').innerHTML = html + '</div>';
+    }
+
+    renderTabs();
+    loadContent();
+    setInterval(() => { if(currentTab.type === 'leaderboard') loadContent(); }, 120000);
+  </script>
+
 </body>
 </html>
-```
