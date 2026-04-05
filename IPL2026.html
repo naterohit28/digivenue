@@ -415,7 +415,7 @@ async function loadRC(){
     const d=await apiGet({tab:'reportcard',player:rcName,match:rcMatch});
 
     // ── Proxy v5/v6: structured response ─────────────────────
-    if(d.scoreMap!==undefined){
+    if(d.scoreMap && Object.keys(d.scoreMap).length > 0){
       renderRC(d.scoreMap, d.detailMap||{}, d.chipTotals||{},
                d.playerCol>=0, d.matchCol>=0, d.dailyTotal??null);
       return;
@@ -491,7 +491,10 @@ function renderRC(sm,dm,chipTotals,foundPlayer,foundMatch,dailyTotal){
   const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
   // Chips
-  const mNums=Object.keys(chipTotals).map(Number).sort((a,b)=>a-b);
+  const mNums = Object.keys(chipTotals)
+  .map(Number)
+  .filter(m => m <= rcMatch)   // 🔥 IMPORTANT FIX
+  .sort((a,b)=>a-b);
   let chips='';
   if(mNums.length>0){
     chips=`<div class="cw"><div class="ct">Match Breakdown</div><div class="chips">
@@ -538,7 +541,7 @@ function renderRC(sm,dm,chipTotals,foundPlayer,foundMatch,dailyTotal){
           vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
         }else{
           // Regular rows: green +n or RED -n
-          vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
+          vh=`<span class="rv ${num<0?'neg':'pos'}">${fmtS(num)}</span>`;
         }
       }else{
         vh=`<span class="rv dim">—</span>`;
