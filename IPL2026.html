@@ -80,7 +80,17 @@
     .rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
     .rr.daily-tot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
     /* detail column (col D / col I — player name, description) */
-    .rd{font-size:11px;color:#94a3b8;text-align:right;flex-shrink:0;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic}
+   .rd{
+  font-size:11px;
+  color:#94a3b8;
+  text-align:right;
+  flex-shrink:0;
+  max-width:320px;     /* increased width */
+  white-space:normal;  /* allow wrapping */
+  overflow:visible;    /* don't cut text */
+  text-overflow:unset;
+  font-style:italic;
+}
     .rr.sub .rd{display:none}
     .rr.tot .rd{display:none}
     /* score column (col J — the numeric points) */
@@ -604,9 +614,9 @@ function renderRC(sm, dm, chipTotals, foundPlayer, foundMatch, dailyTotal){
       }
 
       // Detail text (col D/I — player name, description)
-      const detailHtml = (!rd.sub && detail)
-        ? `<span class="rd">${esc(detail)}</span>`
-        : '';
+      const detailHtml = !rd.sub
+      ? `<span class="rd">${esc(detail || '—')}</span>`
+      : '';
 
       rows+=`<div class="rr ${rd.sub?'sub':''}">
         <span class="ri">${rd.i}</span>
