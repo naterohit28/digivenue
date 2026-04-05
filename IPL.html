@@ -1,5 +1,3 @@
-Here is the corrected HTML code with the rendering logic fixed to show player names when numeric values are empty, while keeping the UI design unchanged.
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -276,7 +274,7 @@ function renderDT(rows){
   let hi=0;
   for(let i=0;i<Math.min(5,rows.length);i++)if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
   const hdrs=rows[hi],data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
-  let h='<div class="tw"><tr><thead><tr>';
+  let h='<div class="tw"><table><thead><tr>';
   hdrs.forEach((hd,i)=>{
     if(isP){if(i===0||i===1)return;}else if(i===0)return;
     let cls='',lbl=String(hd||'').trim();
@@ -359,16 +357,23 @@ function rcFallback(g){
   }
   renderRC(sm,dm,dc>=0,sc>=0,dailyTotal);
 }
-// ========== FIXED RENDERING LOGIC (CRITICAL CHANGES) ==========
+/* ── RENDER RC — chip strip REMOVED per user request ─── */
 function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
   const pl =players.find(p=>p.name===rcName);
   const rank=pl?pl.rank:0;
   const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  // ── NO CHIP STRIP — removed per user request ──────────────
+  // warning
   const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
   let warn='';
   if(!hasData&&!foundPlayer)warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
   else if(!hasData&&!foundMatch)warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
+  // score rows
   
+  /* ═══════════════════════════════════════════════════════════════════
+     CHANGED SECTION START: Fixed rendering logic for Super Selector
+     ═══════════════════════════════════════════════════════════════════ */
+     
   let rows='';
   RC_GROUPS.forEach(grp=>{
     rows+=`<div class="gh">${grp.t}</div>`;
@@ -377,51 +382,38 @@ function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
       const detail =dm[rd.k]||'';
       const num =pn(scoreRaw);
       const isNum =!isNaN(num);
-      let vh = '';
+      const hasDetail = detail && detail !== '' && detail !== '-' && detail !== '—';
       
-      // BADGE rows (Linked / Upfront Premium)
+      let vh='';
       if(rd.badge){
         const txt=detail||scoreRaw;
-        if (/yes|linked|true/i.test(txt)) vh = `<span class="badge yes">${esc(txt)}</span>`;
-        else if(/no|not|false/i.test(txt)) vh = `<span class="badge no">${esc(txt)}</span>`;
-        else if(txt) vh = `<span class="badge neu">${esc(txt)}</span>`;
-        else vh = `<span class="rv dim">—</span>`;
-      }
-      // NON-BADGE rows: apply fallback logic (numeric exists → number, else detail exists → detail, else dash)
-      else {
-        if(isNum) {
-          // numeric value exists (including zero, negative)
-          if(rd.sub) {
-            // sub rows (totals, final points) – gold style
-            if(num === 0) vh = `<span class="rv gold">0</span>`;
-            else vh = `<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
-          } else {
-            // regular rows: show with sign (+/-) and color (pos/neg), zero shown as "0"
-            if(num === 0) vh = `<span class="rv">0</span>`;
-            else if(num > 0) vh = `<span class="rv pos">${fmtS(num)}</span>`;
-            else vh = `<span class="rv neg">${fmtS(num)}</span>`;
-          }
-        } 
-        else if(detail && detail.trim() !== '') {
-          // ✅ FALLBACK: numeric empty → show player name / detail text
-          if(rd.sub) {
-            vh = `<span class="rv gold">${esc(detail)}</span>`;
-          } else {
-            vh = `<span class="rv">${esc(detail)}</span>`;
-          }
-        } 
-        else {
-          vh = `<span class="rv dim">—</span>`;
-        }
+        if (/yes|linked|true/i.test(txt)) vh=`<span class="badge yes">${esc(txt)}</span>`;
+        else if(/no|not|false/i.test(txt)) vh=`<span class="badge no">${esc(txt)}</span>`;
+        else if(txt) vh=`<span class="badge neu">${esc(txt)}</span>`;
+        else vh=`<span class="rv dim">—</span>`;
+      }else if(isNum){
+        if(num===0) vh=`<span class="rv">0</span>`;
+        else if(rd.sub) vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
+        else vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
+      }else if(!rd.sub && !rd.badge && hasDetail){
+        vh=`<span class="rv">${esc(detail)}</span>`;
+      }else{
+        vh=`<span class="rv dim">—</span>`;
       }
       
-      const dh=(!rd.sub && !rd.badge && detail && !isNum)?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
+      // Only show detail in middle column if we have a number (to avoid duplication when showing detail in value column)
+      const dh=(!rd.sub&&!rd.badge&&hasDetail&&isNum)?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
+      
       rows+=`<div class="rr ${rd.sub?'sub':''}">
         <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dh}${vh}
       </div>`;
     });
   });
   
+  /* ═══════════════════════════════════════════════════════════════════
+     CHANGED SECTION END
+     ═══════════════════════════════════════════════════════════════════ */
+     
   const dh2=(dailyTotal!==null&&!isNaN(dailyTotal))
     ?`<div class="rr dtot"><span class="ri">📅</span><span class="rl">Total Daily Score — Match ${rcMatch}</span><span class="rd"></span><span class="rv blue">${fmt(dailyTotal)}</span></div>`:'';
   setRC(`<div class="rccard">
@@ -448,8 +440,7 @@ function pn(v){
   return parseFloat(s);
 }
 function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
-// FIXED: zero returns "0" instead of dash
-function fmtS(n){if(n===0) return '0'; return (n>0?'+':'')+n.toLocaleString('en-US');}
+function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
 function fmtCell(n){
   if(isNaN(n)||n===0)return`<span class="c-dim">—</span>`;
   if(n<0)return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
@@ -460,4 +451,3 @@ setInterval(()=>{if(cur.type==='lb')load();},120000);
 </script>
 </body>
 </html>
-```
