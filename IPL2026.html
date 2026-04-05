@@ -6,23 +6,31 @@
 <title>IPL 2026 Fantasy League</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+/* ─── reset ────────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
 .wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px rgba(0,0,0,.5);padding:15px}
+
+/* ─── header ───────────────────────────────────────────────── */
 .header{text-align:center;margin-bottom:15px}
 .header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
 .banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,.1);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
+
+/* ─── tabs ─────────────────────────────────────────────────── */
 .tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
 .tab-bar::-webkit-scrollbar{height:4px}
 .tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
 .tab-btn{background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0;font-family:'Inter',sans-serif}
 .tab-btn:hover{background:rgba(255,255,255,.1);color:#fff}
 .tab-btn.active{background:rgba(251,191,36,.1);color:#fbbf24;border-color:#fbbf24}
+
+/* ─── loading / error ──────────────────────────────────────── */
 .loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
 .spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8;white-space:pre-wrap}
-/* tables */
+
+/* ─── leaderboard & data tables ────────────────────────────── */
 .tw{overflow:auto;background:rgba(15,23,42,.6);border-radius:8px;border:1px solid rgba(255,255,255,.05);max-height:75vh}
 table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
 th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#f8fafc}
@@ -31,11 +39,12 @@ th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-inde
 .sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,.1);text-align:center}
 th.sc1,th.sc2{z-index:15;background:#0f172a}
 tr:hover td{background:rgba(255,255,255,.03)}
-.c-neg{color:#f87171!important;font-weight:700}
-.c-dim{color:#475569}
-.rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
-.ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
-/* RC */
+.neg{color:#f87171!important;font-weight:700}
+.dim{color:#475569}
+.rk1{color:#fbbf24;font-weight:800}.rk2{color:#94a3b8;font-weight:800}.rk3{color:#b45309;font-weight:800}
+.aru{color:#4ade80;font-size:10px}.ard{color:#f87171;font-size:10px}.are{color:#64748b;font-size:10px}
+
+/* ─── report card wrapper ──────────────────────────────────── */
 .rc-wrap{max-width:920px;margin:0 auto}
 .rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
 .rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
@@ -44,7 +53,11 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .rcsel:hover{border-color:rgba(251,191,36,.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
 .rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
 .rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,.35)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ─── report card layout ───────────────────────────────────── */
 .rccard{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+
+/* hero strip */
 .rchero{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.04));border-bottom:1px solid rgba(251,191,36,.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
 .rchn{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#fff}
@@ -52,40 +65,117 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .rchr{margin-left:auto;text-align:right}
 .rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
 .rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* section header */
 .gh{background:rgba(255,255,255,.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-/* row grid: icon | label | detail | score */
-.rr{display:grid;grid-template-columns:28px 1fr auto 90px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s}
+
+/*
+  ═══════════════════════════════════════════════════════════
+  ROW LAYOUT — MANDATORY 3-COLUMN STRUCTURE
+  Each row: [icon+label] [detail/middle] [score/right]
+
+  Uses CSS grid:
+    col 1: 28px  — emoji icon
+    col 2: 1fr   — row label  (left)
+    col 3: auto  — player detail (middle, Col I from sheet)
+    col 4: 85px  — numeric score (right, Col J from sheet)
+
+  This enforces the exact structure from the Google Sheet.
+  ═══════════════════════════════════════════════════════════
+*/
+.rr{
+  display: grid;
+  grid-template-columns: 28px 1fr auto 85px;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  transition: background .12s;
+}
 .rr:hover{background:rgba(255,255,255,.04)}
-.rr.sub{background:rgba(251,191,36,.07);border-top:1px solid rgba(251,191,36,.15);border-bottom:1px solid rgba(251,191,36,.15)}
-.rr.tot{background:linear-gradient(90deg,rgba(251,191,36,.14),transparent);border-top:2px solid rgba(251,191,36,.35);padding:15px 20px}
-.rr.dtot{background:linear-gradient(90deg,rgba(96,165,250,.1),transparent);border-top:2px solid rgba(96,165,250,.25);padding:13px 20px}
+
+/* subtotal rows */
+.rr.sub{
+  background:rgba(251,191,36,.07);
+  border-top:1px solid rgba(251,191,36,.15);
+  border-bottom:1px solid rgba(251,191,36,.15);
+}
+/* grand total row */
+.rr.tot{
+  background:linear-gradient(90deg,rgba(251,191,36,.14),transparent);
+  border-top:2px solid rgba(251,191,36,.35);
+  padding:15px 20px;
+}
+/* daily total row */
+.rr.dtot{
+  background:linear-gradient(90deg,rgba(96,165,250,.1),transparent);
+  border-top:2px solid rgba(96,165,250,.25);
+  padding:13px 20px;
+}
+
+/* col 1: icon */
 .ri{font-size:15px;text-align:center}
+
+/* col 2: label */
 .rl{font-size:13px;font-weight:500;color:#cbd5e1}
 .rr.sub  .rl{color:#fbbf24;font-weight:700}
 .rr.tot  .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
 .rr.dtot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
-.rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
-.rr.sub  .rd,.rr.tot .rd,.rr.dtot .rd{visibility:hidden}
+
+/*
+  col 3: DETAIL (Col I from sheet — player name, team, "Yes"/"No")
+  ALWAYS shown. NEVER hidden just because score is empty.
+  This is the fix for Super Selector — even rows with no score
+  still show the player name here.
+*/
+.rd{
+  font-size: 11px;
+  color: #94a3b8;
+  font-style: italic;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px;
+}
+/* hide detail on total/subtotal rows (they have no detail column) */
+.rr.sub  .rd,
+.rr.tot  .rd,
+.rr.dtot .rd { visibility: hidden }
+
+/*
+  col 4: SCORE (Col J from sheet — numeric, may be negative)
+  Negative values → RED.
+*/
 .rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
 .rv.pos {color:#4ade80}
-.rv.neg {color:#f87171;font-weight:700}
+.rv.neg {color:#f87171;font-weight:700}  /* RED for negatives — MANDATORY */
 .rv.dim {color:#64748b;font-weight:400;font-size:12px}
 .rv.gold{color:#fbbf24;font-weight:700}
 .rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,.4)}
 .rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
+
+/* badge (Yes/No for Linked/Premium rows) */
 .badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
 .badge.yes{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.35)}
 .badge.no {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)}
 .badge.neu{background:rgba(148,163,184,.1);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
+
+/* empty state */
 .rce{padding:44px 20px;text-align:center}
 .rce-i{font-size:38px;margin-bottom:10px;display:block}
 .rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
 .rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
+
+/* warning strip */
 .warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:9px 14px;margin:0 20px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
+
+/* mobile */
 @media(max-width:600px){
   .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
   .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
-  .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 72px}.rd{max-width:110px}
+  .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 70px}
+  .rd{max-width:110px}
 }
 </style>
 </head>
@@ -98,7 +188,11 @@ tr:hover td{background:rgba(255,255,255,.03)}
   <div class="tab-bar" id="tabBar"></div>
   <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
 </div>
+
 <script>
+/* ═══════════════════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════════════════ */
 const API = 'https://script.google.com/macros/s/AKfycbz-Jj_RmSnxqxE9k_jwQoaQ-X-AL-tJp_T-k2lvwhrW4UlKSgdbl8mQRZJooco_VmyDzQ/exec';
 
 const TABS = [
@@ -126,6 +220,15 @@ const LB_COLS = [
   {re:'cum.*weekly',       lbl:'Total Weekly'},
 ];
 
+/* ═══════════════════════════════════════════════════════════════
+   REPORT CARD GROUPS
+   Each row definition has:
+     k     = scoreMap / detailMap key
+     i     = emoji icon
+     l     = display label
+     sub   = subtotal row (gold/red colour, no detail shown)
+     badge = renders Yes/No badge from detailMap (not numeric)
+═══════════════════════════════════════════════════════════════ */
 const RC_GROUPS = [
   {t:'🏏 Match Related', rows:[
     {k:'match_pts',   i:'🏏', l:'Match Points'},
@@ -168,7 +271,386 @@ const RC_GROUPS = [
   ]},
 ];
 
-const RC_LMAP = {
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════ */
+let cur     = TABS[0];
+let players = [];
+let rcName  = '';
+let rcMatch = 7;
+const CACHE = {};
+const TTL   = 60000; // 60s cache for non-RC tabs
+
+/* ═══════════════════════════════════════════════════════════════
+   API HELPER
+   RC calls are always fresh (no cache) because the server must
+   re-set the dropdown and re-read the sheet each time.
+═══════════════════════════════════════════════════════════════ */
+async function apiGet(params, fresh = false) {
+  const key = JSON.stringify(params);
+  const now = Date.now();
+  if (!fresh && CACHE[key] && now - CACHE[key].ts < TTL) {
+    return CACHE[key].d;
+  }
+  const qs  = Object.entries(params).map(([k,v]) => k + '=' + encodeURIComponent(v)).join('&');
+  const res = await fetch(API + '?' + qs);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const d = await res.json();
+  if (d.error) throw new Error(d.error);
+  if (!fresh) CACHE[key] = { d, ts: now };
+  return d;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════════════ */
+function renderTabs() {
+  document.getElementById('tabBar').innerHTML = TABS.map(t =>
+    `<button class="tab-btn ${t.name === cur.name ? 'active' : ''}"
+       onclick="go('${t.name}')">${t.name}</button>`
+  ).join('');
+}
+function go(n) { cur = TABS.find(t => t.name === n); renderTabs(); load(); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ROUTER — FIXED: checks d.scoreMap vs d.rows, never assumes both
+═══════════════════════════════════════════════════════════════ */
+async function load() {
+  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
+  try {
+    if (cur.type === 'lb') {
+      const d = await apiGet({ tab: 'leaderboard' });
+      // d.rows is an array of arrays — safe to use
+      buildPlayers(d.rows);
+      renderLB(d.rows);
+
+    } else if (cur.type === 'rc') {
+      // Preload player names from leaderboard if not yet done
+      if (!players.length) {
+        try {
+          const d = await apiGet({ tab: 'leaderboard' });
+          buildPlayers(d.rows);
+        } catch(e) { /* ignore — players list is optional */ }
+      }
+      renderRCShell();
+
+    } else {
+      // dt tabs — always have d.rows
+      const d = await apiGet({ tab: cur.key });
+      renderDT(d.rows);
+    }
+  } catch(e) {
+    set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUILD PLAYERS (from leaderboard rows)
+═══════════════════════════════════════════════════════════════ */
+function buildPlayers(rows) {
+  // Guard: rows must exist and be an array
+  if (!rows || !Array.isArray(rows)) return;
+
+  players = [];
+  let hi = -1;
+  for (let i = 0; i < Math.min(8, rows.length); i++) {
+    if (!Array.isArray(rows[i])) continue;
+    const j = rows[i].join('|').toLowerCase();
+    if (j.includes('participant') || (j.includes('rank') && j.includes('total'))) {
+      hi = i; break;
+    }
+  }
+  if (hi < 0) return;
+
+  const h  = rows[hi];
+  const iR = h.findIndex(v => /^rank$/i.test(String(v||'').trim()));
+  const iN = h.findIndex(v => /participant/i.test(String(v||'')));
+  const iT = h.findIndex(v => /^total$/i.test(String(v||'').trim()));
+  const iA = iR >= 0 ? iR + 1 : -1;
+
+  for (const row of rows.slice(hi + 1)) {
+    if (!Array.isArray(row)) continue;
+    const rn = parseInt(row[iR]);
+    const nm = String(row[iN] || '').trim();
+    if (!nm || isNaN(rn) || nm === 'null') continue;
+    players.push({
+      rank: rn,
+      name: nm,
+      arw : iA >= 0 ? String(row[iA] || '') : '',
+      total: pn(row[iT]),
+    });
+  }
+  players.sort((a, b) => a.rank - b.rank);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEADERBOARD
+═══════════════════════════════════════════════════════════════ */
+function renderLB(rows) {
+  if (!rows || !Array.isArray(rows)) {
+    set('<div class="loading">No data.</div>'); return;
+  }
+
+  // Update banner
+  for (const r of rows.slice(0, 5)) {
+    if (!Array.isArray(r)) continue;
+    const m = r.join(' ').match(/match\s*#?\s*(\d+)/i);
+    if (m) { document.getElementById('banner').textContent = 'Data Updated till Match ' + m[1]; break; }
+  }
+
+  // Find header row
+  let hi = -1;
+  for (let i = 0; i < Math.min(8, rows.length); i++) {
+    if (!Array.isArray(rows[i])) continue;
+    const j = rows[i].join('|').toLowerCase();
+    if (j.includes('participant') || (j.includes('rank') && j.includes('total'))) { hi = i; break; }
+  }
+  if (hi < 0) { set('<div class="loading">Header not found.</div>'); return; }
+
+  const h  = rows[hi];
+  const iR = h.findIndex(v => /^rank$/i.test(String(v||'').trim()));
+  const iN = h.findIndex(v => /participant/i.test(String(v||'')));
+  const iT = h.findIndex(v => /^total$/i.test(String(v||'').trim()));
+  const iA = iR >= 0 ? iR + 1 : -1;
+
+  const sc = LB_COLS.map(d => {
+    const re  = new RegExp(d.re, 'i');
+    const idx = h.findIndex(v => re.test(String(v||'')));
+    return idx >= 0 ? { i: idx, lbl: d.lbl } : null;
+  }).filter(Boolean);
+
+  const dr = rows.slice(hi + 1).filter(r => {
+    if (!Array.isArray(r)) return false;
+    const rn = parseInt(r[iR]);
+    const nm = String(r[iN] || '').trim();
+    return !isNaN(rn) && nm && nm !== 'null';
+  });
+
+  let html = `<div class="tw"><table><thead><tr>
+    <th class="sc1">Rank &amp; Name</th>
+    <th class="sc2">Total</th>
+    ${sc.map(c => `<th>${c.lbl}</th>`).join('')}
+  </tr></thead><tbody>`;
+
+  for (const r of dr) {
+    const rank = parseInt(r[iR]);
+    const name = esc(String(r[iN] || '').trim());
+    const tot  = pn(r[iT]);
+    const arw  = iA >= 0 ? String(r[iA] || '') : '';
+    const rk   = rank===1?'rk1':rank===2?'rk2':rank===3?'rk3':'';
+    const ac   = arw.includes('▲')?'aru':arw.includes('▼')?'ard':'are';
+    const an   = (arw.match(/\d+/)||[''])[0];
+    const at   = arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
+    html += `<tr>
+      <td class="sc1">
+        <span class="${rk}" style="margin-right:7px">#${rank}</span>
+        <span class="${ac}" style="margin-right:7px">${at}</span>
+        ${name}
+      </td>
+      <td class="sc2">${fmtCell(tot)}</td>
+      ${sc.map(c => `<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}
+    </tr>`;
+  }
+  set(html + '</tbody></table></div>');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA TABLE (Match Scores, SS Scores, Daily, Player Points)
+═══════════════════════════════════════════════════════════════ */
+function renderDT(rows) {
+  // Guard: rows must be a valid array with at least 2 rows
+  if (!rows || !Array.isArray(rows) || rows.length < 2) {
+    set('<div class="loading">No data available.</div>'); return;
+  }
+
+  const isP = cur.key === 'playerpoints';
+
+  // Find header row (first row with ≥3 non-empty cells)
+  let hi = 0;
+  for (let i = 0; i < Math.min(5, rows.length); i++) {
+    if (Array.isArray(rows[i]) && rows[i].filter(c => String(c||'').trim()).length >= 3) {
+      hi = i; break;
+    }
+  }
+
+  const hdrs = rows[hi] || [];
+  const data  = rows.slice(hi + 1).filter(r => Array.isArray(r) && r.some(c => String(c||'').trim()));
+
+  let h = '<div class="tw"><table><thead><tr>';
+  hdrs.forEach((hd, i) => {
+    if (isP) { if (i===0||i===1) return; } else { if (i===0) return; }
+    let cls = '', lbl = String(hd||'').trim();
+    if (isP) { if(i===2){cls='sc1';} if(i===3){cls='sc2';lbl='Total Score';} }
+    else      { if(i===1){cls='sc1';} if(i===2){cls='sc2';} }
+    h += `<th class="${cls}">${esc(lbl)}</th>`;
+  });
+  h += '</tr></thead><tbody>';
+
+  data.forEach(row => {
+    h += '<tr>';
+    row.forEach((c, i) => {
+      if (isP) { if (i===0||i===1) return; } else { if (i===0) return; }
+      let cls = '';
+      if (isP) { if(i===2) cls='sc1'; if(i===3) cls='sc2'; }
+      else      { if(i===1) cls='sc1'; if(i===2) cls='sc2'; }
+      const raw = String(c||'').trim();
+      const n   = pn(raw);
+      let disp  = esc(raw===''||raw==='null' ? '—' : raw);
+      if (!isNaN(n) && n < 0)  disp = `<span class="neg">${esc(raw)}</span>`;
+      else if (!isNaN(n) && n===0) disp = `<span class="dim">—</span>`;
+      h += `<td class="${cls}">${disp}</td>`;
+    });
+    h += '</tr>';
+  });
+
+  set(h + '</tbody></table></div>');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORT CARD SHELL
+═══════════════════════════════════════════════════════════════ */
+function renderRCShell() {
+  let no = '<option value="">— Select your name —</option>';
+  if (!players.length) {
+    no += '<option disabled>Loading names…</option>';
+  } else {
+    players.forEach(p => {
+      no += `<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;
+    });
+  }
+  let mo = '';
+  for (let m = 1; m <= 74; m++) mo += `<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
+
+  set(`<div class="rc-wrap">
+    <div class="rc-bar">
+      <div class="rcg">
+        <div class="rcl">Player</div>
+        <select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select>
+      </div>
+      <div class="rcg" style="max-width:180px">
+        <div class="rcl">Match</div>
+        <select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select>
+      </div>
+      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
+    </div>
+    <div id="rcA">
+      <div class="rccard"><div class="rce">
+        <span class="rce-i">📋</span>
+        <div class="rce-t">Select player &amp; match</div>
+        <div class="rce-s">Pick a name and match number, then tap <strong>View</strong>.</div>
+      </div></div>
+    </div>
+  </div>`);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORT CARD LOAD
+
+   FIXED ROUTING:
+     - If response has d.scoreMap → it's RC structured data → renderRC()
+     - If response has d.rows     → it's raw rows           → rcFallback()
+     - Never call d.rows.length without checking d.rows exists first
+═══════════════════════════════════════════════════════════════ */
+async function loadRC() {
+  rcName  = document.getElementById('rcSN').value;
+  rcMatch = parseInt(document.getElementById('rcSM').value);
+
+  if (!rcName) {
+    setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');
+    return;
+  }
+
+  const btn = document.getElementById('rcb');
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  try {
+    // Always fresh — proxy must re-set dropdowns every call
+    const d = await apiGet({ tab: 'reportcard', player: rcName, match: rcMatch }, true);
+
+    // ── CORRECT ROUTING ──────────────────────────────────────────
+    if (d.scoreMap !== undefined) {
+      // New structured response from proxy v9+
+      renderRC(d.scoreMap, d.detailMap || {}, d.dailyTotal ?? null);
+
+    } else if (d.rows !== undefined && Array.isArray(d.rows)) {
+      // Old proxy returned raw rows — parse client-side
+      rcFallback(d.rows);
+
+    } else {
+      throw new Error('Unexpected API response format');
+    }
+
+  } catch(e) {
+    setRC(`<div class="rccard"><div class="rce">
+      <span class="rce-i">❌</span>
+      <div class="rce-t">Error loading Report Card</div>
+      <div class="rce-s">${esc(e.message)}</div>
+    </div></div>`);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '▶ View';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RC FALLBACK (raw rows from old proxy)
+═══════════════════════════════════════════════════════════════ */
+function rcFallback(rows) {
+  if (!rows || !Array.isArray(rows) || !rows.length) {
+    setRC('<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">No data returned</div></div></div>');
+    return;
+  }
+
+  const sm = {}, dm = {};
+  let   sc = -1, dc = -1, dailyTotal = null;
+
+  // Detect score column by voting
+  const votes = {};
+  for (let r = 0; r < rows.length; r++) {
+    if (!Array.isArray(rows[r])) continue;
+    let lbl = '';
+    for (let c = 0; c <= 3; c++) {
+      if (String(rows[r][c]||'').trim()) { lbl = String(rows[r][c]).trim(); break; }
+    }
+    const kk = RC_LMAP_CLIENT[lbl.toLowerCase()];
+    if (!kk || kk === 'sp_linked' || kk === 'dd_prem') continue;
+    for (let c = rows[r].length - 1; c >= 4; c--) {
+      const v = String(rows[r][c]||'').trim();
+      if (v && v !== '-' && v !== '—' && !isNaN(pn(v))) {
+        votes[c] = (votes[c]||0) + 1; break;
+      }
+    }
+  }
+  let mx = 0;
+  Object.entries(votes).forEach(([c,v]) => { if(v>mx){mx=v;sc=+c;} });
+  dc = sc > 0 ? sc - 1 : -1;
+
+  for (let r = 2; r < rows.length; r++) {
+    if (!Array.isArray(rows[r])) continue;
+    let lbl = '';
+    for (let c = 0; c <= 3; c++) {
+      if (String(rows[r][c]||'').trim()) { lbl = String(rows[r][c]).trim(); break; }
+    }
+    const key = RC_LMAP_CLIENT[lbl.toLowerCase()];
+    if (!key) continue;
+    if (key === 'daily_total') {
+      if (sc >= 0) dailyTotal = pn(rows[r][sc]);
+      continue;
+    }
+    const detVal = dc >= 0 ? String(rows[r][dc]||'').trim() : '';
+    const scVal  = sc >= 0 ? String(rows[r][sc]||'').trim() : '';
+    if (key === 'sp_linked' || key === 'dd_prem') {
+      dm[key] = detVal || scVal; sm[key] = '';
+    } else {
+      dm[key] = detVal; sm[key] = scVal;
+    }
+  }
+  renderRC(sm, dm, dailyTotal);
+}
+
+// Client-side label map (for fallback parsing)
+const RC_LMAP_CLIENT = {
   'match points':'match_pts','bonus points':'bonus_pts',
   'risk incentive':'risk_inc','special incentive':'special_inc',
   'match related points':'match_total',
@@ -189,273 +671,184 @@ const RC_LMAP = {
   'total daily score':'daily_total','daily total':'daily_total','total daily':'daily_total',
 };
 
-let cur=TABS[0], players=[], rcName='', rcMatch=7;
-const CACHE={}, TTL=60000;
+/* ═══════════════════════════════════════════════════════════════
+   REPORT CARD RENDER
 
-async function api(params, fresh=false){
-  const key=JSON.stringify(params), now=Date.now();
-  if(!fresh&&CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
-  const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
-  const res=await fetch(API+'?'+qs);
-  if(!res.ok) throw new Error('HTTP '+res.status);
-  const d=await res.json();
-  if(d.error) throw new Error(d.error);
-  if(!fresh) CACHE[key]={d,ts:now};
-  return d;
-}
+   MANDATORY 3-COLUMN STRUCTURE (matches Google Sheet exactly):
+   ┌──────┬──────────────────────────┬──────────────────┬────────┐
+   │ icon │ label (Col D)            │ detail (Col I)   │ score  │
+   │      │ e.g. "Wicket Keeper"     │ "Sanju Samson"   │ 19     │
+   │      │ e.g. "Bat 1"             │ "Ayush Mhatre"   │ 326    │
+   │      │ e.g. "Vice Captain"      │ "Yashasvi…"      │ —      │
+   └──────┴──────────────────────────┴──────────────────┴────────┘
 
-function renderTabs(){
-  document.getElementById('tabBar').innerHTML=TABS.map(t=>
-    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
-  ).join('');
-}
-function go(n){cur=TABS.find(t=>t.name===n);renderTabs();load();}
+   RULES:
+   1. ALWAYS show detail (Col I) even if score is empty
+      → This fixes Super Selector blank names
+   2. ALWAYS show score as RED if negative
+   3. NEVER replace detail with score
+   4. NEVER hide detail column
+═══════════════════════════════════════════════════════════════ */
+function renderRC(sm, dm, dailyTotal) {
+  // sm = scoreMap  { key: rawScoreString }  e.g. { wk: "19", bat1: "326", vc: "" }
+  // dm = detailMap { key: detailString   }  e.g. { wk: "Sanju Samson", vc: "Yashasvi Jaiswal" }
 
-async function load(){
-  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
-  try{
-    if(cur.type==='lb'){
-      const d=await api({tab:'leaderboard'});buildPlayers(d.rows);renderLB(d.rows);
-    }else if(cur.type==='rc'){
-      if(!players.length)try{const d=await api({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
-      renderRCShell();
-    }else{
-      const d=await api({tab:cur.key});renderDT(d.rows);
-    }
-  }catch(e){set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);}
-}
+  const pl   = players.find(p => p.name === rcName);
+  const rank = pl ? pl.rank : 0;
+  const init = rcName.split(' ').map(w => w[0]||'').join('').slice(0, 2).toUpperCase();
 
-function buildPlayers(rows){
-  players=[];
-  let hi=-1;
-  for(let i=0;i<Math.min(8,rows.length);i++){
-    const j=rows[i].join('|').toLowerCase();
-    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
+  // Warning — only if truly no data at all
+  const hasAnyData = Object.values(sm).some(v => v && v !== '' && v !== '-' && v !== '—')
+                  || Object.values(dm).some(v => v && v !== '');
+  let warn = '';
+  if (!hasAnyData) {
+    warn = `<div class="warn">⚠ No data found for ${esc(rcName)} — Match ${rcMatch}. 
+      Check that the player name matches exactly and match data has been entered.</div>`;
   }
-  if(hi<0)return;
-  const h=rows[hi];
-  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
-  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
-  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
-  const iA=iR>=0?iR+1:-1;
-  rows.slice(hi+1).forEach(r=>{
-    const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();
-    if(!nm||isNaN(rn)||nm==='null')return;
-    players.push({rank:rn,name:nm,arw:iA>=0?String(r[iA]||''):'',total:pn(r[iT])});
-  });
-  players.sort((a,b)=>a.rank-b.rank);
-}
 
-function renderLB(rows){
-  for(const r of rows.slice(0,5)){
-    const m=r.join(' ').match(/match\s*#?\s*(\d+)/i);
-    if(m){document.getElementById('banner').textContent='Data Updated till Match '+m[1];break;}
-  }
-  let hi=-1;
-  for(let i=0;i<Math.min(8,rows.length);i++){
-    const j=rows[i].join('|').toLowerCase();
-    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
-  }
-  if(hi<0){set('<div class="loading">Header not found.</div>');return;}
-  const h=rows[hi];
-  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
-  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
-  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
-  const iA=iR>=0?iR+1:-1;
-  const sc=LB_COLS.map(d=>{const re=new RegExp(d.re,'i');const i=h.findIndex(v=>re.test(String(v||'')));return i>=0?{i,lbl:d.lbl}:null;}).filter(Boolean);
-  const dr=rows.slice(hi+1).filter(r=>{const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();return !isNaN(rn)&&nm&&nm!=='null';});
-  let html=`<div class="tw"><table><thead><tr>
-    <th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>
-    ${sc.map(c=>`<th>${c.lbl}</th>`).join('')}
-  </tr></thead><tbody>`;
-  dr.forEach(r=>{
-    const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim()),tot=pn(r[iT]),arw=iA>=0?String(r[iA]||''):'';
-    const rk=rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
-    const ac=arw.includes('▲')?'ar-up':arw.includes('▼')?'ar-dn':'ar-eq';
-    const an=(arw.match(/\d+/)||[''])[0];
-    const at=arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
-    html+=`<tr><td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td><td class="sc2">${fmtCell(tot)}</td>${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}</tr>`;
-  });
-  set(html+'</tbody></table></div>');
-}
+  // Build all score rows
+  let rows = '';
+  RC_GROUPS.forEach(grp => {
+    rows += `<div class="gh">${grp.t}</div>`;
 
-function renderDT(rows){
-  if(!rows||rows.length<2){set('<div class="loading">No data.</div>');return;}
-  const isP=cur.key==='playerpoints';
-  let hi=0;
-  for(let i=0;i<Math.min(5,rows.length);i++)if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
-  const hdrs=rows[hi],data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
-  let h='<div class="tw"><table><thead><tr>';
-  hdrs.forEach((hd,i)=>{
-    if(isP){if(i===0||i===1)return;}else if(i===0)return;
-    let cls='',lbl=String(hd||'').trim();
-    if(isP){if(i===2)cls='sc1';if(i===3){cls='sc2';lbl='Total Score';}}
-    else    {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-    h+=`<th class="${cls}">${esc(lbl)}</th>`;
-  });
-  h+='</tr></thead><tbody>';
-  data.forEach(r=>{
-    h+='<tr>';
-    r.forEach((c,i)=>{
-      if(isP){if(i===0||i===1)return;}else if(i===0)return;
-      let cls='';
-      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
-      else    {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      const raw=String(c||'').trim(),n=pn(raw);
-      let disp=esc(raw===''||raw==='null'?'—':raw);
-      if(!isNaN(n)&&n<0)  disp=`<span class="c-neg">${esc(raw)}</span>`;
-      else if(!isNaN(n)&&n===0)disp=`<span class="c-dim">—</span>`;
-      h+=`<td class="${cls}">${disp}</td>`;
-    });
-    h+='</tr>';
-  });
-  set(h+'</tbody></table></div>');
-}
+    grp.rows.forEach(rd => {
+      // Get values — default to empty string, never undefined
+      const scoreRaw = sm[rd.k] !== undefined ? String(sm[rd.k]) : '';
+      const detail   = dm[rd.k] !== undefined ? String(dm[rd.k]) : '';
+      const num      = pn(scoreRaw);
+      const isNum    = !isNaN(num);
 
-function renderRCShell(){
-  let no='<option value="">— Select your name —</option>';
-  if(!players.length)no+='<option disabled>Loading names…</option>';
-  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
-  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
-  set(`<div class="rc-wrap">
-    <div class="rc-bar">
-      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
-      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
-      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
-    </div>
-    <div id="rcA"><div class="rccard"><div class="rce">
-      <span class="rce-i">📋</span>
-      <div class="rce-t">Select player &amp; match</div>
-      <div class="rce-s">Pick a name and match number, then tap <strong>View</strong>.</div>
-    </div></div></div>
-  </div>`);
-}
+      // ── SCORE CELL (Col J) ────────────────────────────────────
+      let scoreHtml = '';
+      if (rd.badge) {
+        // Badge rows: Yes/No is in the detail column (Col I)
+        // scoreRaw is empty for these rows
+        const txt = detail || scoreRaw;
+        if      (/yes|linked|true/i.test(txt))   scoreHtml = `<span class="badge yes">${esc(txt)}</span>`;
+        else if (/no|not|false/i.test(txt))       scoreHtml = `<span class="badge no">${esc(txt)}</span>`;
+        else if (txt)                             scoreHtml = `<span class="badge neu">${esc(txt)}</span>`;
+        else                                      scoreHtml = `<span class="rv dim">—</span>`;
 
-async function loadRC(){
-  rcName =document.getElementById('rcSN').value;
-  rcMatch=parseInt(document.getElementById('rcSM').value);
-  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');return;}
-  const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='…';
-  try{
-    const d=await api({tab:'reportcard',player:rcName,match:rcMatch},true);
-    if(d.scoreMap!==undefined){
-      renderRC(d.scoreMap,d.detailMap||{},d.playerCol>=0,d.matchCol>=0,d.dailyTotal??null);
-    }else{
-      rcFallback(d.rows||[]);
-    }
-  }catch(e){
-    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">${esc(e.message)}</div></div></div>`);
-  }
-  btn.disabled=false;btn.textContent='▶ View';
-}
-
-function rcFallback(g){
-  const sm={},dm={};let sc=-1,dc=-1,dailyTotal=null;
-  const votes={};
-  for(let r=0;r<g.length;r++){
-    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
-    if(!RC_LMAP[lbl.toLowerCase()])continue;
-    for(let c=g[r].length-1;c>3;c--){const v=String(g[r][c]||'').trim();if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}}
-  }
-  let mx=0;Object.entries(votes).forEach(([c,v])=>{if(v>mx){mx=v;sc=+c;}});
-  dc=sc>0?sc-1:-1;
-  for(let r=2;r<g.length;r++){
-    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
-    const key=RC_LMAP[lbl.toLowerCase()];
-    if(key==='daily_total'){if(sc>=0)dailyTotal=pn(g[r][sc]);continue;}
-    if(!key)continue;
-    const det=dc>=0?String(g[r][dc]||'').trim():'';
-    const scv=sc>=0?String(g[r][sc]||'').trim():'';
-    if(key==='sp_linked'||key==='dd_prem'){detailMap[key]=det||scv;scoreMap[key]='';}
-    else{dm[key]=det;sm[key]=scv;}
-  }
-  renderRC(sm,dm,dc>=0,sc>=0,dailyTotal);
-}
-
-/* ── RENDER RC — chip strip REMOVED per user request ─── */
-function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
-  const pl  =players.find(p=>p.name===rcName);
-  const rank=pl?pl.rank:0;
-  const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-
-  // ── NO CHIP STRIP — removed per user request ──────────────
-
-  // warning
-  const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
-  let warn='';
-  if(!hasData&&!foundPlayer)warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
-  else if(!hasData&&!foundMatch)warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
-
-  // score rows
-  let rows='';
-  RC_GROUPS.forEach(grp=>{
-    rows+=`<div class="gh">${grp.t}</div>`;
-    grp.rows.forEach(rd=>{
-      const scoreRaw=sm[rd.k]||'';
-      const detail  =dm[rd.k]||'';
-      const num     =pn(scoreRaw);
-      const isNum   =!isNaN(num);
-      let vh='';
-
-      if(rd.badge){
-        const txt=detail||scoreRaw;
-        if     (/yes|linked|true/i.test(txt))  vh=`<span class="badge yes">${esc(txt)}</span>`;
-        else if(/no|not|false/i.test(txt))     vh=`<span class="badge no">${esc(txt)}</span>`;
-        else if(txt)                            vh=`<span class="badge neu">${esc(txt)}</span>`;
-        else                                    vh=`<span class="rv dim">—</span>`;
-      }else if(isNum){
-        if(num===0)       vh=`<span class="rv dim">—</span>`;
-        else if(rd.sub)   vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
-        else              vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
-      }else{
-        vh=`<span class="rv dim">—</span>`;
+      } else if (isNum) {
+        if (num === 0) {
+          scoreHtml = `<span class="rv dim">—</span>`;
+        } else if (rd.sub) {
+          // Subtotal: show plain number, gold if positive, RED if negative
+          scoreHtml = `<span class="rv ${num < 0 ? 'neg' : 'gold'}">${fmt(num)}</span>`;
+        } else {
+          // Regular row: +green or -RED
+          scoreHtml = `<span class="rv ${num > 0 ? 'pos' : 'neg'}">${fmtS(num)}</span>`;
+        }
+      } else {
+        // scoreRaw is not numeric (empty or dash) → show —
+        scoreHtml = `<span class="rv dim">—</span>`;
       }
 
-      const dh=(!rd.sub&&!rd.badge&&detail)?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
+      // ── DETAIL CELL (Col I) ───────────────────────────────────
+      // ALWAYS render this cell.
+      // For subtotal/total rows: hidden via CSS (visibility:hidden)
+      // For badge rows: the badge itself is in scoreHtml, so detail is empty here
+      // For regular rows: shows player name / team even if score is empty
+      let detailHtml = '';
+      if (rd.sub) {
+        detailHtml = `<span class="rd"></span>`; // hidden by CSS
+      } else if (rd.badge) {
+        detailHtml = `<span class="rd"></span>`; // badge rows show via scoreHtml
+      } else {
+        // CRITICAL: show detail EVEN IF score is empty (Super Selector fix)
+        detailHtml = `<span class="rd">${detail ? esc(detail) : ''}</span>`;
+      }
 
-      rows+=`<div class="rr ${rd.sub?'sub':''}">
-        <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dh}${vh}
+      rows += `<div class="rr ${rd.sub ? 'sub' : ''}">
+        <span class="ri">${rd.i}</span>
+        <span class="rl">${rd.l}</span>
+        ${detailHtml}
+        ${scoreHtml}
       </div>`;
     });
   });
 
-  const dh2=(dailyTotal!==null&&!isNaN(dailyTotal))
-    ?`<div class="rr dtot"><span class="ri">📅</span><span class="rl">Total Daily Score — Match ${rcMatch}</span><span class="rd"></span><span class="rv blue">${fmt(dailyTotal)}</span></div>`:'';
+  // Daily total row
+  const dailyHtml = (dailyTotal !== null && !isNaN(dailyTotal))
+    ? `<div class="rr dtot">
+        <span class="ri">📅</span>
+        <span class="rl">Total Daily Score — Match ${rcMatch}</span>
+        <span class="rd"></span>
+        <span class="rv blue">${fmt(dailyTotal)}</span>
+      </div>`
+    : '';
 
   setRC(`<div class="rccard">
     <div class="rchero">
       <div class="rcav">${init}</div>
-      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
-      ${rank?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
+      <div>
+        <div class="rchn">${esc(rcName)}</div>
+        <div class="rchs">Report Card · Match ${rcMatch}</div>
+      </div>
+      ${rank > 0 ? `<div class="rchr">
+        <div class="rcrn">#${rank}</div>
+        <div class="rcrl">Season Rank</div>
+      </div>` : ''}
     </div>
     ${warn}
     <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">Score Breakdown — Match ${rcMatch}</div>
     ${rows}
-    ${dh2}
-    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
+    ${dailyHtml}
+    <div class="rr tot">
+      <span class="ri">🏆</span>
+      <span class="rl">Total (Cumulative Season Score)</span>
+      <span class="rd"></span>
+      <span class="rv grand">${pl ? fmt(pl.total) : '—'}</span>
+    </div>
   </div>`);
 }
 
-function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
-function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h){document.getElementById('area').innerHTML=h;}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function pn(v){
-  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
-  const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════════════ */
+function setRC(h) { document.getElementById('rcA').innerHTML = h; }
+function set(h)   { document.getElementById('area').innerHTML = h; }
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Parse display number — PRESERVES NEGATIVES
+// "1,200" → 1200  |  "(100)" → -100  |  "-" → NaN
+function pn(v) {
+  if (v === null || v === undefined || v === '' || v === '-' || v === '—') return NaN;
+  const s = String(v).trim().replace(/,/g, '');
+  if (/^\([\d.]+\)$/.test(s)) return -parseFloat(s.slice(1, -1));
   return parseFloat(s);
 }
-function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
-function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
-function fmtCell(n){
-  if(isNaN(n)||n===0)return`<span class="c-dim">—</span>`;
-  if(n<0)return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
+
+// Plain number (no sign), NaN → "—"
+function fmt(n) {
+  const x = typeof n === 'number' ? n : pn(n);
+  return isNaN(x) ? String(n||'—') : x.toLocaleString('en-US');
+}
+
+// Signed: +1,200 / -150 / — for zero
+function fmtS(n) {
+  if (n === 0) return '—';
+  return (n > 0 ? '+' : '') + n.toLocaleString('en-US');
+}
+
+// Table cell format: RED negative, dim zero
+function fmtCell(n) {
+  if (isNaN(n) || n === 0) return `<span class="dim">—</span>`;
+  if (n < 0) return `<span class="neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
   return n.toLocaleString('en-US');
 }
 
-renderTabs();load();
-setInterval(()=>{if(cur.type==='lb')load();},120000);
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+renderTabs();
+load();
+// Auto-refresh leaderboard every 2 minutes
+setInterval(() => { if (cur.type === 'lb') load(); }, 120000);
 </script>
 </body>
 </html>
