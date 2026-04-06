@@ -20,6 +20,7 @@
       --border: #334155;
       --success: #10B981;
       --error: #EF4444;
+      --highlight: rgba(245, 158, 11, 0.15);
     }
 
     body {
@@ -113,6 +114,15 @@
       cursor: not-allowed;
     }
 
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 10px 20px;
+      font-size: 14px;
+      width: auto;
+    }
+
     .error-msg {
       background: rgba(239, 68, 68, 0.1);
       border: 1px solid var(--error);
@@ -192,7 +202,7 @@
       color: var(--primary);
     }
 
-    /* Global Banner - Data Updated Till Match X */
+    /* Global Banner */
     .global-banner {
       background: rgba(245, 158, 11, 0.1);
       border: 1px solid var(--primary);
@@ -236,23 +246,52 @@
       border-bottom-color: var(--primary);
     }
 
-    /* Match Selector */
-    .match-selector {
+    /* Report Card */
+    .report-card-header {
       background: var(--bg-card);
       padding: 20px;
       border-radius: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    .match-selector label {
-      font-size: 14px;
-      margin-bottom: 10px;
-      display: block;
+    .player-info-box {
+      display: flex;
+      gap: 30px;
+      align-items: center;
     }
 
-    .match-selector select {
-      max-width: 200px;
+    .player-info-box div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-info-box label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .player-info-box span {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .match-selector-inline {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .match-selector-inline select {
+      width: 150px;
+      padding: 10px;
     }
 
     /* Report Card Sections */
@@ -346,12 +385,11 @@
     /* Data Table with Frozen Headers */
     .data-table {
       width: 100%;
-      overflow-x: auto;
       background: var(--bg-card);
       border-radius: 12px;
       border: 1px solid var(--border);
-      max-height: 80vh;
-      overflow-y: auto;
+      max-height: 70vh;
+      overflow: auto;
     }
 
     table {
@@ -369,15 +407,22 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      white-space: nowrap;
     }
 
     td {
       padding: 12px;
       border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      white-space: nowrap;
     }
 
     tr:hover {
       background: rgba(245, 158, 11, 0.05);
+    }
+
+    tr.user-row {
+      background: var(--highlight);
+      font-weight: 600;
     }
 
     .tab-content {
@@ -441,7 +486,7 @@
         📊 Data Updated Till Match <span id="lastUpdatedMatch">11</span>
       </div>
 
-      <!-- Tabs (Reordered: Leaderboard First) -->
+      <!-- Tabs -->
       <div class="tabs">
         <button class="tab-btn active" data-tab="leaderboard">Leaderboard</button>
         <button class="tab-btn" data-tab="reportcard">Your Report Card</button>
@@ -457,22 +502,35 @@
         <button class="tab-btn" data-tab="cummatchwise">Cum Match Wise</button>
       </div>
 
-      <!-- Leaderboard Tab (Now First) -->
+      <!-- Leaderboard Tab -->
       <div id="tab-leaderboard" class="tab-content active"></div>
 
       <!-- Report Card Tab -->
       <div id="tab-reportcard" class="tab-content">
-        <div class="match-selector">
-          <label for="matchSelect">Select Match</label>
-          <select id="matchSelect">
-            <!-- Populated by JS -->
-          </select>
+        <div class="report-card-header">
+          <div class="player-info-box">
+            <div>
+              <label>Player Name</label>
+              <span id="rcPlayerName">-</span>
+            </div>
+            <div>
+              <label>Current Rank</label>
+              <span id="rcPlayerRank">#-</span>
+            </div>
+          </div>
+          
+          <div class="match-selector-inline">
+            <select id="matchSelectRC">
+              <!-- Populated by JS -->
+            </select>
+            <button class="btn btn-secondary" id="submitReportCard">Submit</button>
+          </div>
         </div>
 
         <div id="reportCardContent">
           <div class="loading">
             <div class="spinner"></div>
-            <p>Loading your report card...</p>
+            <p>Select a match and click Submit</p>
           </div>
         </div>
       </div>
@@ -493,18 +551,18 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════
-    // CONFIGURATION - CHANGE THESE VALUES
+    // CONFIGURATION
     // ═══════════════════════════════════════════════════════════
     const API_URL = 'https://script.google.com/macros/s/AKfycbxxaK3hsX7zc5_3KDRpomlRkoonn82FypW-G-NTci6Jb4l_20qNwtdJ9EsyHlEzmxfg/exec';
-    const LAST_UPDATED_MATCH = 11; // UPDATE THIS WHEN NEW MATCH DATA IS ADDED
-    const DEFAULT_MATCH = 11; // Default match to show
+    const LAST_UPDATED_MATCH = 11;
+    const DEFAULT_MATCH = 11;
     
     let currentUser = null;
     let currentMatch = DEFAULT_MATCH;
 
     // Sheet name mapping
     const TAB_TO_SHEET = {
-      'leaderboard': 'D-1',
+      'leaderboard': 'Dashboard',
       'reportcard': 'Your Report Card',
       'matchscores': 'Match Scores',
       'bonusscores': 'Bonus Scores',
@@ -523,7 +581,7 @@
       document.getElementById('lastUpdatedMatch').textContent = LAST_UPDATED_MATCH;
       checkLogin();
       setupEventListeners();
-      populateMatchSelect();
+      populateMatchSelects();
     });
 
     function setupEventListeners() {
@@ -534,22 +592,23 @@
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
       });
       
-      // Auto-reload on match change
-      document.getElementById('matchSelect').addEventListener('change', (e) => {
-        currentMatch = parseInt(e.target.value);
+      document.getElementById('submitReportCard').addEventListener('click', () => {
+        currentMatch = parseInt(document.getElementById('matchSelectRC').value);
         loadReportCard();
       });
     }
 
-    function populateMatchSelect() {
-      const select = document.getElementById('matchSelect');
-      for (let i = 1; i <= 74; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `Match ${i}`;
-        if (i === currentMatch) option.selected = true;
-        select.appendChild(option);
-      }
+    function populateMatchSelects() {
+      const selects = [document.getElementById('matchSelectRC')];
+      selects.forEach(select => {
+        for (let i = 1; i <= 74; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = `Match ${i}`;
+          if (i === currentMatch) option.selected = true;
+          select.appendChild(option);
+        }
+      });
     }
 
     async function handleLogin(e) {
@@ -616,8 +675,9 @@
       document.getElementById('userName').textContent = currentUser.name;
       document.getElementById('userEmail').textContent = currentUser.email;
       
-      // Load leaderboard first (since it's the first tab)
-      loadGenericTab('leaderboard');
+      document.getElementById('rcPlayerName').textContent = currentUser.name;
+      
+      loadLeaderboard();
     }
 
     async function loadReportCard() {
@@ -630,7 +690,6 @@
       `;
       
       try {
-        // NEW: Read from "Your Report Card" sheet directly
         const sheetName = TAB_TO_SHEET.reportcard;
         const response = await fetch(`${API_URL}?tab=${encodeURIComponent(sheetName)}`);
         const data = await response.json();
@@ -647,75 +706,121 @@
     }
 
     function buildReportCardFromSheet(rows, matchNum) {
-      if (!rows || rows.length === 0) {
-        return '<div class="error-msg">No data available</div>';
+      if (!rows || rows.length < 5) {
+        return '<div class="error-msg">Insufficient data in sheet</div>';
       }
       
-      // DEBUG: Show first 3 rows to understand structure
-      let debugHTML = '<div style="background: #1E293B; padding: 20px; border-radius: 8px; margin-bottom: 20px; font-size: 12px; font-family: monospace;">';
-      debugHTML += '<h3 style="color: #F59E0B; margin-bottom: 10px;">DEBUG: First 3 Rows of Sheet</h3>';
-      for (let r = 0; r < Math.min(3, rows.length); r++) {
-        debugHTML += `<div style="margin-bottom: 10px;"><strong style="color: #10B981;">Row ${r}:</strong> `;
-        debugHTML += rows[r].slice(0, 15).map((cell, idx) => `[${idx}]=${cell}`).join(' | ');
-        debugHTML += '</div>';
-      }
-      debugHTML += '</div>';
-      
-      // Find match column - Row 3 (index 2) has match numbers
+      // Find match column in Row 3 (index 2)
       let matchCol = -1;
-      const matchHeaderRow = 2; // Row 3 in sheet (0-indexed as 2)
-      
-      if (rows.length > matchHeaderRow) {
-        for (let c = 0; c < rows[matchHeaderRow].length; c++) {
-          const cellValue = String(rows[matchHeaderRow][c] || '').trim();
-          if (cellValue == String(matchNum)) {
-            matchCol = c;
-            break;
-          }
+      for (let c = 0; c < rows[2].length; c++) {
+        if (String(rows[2][c]).trim() == String(matchNum)) {
+          matchCol = c;
+          break;
         }
       }
       
       if (matchCol === -1) {
-        return debugHTML + `<div class="error-msg">Match ${matchNum} not found in Row 3. Available matches: ${rows[matchHeaderRow].filter(v => v).slice(0, 20).join(', ')}</div>`;
+        return `<div class="error-msg">Match ${matchNum} not found. Available: ${rows[2].filter(v => v && !isNaN(v)).join(', ')}</div>`;
       }
       
-      debugHTML += `<div style="color: #10B981; margin-bottom: 20px;">✅ Found Match ${matchNum} at Row 3, Column ${matchCol}</div>`;
+      // Get rank (from Row 2)
+      const rank = rows[1][matchCol] || '-';
+      document.getElementById('rcPlayerRank').textContent = `#${rank}`;
       
-      // Find player row
-      const playerName = currentUser.name.toLowerCase();
-      let playerRow = -1;
-      for (let r = 0; r < rows.length; r++) {
-        for (let c = 0; c < 3; c++) {
-          if (String(rows[r][c] || '').toLowerCase().trim() === playerName) {
-            playerRow = r;
-            break;
-          }
-        }
-        if (playerRow !== -1) break;
-      }
-      
-      if (playerRow === -1) {
-        return '<div class="error-msg">Player not found in sheet</div>';
-      }
-      
-      // Build HTML - this is a simplified version
-      // You'll need to adjust based on your actual sheet structure
+      // Build report card HTML
       let html = '<div class="report-card">';
       
+      // We'll read line items starting from row 5 (index 4)
+      // This is a simplified version - adjust based on actual structure
       html += `
         <div class="section-group">
-          <div class="section-group-header">Report Card Data</div>
+          <div class="section-group-header">Match Data</div>
           <div class="line-item">
             <div class="line-item-label">
-              <h4>Match Score</h4>
-              <p>${rows[playerRow][8] || '-'}</p>
+              <h4>Match ${matchNum} Score</h4>
+              <p>Rank: #${rank}</p>
             </div>
-            <div class="line-item-score">${rows[playerRow][matchCol] || '-'}</div>
+            <div class="line-item-score">${rows[1][matchCol] || '-'}</div>
           </div>
         </div>
       `;
       
       html += '</div>';
+      return html;
+    }
+
+    async function loadLeaderboard() {
+      const container = document.getElementById('tab-leaderboard');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+      
+      try {
+        const response = await fetch(`${API_URL}?tab=Dashboard`);
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        container.innerHTML = buildLeaderboardTable(data.rows);
+        
+      } catch (error) {
+        container.innerHTML = `<div class="error-msg">${error.message}</div>`;
+      }
+    }
+
+    function buildLeaderboardTable(rows) {
+      if (!rows || rows.length < 5) {
+        return '<div class="error-msg">No data available</div>';
+      }
+      
+      // Skip first 4 rows, start from row 5 (index 4)
+      const headers = rows[3]; // Row 4 has headers
+      const dataRows = rows.slice(4); // Start from row 5
+      
+      // Columns to show (skip email column at index 0 or 1)
+      const columnsToShow = [
+        0,   // Rank
+        1,   // Movement
+        2,   // Participant
+        3,   // Match
+        4,   // Bonus
+        5,   // SP
+        6,   // DD
+        7,   // RESURRECT
+        8,   // RI
+        9,   // SI
+        10,  // SB
+        11,  // SS
+        12,  // Total
+        14,  // Daily Winner
+        15,  // Weekly Winner
+        16,  // Cum Daily
+        17   // Cum Weekly
+      ];
+      
+      let html = '<div class="data-table"><table>';
+      
+      // Headers
+      html += '<thead><tr>';
+      columnsToShow.forEach(idx => {
+        html += `<th>${headers[idx] || ''}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+      
+      // Data rows
+      const userName = currentUser.name.toLowerCase();
+      dataRows.forEach(row => {
+        const participantName = String(row[2] || '').toLowerCase();
+        const isUserRow = participantName === userName;
+        
+        html += `<tr ${isUserRow ? 'class="user-row"' : ''}>`;
+        columnsToShow.forEach(idx => {
+          html += `<td>${row[idx] || ''}</td>`;
+        });
+        html += '</tr>';
+      });
+      
+      html += '</tbody></table></div>';
       return html;
     }
 
@@ -731,9 +836,9 @@
       const activeTab = document.getElementById(`tab-${tabName}`);
       activeTab.classList.add('active');
       
-      if (tabName === 'reportcard') {
-        loadReportCard();
-      } else if (!activeTab.innerHTML) {
+      if (tabName === 'leaderboard' && !activeTab.innerHTML) {
+        loadLeaderboard();
+      } else if (tabName !== 'reportcard' && !activeTab.innerHTML) {
         loadGenericTab(tabName);
       }
     }
@@ -752,31 +857,67 @@
           throw new Error(data.error);
         }
         
-        let html = '<div class="data-table"><table>';
-        
-        if (data.rows && data.rows.length > 0) {
-          html += '<thead><tr>';
-          data.rows[0].forEach(cell => {
-            html += `<th>${cell}</th>`;
-          });
-          html += '</tr></thead><tbody>';
-          
-          for (let i = 1; i < Math.min(data.rows.length, 100); i++) {
-            html += '<tr>';
-            data.rows[i].forEach(cell => {
-              html += `<td>${cell}</td>`;
-            });
-            html += '</tr>';
-          }
-          html += '</tbody>';
-        }
-        
-        html += '</table></div>';
-        container.innerHTML = html;
+        container.innerHTML = buildGenericTable(data.rows);
         
       } catch (error) {
         container.innerHTML = `<div class="error-msg">${error.message}</div>`;
       }
+    }
+
+    function buildGenericTable(rows) {
+      if (!rows || rows.length < 2) {
+        return '<div class="error-msg">No data available</div>';
+      }
+      
+      // Find header row (usually row with "Email ID" or "Name")
+      let headerRow = 0;
+      for (let i = 0; i < Math.min(5, rows.length); i++) {
+        const rowText = rows[i].join('').toLowerCase();
+        if (rowText.includes('name') || rowText.includes('email')) {
+          headerRow = i;
+          break;
+        }
+      }
+      
+      const headers = rows[headerRow];
+      const dataRows = rows.slice(headerRow + 1);
+      
+      // Find email column to skip
+      let emailColIdx = -1;
+      headers.forEach((h, idx) => {
+        if (String(h).toLowerCase().includes('email')) {
+          emailColIdx = idx;
+        }
+      });
+      
+      let html = '<div class="data-table"><table>';
+      
+      // Headers (skip email column)
+      html += '<thead><tr>';
+      headers.forEach((h, idx) => {
+        if (idx !== emailColIdx) {
+          html += `<th>${h}</th>`;
+        }
+      });
+      html += '</tr></thead><tbody>';
+      
+      // Data rows (skip email column, limit to 100 rows)
+      const userName = currentUser.name.toLowerCase();
+      dataRows.slice(0, 100).forEach(row => {
+        const participantName = String(row[1] || row[2] || '').toLowerCase();
+        const isUserRow = participantName === userName;
+        
+        html += `<tr ${isUserRow ? 'class="user-row"' : ''}>`;
+        row.forEach((cell, idx) => {
+          if (idx !== emailColIdx) {
+            html += `<td>${cell}</td>`;
+          }
+        });
+        html += '</tr>';
+      });
+      
+      html += '</tbody></table></div>';
+      return html;
     }
   </script>
 
