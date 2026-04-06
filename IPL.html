@@ -943,9 +943,17 @@
           
           // Colorize arrows in Movement column (index 1)
           if (idx === 1 && cellValue) {
-            if (cellValue.includes('▲') || cellValue.includes('▴') || cellValue.includes('↑')) {
+            const cellStr = String(cellValue).trim();
+            console.log('Movement cell:', cellStr, 'Char codes:', Array.from(cellStr).map(c => c.charCodeAt(0)));
+            
+            // Check if starts with up arrow or contains up arrow
+            if (cellStr.startsWith('▲') || cellStr.startsWith('▴') || cellStr.startsWith('△') || 
+                cellStr.includes('▲') || cellStr.includes('▴') || cellStr.includes('△') || cellStr.includes('↑')) {
               formattedValue = `<span class="arrow-up">${cellValue}</span>`;
-            } else if (cellValue.includes('▼') || cellValue.includes('▾') || cellValue.includes('↓')) {
+            } 
+            // Check if starts with down arrow or contains down arrow
+            else if (cellStr.startsWith('▼') || cellStr.startsWith('▾') || cellStr.startsWith('▽') ||
+                     cellStr.includes('▼') || cellStr.includes('▾') || cellStr.includes('▽') || cellStr.includes('↓')) {
               formattedValue = `<span class="arrow-down">${cellValue}</span>`;
             }
           }
