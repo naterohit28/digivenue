@@ -21,6 +21,9 @@
       --success: #10B981;
       --error: #EF4444;
       --highlight: rgba(245, 158, 11, 0.15);
+      --header-bg: #1e3a5f; /* New: Blue-tinted header background */
+      --positive: #22C55E; /* Green for positive/up */
+      --negative: #EF4444; /* Red for negative/down */
     }
 
     body {
@@ -312,13 +315,14 @@
     }
 
     .section-group-header {
-      background: var(--bg-dark);
+      background: var(--header-bg);
       padding: 15px 20px;
       font-weight: 600;
       font-size: 16px;
       color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--primary);
     }
 
     .line-item {
@@ -399,15 +403,16 @@
     }
 
     th {
-      background: var(--bg-dark);
+      background: var(--header-bg);
       padding: 12px;
       text-align: left;
       font-weight: 600;
-      border-bottom: 2px solid var(--border);
+      border-bottom: 2px solid var(--primary);
       position: sticky;
       top: 0;
       z-index: 10;
       white-space: nowrap;
+      color: var(--text-light);
     }
 
     td {
@@ -423,6 +428,22 @@
     tr.user-row {
       background: var(--highlight);
       font-weight: 600;
+    }
+
+    /* Negative values in red */
+    .negative-value {
+      color: var(--negative);
+    }
+
+    /* Arrow colors */
+    .arrow-up {
+      color: var(--positive);
+      font-weight: 700;
+    }
+
+    .arrow-down {
+      color: var(--negative);
+      font-weight: 700;
     }
 
     .tab-content {
@@ -917,7 +938,24 @@
         
         html += `<tr ${isUserRow ? 'class="user-row"' : ''}>`;
         columnsToShow.forEach(idx => {
-          html += `<td>${row[idx] || ''}</td>`;
+          let cellValue = row[idx] || '';
+          let formattedValue = cellValue;
+          
+          // Colorize arrows in Movement column (index 1)
+          if (idx === 1 && cellValue) {
+            if (cellValue.includes('▲') || cellValue.includes('▴') || cellValue.includes('↑')) {
+              formattedValue = `<span class="arrow-up">${cellValue}</span>`;
+            } else if (cellValue.includes('▼') || cellValue.includes('▾') || cellValue.includes('↓')) {
+              formattedValue = `<span class="arrow-down">${cellValue}</span>`;
+            }
+          }
+          
+          // Colorize negative values
+          if (cellValue && String(cellValue).trim().startsWith('-')) {
+            formattedValue = `<span class="negative-value">${cellValue}</span>`;
+          }
+          
+          html += `<td>${formattedValue}</td>`;
         });
         html += '</tr>';
       });
@@ -1012,7 +1050,14 @@
         html += `<tr ${isUserRow ? 'class="user-row"' : ''}>`;
         row.forEach((cell, idx) => {
           if (idx !== emailColIdx) {
-            html += `<td>${cell}</td>`;
+            let formattedValue = cell;
+            
+            // Colorize negative values
+            if (cell && String(cell).trim().startsWith('-')) {
+              formattedValue = `<span class="negative-value">${cell}</span>`;
+            }
+            
+            html += `<td>${formattedValue}</td>`;
           }
         });
         html += '</tr>';
