@@ -1,453 +1,706 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>IPL 2026 Fantasy League</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f8fafc;font-family:'Inter',sans-serif;padding:15px;min-height:100vh}
-.wrap{max-width:1250px;margin:0 auto;background:rgba(30,41,59,.7);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px rgba(0,0,0,.5);padding:15px}
-.header{text-align:center;margin-bottom:15px}
-.header h1{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(to right,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:1px}
-.banner{display:inline-block;margin-top:5px;background:rgba(220,38,38,.1);border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600}
-.tab-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
-.tab-bar::-webkit-scrollbar{height:4px}
-.tab-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
-.tab-btn{background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-size:12px;flex-shrink:0;font-family:'Inter',sans-serif}
-.tab-btn:hover{background:rgba(255,255,255,.1);color:#fff}
-.tab-btn.active{background:rgba(251,191,36,.1);color:#fbbf24;border-color:#fbbf24}
-.loading{text-align:center;padding:40px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px}
-.spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,.1);border-top-color:#fbbf24;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.err-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:16px 20px;color:#fca5a5;font-size:13px;line-height:1.8;white-space:pre-wrap}
-/* tables */
-.tw{overflow:auto;background:rgba(15,23,42,.6);border-radius:8px;border:1px solid rgba(255,255,255,.05);max-height:75vh}
-table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap}
-th,td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#f8fafc}
-th{background:#0f172a;color:#fbbf24;font-weight:700;position:sticky;top:0;z-index:10;border-bottom:2px solid rgba(255,255,255,.1);text-transform:uppercase;font-size:10px;letter-spacing:.5px}
-.sc1{position:sticky;left:0;background:#1e293b;z-index:5;font-weight:600;min-width:190px}
-.sc2{position:sticky;left:190px;background:#1e293b;z-index:5;font-weight:800;color:#fbbf24;min-width:85px;border-right:1px solid rgba(255,255,255,.1);text-align:center}
-th.sc1,th.sc2{z-index:15;background:#0f172a}
-tr:hover td{background:rgba(255,255,255,.03)}
-.c-neg{color:#f87171!important;font-weight:700}
-.c-dim{color:#475569}
-.rk-1{color:#fbbf24;font-weight:800}.rk-2{color:#94a3b8;font-weight:800}.rk-3{color:#b45309;font-weight:800}
-.ar-up{color:#4ade80;font-size:10px}.ar-dn{color:#f87171;font-size:10px}.ar-eq{color:#64748b;font-size:10px}
-/* RC */
-.rc-wrap{max-width:920px;margin:0 auto}
-.rc-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
-.rcg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;max-width:280px}
-.rcl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#475569}
-.rcsel{background:#0f172a;border:1px solid rgba(255,255,255,.15);color:#f8fafc;padding:9px 32px 9px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-color:#0f172a;transition:border-color .2s}
-.rcsel:hover{border-color:rgba(251,191,36,.4)}.rcsel:focus{border-color:#fbbf24}.rcsel option{background:#1e293b}
-.rcbtn{height:40px;padding:0 22px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0}
-.rcbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,191,36,.35)}.rcbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.rccard{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
-.rchero{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.04));border-bottom:1px solid rgba(251,191,36,.2);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.rcav{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#0f172a;flex-shrink:0;letter-spacing:-1px}
-.rchn{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#fff}
-.rchs{font-size:12px;color:#94a3b8;margin-top:3px}
-.rchr{margin-left:auto;text-align:right}
-.rcrn{font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#fbbf24;line-height:1}
-.rcrl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.gh{background:rgba(255,255,255,.03);padding:6px 20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-/* row grid: icon | label | detail | score */
-.rr{display:grid;grid-template-columns:28px 1fr auto 90px;align-items:center;gap:8px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s}
-.rr:hover{background:rgba(255,255,255,.04)}
-.rr.sub{background:rgba(251,191,36,.07);border-top:1px solid rgba(251,191,36,.15);border-bottom:1px solid rgba(251,191,36,.15)}
-.rr.tot{background:linear-gradient(90deg,rgba(251,191,36,.14),transparent);border-top:2px solid rgba(251,191,36,.35);padding:15px 20px}
-.rr.dtot{background:linear-gradient(90deg,rgba(96,165,250,.1),transparent);border-top:2px solid rgba(96,165,250,.25);padding:13px 20px}
-.ri{font-size:15px;text-align:center}
-.rl{font-size:13px;font-weight:500;color:#cbd5e1}
-.rr.sub .rl{color:#fbbf24;font-weight:700}
-.rr.tot .rl{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#fbbf24}
-.rr.dtot .rl{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#60a5fa}
-.rd{font-size:11px;color:#94a3b8;font-style:italic;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
-.rr.sub .rd,.rr.tot .rd,.rr.dtot .rd{visibility:hidden}
-.rv{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#f1f5f9;text-align:right}
-.rv.pos {color:#4ade80}
-.rv.neg {color:#f87171;font-weight:700}
-.rv.dim {color:#64748b;font-weight:400;font-size:12px}
-.rv.gold{color:#fbbf24;font-weight:700}
-.rv.grand{color:#fbbf24;font-size:26px;font-weight:800;text-shadow:0 0 20px rgba(251,191,36,.4)}
-.rv.blue{color:#60a5fa;font-size:18px;font-weight:800}
-.badge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;white-space:nowrap}
-.badge.yes{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.35)}
-.badge.no {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)}
-.badge.neu{background:rgba(148,163,184,.1);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
-.rce{padding:44px 20px;text-align:center}
-.rce-i{font-size:38px;margin-bottom:10px;display:block}
-.rce-t{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:6px}
-.rce-s{font-size:12px;color:#64748b;line-height:1.6;max-width:360px;margin:0 auto}
-.warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:9px 14px;margin:0 20px 4px;font-size:11px;color:#fcd34d;line-height:1.5}
-@media(max-width:600px){
-  .sc1{min-width:130px}.sc2{min-width:75px;left:130px}
-  .rc-bar{flex-direction:column}.rcg{max-width:100%}.rcbtn{width:100%;justify-content:center}
-  .rr{padding:9px 14px;grid-template-columns:24px 1fr auto 72px}.rd{max-width:110px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPL 2026 Fantasy League</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #F59E0B;
+      --bg-dark: #0F172A;
+      --bg-card: #1E293B;
+      --text-light: #F1F5F9;
+      --text-muted: #94A3B8;
+      --border: #334155;
+      --success: #10B981;
+      --error: #EF4444;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Login Screen */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      border: 1px solid var(--border);
+    }
+
+    .login-card h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    /* Main App */
+    .app-screen {
+      display: none;
+    }
+
+    .app-screen.active {
+      display: block;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      margin-bottom: 30px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--bg-dark);
+    }
+
+    .user-details h2 {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .user-details p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .logout-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 30px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-light);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Match Selector */
+    .match-selector {
+      background: var(--bg-card);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+    }
+
+    .match-selector label {
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .match-selector select {
+      max-width: 200px;
+    }
+
+    /* Report Card */
+    .report-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .section {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .section-header h3 {
+      font-size: 16px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .section-score {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .section-detail {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .tabs {
+        gap: 4px;
+      }
+
+      .tab-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+    }
+
+    /* Data Table */
+    .data-table {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--bg-dark);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover {
+      background: rgba(245, 158, 11, 0.05);
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="header">
-    <h1>IPL 2026 Fantasy League</h1>
-    <div class="banner" id="banner">Syncing live data…</div>
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h1>IPL 2026 Fantasy</h1>
+      <p>Enter your registered email to continue</p>
+      
+      <div id="errorMsg" class="error-msg" style="display: none;"></div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            placeholder="your.email@gmail.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+        
+        <button type="submit" class="btn" id="loginBtn">
+          Sign In
+        </button>
+      </form>
+    </div>
   </div>
-  <div class="tab-bar" id="tabBar"></div>
-  <div id="area"><div class="loading"><div class="spinner"></div>Loading…</div></div>
-</div>
-<script>
-const API = 'https://script.google.com/macros/s/AKfycbz-Jj_RmSnxqxE9k_jwQoaQ-X-AL-tJp_T-k2lvwhrW4UlKSgdbl8mQRZJooco_VmyDzQ/exec';
-const TABS = [
-  {name:'Leaderboard', key:'leaderboard', type:'lb'},
-  {name:'Your Report Card', key:'reportcard', type:'rc'},
-  {name:'Match Scores', key:'matchscores', type:'dt'},
-  {name:'SS Scores', key:'ssscores', type:'dt'},
-  {name:'Daily Score', key:'dailyscore', type:'dt'},
-  {name:'IPL Player Points', key:'playerpoints', type:'dt'},
-];
-const LB_COLS = [
-  {re:'match', lbl:'Match' },
-  {re:'bonus', lbl:'Bonus' },
-  {re:'star performer', lbl:'SP' },
-  {re:'dynamic duo', lbl:'DD' },
-  {re:'resurrector', lbl:'Resurct' },
-  {re:'risk incentive', lbl:'RI' },
-  {re:'special incentive', lbl:'SI' },
-  {re:'super bonus', lbl:'SB' },
-  {re:'super selector', lbl:'SS' },
-  {re:'daily winner', lbl:'Daily' },
-  {re:'weekly winner', lbl:'Weekly' },
-  {re:'cum.*daily', lbl:'Total Daily' },
-  {re:'cum.*weekly', lbl:'Total Weekly'},
-];
-const RC_GROUPS = [
-  {t:'🏏 Match Related', rows:[
-    {k:'match_pts', i:'🏏', l:'Match Points'},
-    {k:'bonus_pts', i:'🎯', l:'Bonus Points'},
-    {k:'risk_inc', i:'⚡', l:'Risk Incentive'},
-    {k:'special_inc', i:'🎁', l:'Special Incentive'},
-    {k:'match_total', i:'➕', l:'Match Related Points', sub:1},
-  ]},
-  {t:'⭐ Star Performer', rows:[
-    {k:'sp_indiv', i:'⭐', l:'SP Individual Performance'},
-    {k:'sp_linked', i:'🔗', l:'Linked / Not Linked', badge:1},
-    {k:'sp_pts', i:'⭐', l:'SP Points (incl link effect)', sub:1},
-  ]},
-  {t:'👥 Dynamic Duo', rows:[
-    {k:'dd1_indiv', i:'👤', l:'D1 Individual Performance'},
-    {k:'dd2_indiv', i:'👤', l:'D2 Individual Performance'},
-    {k:'dd_prem', i:'💎', l:'Upfront Premium?', badge:1},
-    {k:'dd_pts', i:'👥', l:'DD Points (incl prem. effect)', sub:1},
-  ]},
-  {t:'🔁 The Resurrector', rows:[
-    {k:'res1', i:'💀', l:'Ressurector 1'},
-    {k:'res2', i:'💀', l:'Ressurector 2'},
-    {k:'resurrector',i:'🔁', l:'THE RESURRECTOR', sub:1},
-  ]},
-  {t:'🔮 Super Selector', rows:[
-    {k:'wk', i:'🧤', l:'Wicket Keeper'},
-    {k:'vc', i:'🏅', l:'Vice Captain'},
-    {k:'captain', i:'©️', l:'Captain'},
-    {k:'bat1', i:'🏏', l:'Bat 1'},
-    {k:'bat2', i:'🏏', l:'Bat 2'},
-    {k:'bat3', i:'🏏', l:'Bat 3'},
-    {k:'bow1', i:'🏐', l:'Bow 1'},
-    {k:'bow2', i:'🏐', l:'Bow 2'},
-    {k:'bow3', i:'🏐', l:'Bow 3'},
-    {k:'ar1', i:'🔄', l:'All Rounder 1'},
-    {k:'ar2', i:'🔄', l:'All Rounder 2'},
-    {k:'play1', i:'▶️', l:'Play 1'},
-    {k:'play2', i:'▶️', l:'Play 2'},
-    {k:'super_sel',i:'🔮', l:'Super Selector', sub:1},
-  ]},
-];
-const RC_LMAP = {
-  'match points':'match_pts','bonus points':'bonus_pts',
-  'risk incentive':'risk_inc','special incentive':'special_inc',
-  'match related points':'match_total',
-  'sp individual performance':'sp_indiv',
-  'linked / not linked':'sp_linked','linked/not linked':'sp_linked',
-  'sp points (incl link effect)':'sp_pts','sp points (incl. link effect)':'sp_pts',
-  'd1 individual performance':'dd1_indiv','d2 individual performance':'dd2_indiv',
-  'upfront premium?':'dd_prem','upfront premium':'dd_prem',
-  'dd points (incl prem. effect)':'dd_pts','dd points (incl. prem. effect)':'dd_pts',
-  'ressurector 1':'res1','resurrector 1':'res1',
-  'ressurector 2':'res2','resurrector 2':'res2',
-  'the resurrector':'resurrector',
-  'wicket keeper':'wk','vice captain':'vc','captain':'captain',
-  'bat 1':'bat1','bat 2':'bat2','bat 3':'bat3',
-  'bow 1':'bow1','bow 2':'bow2','bow 3':'bow3',
-  'all rounder 1':'ar1','all rounder 2':'ar2',
-  'play 1':'play1','play 2':'play2','super selector':'super_sel',
-  'total daily score':'daily_total','daily total':'daily_total','total daily':'daily_total',
-};
-let cur=TABS[0], players=[], rcName='', rcMatch=7;
-const CACHE={}, TTL=60000;
-async function api(params, fresh=false){
-  const key=JSON.stringify(params), now=Date.now();
-  if(!fresh&&CACHE[key]&&now-CACHE[key].ts<TTL) return CACHE[key].d;
-  const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
-  const res=await fetch(API+'?'+qs);
-  if(!res.ok) throw new Error('HTTP '+res.status);
-  const d=await res.json();
-  if(d.error) throw new Error(d.error);
-  if(!fresh) CACHE[key]={d,ts:now};
-  return d;
-}
-function renderTabs(){
-  document.getElementById('tabBar').innerHTML=TABS.map(t=>
-    `<button class="tab-btn ${t.name===cur.name?'active':''}" onclick="go('${t.name}')">${t.name}</button>`
-  ).join('');
-}
-function go(n){cur=TABS.find(t=>t.name===n);renderTabs();load();}
-async function load(){
-  set('<div class="loading"><div class="spinner"></div>Loading…</div>');
-  try{
-    if(cur.type==='lb'){
-      const d=await api({tab:'leaderboard'});buildPlayers(d.rows);renderLB(d.rows);
-    }else if(cur.type==='rc'){
-      if(!players.length)try{const d=await api({tab:'leaderboard'});buildPlayers(d.rows);}catch(e){}
-      renderRCShell();
-    }else{
-      const d=await api({tab:cur.key});renderDT(d.rows);
-    }
-  }catch(e){set(`<div class="err-box">⚠ ${esc(e.message)}</div>`);}
-}
-function buildPlayers(rows){
-  players=[];
-  let hi=-1;
-  for(let i=0;i<Math.min(8,rows.length);i++){
-    const j=rows[i].join('|').toLowerCase();
-    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
-  }
-  if(hi<0)return;
-  const h=rows[hi];
-  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
-  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
-  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
-  const iA=iR>=0?iR+1:-1;
-  rows.slice(hi+1).forEach(r=>{
-    const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();
-    if(!nm||isNaN(rn)||nm==='null')return;
-    players.push({rank:rn,name:nm,arw:iA>=0?String(r[iA]||''):'',total:pn(r[iT])});
-  });
-  players.sort((a,b)=>a.rank-b.rank);
-}
-function renderLB(rows){
-  for(const r of rows.slice(0,5)){
-    const m=r.join(' ').match(/match\s*#?\s*(\d+)/i);
-    if(m){document.getElementById('banner').textContent='Data Updated till Match '+m[1];break;}
-  }
-  let hi=-1;
-  for(let i=0;i<Math.min(8,rows.length);i++){
-    const j=rows[i].join('|').toLowerCase();
-    if(j.includes('participant')||(j.includes('rank')&&j.includes('total'))){hi=i;break;}
-  }
-  if(hi<0){set('<div class="loading">Header not found.</div>');return;}
-  const h=rows[hi];
-  const iR=h.findIndex(v=>/^rank$/i.test(String(v||'').trim()));
-  const iN=h.findIndex(v=>/participant/i.test(String(v||'')));
-  const iT=h.findIndex(v=>/^total$/i.test(String(v||'').trim()));
-  const iA=iR>=0?iR+1:-1;
-  const sc=LB_COLS.map(d=>{const re=new RegExp(d.re,'i');const i=h.findIndex(v=>re.test(String(v||'')));return i>=0?{i,lbl:d.lbl}:null;}).filter(Boolean);
-  const dr=rows.slice(hi+1).filter(r=>{const rn=parseInt(r[iR]),nm=String(r[iN]||'').trim();return !isNaN(rn)&&nm&&nm!=='null';});
-  let html=`<div class="tw"><table><thead><tr>
-    <th class="sc1">Rank &amp; Name</th><th class="sc2">Total</th>
-    ${sc.map(c=>`<th>${c.lbl}</th>`).join('')}
-  </tr></thead><tbody>`;
-  dr.forEach(r=>{
-    const rank=parseInt(r[iR]),name=esc(String(r[iN]||'').trim()),tot=pn(r[iT]),arw=iA>=0?String(r[iA]||''):'';
-    const rk=rank===1?'rk-1':rank===2?'rk-2':rank===3?'rk-3':'';
-    const ac=arw.includes('▲')?'ar-up':arw.includes('▼')?'ar-dn':'ar-eq';
-    const an=(arw.match(/\d+/)||[''])[0];
-    const at=arw.includes('▲')?`▲${an}`:arw.includes('▼')?`▼${an}`:'◆';
-    html+=`<tr><td class="sc1"><span class="${rk}" style="margin-right:7px">#${rank}</span><span class="${ac}" style="margin-right:7px">${at}</span>${name}</td><td class="sc2">${fmtCell(tot)}</td>${sc.map(c=>`<td>${fmtCell(pn(r[c.i]))}</td>`).join('')}</tr>`;
-  });
-  set(html+'</tbody></table></div>');
-}
-function renderDT(rows){
-  if(!rows||rows.length<2){set('<div class="loading">No data.</div>');return;}
-  const isP=cur.key==='playerpoints';
-  let hi=0;
-  for(let i=0;i<Math.min(5,rows.length);i++)if(rows[i].filter(c=>String(c||'').trim()).length>=3){hi=i;break;}
-  const hdrs=rows[hi],data=rows.slice(hi+1).filter(r=>r.some(c=>String(c||'').trim()));
-  let h='<div class="tw"><table><thead><tr>';
-  hdrs.forEach((hd,i)=>{
-    if(isP){if(i===0||i===1)return;}else if(i===0)return;
-    let cls='',lbl=String(hd||'').trim();
-    if(isP){if(i===2)cls='sc1';if(i===3){cls='sc2';lbl='Total Score';}}
-    else {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-    h+=`<th class="${cls}">${esc(lbl)}</th>`;
-  });
-  h+='</tr></thead><tbody>';
-  data.forEach(r=>{
-    h+='<tr>';
-    r.forEach((c,i)=>{
-      if(isP){if(i===0||i===1)return;}else if(i===0)return;
-      let cls='';
-      if(isP){if(i===2)cls='sc1';if(i===3)cls='sc2';}
-      else {if(i===1)cls='sc1';if(i===2)cls='sc2';}
-      const raw=String(c||'').trim(),n=pn(raw);
-      let disp=esc(raw===''||raw==='null'?'—':raw);
-      if(!isNaN(n)&&n<0) disp=`<span class="c-neg">${esc(raw)}</span>`;
-      else if(!isNaN(n)&&n===0)disp=`<span class="c-dim">—</span>`;
-      h+=`<td class="${cls}">${disp}</td>`;
-    });
-    h+='</tr>';
-  });
-  set(h+'</tbody></table></div>');
-}
-function renderRCShell(){
-  let no='<option value="">— Select your name —</option>';
-  if(!players.length)no+='<option disabled>Loading names…</option>';
-  else players.forEach(p=>{no+=`<option value="${esc(p.name)}" ${p.name===rcName?'selected':''}>${esc(p.name)}</option>`;});
-  let mo='';for(let m=1;m<=74;m++)mo+=`<option value="${m}" ${m===rcMatch?'selected':''}>Match ${m}</option>`;
-  set(`<div class="rc-wrap">
-    <div class="rc-bar">
-      <div class="rcg"><div class="rcl">Player</div><select class="rcsel" id="rcSN" onchange="rcName=this.value">${no}</select></div>
-      <div class="rcg" style="max-width:180px"><div class="rcl">Match</div><select class="rcsel" id="rcSM" onchange="rcMatch=parseInt(this.value)">${mo}</select></div>
-      <button class="rcbtn" id="rcb" onclick="loadRC()">▶ View</button>
+
+  <!-- Main App Screen -->
+  <div id="appScreen" class="app-screen">
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="user-info">
+            <div class="avatar" id="userAvatar"></div>
+            <div class="user-details">
+              <h2 id="userName"></h2>
+              <p id="userEmail"></p>
+            </div>
+          </div>
+          <button class="logout-btn" id="logoutBtn">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="reportcard">Your Report Card</button>
+        <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+        <button class="tab-btn" data-tab="matchscores">Match Scores</button>
+        <button class="tab-btn" data-tab="dailyscores">Daily Scores</button>
+      </div>
+
+      <!-- Report Card Tab -->
+      <div id="tab-reportcard" class="tab-content active">
+        <div class="match-selector">
+          <label for="matchSelect">Select Match</label>
+          <select id="matchSelect">
+            <!-- Will be populated by JS -->
+          </select>
+        </div>
+
+        <div id="reportCardContent">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading your report card...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Tabs -->
+      <div id="tab-leaderboard" class="tab-content" style="display: none;">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading leaderboard...</p>
+        </div>
+      </div>
+
+      <div id="tab-matchscores" class="tab-content" style="display: none;">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading match scores...</p>
+        </div>
+      </div>
+
+      <div id="tab-dailyscores" class="tab-content" style="display: none;">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading daily scores...</p>
+        </div>
+      </div>
     </div>
-    <div id="rcA"><div class="rccard"><div class="rce">
-      <span class="rce-i">📋</span>
-      <div class="rce-t">Select player &amp; match</div>
-      <div class="rce-s">Pick a name and match number, then tap <strong>View</strong>.</div>
-    </div></div></div>
-  </div>`);
-}
-async function loadRC(){
-  rcName =document.getElementById('rcSN').value;
-  rcMatch=parseInt(document.getElementById('rcSM').value);
-  if(!rcName){setRC('<div class="rccard"><div class="rce"><span class="rce-i">⚠️</span><div class="rce-t">Please select a player</div></div></div>');return;}
-  const btn=document.getElementById('rcb');btn.disabled=true;btn.textContent='…';
-  try{
-    const d=await api({tab:'reportcard',player:rcName,match:rcMatch},true);
-    if(d.scoreMap!==undefined){
-      renderRC(d.scoreMap,d.detailMap||{},d.playerCol>=0,d.matchCol>=0,d.dailyTotal??null);
-    }else{
-      rcFallback(d.rows||[]);
-    }
-  }catch(e){
-    setRC(`<div class="rccard"><div class="rce"><span class="rce-i">❌</span><div class="rce-t">Error</div><div class="rce-s">${esc(e.message)}</div></div></div>`);
-  }
-  btn.disabled=false;btn.textContent='▶ View';
-}
-function rcFallback(g){
-  const sm={},dm={};let sc=-1,dc=-1,dailyTotal=null;
-  const votes={};
-  for(let r=0;r<g.length;r++){
-    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
-    if(!RC_LMAP[lbl.toLowerCase()])continue;
-    for(let c=g[r].length-1;c>3;c--){const v=String(g[r][c]||'').trim();if(v&&v!=='-'&&v!=='—'&&!isNaN(pn(v))){votes[c]=(votes[c]||0)+1;break;}}
-  }
-  let mx=0;Object.entries(votes).forEach(([c,v])=>{if(v>mx){mx=v;sc=+c;}});
-  dc=sc>0?sc-1:-1;
-  for(let r=2;r<g.length;r++){
-    let lbl='';for(let c=0;c<=3;c++)if(String(g[r][c]||'').trim()){lbl=String(g[r][c]).trim();break;}
-    const key=RC_LMAP[lbl.toLowerCase()];
-    if(key==='daily_total'){if(sc>=0)dailyTotal=pn(g[r][sc]);continue;}
-    if(!key)continue;
-    const det=dc>=0?String(g[r][dc]||'').trim():'';
-    const scv=sc>=0?String(g[r][sc]||'').trim():'';
-    if(key==='sp_linked'||key==='dd_prem'){detailMap[key]=det||scv;scoreMap[key]='';}
-    else{dm[key]=det;sm[key]=scv;}
-  }
-  renderRC(sm,dm,dc>=0,sc>=0,dailyTotal);
-}
-/* ── RENDER RC — chip strip REMOVED per user request ─── */
-function renderRC(sm,dm,foundPlayer,foundMatch,dailyTotal){
-  const pl =players.find(p=>p.name===rcName);
-  const rank=pl?pl.rank:0;
-  const init=rcName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-  // ── NO CHIP STRIP — removed per user request ──────────────
-  // warning
-  const hasData=Object.values(sm).some(v=>v&&v!==''&&v!=='-'&&v!=='—');
-  let warn='';
-  if(!hasData&&!foundPlayer)warn=`<div class="warn">⚠ Player name not found in sheet. Check exact spelling.</div>`;
-  else if(!hasData&&!foundMatch)warn=`<div class="warn">⚠ Match ${rcMatch} data not yet entered in the sheet.</div>`;
-  // score rows
-  
-  /* ═══════════════════════════════════════════════════════════════════
-     CHANGED SECTION START: Fixed rendering logic for Super Selector
-     ═══════════════════════════════════════════════════════════════════ */
-     
-  let rows='';
-  RC_GROUPS.forEach(grp=>{
-    rows+=`<div class="gh">${grp.t}</div>`;
-    grp.rows.forEach(rd=>{
-      const scoreRaw=sm[rd.k]||'';
-      const detail =dm[rd.k]||'';
-      const num =pn(scoreRaw);
-      const isNum =!isNaN(num);
-      const hasDetail = detail && detail !== '' && detail !== '-' && detail !== '—';
+  </div>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxxaK3hsX7zc5_3KDRpomlRkoonn82FypW-G-NTci6Jb4l_20qNwtdJ9EsyHlEzmxfg/exec';
+    
+    let currentUser = null;
+    let currentMatch = 7;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      checkLogin();
+      setupEventListeners();
+      populateMatchSelect();
+    });
+
+    function setupEventListeners() {
+      // Login
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
       
-      let vh='';
-      if(rd.badge){
-        const txt=detail||scoreRaw;
-        if (/yes|linked|true/i.test(txt)) vh=`<span class="badge yes">${esc(txt)}</span>`;
-        else if(/no|not|false/i.test(txt)) vh=`<span class="badge no">${esc(txt)}</span>`;
-        else if(txt) vh=`<span class="badge neu">${esc(txt)}</span>`;
-        else vh=`<span class="rv dim">—</span>`;
-      }else if(isNum){
-        if(num===0) vh=`<span class="rv">0</span>`;
-        else if(rd.sub) vh=`<span class="rv ${num<0?'neg':'gold'}">${fmt(num)}</span>`;
-        else vh=`<span class="rv ${num>0?'pos':'neg'}">${fmtS(num)}</span>`;
-      }else if(!rd.sub && !rd.badge && hasDetail){
-        vh=`<span class="rv">${esc(detail)}</span>`;
-      }else{
-        vh=`<span class="rv dim">—</span>`;
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+      
+      // Tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+      
+      // Match selector
+      document.getElementById('matchSelect').addEventListener('change', (e) => {
+        currentMatch = parseInt(e.target.value);
+        loadReportCard();
+      });
+    }
+
+    function populateMatchSelect() {
+      const select = document.getElementById('matchSelect');
+      for (let i = 1; i <= 74; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Match ${i}`;
+        if (i === currentMatch) option.selected = true;
+        select.appendChild(option);
       }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
       
-      // Only show detail in middle column if we have a number (to avoid duplication when showing detail in value column)
-      const dh=(!rd.sub&&!rd.badge&&hasDetail&&isNum)?`<span class="rd">${esc(detail)}</span>`:`<span class="rd"></span>`;
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const btn = document.getElementById('loginBtn');
+      const errorMsg = document.getElementById('errorMsg');
       
-      rows+=`<div class="rr ${rd.sub?'sub':''}">
-        <span class="ri">${rd.i}</span><span class="rl">${rd.l}</span>${dh}${vh}
-      </div>`;
-    });
-  });
-  
-  /* ═══════════════════════════════════════════════════════════════════
-     CHANGED SECTION END
-     ═══════════════════════════════════════════════════════════════════ */
-     
-  const dh2=(dailyTotal!==null&&!isNaN(dailyTotal))
-    ?`<div class="rr dtot"><span class="ri">📅</span><span class="rl">Total Daily Score — Match ${rcMatch}</span><span class="rd"></span><span class="rv blue">${fmt(dailyTotal)}</span></div>`:'';
-  setRC(`<div class="rccard">
-    <div class="rchero">
-      <div class="rcav">${init}</div>
-      <div><div class="rchn">${esc(rcName)}</div><div class="rchs">Report Card · Match ${rcMatch}</div></div>
-      ${rank?`<div class="rchr"><div class="rcrn">#${rank}</div><div class="rcrl">Season Rank</div></div>`:''}
-    </div>
-    ${warn}
-    <div class="gh" style="color:#94a3b8;letter-spacing:1.5px">Score Breakdown — Match ${rcMatch}</div>
-    ${rows}
-    ${dh2}
-    <div class="rr tot"><span class="ri">🏆</span><span class="rl">Total (Cumulative Season Score)</span><span class="rd"></span><span class="rv grand">${pl?fmt(pl.total):'—'}</span></div>
-  </div>`);
-}
-function rcJ(m){rcMatch=m;document.getElementById('rcSM').value=m;loadRC();}
-function setRC(h){document.getElementById('rcA').innerHTML=h;}
-function set(h){document.getElementById('area').innerHTML=h;}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function pn(v){
-  if(v===null||v===undefined||v===''||v==='-'||v==='—')return NaN;
-  const s=String(v).trim().replace(/,/g,'');
-  if(/^\([\d.]+\)$/.test(s))return -parseFloat(s.slice(1,-1));
-  return parseFloat(s);
-}
-function fmt(n){const x=typeof n==='number'?n:pn(n);return isNaN(x)?String(n||'—'):x.toLocaleString('en-US');}
-function fmtS(n){if(n===0)return'—';return(n>0?'+':'')+n.toLocaleString('en-US');}
-function fmtCell(n){
-  if(isNaN(n)||n===0)return`<span class="c-dim">—</span>`;
-  if(n<0)return`<span class="c-neg">(${Math.abs(n).toLocaleString('en-US')})</span>`;
-  return n.toLocaleString('en-US');
-}
-renderTabs();load();
-setInterval(()=>{if(cur.type==='lb')load();},120000);
-</script>
+      errorMsg.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      
+      try {
+        const response = await fetch(`${API_URL}?action=getReportCard&email=${encodeURIComponent(email)}&match=1`);
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        if (data.success && data.data.player) {
+          // Login successful
+          currentUser = {
+            email: email,
+            name: data.data.player
+          };
+          
+          localStorage.setItem('iplUser', JSON.stringify(currentUser));
+          showApp();
+        } else {
+          throw new Error('Invalid response from server');
+        }
+        
+      } catch (error) {
+        errorMsg.textContent = error.message || 'Login failed. Please check your email and try again.';
+        errorMsg.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('iplUser');
+      currentUser = null;
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('appScreen').classList.remove('active');
+    }
+
+    function checkLogin() {
+      const stored = localStorage.getItem('iplUser');
+      if (stored) {
+        currentUser = JSON.parse(stored);
+        showApp();
+      }
+    }
+
+    function showApp() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').classList.add('active');
+      
+      // Set user info
+      const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('userName').textContent = currentUser.name;
+      document.getElementById('userEmail').textContent = currentUser.email;
+      
+      // Load initial data
+      loadReportCard();
+    }
+
+    async function loadReportCard() {
+      const container = document.getElementById('reportCardContent');
+      container.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading Match ${currentMatch} data...</p>
+        </div>
+      `;
+      
+      try {
+        const response = await fetch(`${API_URL}?action=getReportCard&email=${encodeURIComponent(currentUser.email)}&match=${currentMatch}`);
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to load data');
+        }
+        
+        const data = result.data;
+        
+        // Build report card HTML
+        let html = '<div class="report-card">';
+        
+        // Section titles mapping
+        const sectionTitles = {
+          matchscores: 'Match Related Points',
+          bonusscores: 'Bonus Points',
+          riskincentive: 'Risk Incentive',
+          spscores: 'SP Scores',
+          ddscores: 'DD Scores',
+          ssscores: 'SS Scores',
+          specialincentive: 'Special Incentive',
+          theresurrector: 'The Resurrector',
+          playerpoints: 'Player Points'
+        };
+        
+        for (let section in data.sections) {
+          const sectionData = data.sections[section];
+          const title = sectionTitles[section] || section;
+          
+          html += `
+            <div class="section">
+              <div class="section-header">
+                <h3>${title}</h3>
+                <div class="section-score">${sectionData.score || '-'}</div>
+              </div>
+              <div class="section-detail">${sectionData.detail || 'No data available'}</div>
+              ${sectionData.error ? `<div style="color: var(--error); font-size: 12px; margin-top: 8px;">${sectionData.error}</div>` : ''}
+            </div>
+          `;
+        }
+        
+        // Debug info
+        html += `
+          <div class="section" style="background: var(--bg-dark);">
+            <details>
+              <summary style="cursor: pointer; color: var(--text-muted);">Debug Info</summary>
+              <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto;">${JSON.stringify(data.debug, null, 2)}</pre>
+            </details>
+          </div>
+        `;
+        
+        html += '</div>';
+        
+        container.innerHTML = html;
+        
+      } catch (error) {
+        container.innerHTML = `
+          <div class="error-msg">
+            ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+      
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+      });
+      
+      const activeTab = document.getElementById(`tab-${tabName}`);
+      activeTab.style.display = 'block';
+      
+      // Load data for other tabs if needed
+      if (tabName !== 'reportcard') {
+        loadGenericTab(tabName);
+      }
+    }
+
+    async function loadGenericTab(tabName) {
+      const container = document.getElementById(`tab-${tabName}`);
+      
+      try {
+        const response = await fetch(`${API_URL}?tab=${tabName}`);
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        // Simple table view
+        let html = '<div class="data-table"><table>';
+        
+        if (data.rows && data.rows.length > 0) {
+          // Headers
+          html += '<thead><tr>';
+          data.rows[0].forEach(cell => {
+            html += `<th>${cell}</th>`;
+          });
+          html += '</tr></thead><tbody>';
+          
+          // Rows
+          for (let i = 1; i < data.rows.length; i++) {
+            html += '<tr>';
+            data.rows[i].forEach(cell => {
+              html += `<td>${cell}</td>`;
+            });
+            html += '</tr>';
+          }
+          html += '</tbody>';
+        }
+        
+        html += '</table></div>';
+        container.innerHTML = html;
+        
+      } catch (error) {
+        container.innerHTML = `<div class="error-msg">${error.message}</div>`;
+      }
+    }
+  </script>
+
 </body>
 </html>
