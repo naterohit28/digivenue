@@ -651,19 +651,35 @@
         return '<div class="error-msg">No data available</div>';
       }
       
-      // Find match column
+      // DEBUG: Show first 3 rows to understand structure
+      let debugHTML = '<div style="background: #1E293B; padding: 20px; border-radius: 8px; margin-bottom: 20px; font-size: 12px; font-family: monospace;">';
+      debugHTML += '<h3 style="color: #F59E0B; margin-bottom: 10px;">DEBUG: First 3 Rows of Sheet</h3>';
+      for (let r = 0; r < Math.min(3, rows.length); r++) {
+        debugHTML += `<div style="margin-bottom: 10px;"><strong style="color: #10B981;">Row ${r}:</strong> `;
+        debugHTML += rows[r].slice(0, 15).map((cell, idx) => `[${idx}]=${cell}`).join(' | ');
+        debugHTML += '</div>';
+      }
+      debugHTML += '</div>';
+      
+      // Find match column - Row 3 (index 2) has match numbers
       let matchCol = -1;
-      for (let c = 0; c < rows[0].length; c++) {
-        const cellValue = String(rows[0][c] || '').trim();
-        if (cellValue == String(matchNum)) {
-          matchCol = c;
-          break;
+      const matchHeaderRow = 2; // Row 3 in sheet (0-indexed as 2)
+      
+      if (rows.length > matchHeaderRow) {
+        for (let c = 0; c < rows[matchHeaderRow].length; c++) {
+          const cellValue = String(rows[matchHeaderRow][c] || '').trim();
+          if (cellValue == String(matchNum)) {
+            matchCol = c;
+            break;
+          }
         }
       }
       
       if (matchCol === -1) {
-        return `<div class="error-msg">Match ${matchNum} not found in sheet</div>`;
+        return debugHTML + `<div class="error-msg">Match ${matchNum} not found in Row 3. Available matches: ${rows[matchHeaderRow].filter(v => v).slice(0, 20).join(', ')}</div>`;
       }
+      
+      debugHTML += `<div style="color: #10B981; margin-bottom: 20px;">✅ Found Match ${matchNum} at Row 3, Column ${matchCol}</div>`;
       
       // Find player row
       const playerName = currentUser.name.toLowerCase();
