@@ -690,63 +690,159 @@
       `;
       
       try {
-        const sheetName = TAB_TO_SHEET.reportcard;
-        const response = await fetch(`${API_URL}?tab=${encodeURIComponent(sheetName)}`);
-        const data = await response.json();
+        const response = await fetch(`${API_URL}?action=getReportCard&email=${encodeURIComponent(currentUser.email)}&match=${currentMatch}`);
+        const result = await response.json();
         
-        if (data.error) {
-          throw new Error(data.error);
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to load data');
         }
         
-        container.innerHTML = buildReportCardFromSheet(data.rows, currentMatch);
+        // Update rank display
+        if (result.data.rank) {
+          document.getElementById('rcPlayerRank').textContent = `#${result.data.rank}`;
+        }
+        
+        container.innerHTML = buildReportCardHTML(result.data);
         
       } catch (error) {
         container.innerHTML = `<div class="error-msg">${error.message}</div>`;
       }
     }
 
-    function buildReportCardFromSheet(rows, matchNum) {
-      if (!rows || rows.length < 5) {
-        return '<div class="error-msg">Insufficient data in sheet</div>';
-      }
+    function buildReportCardHTML(data) {
+      const s = data.sections;
+      const ss = data.ssTeam;
       
-      // Find match column in Row 3 (index 2)
-      let matchCol = -1;
-      for (let c = 0; c < rows[2].length; c++) {
-        if (String(rows[2][c]).trim() == String(matchNum)) {
-          matchCol = c;
-          break;
-        }
-      }
-      
-      if (matchCol === -1) {
-        return `<div class="error-msg">Match ${matchNum} not found. Available: ${rows[2].filter(v => v && !isNaN(v)).join(', ')}</div>`;
-      }
-      
-      // Get rank (from Row 2)
-      const rank = rows[1][matchCol] || '-';
-      document.getElementById('rcPlayerRank').textContent = `#${rank}`;
-      
-      // Build report card HTML
       let html = '<div class="report-card">';
       
-      // We'll read line items starting from row 5 (index 4)
-      // This is a simplified version - adjust based on actual structure
+      // MATCH RELATED
       html += `
         <div class="section-group">
-          <div class="section-group-header">Match Data</div>
-          <div class="line-item">
+          <div class="section-group-header">Match Related</div>
+          ${lineItem('Match Points', s.matchscores)}
+          ${lineItem('Bonus Points', s.bonusscores)}
+          ${lineItem('Risk Incentive', s.riskincentive)}
+          ${lineItem('Special Incentive', s.specialincentive)}
+          ${lineItem('Match Related Points (Total)', s.matchscores, true)}
+        </div>
+      `;
+      
+      // SUPER PICKS
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">Super Picks</div>
+          ${lineItem('SP Individual Performance', s.spscores)}
+          ${lineItem('Linked / Not Linked', s.spscores)}
+          ${lineItem('SP Points (incl link effect)', s.spscores, true)}
+        </div>
+      `;
+      
+      // DOUBLE DOWN
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">Double Down</div>
+          ${lineItem('D1 Individual Performance', s.ddscores)}
+          ${lineItem('D2 Individual Performance', s.ddscores)}
+          ${lineItem('Upfront Premium?', s.ddscores)}
+          ${lineItem('DD Points (incl prem. effect)', s.ddscores, true)}
+        </div>
+      `;
+      
+      // THE RESURRECTOR
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">The Resurrector</div>
+          ${lineItem('Ressurector 1', s.theresurrector)}
+          ${lineItem('Ressurector 2', s.theresurrector)}
+          ${lineItem('THE RESURRECTOR (Total)', s.theresurrector, true)}
+        </div>
+      `;
+      
+      // SUPER SELECTOR TEAM
+      if (ss) {
+        html += `
+          <div class="section-group">
+            <div class="section-group-header">Super Selector Team</div>
+            ${ssLineItem('Wicket Keeper', ss['Wicket Keeper'], s.ssscores)}
+            ${ssLineItem('Vice Captain', ss['Vice Captain'], s.ssscores)}
+            ${ssLineItem('Captain', ss['Captain'], s.ssscores)}
+            ${ssLineItem('Bat 1', ss['Bat 1'], s.ssscores)}
+            ${ssLineItem('Bat 2', ss['Bat 2'], s.ssscores)}
+            ${ssLineItem('Bat 3', ss['Bat 3'], s.ssscores)}
+            ${ssLineItem('Bow 1', ss['Bow 1'], s.ssscores)}
+            ${ssLineItem('Bow 2', ss['Bow 2'], s.ssscores)}
+            ${ssLineItem('Bow 3', ss['Bow 3'], s.ssscores)}
+            ${ssLineItem('All-Rounder 1', ss['All-Rounder 1'], s.ssscores)}
+            ${ssLineItem('All-Rounder 2', ss['All-Rounder 2'], s.ssscores)}
+            ${ssLineItem('Play 1', ss['Play 1'], s.ssscores)}
+            ${ssLineItem('Play 2', ss['Play 2'], s.ssscores)}
+            ${lineItem('Super Selector (Total)', s.ssscores, true)}
+          </div>
+        `;
+      }
+      
+      // TOTAL DAILY SCORE
+      const total = calculateTotal(s);
+      html += `
+        <div class="section-group">
+          <div class="line-item total">
             <div class="line-item-label">
-              <h4>Match ${matchNum} Score</h4>
-              <p>Rank: #${rank}</p>
+              <h4 style="font-size: 18px;">TOTAL DAILY SCORE</h4>
             </div>
-            <div class="line-item-score">${rows[1][matchCol] || '-'}</div>
+            <div class="line-item-score" style="font-size: 28px;">
+              ${total}
+            </div>
           </div>
         </div>
       `;
       
       html += '</div>';
       return html;
+    }
+
+    function lineItem(label, section, isTotal = false) {
+      if (!section) {
+        return `
+          <div class="line-item ${isTotal ? 'total' : ''}">
+            <div class="line-item-label">
+              <h4>${label}</h4>
+              <p>-</p>
+            </div>
+            <div class="line-item-score">-</div>
+          </div>
+        `;
+      }
+      
+      return `
+        <div class="line-item ${isTotal ? 'total' : ''}">
+          <div class="line-item-label">
+            <h4>${label}</h4>
+            <p>${section.detail || '-'}</p>
+          </div>
+          <div class="line-item-score">${section.score || '-'}</div>
+        </div>
+      `;
+    }
+
+    function ssLineItem(label, playerName, section) {
+      return `
+        <div class="line-item">
+          <div class="line-item-label">
+            <h4>${label}</h4>
+            <p>${playerName || '-'}</p>
+          </div>
+          <div class="line-item-score">${section?.score || '-'}</div>
+        </div>
+      `;
+    }
+
+    function calculateTotal(sections) {
+      let total = 0;
+      for (let key in sections) {
+        const score = parseInt(sections[key]?.score || '0');
+        if (!isNaN(score)) total += score;
+      }
+      return total || '-';
     }
 
     async function loadLeaderboard() {
