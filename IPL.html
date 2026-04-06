@@ -723,7 +723,6 @@
           ${lineItem('Bonus Points', s.bonusscores)}
           ${lineItem('Risk Incentive', s.riskincentive)}
           ${lineItem('Special Incentive', s.specialincentive)}
-          ${lineItem('Match Related Points (Total)', s.matchscores, true)}
         </div>
       `;
       
@@ -731,8 +730,8 @@
       html += `
         <div class="section-group">
           <div class="section-group-header">Super Picks</div>
-          ${lineItem('SP Individual Performance', s.spscores)}
-          ${lineItem('Linked / Not Linked', s.spscores)}
+          ${lineItem('SP Individual Performance', s.spindividual)}
+          ${lineItem('Linked / Not Linked', s.splinked)}
           ${lineItem('SP Points (incl link effect)', s.spscores, true)}
         </div>
       `;
@@ -741,9 +740,9 @@
       html += `
         <div class="section-group">
           <div class="section-group-header">Double Down</div>
-          ${lineItem('D1 Individual Performance', s.ddscores)}
-          ${lineItem('D2 Individual Performance', s.ddscores)}
-          ${lineItem('Upfront Premium?', s.ddscores)}
+          ${lineItem('D1 Individual Performance', s.dd1)}
+          ${lineItem('D2 Individual Performance', s.dd2)}
+          ${lineItem('Upfront Premium?', s.ddpremium)}
           ${lineItem('DD Points (incl prem. effect)', s.ddscores, true)}
         </div>
       `;
@@ -752,8 +751,8 @@
       html += `
         <div class="section-group">
           <div class="section-group-header">The Resurrector</div>
-          ${lineItem('Ressurector 1', s.theresurrector)}
-          ${lineItem('Ressurector 2', s.theresurrector)}
+          ${lineItem('Ressurector 1', s.res1)}
+          ${lineItem('Ressurector 2', s.res2)}
           ${lineItem('THE RESURRECTOR (Total)', s.theresurrector, true)}
         </div>
       `;
@@ -825,23 +824,30 @@
     }
 
     function ssLineItem(label, playerName, section) {
+      const score = section?.score || '-';
+      // For SS team, each player gets the same SS score, so we just show it once at the total
       return `
         <div class="line-item">
           <div class="line-item-label">
             <h4>${label}</h4>
             <p>${playerName || '-'}</p>
           </div>
-          <div class="line-item-score">${section?.score || '-'}</div>
+          <div class="line-item-score">-</div>
         </div>
       `;
     }
 
     function calculateTotal(sections) {
       let total = 0;
-      for (let key in sections) {
-        const score = parseInt(sections[key]?.score || '0');
-        if (!isNaN(score)) total += score;
-      }
+      const scoresToSum = ['matchscores', 'bonusscores', 'riskincentive', 'specialincentive', 'spscores', 'ddscores', 'theresurrector', 'ssscores'];
+      
+      scoresToSum.forEach(key => {
+        if (sections[key] && sections[key].score) {
+          const score = parseInt(String(sections[key].score).replace(/[^0-9-]/g, ''));
+          if (!isNaN(score)) total += score;
+        }
+      });
+      
       return total || '-';
     }
 
