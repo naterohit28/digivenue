@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy League</title>
+  <title>IPL 2026 Fantasy League - Complete</title>
   <style>
     * {
       margin: 0;
@@ -76,7 +76,6 @@
     }
 
     input[type="email"],
-    input[type="text"],
     select {
       width: 100%;
       padding: 12px 16px;
@@ -85,7 +84,6 @@
       border-radius: 8px;
       color: var(--text-light);
       font-size: 16px;
-      transition: border-color 0.2s;
     }
 
     input:focus,
@@ -104,7 +102,6 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
 
     .btn:hover {
@@ -126,7 +123,7 @@
       font-size: 14px;
     }
 
-    /* Main App */
+    /* App Screen */
     .app-screen {
       display: none;
     }
@@ -188,7 +185,6 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 14px;
-      transition: all 0.2s;
     }
 
     .logout-btn:hover {
@@ -216,7 +212,6 @@
       font-size: 14px;
       font-weight: 500;
       white-space: nowrap;
-      transition: all 0.2s;
     }
 
     .tab-btn:hover {
@@ -247,7 +242,7 @@
       max-width: 200px;
     }
 
-    /* Report Card */
+    /* Report Card Sections */
     .report-card {
       background: var(--bg-card);
       border-radius: 12px;
@@ -255,38 +250,63 @@
       overflow: hidden;
     }
 
-    .section {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
+    .section-group {
+      border-bottom: 2px solid var(--border);
+      padding: 0;
     }
 
-    .section:last-child {
+    .section-group:last-child {
       border-bottom: none;
     }
 
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .section-header h3 {
+    .section-group-header {
+      background: var(--bg-dark);
+      padding: 15px 20px;
+      font-weight: 600;
       font-size: 16px;
       color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .line-item {
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .line-item:last-child {
+      border-bottom: none;
+    }
+
+    .line-item.total {
+      background: rgba(245, 158, 11, 0.05);
       font-weight: 600;
     }
 
-    .section-score {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--success);
+    .line-item-label {
+      flex: 1;
     }
 
-    .section-detail {
+    .line-item-label h4 {
       font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .line-item-label p {
+      font-size: 13px;
       color: var(--text-muted);
-      line-height: 1.6;
+    }
+
+    .line-item-score {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--success);
+      min-width: 80px;
+      text-align: right;
     }
 
     /* Loading */
@@ -310,27 +330,13 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .tabs {
-        gap: 4px;
-      }
-
-      .tab-btn {
-        padding: 10px 16px;
-        font-size: 13px;
-      }
-    }
-
     /* Data Table */
     .data-table {
       width: 100%;
       overflow-x: auto;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
     }
 
     table {
@@ -345,15 +351,25 @@
       text-align: left;
       font-weight: 600;
       border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
     }
 
     td {
       padding: 12px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
     }
 
     tr:hover {
       background: rgba(245, 158, 11, 0.05);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
   </style>
 </head>
@@ -409,7 +425,15 @@
         <button class="tab-btn active" data-tab="reportcard">Your Report Card</button>
         <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
         <button class="tab-btn" data-tab="matchscores">Match Scores</button>
+        <button class="tab-btn" data-tab="bonusscores">Bonus Scores</button>
+        <button class="tab-btn" data-tab="riskincentive">Risk Incentive</button>
+        <button class="tab-btn" data-tab="ssscores">SS Scores</button>
+        <button class="tab-btn" data-tab="ddscores">DD Scores</button>
+        <button class="tab-btn" data-tab="spscores">SP Scores</button>
+        <button class="tab-btn" data-tab="specialincentive">Special Incentive</button>
+        <button class="tab-btn" data-tab="weeklyscores">Weekly Scores</button>
         <button class="tab-btn" data-tab="dailyscores">Daily Scores</button>
+        <button class="tab-btn" data-tab="cummatchwise">Cum Match Wise</button>
       </div>
 
       <!-- Report Card Tab -->
@@ -417,7 +441,7 @@
         <div class="match-selector">
           <label for="matchSelect">Select Match</label>
           <select id="matchSelect">
-            <!-- Will be populated by JS -->
+            <!-- Populated by JS -->
           </select>
         </div>
 
@@ -429,35 +453,42 @@
         </div>
       </div>
 
-      <!-- Other Tabs -->
-      <div id="tab-leaderboard" class="tab-content" style="display: none;">
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Loading leaderboard...</p>
-        </div>
-      </div>
-
-      <div id="tab-matchscores" class="tab-content" style="display: none;">
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Loading match scores...</p>
-        </div>
-      </div>
-
-      <div id="tab-dailyscores" class="tab-content" style="display: none;">
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Loading daily scores...</p>
-        </div>
-      </div>
+      <!-- Other Tabs (Generic Table Display) -->
+      <div id="tab-leaderboard" class="tab-content"></div>
+      <div id="tab-matchscores" class="tab-content"></div>
+      <div id="tab-bonusscores" class="tab-content"></div>
+      <div id="tab-riskincentive" class="tab-content"></div>
+      <div id="tab-ssscores" class="tab-content"></div>
+      <div id="tab-ddscores" class="tab-content"></div>
+      <div id="tab-spscores" class="tab-content"></div>
+      <div id="tab-specialincentive" class="tab-content"></div>
+      <div id="tab-weeklyscores" class="tab-content"></div>
+      <div id="tab-dailyscores" class="tab-content"></div>
+      <div id="tab-cummatchwise" class="tab-content"></div>
     </div>
   </div>
 
   <script>
+    // IMPORTANT: Replace this with your actual Apps Script URL
     const API_URL = 'https://script.google.com/macros/s/AKfycbxxaK3hsX7zc5_3KDRpomlRkoonn82FypW-G-NTci6Jb4l_20qNwtdJ9EsyHlEzmxfg/exec';
     
     let currentUser = null;
-    let currentMatch = 7;
+    let currentMatch = 9;
+
+    // Sheet name mapping
+    const TAB_TO_SHEET = {
+      'leaderboard': 'D-1',
+      'matchscores': 'Match Scores',
+      'bonusscores': 'Bonus Scores',
+      'riskincentive': 'Risk Incentive',
+      'ssscores': 'SS Scores',
+      'ddscores': 'DD Scores',
+      'spscores': 'SP Scores',
+      'specialincentive': 'Special Incentive',
+      'weeklyscores': 'Weekly Scores',
+      'dailyscores': 'Daily Scores',
+      'cummatchwise': 'Cum Match Wise Scores'
+    };
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
@@ -467,18 +498,13 @@
     });
 
     function setupEventListeners() {
-      // Login
       document.getElementById('loginForm').addEventListener('submit', handleLogin);
-      
-      // Logout
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
       
-      // Tabs
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
       });
       
-      // Match selector
       document.getElementById('matchSelect').addEventListener('change', (e) => {
         currentMatch = parseInt(e.target.value);
         loadReportCard();
@@ -516,7 +542,6 @@
         }
         
         if (data.success && data.data.player) {
-          // Login successful
           currentUser = {
             email: email,
             name: data.data.player
@@ -529,7 +554,7 @@
         }
         
       } catch (error) {
-        errorMsg.textContent = error.message || 'Login failed. Please check your email and try again.';
+        errorMsg.textContent = error.message || 'Login failed. Please check your email.';
         errorMsg.style.display = 'block';
       } finally {
         btn.disabled = false;
@@ -556,13 +581,11 @@
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('appScreen').classList.add('active');
       
-      // Set user info
       const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
       document.getElementById('userAvatar').textContent = initials;
       document.getElementById('userName').textContent = currentUser.name;
       document.getElementById('userEmail').textContent = currentUser.email;
       
-      // Load initial data
       loadReportCard();
     }
 
@@ -583,94 +606,172 @@
           throw new Error(result.error || 'Failed to load data');
         }
         
-        const data = result.data;
-        
-        // Build report card HTML
-        let html = '<div class="report-card">';
-        
-        // Section titles mapping
-        const sectionTitles = {
-          matchscores: 'Match Related Points',
-          bonusscores: 'Bonus Points',
-          riskincentive: 'Risk Incentive',
-          spscores: 'SP Scores',
-          ddscores: 'DD Scores',
-          ssscores: 'SS Scores',
-          specialincentive: 'Special Incentive',
-          theresurrector: 'The Resurrector',
-          playerpoints: 'Player Points'
-        };
-        
-        for (let section in data.sections) {
-          const sectionData = data.sections[section];
-          const title = sectionTitles[section] || section;
-          
-          html += `
-            <div class="section">
-              <div class="section-header">
-                <h3>${title}</h3>
-                <div class="section-score">${sectionData.score || '-'}</div>
-              </div>
-              <div class="section-detail">${sectionData.detail || 'No data available'}</div>
-              ${sectionData.error ? `<div style="color: var(--error); font-size: 12px; margin-top: 8px;">${sectionData.error}</div>` : ''}
-            </div>
-          `;
-        }
-        
-        // Debug info
-        html += `
-          <div class="section" style="background: var(--bg-dark);">
-            <details>
-              <summary style="cursor: pointer; color: var(--text-muted);">Debug Info</summary>
-              <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto;">${JSON.stringify(data.debug, null, 2)}</pre>
-            </details>
-          </div>
-        `;
-        
-        html += '</div>';
-        
-        container.innerHTML = html;
+        container.innerHTML = buildReportCardHTML(result.data);
         
       } catch (error) {
-        container.innerHTML = `
-          <div class="error-msg">
-            ${error.message}
-          </div>
-        `;
+        container.innerHTML = `<div class="error-msg">${error.message}</div>`;
       }
     }
 
+    function buildReportCardHTML(data) {
+      const s = data.sections;
+      const ss = data.ssTeam;
+      
+      let html = '<div class="report-card">';
+      
+      // MATCH RELATED
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">Match Related</div>
+          ${lineItem('Match Points', s.matchscores)}
+          ${lineItem('Bonus Points', s.bonusscores)}
+          ${lineItem('Risk Incentive', s.riskincentive)}
+          ${lineItem('Special Incentive', s.specialincentive)}
+          ${lineItem('Match Related Points (Total)', s.matchscores, true)}
+        </div>
+      `;
+      
+      // SUPER PICKS
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">Super Picks</div>
+          ${lineItem('SP Individual Performance', s.spscores)}
+          ${lineItem('Linked / Not Linked', s.spscores)}
+          ${lineItem('SP Points (incl link effect)', s.spscores, true)}
+        </div>
+      `;
+      
+      // DOUBLE DOWN
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">Double Down</div>
+          ${lineItem('D1 Individual Performance', s.ddscores)}
+          ${lineItem('D2 Individual Performance', s.ddscores)}
+          ${lineItem('Upfront Premium?', s.ddscores)}
+          ${lineItem('DD Points (incl prem. effect)', s.ddscores, true)}
+        </div>
+      `;
+      
+      // THE RESURRECTOR
+      html += `
+        <div class="section-group">
+          <div class="section-group-header">The Resurrector</div>
+          ${lineItem('Ressurector 1', s.theresurrector)}
+          ${lineItem('Ressurector 2', s.theresurrector)}
+          ${lineItem('THE RESURRECTOR (Total)', s.theresurrector, true)}
+        </div>
+      `;
+      
+      // SUPER SELECTOR TEAM
+      if (ss) {
+        html += `
+          <div class="section-group">
+            <div class="section-group-header">Super Selector Team</div>
+            ${ssLineItem('Wicket Keeper', ss['Wicket Keeper'], s.ssscores)}
+            ${ssLineItem('Vice Captain', ss['Vice Captain'], s.ssscores)}
+            ${ssLineItem('Captain', ss['Captain'], s.ssscores)}
+            ${ssLineItem('Bat 1', ss['Bat 1'], s.ssscores)}
+            ${ssLineItem('Bat 2', ss['Bat 2'], s.ssscores)}
+            ${ssLineItem('Bat 3', ss['Bat 3'], s.ssscores)}
+            ${ssLineItem('Bow 1', ss['Bow 1'], s.ssscores)}
+            ${ssLineItem('Bow 2', ss['Bow 2'], s.ssscores)}
+            ${ssLineItem('Bow 3', ss['Bow 3'], s.ssscores)}
+            ${ssLineItem('All-Rounder 1', ss['All-Rounder 1'], s.ssscores)}
+            ${ssLineItem('All-Rounder 2', ss['All-Rounder 2'], s.ssscores)}
+            ${ssLineItem('Play 1', ss['Play 1'], s.ssscores)}
+            ${ssLineItem('Play 2', ss['Play 2'], s.ssscores)}
+            ${lineItem('Super Selector (Total)', s.ssscores, true)}
+          </div>
+        `;
+      }
+      
+      // TOTAL DAILY SCORE
+      html += `
+        <div class="section-group">
+          <div class="line-item total">
+            <div class="line-item-label">
+              <h4 style="font-size: 18px;">TOTAL DAILY SCORE</h4>
+            </div>
+            <div class="line-item-score" style="font-size: 28px;">
+              ${calculateTotal(s)}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      html += '</div>';
+      return html;
+    }
+
+    function lineItem(label, section, isTotal = false) {
+      if (!section) {
+        return `
+          <div class="line-item ${isTotal ? 'total' : ''}">
+            <div class="line-item-label">
+              <h4>${label}</h4>
+              <p>-</p>
+            </div>
+            <div class="line-item-score">-</div>
+          </div>
+        `;
+      }
+      
+      return `
+        <div class="line-item ${isTotal ? 'total' : ''}">
+          <div class="line-item-label">
+            <h4>${label}</h4>
+            <p>${section.detail || '-'}</p>
+          </div>
+          <div class="line-item-score">${section.score || '-'}</div>
+        </div>
+      `;
+    }
+
+    function ssLineItem(label, playerName, section) {
+      return `
+        <div class="line-item">
+          <div class="line-item-label">
+            <h4>${label}</h4>
+            <p>${playerName || '-'}</p>
+          </div>
+          <div class="line-item-score">${section?.score || '-'}</div>
+        </div>
+      `;
+    }
+
+    function calculateTotal(sections) {
+      // For now, just sum the scores we have
+      // You may need to adjust this based on actual data structure
+      let total = 0;
+      for (let key in sections) {
+        const score = parseInt(sections[key]?.score || '0');
+        if (!isNaN(score)) total += score;
+      }
+      return total || '-';
+    }
+
     function switchTab(tabName) {
-      // Update tab buttons
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tabName);
       });
       
-      // Update tab content
       document.querySelectorAll('.tab-content').forEach(content => {
-        content.style.display = 'none';
+        content.classList.remove('active');
       });
       
       const activeTab = document.getElementById(`tab-${tabName}`);
-      activeTab.style.display = 'block';
+      activeTab.classList.add('active');
       
-      // Load data for other tabs if needed
-      if (tabName !== 'reportcard') {
+      if (tabName !== 'reportcard' && !activeTab.innerHTML) {
         loadGenericTab(tabName);
       }
     }
 
     async function loadGenericTab(tabName) {
       const container = document.getElementById(`tab-${tabName}`);
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
       
-      // Map frontend tab names to sheet names
-      const tabToSheet = {
-        'leaderboard': 'D-1',
-        'matchscores': 'Match Scores',
-        'dailyscores': 'Daily Scores'
-      };
-      
-      const sheetName = tabToSheet[tabName] || tabName;
+      const sheetName = TAB_TO_SHEET[tabName];
       
       try {
         const response = await fetch(`${API_URL}?tab=${encodeURIComponent(sheetName)}`);
@@ -680,18 +781,15 @@
           throw new Error(data.error);
         }
         
-        // Simple table view
         let html = '<div class="data-table"><table>';
         
         if (data.rows && data.rows.length > 0) {
-          // Headers
           html += '<thead><tr>';
           data.rows[0].forEach(cell => {
             html += `<th>${cell}</th>`;
           });
           html += '</tr></thead><tbody>';
           
-          // Rows (limit to first 100 for performance)
           for (let i = 1; i < Math.min(data.rows.length, 100); i++) {
             html += '<tr>';
             data.rows[i].forEach(cell => {
