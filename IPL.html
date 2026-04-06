@@ -937,24 +937,31 @@
         const isUserRow = participantName === userName;
         
         html += `<tr ${isUserRow ? 'class="user-row"' : ''}>`;
-        columnsToShow.forEach(idx => {
+        columnsToShow.forEach((idx, displayIdx) => {
           let cellValue = row[idx] || '';
           let formattedValue = cellValue;
           
-          // Colorize arrows in Movement column (index 1)
-          if (idx === 1 && cellValue) {
+          // Debug: Log all cells in first row to see structure
+          if (dataRows.indexOf(row) === 0) {
+            console.log(`Column ${idx} (display ${displayIdx}):`, cellValue);
+          }
+          
+          // Colorize arrows - check the actual movement column (index 1 in columnsToShow array)
+          if (displayIdx === 1 && cellValue) {
             const cellStr = String(cellValue).trim();
-            console.log('Movement cell:', cellStr, 'Char codes:', Array.from(cellStr).map(c => c.charCodeAt(0)));
+            console.log('Movement cell:', cellStr, 'at column index:', idx);
             
             // Check if starts with up arrow or contains up arrow
             if (cellStr.startsWith('▲') || cellStr.startsWith('▴') || cellStr.startsWith('△') || 
                 cellStr.includes('▲') || cellStr.includes('▴') || cellStr.includes('△') || cellStr.includes('↑')) {
               formattedValue = `<span class="arrow-up">${cellValue}</span>`;
+              console.log('✓ UP arrow detected!');
             } 
             // Check if starts with down arrow or contains down arrow
             else if (cellStr.startsWith('▼') || cellStr.startsWith('▾') || cellStr.startsWith('▽') ||
                      cellStr.includes('▼') || cellStr.includes('▾') || cellStr.includes('▽') || cellStr.includes('↓')) {
               formattedValue = `<span class="arrow-down">${cellValue}</span>`;
+              console.log('✓ DOWN arrow detected!');
             }
           }
           
