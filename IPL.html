@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL 2026 Fantasy League - Complete</title>
+  <title>IPL 2026 Fantasy League</title>
   <style>
     * {
       margin: 0;
@@ -137,7 +137,7 @@
       background: var(--bg-card);
       border-bottom: 1px solid var(--border);
       padding: 20px 0;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .header-content {
@@ -190,6 +190,19 @@
     .logout-btn:hover {
       border-color: var(--primary);
       color: var(--primary);
+    }
+
+    /* Global Banner - Data Updated Till Match X */
+    .global-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--primary);
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 500;
     }
 
     /* Tabs */
@@ -330,13 +343,15 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Data Table */
+    /* Data Table with Frozen Headers */
     .data-table {
       width: 100%;
       overflow-x: auto;
       background: var(--bg-card);
       border-radius: 12px;
       border: 1px solid var(--border);
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     table {
@@ -353,6 +368,7 @@
       border-bottom: 2px solid var(--border);
       position: sticky;
       top: 0;
+      z-index: 10;
     }
 
     td {
@@ -420,10 +436,15 @@
     </header>
 
     <div class="container">
-      <!-- Tabs -->
+      <!-- Global Banner -->
+      <div class="global-banner">
+        📊 Data Updated Till Match <span id="lastUpdatedMatch">11</span>
+      </div>
+
+      <!-- Tabs (Reordered: Leaderboard First) -->
       <div class="tabs">
-        <button class="tab-btn active" data-tab="reportcard">Your Report Card</button>
-        <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+        <button class="tab-btn active" data-tab="leaderboard">Leaderboard</button>
+        <button class="tab-btn" data-tab="reportcard">Your Report Card</button>
         <button class="tab-btn" data-tab="matchscores">Match Scores</button>
         <button class="tab-btn" data-tab="bonusscores">Bonus Scores</button>
         <button class="tab-btn" data-tab="riskincentive">Risk Incentive</button>
@@ -436,8 +457,11 @@
         <button class="tab-btn" data-tab="cummatchwise">Cum Match Wise</button>
       </div>
 
+      <!-- Leaderboard Tab (Now First) -->
+      <div id="tab-leaderboard" class="tab-content active"></div>
+
       <!-- Report Card Tab -->
-      <div id="tab-reportcard" class="tab-content active">
+      <div id="tab-reportcard" class="tab-content">
         <div class="match-selector">
           <label for="matchSelect">Select Match</label>
           <select id="matchSelect">
@@ -453,8 +477,7 @@
         </div>
       </div>
 
-      <!-- Other Tabs (Generic Table Display) -->
-      <div id="tab-leaderboard" class="tab-content"></div>
+      <!-- Other Tabs -->
       <div id="tab-matchscores" class="tab-content"></div>
       <div id="tab-bonusscores" class="tab-content"></div>
       <div id="tab-riskincentive" class="tab-content"></div>
@@ -469,15 +492,20 @@
   </div>
 
   <script>
-    // IMPORTANT: Replace this with your actual Apps Script URL
+    // ═══════════════════════════════════════════════════════════
+    // CONFIGURATION - CHANGE THESE VALUES
+    // ═══════════════════════════════════════════════════════════
     const API_URL = 'https://script.google.com/macros/s/AKfycbxxaK3hsX7zc5_3KDRpomlRkoonn82FypW-G-NTci6Jb4l_20qNwtdJ9EsyHlEzmxfg/exec';
+    const LAST_UPDATED_MATCH = 11; // UPDATE THIS WHEN NEW MATCH DATA IS ADDED
+    const DEFAULT_MATCH = 11; // Default match to show
     
     let currentUser = null;
-    let currentMatch = 9;
+    let currentMatch = DEFAULT_MATCH;
 
     // Sheet name mapping
     const TAB_TO_SHEET = {
       'leaderboard': 'D-1',
+      'reportcard': 'Your Report Card',
       'matchscores': 'Match Scores',
       'bonusscores': 'Bonus Scores',
       'riskincentive': 'Risk Incentive',
@@ -492,6 +520,7 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('lastUpdatedMatch').textContent = LAST_UPDATED_MATCH;
       checkLogin();
       setupEventListeners();
       populateMatchSelect();
@@ -505,6 +534,7 @@
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
       });
       
+      // Auto-reload on match change
       document.getElementById('matchSelect').addEventListener('change', (e) => {
         currentMatch = parseInt(e.target.value);
         loadReportCard();
@@ -586,7 +616,8 @@
       document.getElementById('userName').textContent = currentUser.name;
       document.getElementById('userEmail').textContent = currentUser.email;
       
-      loadReportCard();
+      // Load leaderboard first (since it's the first tab)
+      loadGenericTab('leaderboard');
     }
 
     async function loadReportCard() {
@@ -599,155 +630,77 @@
       `;
       
       try {
-        const response = await fetch(`${API_URL}?action=getReportCard&email=${encodeURIComponent(currentUser.email)}&match=${currentMatch}`);
-        const result = await response.json();
+        // NEW: Read from "Your Report Card" sheet directly
+        const sheetName = TAB_TO_SHEET.reportcard;
+        const response = await fetch(`${API_URL}?tab=${encodeURIComponent(sheetName)}`);
+        const data = await response.json();
         
-        if (!result.success) {
-          throw new Error(result.error || 'Failed to load data');
+        if (data.error) {
+          throw new Error(data.error);
         }
         
-        container.innerHTML = buildReportCardHTML(result.data);
+        container.innerHTML = buildReportCardFromSheet(data.rows, currentMatch);
         
       } catch (error) {
         container.innerHTML = `<div class="error-msg">${error.message}</div>`;
       }
     }
 
-    function buildReportCardHTML(data) {
-      const s = data.sections;
-      const ss = data.ssTeam;
-      
-      let html = '<div class="report-card">';
-      
-      // MATCH RELATED
-      html += `
-        <div class="section-group">
-          <div class="section-group-header">Match Related</div>
-          ${lineItem('Match Points', s.matchscores)}
-          ${lineItem('Bonus Points', s.bonusscores)}
-          ${lineItem('Risk Incentive', s.riskincentive)}
-          ${lineItem('Special Incentive', s.specialincentive)}
-          ${lineItem('Match Related Points (Total)', s.matchscores, true)}
-        </div>
-      `;
-      
-      // SUPER PICKS
-      html += `
-        <div class="section-group">
-          <div class="section-group-header">Super Picks</div>
-          ${lineItem('SP Individual Performance', s.spscores)}
-          ${lineItem('Linked / Not Linked', s.spscores)}
-          ${lineItem('SP Points (incl link effect)', s.spscores, true)}
-        </div>
-      `;
-      
-      // DOUBLE DOWN
-      html += `
-        <div class="section-group">
-          <div class="section-group-header">Double Down</div>
-          ${lineItem('D1 Individual Performance', s.ddscores)}
-          ${lineItem('D2 Individual Performance', s.ddscores)}
-          ${lineItem('Upfront Premium?', s.ddscores)}
-          ${lineItem('DD Points (incl prem. effect)', s.ddscores, true)}
-        </div>
-      `;
-      
-      // THE RESURRECTOR
-      html += `
-        <div class="section-group">
-          <div class="section-group-header">The Resurrector</div>
-          ${lineItem('Ressurector 1', s.theresurrector)}
-          ${lineItem('Ressurector 2', s.theresurrector)}
-          ${lineItem('THE RESURRECTOR (Total)', s.theresurrector, true)}
-        </div>
-      `;
-      
-      // SUPER SELECTOR TEAM
-      if (ss) {
-        html += `
-          <div class="section-group">
-            <div class="section-group-header">Super Selector Team</div>
-            ${ssLineItem('Wicket Keeper', ss['Wicket Keeper'], s.ssscores)}
-            ${ssLineItem('Vice Captain', ss['Vice Captain'], s.ssscores)}
-            ${ssLineItem('Captain', ss['Captain'], s.ssscores)}
-            ${ssLineItem('Bat 1', ss['Bat 1'], s.ssscores)}
-            ${ssLineItem('Bat 2', ss['Bat 2'], s.ssscores)}
-            ${ssLineItem('Bat 3', ss['Bat 3'], s.ssscores)}
-            ${ssLineItem('Bow 1', ss['Bow 1'], s.ssscores)}
-            ${ssLineItem('Bow 2', ss['Bow 2'], s.ssscores)}
-            ${ssLineItem('Bow 3', ss['Bow 3'], s.ssscores)}
-            ${ssLineItem('All-Rounder 1', ss['All-Rounder 1'], s.ssscores)}
-            ${ssLineItem('All-Rounder 2', ss['All-Rounder 2'], s.ssscores)}
-            ${ssLineItem('Play 1', ss['Play 1'], s.ssscores)}
-            ${ssLineItem('Play 2', ss['Play 2'], s.ssscores)}
-            ${lineItem('Super Selector (Total)', s.ssscores, true)}
-          </div>
-        `;
+    function buildReportCardFromSheet(rows, matchNum) {
+      if (!rows || rows.length === 0) {
+        return '<div class="error-msg">No data available</div>';
       }
       
-      // TOTAL DAILY SCORE
+      // Find match column
+      let matchCol = -1;
+      for (let c = 0; c < rows[0].length; c++) {
+        const cellValue = String(rows[0][c] || '').trim();
+        if (cellValue == String(matchNum)) {
+          matchCol = c;
+          break;
+        }
+      }
+      
+      if (matchCol === -1) {
+        return `<div class="error-msg">Match ${matchNum} not found in sheet</div>`;
+      }
+      
+      // Find player row
+      const playerName = currentUser.name.toLowerCase();
+      let playerRow = -1;
+      for (let r = 0; r < rows.length; r++) {
+        for (let c = 0; c < 3; c++) {
+          if (String(rows[r][c] || '').toLowerCase().trim() === playerName) {
+            playerRow = r;
+            break;
+          }
+        }
+        if (playerRow !== -1) break;
+      }
+      
+      if (playerRow === -1) {
+        return '<div class="error-msg">Player not found in sheet</div>';
+      }
+      
+      // Build HTML - this is a simplified version
+      // You'll need to adjust based on your actual sheet structure
+      let html = '<div class="report-card">';
+      
       html += `
         <div class="section-group">
-          <div class="line-item total">
+          <div class="section-group-header">Report Card Data</div>
+          <div class="line-item">
             <div class="line-item-label">
-              <h4 style="font-size: 18px;">TOTAL DAILY SCORE</h4>
+              <h4>Match Score</h4>
+              <p>${rows[playerRow][8] || '-'}</p>
             </div>
-            <div class="line-item-score" style="font-size: 28px;">
-              ${calculateTotal(s)}
-            </div>
+            <div class="line-item-score">${rows[playerRow][matchCol] || '-'}</div>
           </div>
         </div>
       `;
       
       html += '</div>';
       return html;
-    }
-
-    function lineItem(label, section, isTotal = false) {
-      if (!section) {
-        return `
-          <div class="line-item ${isTotal ? 'total' : ''}">
-            <div class="line-item-label">
-              <h4>${label}</h4>
-              <p>-</p>
-            </div>
-            <div class="line-item-score">-</div>
-          </div>
-        `;
-      }
-      
-      return `
-        <div class="line-item ${isTotal ? 'total' : ''}">
-          <div class="line-item-label">
-            <h4>${label}</h4>
-            <p>${section.detail || '-'}</p>
-          </div>
-          <div class="line-item-score">${section.score || '-'}</div>
-        </div>
-      `;
-    }
-
-    function ssLineItem(label, playerName, section) {
-      return `
-        <div class="line-item">
-          <div class="line-item-label">
-            <h4>${label}</h4>
-            <p>${playerName || '-'}</p>
-          </div>
-          <div class="line-item-score">${section?.score || '-'}</div>
-        </div>
-      `;
-    }
-
-    function calculateTotal(sections) {
-      // For now, just sum the scores we have
-      // You may need to adjust this based on actual data structure
-      let total = 0;
-      for (let key in sections) {
-        const score = parseInt(sections[key]?.score || '0');
-        if (!isNaN(score)) total += score;
-      }
-      return total || '-';
     }
 
     function switchTab(tabName) {
@@ -762,7 +715,9 @@
       const activeTab = document.getElementById(`tab-${tabName}`);
       activeTab.classList.add('active');
       
-      if (tabName !== 'reportcard' && !activeTab.innerHTML) {
+      if (tabName === 'reportcard') {
+        loadReportCard();
+      } else if (!activeTab.innerHTML) {
         loadGenericTab(tabName);
       }
     }
