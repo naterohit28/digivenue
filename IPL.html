@@ -663,8 +663,17 @@
     async function loadGenericTab(tabName) {
       const container = document.getElementById(`tab-${tabName}`);
       
+      // Map frontend tab names to sheet names
+      const tabToSheet = {
+        'leaderboard': 'D-1',
+        'matchscores': 'Match Scores',
+        'dailyscores': 'Daily Scores'
+      };
+      
+      const sheetName = tabToSheet[tabName] || tabName;
+      
       try {
-        const response = await fetch(`${API_URL}?tab=${tabName}`);
+        const response = await fetch(`${API_URL}?tab=${encodeURIComponent(sheetName)}`);
         const data = await response.json();
         
         if (data.error) {
@@ -682,8 +691,8 @@
           });
           html += '</tr></thead><tbody>';
           
-          // Rows
-          for (let i = 1; i < data.rows.length; i++) {
+          // Rows (limit to first 100 for performance)
+          for (let i = 1; i < Math.min(data.rows.length, 100); i++) {
             html += '<tr>';
             data.rows[i].forEach(cell => {
               html += `<td>${cell}</td>`;
