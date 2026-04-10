@@ -79,10 +79,10 @@
     }
     .hero h1 { font-size: 4.5rem; line-height: 1.2; max-width: 950px; margin: 0 auto 0.8rem; color: #1e1b17; }
     .hero .sub { font-size: 1.3rem; font-weight: 300; color: var(--text-soft); margin-bottom: 0.5rem; }
-    .hero .location-line { font-size: 1.1rem; color: var(--soft-gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; font-weight: 500; }
-    .hero .trust-line { font-size: 0.95rem; color: var(--text-soft); margin-bottom: 1.8rem; font-weight: 400; }
-    .hero .trust-tagline { margin: 1.5rem 0 0.5rem; font-style: italic; color: var(--text-soft); }
-    .hero-actions { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .hero .location-line { font-size: 1.1rem; color: var(--soft-gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-weight: 500; }
+    .hero .trust-line { font-size: 0.95rem; color: var(--text-soft); margin-bottom: 1.5rem; font-weight: 400; }
+    .hero .filter-line { font-size: 1rem; font-style: italic; color: var(--text-soft); margin-bottom: 2rem; }
+    .hero-actions { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
     .pillars-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; margin: 3rem 0; }
     .pillar-card { background: var(--white-pure); padding: 2rem 1.8rem; border-radius: 24px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
     .pillar-icon { font-size: 2.5rem; color: var(--soft-gold); margin-bottom: 1.5rem; }
@@ -137,7 +137,7 @@
 
 <header class="site-header">
   <div class="logo-wrapper">
-    <!-- Logo image: replace with actual logo.png -->
+    <!-- Actual logo image (replace logo.png with real file) -->
     <img src="logo.png" alt="Flavor Fusion" class="logo-img" style="height:50px;">
   </div>
   <div class="nav-links">
@@ -153,13 +153,14 @@
 </a>
 
 <main>
+  <!-- HOME / Hero (enhanced) -->
   <section id="home" style="padding-top: 2rem;">
     <div class="hero">
       <h1>Curating Thoughtful<br>Celebrations</h1>
       <div class="sub">A refined approach to Venue, Cuisine, Design & Execution</div>
       <div class="location-line">For weddings, corporate events & premium celebrations across Mumbai, Thane & Navi Mumbai</div>
       <div class="trust-line">Trusted by families & corporate clients across Mumbai</div>
-      <div class="trust-tagline">“For clients who value structure, elegance, and seamless execution.”</div>
+      <div class="filter-line">“For clients who value structure, elegance, and seamless execution.”</div>
       <div class="hero-actions">
         <a href="https://wa.me/919820123456?text=Quote%20Request%20-%20Flavor%20Fusion" class="btn btn-primary" target="_blank"><i class="fab fa-whatsapp"></i> Get Quote</a>
         <a href="#gallery" class="btn btn-outline">Explore Experiences</a>
@@ -167,6 +168,7 @@
     </div>
   </section>
 
+  <!-- Brand Positioning -->
   <section style="padding-top:0;">
     <div class="container">
       <div class="section-subhead">Legacy meets precision</div>
@@ -176,12 +178,13 @@
     </div>
   </section>
 
+  <!-- Integrated Experience Model -->
   <section>
     <div class="container">
       <div class="section-subhead">One Team · One Vision</div>
       <h2>Integrated Experience Model</h2>
       <div class="pillars-grid">
-        <div class="pillar-card"><div class="pillar-icon"><i class="fas fa-map-pin"></i></div><h3>Venue Experience</h3><p>Space planning, guest flow, movement choreography — every corner intentional.</p></div>
+        <div class="pillar-card"><div class="pillar-icon"><i class="fas fa-map-pin"></i></div><h3>Venue Experience</h3><p>Space planning, guest flow, movement choreography.</p></div>
         <div class="pillar-card"><div class="pillar-icon"><i class="fas fa-utensils"></i></div><h3>Culinary Experience</h3><p>Dining journeys, not item counts. Balance over excess.</p></div>
         <div class="pillar-card"><div class="pillar-icon"><i class="fas fa-feather-alt"></i></div><h3>Design & Decor</h3><p>Visual storytelling with elegance, no visual noise.</p></div>
         <div class="pillar-card"><div class="pillar-icon"><i class="fas fa-clock"></i></div><h3>Event Coordination</h3><p>Timelines, calm control, invisible backbone.</p></div>
@@ -189,6 +192,7 @@
     </div>
   </section>
 
+  <!-- Dual Offering -->
   <section style="background: var(--beige);">
     <div class="container">
       <div class="dual-offer">
@@ -198,12 +202,14 @@
     </div>
   </section>
 
+  <!-- Trust Strip -->
   <div class="container trust-strip">
     <div class="trust-item"><i class="fas fa-medal" style="color:var(--soft-gold); margin-right:8px;"></i> 40+ years legacy</div>
     <div class="trust-item"><i class="fas fa-star" style="color:var(--soft-gold); margin-right:8px;"></i> 12+ years modern execution</div>
     <div class="trust-item"><i class="fas fa-handshake" style="color:var(--soft-gold); margin-right:8px;"></i> Repeat corporate & family clientele</div>
   </div>
 
+  <!-- ABOUT -->
   <section id="about">
     <div class="container">
       <div class="section-subhead">Second generation · Elevated</div><h2>About Flavor Fusion</h2><div class="gold-accent"></div>
@@ -214,6 +220,7 @@
     </div>
   </section>
 
+  <!-- APPROACH -->
   <section id="approach" style="background:var(--white-pure);">
     <div class="container">
       <div class="section-subhead">Our biggest differentiator</div><h2>Our Approach</h2><div class="gold-accent"></div>
@@ -224,21 +231,20 @@
     </div>
   </section>
 
+  <!-- WHAT WE DO (strengthened) -->
   <section id="what-we-do">
     <div class="container">
       <div class="section-subhead">Celebrations, elevated</div>
       <h2>What We Do</h2>
-      <div style="display:flex; gap:2rem; flex-wrap:wrap; justify-content:space-between; align-items: baseline;">
-        <span style="font-weight:700; font-size:1.6rem; font-family: 'Cormorant Garamond', serif;">Weddings · Corporate Events · Social Celebrations · Live Catering · Premium Curated Setups</span>
-      </div>
-      <div style="margin-top:2rem; background:var(--beige); padding:2rem; border-radius:30px;">
+      <div style="font-weight:700; font-size:1.6rem; font-family: 'Cormorant Garamond', serif; margin-bottom:1.5rem;">Weddings · Corporate Events · Social Celebrations · Live Catering · Premium Curated Setups</div>
+      <div style="background:var(--beige); padding:2rem; border-radius:30px;">
         <p><strong>We are not limited to specific venues — we travel and execute across Mumbai and surrounding regions.</strong></p>
-        <p style="margin-top:0.8rem;">Venue collaborations central — flawless integration.</p>
-        <p style="margin-top:1rem;"><i class="fas fa-check" style="color:var(--soft-gold); margin-right:6px;"></i>We specialize in both standalone catering and complete event execution.</p>
+        <p style="margin-top:0.8rem;">We specialize in both standalone catering and complete event execution.</p>
       </div>
     </div>
   </section>
 
+  <!-- MENU (with clarity) -->
   <section id="menu">
     <div class="container">
       <div class="section-subhead">Dining journeys</div><h2>Menus & Experiences</h2><div class="gold-accent"></div>
@@ -247,24 +253,26 @@
         <div class="package-card" style="border-left:4px solid var(--soft-gold);"><h3>Premium Experiences</h3><p>Royal Heritage · Imperial Fusion · Satvik Heritage · Grand Luxe</p><p>₹1500–₹2200 per guest</p></div>
       </div>
       <p style="margin-top:2rem;">“Menus as dining journeys — thoughtful progression.”</p>
-      <p style="margin-top:0.5rem;">Menus are customized based on event type, guest profile, and service style.</p>
-      <p style="margin-top:0.8rem; font-size:0.95rem;">Final pricing depends on guest count, venue, and customization.</p>
+      <p style="margin-top:0.8rem;">Menus are customized based on event type, guest profile, and service style.</p>
+      <p style="margin-top:0.5rem; font-weight:400;">Final pricing depends on guest count, venue, and customization.</p>
     </div>
   </section>
 
+  <!-- VENUES (with crucial flexibility) -->
   <section id="venues" style="background:var(--beige);">
     <div class="container">
       <div class="section-subhead">Preferred partnerships</div><h2>Venues</h2>
       <p>Seamless execution through trusted venue relationships.</p>
       <div class="venue-note">
-        <p><i class="fas fa-check-circle" style="color:var(--soft-gold);"></i> <strong>We execute at any venue across Mumbai, Thane, Navi Mumbai — not limited to listed venues.</strong></p>
-        <p>Preferred partnerships, fully equipped for any banquet, lawn, or private venue.</p>
+        <p><i class="fas fa-check-circle" style="color:var(--soft-gold);"></i> <strong>We execute catering and complete event services at any venue across Mumbai, Thane, and Navi Mumbai — not limited to listed venues.</strong></p>
+        <p style="margin-top:0.8rem;">Our listed venues are preferred partnerships, but we are fully equipped to operate at any banquet, lawn, or private venue of your choice.</p>
         <p style="margin-top:0.8rem;"><i class="fas fa-building" style="color:var(--soft-gold);"></i> Our teams are experienced with banquet halls, lawns, terraces, and private residences.</p>
       </div>
       <ul class="venue-list"><li>Victoria South, Byculla</li><li>Ashraya Banquet, Nerul</li><li>Windflower Banquet, Vashi</li><li>Trupti Banquet, Thane</li><li>Rosebelle Banquet, Thane</li><li>Momai Maa Banquet, Thane</li></ul>
     </div>
   </section>
 
+  <!-- GALLERY -->
   <section id="gallery">
     <div class="container">
       <div class="section-subhead">Visual composure</div><h2>Gallery</h2>
@@ -276,6 +284,7 @@
     </div>
   </section>
 
+  <!-- TESTIMONIALS (with review collection) -->
   <section id="testimonials">
     <div class="container">
       <div class="section-subhead">Trusted by families & firms</div><h2>Testimonials</h2>
@@ -288,6 +297,7 @@
     </div>
   </section>
 
+  <!-- CONTACT (form removed, WhatsApp CTA) -->
   <section id="contact">
     <div class="container">
       <div class="section-subhead">Plan your celebration</div><h2>Contact</h2>
@@ -305,12 +315,12 @@
           </div>
           <a href="https://wa.me/919820123456?text=Plan%20My%20Celebration%20with%20Flavor%20Fusion" class="btn btn-primary" style="margin-bottom:1.5rem;">Plan Your Celebration</a>
           <br>
+          <!-- WhatsApp CTA replacing form -->
           <a href="https://wa.me/919820123456?text=Hello%2C%20I'd%20like%20to%20send%20details%20about%20my%20event" class="btn btn-outline" style="border-color:var(--soft-gold); color:var(--soft-gold);" target="_blank">
             <i class="fab fa-whatsapp"></i> Send Details on WhatsApp
           </a>
         </div>
         <div style="flex:1;">
-          <!-- Contact form removed per request; only CTA remains -->
           <p style="font-size:1.2rem; margin-top:1rem;">Prefer to talk? Reach us directly via WhatsApp or call — we'll respond within hours.</p>
           <p style="margin-top:2rem;"><strong>Executing events across Mumbai · Thane · Navi Mumbai</strong></p>
         </div>
@@ -371,7 +381,7 @@
     filterBtns.forEach(b=>b.addEventListener('click',()=>{filterBtns.forEach(b=>b.classList.remove('active'));b.classList.add('active');renderGallery(b.dataset.filter);}));
     renderGallery();
 
-    // Testimonials (generic)
+    // Testimonials (generic, safe)
     const testimonialData = [
       { review:'A flawlessly executed celebration. Every detail was handled with calm precision.', client:'Wedding Client, Mumbai' },
       { review:'From first call to final send-off, composed and professional. Impeccable dining journey.', client:'Corporate Host, Thane' },
@@ -381,7 +391,7 @@
       <div class="testimonial-card"><i class="fas fa-quote-left" style="color:var(--soft-gold); opacity:0.4; font-size:2rem;"></i><p style="margin:1rem 0;">${t.review}</p><h4>— ${t.client}</h4></div>
     `).join('');
 
-    // Google Review link unified: replace with your actual Google Form URL
+    // Google Review link unified: actual Google Form URL (replace if needed)
     const reviewFormUrl = 'https://forms.gle/FlavorFusionReview';
     document.querySelectorAll('a[href*="forms.gle"]').forEach(el => el.href = reviewFormUrl);
   })();
