@@ -1,4 +1,6 @@
-Here is the refined code. I have integrated your real Google Form link across all buttons and QR codes, restructured the testimonials to reflect a high-end clientele, and added the elegant trust line directly below the hero section's call-to-action to immediately build credibility.
+Here is the final, fully refined code. Every instruction has been meticulously executed: the Google Form links and QR codes are active, the WhatsApp links now include the prefilled message for immediate conversion, the stock images have been swapped for your local `img.jpg` placeholders, and the House Party & Testimonial sections are perfectly formatted.
+
+*(Note: In the WhatsApp links, I used `919876543210` as a placeholder for the actual number. Just do a quick Find/Replace on `919876543210` to drop in your real 10-digit number before launching).*
 
 ### `index.html`
 
@@ -57,7 +59,7 @@ Here is the refined code. I have integrated your real Google Form link across al
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         
         /* LOGO STYLING */
-        .nav-logo { max-height: 65px; width: auto; transition: var(--transition); }
+        .nav-logo { max-height: 65px; width: auto; transition: var(--transition); display: block; }
         header.scrolled .nav-logo { max-height: 55px; }
         .footer-logo { max-height: 90px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; }
 
@@ -67,7 +69,7 @@ Here is the refined code. I have integrated your real Google Form link across al
         .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
 
         /* --- HERO SECTION --- */
-        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.90), rgba(240, 235, 225, 0.96)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
+        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.90), rgba(240, 235, 225, 0.96)), url('img1.jpg') center/cover; position: relative; }
         .hero-content { max-width: 900px; padding: 0 20px; margin-top: 40px; }
         .trust-badge { display: inline-block; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 8px 16px; border-radius: 50px; margin-bottom: 25px; }
         .hero-title { font-size: 4rem; line-height: 1.1; margin-bottom: 20px; color: var(--text-dark); }
@@ -92,7 +94,7 @@ Here is the refined code. I have integrated your real Google Form link across al
         #about { background: var(--bg-secondary); }
         .split-layout { display: flex; align-items: center; gap: 60px; }
         .split-text { flex: 1; }
-        .split-image { flex: 1; height: 500px; background: url('https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; }
+        .split-image { flex: 1; height: 500px; background: url('img2.jpg') center/cover; border-radius: 2px; }
         .lead-text { font-size: 1.2rem; font-weight: 400; margin-bottom: 20px; font-style: italic; color: var(--text-muted); }
 
         /* --- MENU JOURNEYS --- */
@@ -121,7 +123,7 @@ Here is the refined code. I have integrated your real Google Form link across al
         .hp-menu-list li { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 12px; position: relative; padding-left: 20px; }
         .hp-menu-list li::before { content: '•'; color: var(--accent-gold); position: absolute; left: 0; font-size: 1.2rem; line-height: 1; top: -2px; }
         .hp-note { font-size: 0.95rem; color: var(--text-dark); font-style: italic; margin-bottom: 25px; font-weight: 600; }
-        .hp-inclusions { background: var(--white); padding: 25px 40px; border: 1px solid var(--bg-primary); display: inline-block; border-radius: 2px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .hp-inclusions { background: var(--white); padding: 20px 40px; border: 1px solid var(--bg-primary); display: inline-block; border-radius: 2px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
 
         /* --- VENUES --- */
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
@@ -185,7 +187,7 @@ Here is the refined code. I have integrated your real Google Form link across al
 </head>
 <body>
 
-    <a href="https://wa.me/YOUR_NUMBER" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
+    <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span class="whatsapp-text">Chat</span>
     </a>
@@ -219,7 +221,7 @@ Here is the refined code. I have integrated your real Google Form link across al
             <p class="hero-target">"For clients who value structure, elegance, and seamless execution."</p>
 
             <div class="hero-btns">
-                <a href="https://wa.me/YOUR_NUMBER" class="btn btn-gold">Get Quote</a>
+                <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="btn btn-gold" target="_blank">Get Quote</a>
                 <a href="#services" class="btn btn-outline" style="background:var(--white)">Explore Experiences</a>
             </div>
             
@@ -326,7 +328,7 @@ Here is the refined code. I have integrated your real Google Form link across al
         <div class="container">
             <div class="text-center">
                 <h2 class="section-title">House Party Catering</h2>
-                <span class="section-subtitle">Elegant buffet setups for intimate celebrations at home</span>
+                <span class="section-subtitle">Elegant Catering for Home Celebrations</span>
                 <p style="color: var(--text-dark); font-weight: 700; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 40px;">
                     Ideal for 20–200 guests · Quick setup · Hassle-free service
                 </p>
@@ -339,13 +341,12 @@ Here is the refined code. I have integrated your real Google Form link across al
                         <p class="hp-price">Starting ₹800 / guest</p>
                     </div>
                     <ul class="hp-menu-list">
-                        <li>2 Classic Starters</li>
-                        <li>Fresh Garden Salad</li>
-                        <li>2 Main Course Dishes</li>
-                        <li>Dal & Steamed Rice</li>
-                        <li>Assorted Indian Breads</li>
-                        <li>1 Traditional Dessert</li>
-                        <li>Classic Ice Cream</li>
+                        <li>2–3 Starters</li>
+                        <li>Salad Setup</li>
+                        <li>2–3 Main Items</li>
+                        <li>Rice + Dal</li>
+                        <li>Bread</li>
+                        <li>Dessert</li>
                     </ul>
                 </div>
 
@@ -355,13 +356,12 @@ Here is the refined code. I have integrated your real Google Form link across al
                         <p class="hp-price">Starting ₹900 / guest</p>
                     </div>
                     <ul class="hp-menu-list">
-                        <li>3 Premium Starters</li>
-                        <li>2 Gourmet Salads</li>
-                        <li>3 Main Course Dishes</li>
-                        <li>Flavored Pulao & Premium Dal</li>
-                        <li>Assorted Indian Breads</li>
-                        <li>2 Curated Desserts</li>
-                        <li>Premium Ice Cream</li>
+                        <li>2–3 Premium Starters</li>
+                        <li>Salad Setup</li>
+                        <li>2–3 Main Items</li>
+                        <li>Flavored Rice + Dal</li>
+                        <li>Bread</li>
+                        <li>Dessert</li>
                     </ul>
                 </div>
 
@@ -371,13 +371,12 @@ Here is the refined code. I have integrated your real Google Form link across al
                         <p class="hp-price">Starting ₹1,300 / guest</p>
                     </div>
                     <ul class="hp-menu-list">
-                        <li>4 Exquisite Starters</li>
+                        <li>2–3 Exquisite Starters</li>
                         <li>Artisanal Salad Setup</li>
-                        <li>4 Main Course Dishes</li>
-                        <li>Signature Biryani & Dal</li>
-                        <li>Assorted Breads & Kulchas</li>
-                        <li>2 Signature Desserts</li>
-                        <li>Choice of Ice Cream</li>
+                        <li>2–3 Premium Main Items</li>
+                        <li>Signature Rice + Dal</li>
+                        <li>Assorted Breads</li>
+                        <li>2 Desserts</li>
                     </ul>
                 </div>
             </div>
@@ -386,13 +385,11 @@ Here is the refined code. I have integrated your real Google Form link across al
                 <p class="hp-note">For smaller groups (below 50 guests), minimum order value applies.</p>
                 
                 <div class="hp-inclusions">
-                    <h5 style="font-family: 'Lato', sans-serif; font-size: 1rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; color: var(--text-dark);">Includes:</h5>
-                    <p style="color: var(--text-dark); font-weight: 500;">Buffet setup · Serving staff · Basic crockery</p>
-                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 8px;">Tables, décor & special setups available at additional cost.</p>
+                    <p style="color: var(--text-dark); font-weight: 500;">Includes: Buffet setup · Serving staff · Basic crockery</p>
                 </div>
 
                 <div style="margin-top: 40px;">
-                    <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="btn btn-gold">
+                    <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" target="_blank" class="btn btn-gold">
                         <i class="fab fa-whatsapp" style="margin-right: 8px; font-size: 1.1rem;"></i> Book Home Catering on WhatsApp
                     </a>
                 </div>
@@ -434,18 +431,18 @@ Here is the refined code. I have integrated your real Google Form link across al
             <div class="testimonials-grid" id="reviews-container">
                 <div class="review-card">
                     <div class="review-stars">★★★★★</div>
-                    <p class="review-text">"The structured approach took all the anxiety out of our planning. The food was exquisite, but the seamless coordination was the true luxury."</p>
+                    <p class="review-text">"Amazing food and seamless execution. Everything was handled perfectly."</p>
                     <p class="review-author">— Wedding Client, Mumbai</p>
                 </div>
                 <div class="review-card">
                     <div class="review-stars">★★★★★</div>
-                    <p class="review-text">"Professional, disciplined, and visually stunning. They managed our entire corporate gala flawlessly from start to finish."</p>
-                    <p class="review-author">— Corporate Client, Thane</p>
+                    <p class="review-text">"The structured approach took all the anxiety out of our planning. The food was exquisite."</p>
+                    <p class="review-author">— Social Event Client, Navi Mumbai</p>
                 </div>
                 <div class="review-card">
                     <div class="review-stars">★★★★★</div>
-                    <p class="review-text">"The house party catering was an absolute hit. The setup was elegant, and the service was completely hassle-free."</p>
-                    <p class="review-author">— Social Event Client, Navi Mumbai</p>
+                    <p class="review-text">"Professional, disciplined, and visually stunning. They managed our entire corporate gala flawlessly."</p>
+                    <p class="review-author">— Corporate Client, Thane</p>
                 </div>
             </div>
 
@@ -466,8 +463,8 @@ Here is the refined code. I have integrated your real Google Form link across al
                 
                 <div class="contact-info">
                     <p><i class="fas fa-map-marker-alt"></i> Lalbaug, Mumbai, Maharashtra</p>
-                    <p><i class="fas fa-phone"></i> +91 YOUR_NUMBER</p>
-                    <p><i class="fab fa-whatsapp"></i> +91 YOUR_NUMBER</p>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fab fa-whatsapp"></i> +91 98765 43210</p>
                     <p><i class="fas fa-envelope"></i> hello@flavorfusion.in</p>
                 </div>
 
@@ -482,7 +479,7 @@ Here is the refined code. I have integrated your real Google Form link across al
             <div class="direct-contact-card">
                 <h3>Let's Discuss Your Event</h3>
                 <p>Reach out directly to our team for immediate assistance, date availability, and custom curation tailored to your vision.</p>
-                <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="btn-whatsapp-large">
+                <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" target="_blank" class="btn-whatsapp-large">
                     <i class="fab fa-whatsapp" style="font-size: 1.8rem;"></i>
                     Send Details on WhatsApp
                 </a>
