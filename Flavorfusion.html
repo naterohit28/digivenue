@@ -56,8 +56,8 @@
         header.scrolled .nav-logo { max-height: 55px; }
         .footer-logo { max-height: 90px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; }
 
-        .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-links a { font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); }
         .nav-links a:hover { color: var(--accent-gold); }
         .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
 
@@ -102,6 +102,19 @@
         
         .menu-disclaimer-box { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-secondary); text-align: center; }
         .menu-disclaimer { font-size: 0.95rem; color: var(--text-muted); font-style: italic; margin-bottom: 5px; }
+
+        /* --- HOUSE PARTY CATERING (NEW) --- */
+        .hp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .hp-card { background: var(--white); padding: 40px 30px; border: 1px solid var(--bg-primary); transition: var(--transition); text-align: center; }
+        .hp-card:hover { border-color: var(--accent-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.03); transform: translateY(-5px); }
+        .hp-card-header { border-bottom: 1px solid var(--bg-secondary); padding-bottom: 20px; margin-bottom: 20px; }
+        .hp-card-header h4 { font-size: 1.5rem; color: var(--text-dark); margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .hp-price { font-size: 1.1rem; color: var(--accent-gold); font-weight: 600; letter-spacing: 1px; }
+        .hp-menu-list { list-style: none; padding: 0; margin: 0; text-align: left; display: inline-block; }
+        .hp-menu-list li { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 12px; position: relative; padding-left: 20px; }
+        .hp-menu-list li::before { content: '•'; color: var(--accent-gold); position: absolute; left: 0; font-size: 1.2rem; line-height: 1; top: -2px; }
+        .hp-note { font-size: 0.95rem; color: var(--text-dark); font-style: italic; margin-bottom: 25px; font-weight: 600; }
+        .hp-inclusions { background: var(--white); padding: 25px 40px; border: 1px solid var(--bg-primary); display: inline-block; border-radius: 2px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
 
         /* --- VENUES --- */
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
@@ -152,6 +165,7 @@
             .footer-grid { grid-template-columns: 1fr; text-align: center; }
             .hero-title { font-size: 3rem; }
             .footer-logo { margin: 0 auto 20px; }
+            .hp-inclusions { padding: 20px; width: 100%; }
         }
         @media (max-width: 768px) {
             .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--white); flex-direction: column; padding: 20px 0; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
@@ -179,8 +193,8 @@
                 <a href="#about">About</a>
                 <a href="#services">What We Do</a>
                 <a href="#menu">Journeys</a>
+                <a href="#house-party">House Party</a>
                 <a href="#venues">Venues</a>
-                <a href="#testimonials">Experiences</a>
                 <a href="#contact">Contact</a>
             </nav>
             <div class="mobile-menu-btn" id="mobile-menu-btn">
@@ -192,12 +206,9 @@
     <section id="hero">
         <div class="hero-content">
             <span class="trust-badge">40+ years legacy · 12+ years modern execution</span>
-            
             <h1 class="hero-title">Curating Thoughtful Celebrations</h1>
-            
             <p class="hero-location">For weddings, corporate events & premium celebrations across Mumbai, Thane & Navi Mumbai</p>
             <p class="hero-trusted">Trusted by families & corporate clients across Mumbai</p>
-            
             <p class="hero-target">"For clients who value structure, elegance, and seamless execution."</p>
 
             <div class="hero-btns">
@@ -302,7 +313,85 @@
         </div>
     </section>
 
-    <section id="venues" class="section-padding" style="background: var(--bg-secondary);">
+    <section id="house-party" class="section-padding" style="background: var(--bg-secondary);">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title">House Party Catering</h2>
+                <span class="section-subtitle">Elegant buffet setups for intimate celebrations at home</span>
+                <p style="color: var(--text-dark); font-weight: 700; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 40px;">
+                    Ideal for 20–200 guests · Quick setup · Hassle-free service
+                </p>
+            </div>
+
+            <div class="hp-grid">
+                <div class="hp-card">
+                    <div class="hp-card-header">
+                        <h4>Silver Package</h4>
+                        <p class="hp-price">Starting ₹800 / guest</p>
+                    </div>
+                    <ul class="hp-menu-list">
+                        <li>2 Classic Starters</li>
+                        <li>Fresh Garden Salad</li>
+                        <li>2 Main Course Dishes</li>
+                        <li>Dal & Steamed Rice</li>
+                        <li>Assorted Indian Breads</li>
+                        <li>1 Traditional Dessert</li>
+                        <li>Classic Ice Cream</li>
+                    </ul>
+                </div>
+
+                <div class="hp-card" style="border-color: var(--accent-gold);">
+                    <div class="hp-card-header">
+                        <h4>Gold Package</h4>
+                        <p class="hp-price">Starting ₹900 / guest</p>
+                    </div>
+                    <ul class="hp-menu-list">
+                        <li>3 Premium Starters</li>
+                        <li>2 Gourmet Salads</li>
+                        <li>3 Main Course Dishes</li>
+                        <li>Flavored Pulao & Premium Dal</li>
+                        <li>Assorted Indian Breads</li>
+                        <li>2 Curated Desserts</li>
+                        <li>Premium Ice Cream</li>
+                    </ul>
+                </div>
+
+                <div class="hp-card">
+                    <div class="hp-card-header">
+                        <h4>Diamond Package</h4>
+                        <p class="hp-price">Starting ₹1,300 / guest</p>
+                    </div>
+                    <ul class="hp-menu-list">
+                        <li>4 Exquisite Starters</li>
+                        <li>Artisanal Salad Setup</li>
+                        <li>4 Main Course Dishes</li>
+                        <li>Signature Biryani & Dal</li>
+                        <li>Assorted Breads & Kulchas</li>
+                        <li>2 Signature Desserts</li>
+                        <li>Choice of Ice Cream</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="hp-note">For smaller groups (below 50 guests), minimum order value applies.</p>
+                
+                <div class="hp-inclusions">
+                    <h5 style="font-family: 'Lato', sans-serif; font-size: 1rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; color: var(--text-dark);">Includes:</h5>
+                    <p style="color: var(--text-dark); font-weight: 500;">Buffet setup · Serving staff · Basic crockery</p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 8px;">Tables, décor & special setups available at additional cost.</p>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="btn btn-gold">
+                        <i class="fab fa-whatsapp" style="margin-right: 8px; font-size: 1.1rem;"></i> Book Home Catering on WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="venues" class="section-padding">
         <div class="container">
             <div class="text-center">
                 <h2 class="section-title">Our Canvas</h2>
@@ -326,7 +415,7 @@
         </div>
     </section>
 
-    <section id="testimonials" class="section-padding">
+    <section id="testimonials" class="section-padding" style="background: var(--bg-secondary);">
         <div class="container">
             <div class="text-center">
                 <h2 class="section-title">Client Experiences</h2>
