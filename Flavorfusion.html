@@ -54,7 +54,7 @@
         /* LOGO STYLING */
         .nav-logo { max-height: 65px; width: auto; transition: var(--transition); }
         header.scrolled .nav-logo { max-height: 55px; }
-        .footer-logo { max-height: 90px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; } /* Background added to pop against dark footer */
+        .footer-logo { max-height: 90px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; }
 
         .nav-links { display: flex; gap: 30px; align-items: center; }
         .nav-links a { font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); }
@@ -65,11 +65,11 @@
         #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.90), rgba(240, 235, 225, 0.96)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
         .hero-content { max-width: 900px; padding: 0 20px; margin-top: 40px; }
         .trust-badge { display: inline-block; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 8px 16px; border-radius: 50px; margin-bottom: 25px; }
-        .hero-title { font-size: 4rem; line-height: 1.1; margin-bottom: 15px; color: var(--text-dark); }
+        .hero-title { font-size: 4rem; line-height: 1.1; margin-bottom: 20px; color: var(--text-dark); }
         
-        .hero-location { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 5px; font-weight: 500; letter-spacing: 1px; }
-        .hero-trusted { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 30px; font-style: italic; font-weight: 400; }
-        .hero-services { font-size: 1.05rem; color: var(--text-dark); font-weight: 600; margin-bottom: 40px; line-height: 1.8; letter-spacing: 1px; text-transform: uppercase; }
+        .hero-location { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 8px; font-weight: 500; }
+        .hero-trusted { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 25px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; }
+        .hero-target { font-size: 1.15rem; color: var(--text-dark); font-style: italic; margin-bottom: 40px; font-family: 'Playfair Display', serif; }
 
         .hero-btns { display: flex; gap: 20px; justify-content: center; }
 
@@ -107,7 +107,7 @@
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
         .venue-card { background: var(--white); padding: 30px; text-align: center; border: 1px solid var(--bg-secondary); }
         .venue-card h4 { font-size: 1.3rem; margin-bottom: 10px; }
-        .venue-context { max-width: 800px; margin: 0 auto; padding: 30px; background: var(--white); border-left: 3px solid var(--accent-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.02); text-align: center; }
+        .venue-context { max-width: 800px; margin: 0 auto; padding: 30px 40px; background: var(--white); border-left: 3px solid var(--accent-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.02); text-align: center; }
 
         /* --- TESTIMONIALS --- */
         .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
@@ -160,7 +160,6 @@
             header { background: var(--white); padding: 10px 0; }
             .whatsapp-text { display: none; }
             .whatsapp-fab { padding: 0; width: 50px; justify-content: center; }
-            .hero-services { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -196,12 +195,10 @@
             
             <h1 class="hero-title">Curating Thoughtful Celebrations</h1>
             
-            <p class="hero-location">Serving Mumbai, Thane & Navi Mumbai</p>
+            <p class="hero-location">For weddings, corporate events & premium celebrations across Mumbai, Thane & Navi Mumbai</p>
             <p class="hero-trusted">Trusted by families & corporate clients across Mumbai</p>
             
-            <p class="hero-services">
-                Weddings · Corporate Events · Social Celebrations · Live Catering · Premium Curated Setups
-            </p>
+            <p class="hero-target">"For clients who value structure, elegance, and seamless execution."</p>
 
             <div class="hero-btns">
                 <a href="https://wa.me/YOUR_NUMBER" class="btn btn-gold">Get Quote</a>
@@ -212,12 +209,21 @@
 
     <section id="services" class="section-padding">
         <div class="container">
-            <div class="text-center" style="max-width: 800px; margin: 0 auto;">
+            <div class="text-center" style="max-width: 850px; margin: 0 auto;">
                 <h2 class="section-title">From Catering to Complete Execution</h2>
                 <span class="section-subtitle">The Integrated Experience Model</span>
-                <p style="color: var(--text-muted); margin-bottom: 15px;">We believe in structured execution over chaos. Experience over item counts. We operate as a single team with one vision, ensuring your celebration is seamless from the first sketch to the final farewell.</p>
-                <p style="color: var(--text-dark); font-weight: 700; font-size: 1.1rem; border-top: 1px solid var(--bg-secondary); padding-top: 20px; display: inline-block;">We specialize in both standalone catering and complete event execution.</p>
+                
+                <p style="color: var(--text-dark); font-weight: 700; font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;">
+                    Weddings · Corporate Events · Social Celebrations · Live Catering · Premium Curated Setups
+                </p>
+                <p style="color: var(--text-muted); font-style: italic; margin-bottom: 25px;">
+                    We specialize in both standalone catering and complete event execution.
+                </p>
+                <p style="color: var(--text-muted); margin-bottom: 15px; border-top: 1px solid var(--bg-secondary); padding-top: 25px;">
+                    We believe in structured execution over chaos. Experience over item counts. We operate as a single team with one vision, ensuring your celebration is seamless from the first sketch to the final farewell.
+                </p>
             </div>
+            
             <div class="pillars-grid">
                 <div class="pillar-card"><i class="fas fa-map-marked-alt pillar-icon"></i><h3 class="pillar-title">Venue Experience</h3><p class="pillar-desc">Strategic space planning, logical flow, and uninterrupted guest movement.</p></div>
                 <div class="pillar-card"><i class="fas fa-utensils pillar-icon"></i><h3 class="pillar-title">Culinary Experience</h3><p class="pillar-desc">Designing a complete dining journey, rather than a crowded list of isolated items.</p></div>
@@ -301,7 +307,6 @@
             <div class="text-center">
                 <h2 class="section-title">Our Canvas</h2>
                 <span class="section-subtitle">Venue Partnerships & Operations</span>
-                <p style="margin-bottom: 40px; color: var(--text-muted); max-width: 700px; margin-left: auto; margin-right: auto;">We have strong working relationships and execution experience across these established venues.</p>
             </div>
             
             <div class="venues-grid">
@@ -314,9 +319,9 @@
             </div>
 
             <div class="venue-context">
-                <p style="color: var(--text-dark); font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; font-family: 'Playfair Display', serif;">We execute at any venue — not limited to listed partnerships.</p>
-                <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 10px;">Whether it is a preferred banquet, a private lawn, or a venue of your own choosing across Mumbai, Thane, or Navi Mumbai, our execution team is fully equipped to deliver a seamless experience.</p>
-                <p style="color: var(--text-dark); font-size: 0.95rem; font-weight: 600; font-style: italic;">Our teams are experienced with banquet halls, lawns, terraces, and private residences.</p>
+                <p style="color: var(--text-dark); font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; font-family: 'Playfair Display', serif;">We execute catering and complete event services at any venue across Mumbai, Thane, and Navi Mumbai — not limited to listed venues.</p>
+                <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 12px;">Our listed venues are preferred partnerships, but we are fully equipped to operate at any banquet, lawn, or private venue of your choice.</p>
+                <p style="color: var(--text-dark); font-size: 0.95rem; font-weight: 600; font-style: italic; border-top: 1px solid var(--accent-gold); padding-top: 12px; display: inline-block;">Our teams are experienced with banquet halls, lawns, terraces, and private residences.</p>
             </div>
         </div>
     </section>
@@ -345,7 +350,7 @@
 
             <div class="text-center" style="margin-top: 50px;">
                 <p style="margin-bottom: 15px; font-size: 1.1rem;">We value your feedback — share your experience with us.</p>
-                <a href="https://forms.gle/YOUR_FORM_LINK" target="_blank" class="btn btn-outline">Leave a Review</a>
+                <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" class="btn btn-outline">Leave a Review</a>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 15px; font-style: italic;">* Reviews are collected and verified before display.</p>
             </div>
         </div>
@@ -367,7 +372,7 @@
 
                 <div style="margin-top: 40px;">
                     <div class="qr-box">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/YOUR_FORM_LINK" alt="Review QR Code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_GOOGLE_FORM_LINK" alt="Review QR Code">
                         <p class="qr-label">Scan to leave a review</p>
                     </div>
                 </div>
@@ -395,12 +400,12 @@
             <div>
                 <h4 class="footer-heading">Client Feedback</h4>
                 <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">We value your feedback — share your experience with us.</p>
-                <a href="https://forms.gle/YOUR_FORM_LINK" target="_blank" class="btn btn-outline-light" style="padding: 10px 20px; font-size: 0.8rem;">Leave a Review</a>
+                <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" class="btn btn-outline-light" style="padding: 10px 20px; font-size: 0.8rem;">Leave a Review</a>
             </div>
 
             <div>
                  <div class="qr-box">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/YOUR_FORM_LINK" alt="Footer QR Code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_GOOGLE_FORM_LINK" alt="Footer QR Code">
                     <p class="qr-label">Scan to review</p>
                 </div>
             </div>
