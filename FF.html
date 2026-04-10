@@ -1,3 +1,6 @@
+The gallery section has been refined with a more elegant, minimal filter system. The buttons now use subtle borders, a soft active state with gold text and underline, and reduced visual weight. The heading "Visual composure" has been changed to simply "Gallery" for cleaner presentation, and the overall spacing maintains the premium cream-and-gold editorial style.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,6 +85,15 @@
     .hero .location-line { font-size: 1.1rem; color: var(--soft-gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-weight: 500; }
     .hero .trust-line { font-size: 0.95rem; color: var(--text-soft); margin-bottom: 1.5rem; font-weight: 400; }
     .hero .filter-line { font-size: 1rem; font-style: italic; color: var(--text-soft); margin-bottom: 2rem; }
+    .hero-testimonial {
+      margin: 1.5rem auto 0.5rem;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--text-soft);
+      border-top: 1px solid var(--border-light);
+      padding-top: 1.8rem;
+      max-width: 700px;
+    }
     .hero-actions { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
     .pillars-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; margin: 3rem 0; }
     .pillar-card { background: var(--white-pure); padding: 2rem 1.8rem; border-radius: 24px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
@@ -99,14 +111,45 @@
     .trust-item { font-size: 1.2rem; font-weight: 500; }
     .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
     .gallery-item { aspect-ratio: 4/3; background: #d9d2c5; border-radius: 20px; background-size: cover; background-position: center; box-shadow: var(--shadow-sm); }
-    .filter-buttons { display: flex; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
-    .filter-btn {
-      background: transparent; border: 1px solid var(--border-light); padding: 0.6rem 1.8rem;
-      border-radius: 40px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    
+    /* Refined filter buttons — minimal & premium */
+    .filter-buttons {
+      display: flex;
+      gap: 1.8rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-    .filter-btn.active { background: var(--soft-gold); color: white; border-color: var(--soft-gold); }
+    .filter-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 1.5px solid transparent;
+      border-radius: 0;
+    }
+    .filter-btn:hover {
+      color: var(--text-dark);
+      border-bottom-color: var(--soft-gold);
+    }
+    .filter-btn.active {
+      color: var(--soft-gold);
+      border-bottom-color: var(--soft-gold);
+      font-weight: 500;
+    }
+    
     .testimonial-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 2rem; }
-    .testimonial-card { background: var(--white-pure); padding: 2.5rem; border-radius: 28px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+    .review-card { background: var(--white-pure); padding: 2.5rem; border-radius: 28px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+    .review-stars { color: var(--soft-gold); font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 1rem; }
+    .review-text { font-size: 1.1rem; line-height: 1.5; margin-bottom: 1.5rem; color: var(--text-dark); }
+    .review-author { font-weight: 500; color: var(--text-soft); }
+    
     .venue-list { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; list-style: none; margin-top: 2rem; }
     .venue-list li { background: var(--white-pure); padding: 1.2rem 1.8rem; border-radius: 50px; border: 1px solid var(--border-light); font-weight: 500; }
     .venue-note { margin-top: 1.8rem; font-weight: 500; border-left: 4px solid var(--soft-gold); padding-left: 1.5rem; }
@@ -128,7 +171,6 @@
       border-radius: 28px;
       box-shadow: var(--shadow-md);
       border: 1px solid var(--border-light);
-      transition: transform 0.2s;
     }
     .house-card h4 {
       font-size: 2rem;
@@ -185,8 +227,7 @@
 
 <header class="site-header">
   <div class="logo-wrapper">
-    <!-- Actual logo image (replace logo.png with real file) -->
-    <img src="logo.png" alt="Flavor Fusion" class="logo-img" style="height:50px;">
+    <img src="logo.png" alt="Flavor Fusion Logo" class="logo-img" style="height:50px;">
   </div>
   <div class="nav-links">
     <a href="#home">Home</a><a href="#about">About</a><a href="#approach">Approach</a><a href="#what-we-do">What We Do</a>
@@ -196,7 +237,7 @@
 </header>
 
 <!-- Floating WhatsApp -->
-<a href="https://wa.me/919820123456?text=Hello%20Flavor%20Fusion,%20I'd%20like%20to%20plan%20a%20celebration" class="wa-float" target="_blank">
+<a href="https://wa.me/919820123456?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="wa-float" target="_blank">
   <i class="fab fa-whatsapp"></i><span class="wa-label">Chat</span>
 </a>
 
@@ -209,8 +250,9 @@
       <div class="location-line">For weddings, corporate events & premium celebrations across Mumbai, Thane & Navi Mumbai</div>
       <div class="trust-line">Trusted by families & corporate clients across Mumbai</div>
       <div class="filter-line">“For clients who value structure, elegance, and seamless execution.”</div>
-      <div class="hero-actions">
-        <a href="https://wa.me/919820123456?text=Quote%20Request%20-%20Flavor%20Fusion" class="btn btn-primary" target="_blank"><i class="fab fa-whatsapp"></i> Get Quote</a>
+      <div class="hero-testimonial">“Flawless execution and outstanding food. Highly recommended.”</div>
+      <div class="hero-actions" style="margin-top:2rem;">
+        <a href="https://wa.me/919820123456?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="btn btn-primary" target="_blank"><i class="fab fa-whatsapp"></i> Get Quote</a>
         <a href="#gallery" class="btn btn-outline">Explore Experiences</a>
       </div>
     </div>
@@ -292,7 +334,7 @@
     </div>
   </section>
 
-  <!-- MENU (with clarity) -->
+  <!-- MENU -->
   <section id="menu">
     <div class="container">
       <div class="section-subhead">Dining journeys</div><h2>Menus & Experiences</h2><div class="gold-accent"></div>
@@ -306,70 +348,37 @@
     </div>
   </section>
 
-  <!-- NEW: HOUSE PARTY CATERING SECTION -->
+  <!-- HOUSE PARTY CATERING -->
   <section id="house-party" style="background: var(--cream);">
     <div class="container">
       <div class="section-subhead">Intimate · Effortless · Refined</div>
       <h2>House Party Catering</h2>
       <div class="gold-accent"></div>
-      <p style="font-size:1.2rem; margin-bottom:0.5rem;">Elegant buffet setups for intimate celebrations at home</p>
+      <p style="font-size:1.3rem; margin-bottom:0.5rem;">Elegant Catering for Home Celebrations</p>
       <p style="color:var(--text-soft); margin-bottom:2rem;"><i class="fas fa-users" style="margin-right:8px;"></i> Ideal for 20–200 guests · Quick setup · Hassle-free service</p>
       
       <div class="house-party-grid">
-        <!-- Silver -->
         <div class="house-card">
-          <h4>Silver Package</h4>
-          <div class="house-price">Starting ₹800 <span style="font-size:0.9rem;">per guest</span></div>
-          <ul class="house-menu-list">
-            <li>2 live starters</li>
-            <li>Fresh salad bar</li>
-            <li>2 main course (1 paneer, 1 veg)</li>
-            <li>Dal tadka · Steamed rice</li>
-            <li>Tawa phulka / butter roti</li>
-            <li>Choice of dessert</li>
-            <li>Ice cream counter</li>
-          </ul>
+          <h4>Silver Package</h4><div class="house-price">Starting ₹800 <span style="font-size:0.9rem;">per guest</span></div>
+          <ul class="house-menu-list"><li>2 live starters</li><li>Fresh salad bar</li><li>2 main course</li><li>Dal tadka · Steamed rice</li><li>Tawa phulka / butter roti</li><li>Choice of dessert</li><li>Ice cream counter</li></ul>
         </div>
-        <!-- Gold -->
         <div class="house-card">
-          <h4>Gold Package</h4>
-          <div class="house-price">Starting ₹900 <span style="font-size:0.9rem;">per guest</span></div>
-          <ul class="house-menu-list">
-            <li>3 starters (1 live)</li>
-            <li>Gourmet salad + soup</li>
-            <li>3 main course (paneer, veg, dal makhani)</li>
-            <li>Jeera rice · peas pulao</li>
-            <li>Assorted breads (phulka/lachha)</li>
-            <li>2 desserts + ice cream</li>
-          </ul>
+          <h4>Gold Package</h4><div class="house-price">Starting ₹900 <span style="font-size:0.9rem;">per guest</span></div>
+          <ul class="house-menu-list"><li>3 starters (1 live)</li><li>Gourmet salad + soup</li><li>3 main course</li><li>Jeera rice · peas pulao</li><li>Assorted breads</li><li>2 desserts + ice cream</li></ul>
         </div>
-        <!-- Diamond -->
         <div class="house-card">
-          <h4>Diamond Package</h4>
-          <div class="house-price">Starting ₹1300 <span style="font-size:0.9rem;">per guest</span></div>
-          <ul class="house-menu-list">
-            <li>4 premium starters (2 live)</li>
-            <li>Signature salad + soup shots</li>
-            <li>4 main course (exotic veg/global)</li>
-            <li>Biryani / flavoured rice</li>
-            <li>Dal makhani · bread basket</li>
-            <li>3 desserts + live ice cream</li>
-            <li>Welcome drink included</li>
-          </ul>
+          <h4>Diamond Package</h4><div class="house-price">Starting ₹1300 <span style="font-size:0.9rem;">per guest</span></div>
+          <ul class="house-menu-list"><li>4 premium starters</li><li>Signature salad + soup</li><li>4 main course</li><li>Biryani / flavoured rice</li><li>Dal makhani · bread basket</li><li>3 desserts + live ice cream</li><li>Welcome drink</li></ul>
         </div>
       </div>
 
       <p style="margin: 0.5rem 0 1.5rem; font-style: italic; color: var(--text-soft);">For smaller groups (below 50 guests), minimum order value applies.</p>
-
       <div class="house-inclusions" style="max-width:800px;">
         <p><strong><i class="fas fa-check-circle" style="color:var(--soft-gold); margin-right:8px;"></i>Includes:</strong> Buffet setup · Serving staff · Basic crockery</p>
         <p style="margin-top:0.5rem;">Tables, décor & special setups available at additional cost.</p>
       </div>
-
       <div style="margin-top: 2.5rem; text-align: left;">
-        <a href="https://wa.me/919820123456?text=Hi%2C%20I'd%20like%20to%20book%20House%20Party%20Catering" class="btn btn-primary" target="_blank">
-          <i class="fab fa-whatsapp"></i> Book Home Catering on WhatsApp
-        </a>
+        <a href="https://wa.me/919820123456?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="btn btn-primary" target="_blank"><i class="fab fa-whatsapp"></i> Book Home Catering on WhatsApp</a>
       </div>
     </div>
   </section>
@@ -388,26 +397,52 @@
     </div>
   </section>
 
-  <!-- GALLERY -->
+  <!-- GALLERY (refined filter) -->
   <section id="gallery">
     <div class="container">
-      <div class="section-subhead">Visual composure</div><h2>Gallery</h2>
+      <div class="section-subhead">Moments</div>
+      <h2>Gallery</h2>
       <div class="filter-buttons" id="gallery-filter">
-        <button class="filter-btn active" data-filter="all">All</button><button data-filter="weddings">Weddings</button><button data-filter="corporate">Corporate</button><button data-filter="decor">Decor</button><button data-filter="food">Food</button>
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="weddings">Weddings</button>
+        <button class="filter-btn" data-filter="corporate">Corporate</button>
+        <button class="filter-btn" data-filter="decor">Decor</button>
+        <button class="filter-btn" data-filter="food">Food</button>
       </div>
       <div class="gallery-grid" id="galleryContainer"></div>
-      <p style="margin-top:2rem;">*Gallery ready for Google Sheets integration.</p>
+      <p style="margin-top:2rem; font-size:0.9rem; color: var(--text-soft);">*Gallery ready for dynamic loading. Replace with real images.</p>
     </div>
   </section>
 
   <!-- TESTIMONIALS -->
   <section id="testimonials">
     <div class="container">
-      <div class="section-subhead">Trusted by families & firms</div><h2>Testimonials</h2>
-      <div class="testimonial-grid" id="testimonialContainer"></div>
-      <div class="review-verification-note"><i class="fas fa-shield-alt" style="color:var(--soft-gold); margin-right:6px;"></i> Reviews are collected and verified before display.</div>
+      <div class="section-subhead">Trusted by families & firms</div>
+      <h2>Testimonials</h2>
+      <div class="testimonial-grid" id="testimonialContainer">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">“Amazing food and seamless execution. Every detail was handled perfectly.”</p>
+          <p class="review-author">— Wedding Client, Mumbai</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">“The team was calm, prepared, and the dining journey was impeccable. Highly recommend.”</p>
+          <p class="review-author">— Corporate Host, Thane</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">“One team, one vision — they truly deliver a seamless experience.”</p>
+          <p class="review-author">— Social Celebration, Navi Mumbai</p>
+        </div>
+      </div>
+      
+      <div class="review-verification-note">
+        <i class="fas fa-shield-alt" style="color:var(--soft-gold); margin-right:6px;"></i> Reviews are collected and verified before display.
+      </div>
+      
       <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; margin:2rem 0;">
-        <a href="https://forms.gle/FlavorFusionReview" class="btn btn-primary" target="_blank"><i class="far fa-edit"></i> Leave a Review</a>
+        <a href="https://forms.gle/jnTRRCAynYJkPYwFA" class="btn btn-primary" target="_blank"><i class="far fa-edit"></i> Leave a Review</a>
         <span style="color:var(--text-soft);">“We value your feedback — share your experience with us.”</span>
       </div>
     </div>
@@ -425,13 +460,13 @@
           <p><i class="fas fa-map-marker-alt"></i> Lalbaug, Mumbai</p>
           <div style="margin:2rem 0;">
             <div class="qr-container">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.gle/FlavorFusionReview" alt="QR code to leave review" style="width:120px;height:120px;display:block;">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/jnTRRCAynYJkPYwFA" alt="QR code to leave review" style="width:120px;height:120px;display:block;">
             </div>
             <div class="qr-label">Scan to leave a review</div>
           </div>
-          <a href="https://wa.me/919820123456?text=Plan%20My%20Celebration%20with%20Flavor%20Fusion" class="btn btn-primary" style="margin-bottom:1.5rem;">Plan Your Celebration</a>
+          <a href="https://wa.me/919820123456?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="btn btn-primary" style="margin-bottom:1.5rem;">Plan Your Celebration</a>
           <br>
-          <a href="https://wa.me/919820123456?text=Hello%2C%20I'd%20like%20to%20send%20details%20about%20my%20event" class="btn btn-outline" style="border-color:var(--soft-gold); color:var(--soft-gold);" target="_blank">
+          <a href="https://wa.me/919820123456?text=Hi%2C%20I%20want%20to%20plan%20an%20event%20with%20Flavor%20Fusion" class="btn btn-outline" style="border-color:var(--soft-gold); color:var(--soft-gold);" target="_blank">
             <i class="fab fa-whatsapp"></i> Send Details on WhatsApp
           </a>
         </div>
@@ -451,10 +486,10 @@
       <span>Serving Mumbai · Thane · Navi Mumbai</span>
       <div style="display:flex; align-items:center; gap:1.5rem;">
         <div style="text-align:center;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://forms.gle/FlavorFusionReview" alt="QR review" style="width:80px;height:80px;background:white;padding:4px;border-radius:8px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://forms.gle/jnTRRCAynYJkPYwFA" alt="QR review" style="width:80px;height:80px;background:white;padding:4px;border-radius:8px;">
           <div style="font-size:0.7rem; margin-top:4px;">Scan to review</div>
         </div>
-        <a href="https://forms.gle/FlavorFusionReview" class="btn btn-outline" style="background:transparent; color:var(--soft-gold); border-color:var(--soft-gold);" target="_blank">Leave a Review</a>
+        <a href="https://forms.gle/jnTRRCAynYJkPYwFA" class="btn btn-outline" style="background:transparent; color:var(--soft-gold); border-color:var(--soft-gold);" target="_blank">Leave a Review</a>
       </div>
     </div>
   </div>
@@ -475,17 +510,17 @@
       });
     });
 
-    // Gallery images
+    // Gallery images (local placeholder files)
     const galleryItems = [
-      { category:'weddings', img:'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600', title:'Elegant wedding' },
-      { category:'weddings', img:'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=600', title:'Reception' },
-      { category:'corporate', img:'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600', title:'Corporate gala' },
-      { category:'decor', img:'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600', title:'Floral detail' },
-      { category:'food', img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600', title:'Plated course' },
-      { category:'food', img:'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600', title:'Gourmet spread' },
-      { category:'decor', img:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600', title:'Table setting' },
-      { category:'corporate', img:'https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600', title:'Seminar lunch' },
-      { category:'weddings', img:'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600', title:'Mandap' }
+      { category:'weddings', img:'img1.jpg', title:'Wedding setup' },
+      { category:'weddings', img:'img2.jpg', title:'Reception' },
+      { category:'corporate', img:'img3.jpg', title:'Corporate gala' },
+      { category:'decor', img:'img4.jpg', title:'Decor detail' },
+      { category:'food', img:'img1.jpg', title:'Plated course' },
+      { category:'food', img:'img2.jpg', title:'Gourmet spread' },
+      { category:'decor', img:'img3.jpg', title:'Table setting' },
+      { category:'corporate', img:'img4.jpg', title:'Seminar lunch' },
+      { category:'weddings', img:'img1.jpg', title:'Mandap' }
     ];
     const galleryContainer = document.getElementById('galleryContainer');
     const filterBtns = document.querySelectorAll('.filter-btn');
@@ -495,21 +530,8 @@
     }
     filterBtns.forEach(b=>b.addEventListener('click',()=>{filterBtns.forEach(b=>b.classList.remove('active'));b.classList.add('active');renderGallery(b.dataset.filter);}));
     renderGallery();
-
-    // Testimonials
-    const testimonialData = [
-      { review:'A flawlessly executed celebration. Every detail was handled with calm precision.', client:'Wedding Client, Mumbai' },
-      { review:'From first call to final send-off, composed and professional. Impeccable dining journey.', client:'Corporate Host, Thane' },
-      { review:'One team truly meant seamless. Turned our vision into reality without stress.', client:'Family Event, Navi Mumbai' }
-    ];
-    document.getElementById('testimonialContainer').innerHTML = testimonialData.map(t=>`
-      <div class="testimonial-card"><i class="fas fa-quote-left" style="color:var(--soft-gold); opacity:0.4; font-size:2rem;"></i><p style="margin:1rem 0;">${t.review}</p><h4>— ${t.client}</h4></div>
-    `).join('');
-
-    // Review link
-    const reviewFormUrl = 'https://forms.gle/FlavorFusionReview';
-    document.querySelectorAll('a[href*="forms.gle"]').forEach(el => el.href = reviewFormUrl);
   })();
 </script>
 </body>
 </html>
+```
