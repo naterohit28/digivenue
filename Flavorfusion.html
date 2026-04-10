@@ -103,7 +103,19 @@ Here is the final, ready-to-launch code:
     .pillar-icon { font-size: 2.5rem; color: var(--soft-gold); margin-bottom: 1.5rem; }
     .pillar-card h3 { font-size: 1.8rem; margin-bottom: 0.8rem; }
     .dual-offer { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin: 3.5rem 0; }
-    .offer-card { background: var(--white-pure); padding: 3rem 2.5rem; border-radius: 32px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
+    .offer-card { 
+  background: var(--white-pure); 
+  padding: 3rem 2.5rem; 
+  border-radius: 32px; 
+  box-shadow: var(--shadow-md); 
+  border: 1px solid var(--border-light);
+  display: flex; 
+  flex-direction: column; 
+}
+.offer-card .btn {
+  margin-top: auto; 
+  align-self: flex-start;
+}
     .offer-card.left { border-top: 6px solid var(--soft-gold); }
     .offer-card.right { border-top: 6px solid var(--gold-deep); }
     .price-tag { font-size: 2.8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; color: #1e1b17; }
@@ -285,11 +297,20 @@ Here is the final, ready-to-launch code:
   <section style="background: var(--beige);">
     <div class="container">
       <div class="dual-offer">
-        <div class="offer-card left"><h3 style="font-size:2rem;">Affordable Catering</h3><div class="price-tag">Starting ₹600 <span style="font-size:1rem;">per guest</span></div><p style="margin:1.5rem 0;">Classic menus with signature discipline.</p><a href="#contact" class="btn btn-outline">View Packages</a></div>
-        <div class="offer-card right"><h3 style="font-size:2rem;">Premium Curated Experiences</h3><div class="price-tag">₹1500 – ₹2200 <span style="font-size:1rem;">per guest</span></div><p style="margin:1.5rem 0;">Bespoke journeys, decor integration, white-glove execution.</p><a href="#menu" class="btn btn-primary">Explore Premium</a></div>
+        <div class="offer-card left">
+          <h3 style="font-size:2.2rem; font-weight:500; margin-bottom:0.5rem;">Affordable Catering</h3>
+          <div class="price-tag">Starting ₹600 <span style="font-size:1rem; font-family:'Inter', sans-serif; font-weight:400; letter-spacing:0;">per guest</span></div>
+          <p style="margin: 1.5rem 0 2.5rem; color:var(--text-dark); font-size: 1.05rem;">Classic menus with signature discipline.</p>
+          <a href="#contact" class="btn btn-outline">View Packages</a>
+        </div>
+        
+        <div class="offer-card right">
+          <h3 style="font-size:2.2rem; font-weight:500; margin-bottom:0.5rem;">Premium Curated Experiences</h3>
+          <div class="price-tag">₹1500 – ₹2200 <span style="font-size:1rem; font-family:'Inter', sans-serif; font-weight:400; letter-spacing:0;">per guest</span></div>
+          <p style="margin: 1.5rem 0 2.5rem; color:var(--text-dark); font-size: 1.05rem;">Bespoke journeys, decor integration, white-glove execution.</p>
+          <a href="#menu" class="btn btn-primary">Explore Premium</a>
+        </div>
       </div>
-    </div>
-  </section>
 
   <div class="container trust-strip">
     <div class="trust-item"><i class="fas fa-medal" style="color:var(--soft-gold); margin-right:8px;"></i> 40+ years legacy</div>
