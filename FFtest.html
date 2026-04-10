@@ -1,10 +1,3 @@
-Here is your refined code with the **`FLAVOR FUSION Logo.svg`** perfectly integrated into both the header and the footer. 
-
-I retained your exact CSS classes (`.logo-img` and `.footer-logo`) so the header logo remains sleek and perfectly centered, while the footer logo gets that slight white background padding to ensure the dark text of the logo pops beautifully against your dark footer.
-
-Here is the final, ready-to-launch code:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +48,16 @@ Here is the final, ready-to-launch code:
       padding: 0.8rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
     }
     .logo-wrapper { display: flex; align-items: center; }
-    .logo-img { height: 200px; width: auto; display: block; }
+    
+    /* --- FIX: KEEPS HEADER THIN BUT MAGNIFIES LOGO --- */
+    .logo-img { 
+      height: 60px; /* Keeps the physical header thin */
+      width: auto; 
+      display: block; 
+      transform: scale(2.6); /* Zooms the logo in 2.6x */
+      transform-origin: left center; /* Keeps it anchored to the left */
+    }
+    
     .nav-links { display: flex; gap: 2.2rem; font-weight: 450; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; }
     .nav-links a { text-decoration: none; color: var(--text-dark); transition: color 0.2s; font-weight: 500; }
     .nav-links a:hover { color: var(--soft-gold); }
@@ -104,18 +106,15 @@ Here is the final, ready-to-launch code:
     .pillar-card h3 { font-size: 1.8rem; margin-bottom: 0.8rem; }
     .dual-offer { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin: 3.5rem 0; }
     .offer-card { 
-  background: var(--white-pure); 
-  padding: 3rem 2.5rem; 
-  border-radius: 32px; 
-  box-shadow: var(--shadow-md); 
-  border: 1px solid var(--border-light);
-  display: flex; 
-  flex-direction: column; 
-}
-.offer-card .btn {
-  margin-top: auto; 
-  align-self: flex-start;
-}
+      background: var(--white-pure); 
+      padding: 3rem 2.5rem; 
+      border-radius: 32px; 
+      box-shadow: var(--shadow-md); 
+      border: 1px solid var(--border-light);
+      display: flex; 
+      flex-direction: column; 
+    }
+    .offer-card .btn { margin-top: auto; align-self: flex-start; }
     .offer-card.left { border-top: 6px solid var(--soft-gold); }
     .offer-card.right { border-top: 6px solid var(--gold-deep); }
     .price-tag { font-size: 2.8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; color: #1e1b17; }
@@ -127,37 +126,13 @@ Here is the final, ready-to-launch code:
     .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
     .gallery-item { aspect-ratio: 4/3; background: #d9d2c5; border-radius: 20px; background-size: cover; background-position: center; box-shadow: var(--shadow-sm); }
     
-    /* Refined filter buttons — minimal & premium */
-    .filter-buttons {
-      display: flex;
-      gap: 1.8rem;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .filter-buttons { display: flex; gap: 1.8rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center; }
     .filter-btn {
-      background: transparent;
-      border: none;
-      padding: 0.4rem 0;
-      font-size: 0.9rem;
-      font-weight: 400;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text-soft);
-      cursor: pointer;
-      transition: all 0.2s;
-      border-bottom: 1.5px solid transparent;
-      border-radius: 0;
+      background: transparent; border: none; padding: 0.4rem 0; font-size: 0.9rem; font-weight: 400; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-soft); cursor: pointer; transition: all 0.2s; border-bottom: 1.5px solid transparent; border-radius: 0;
     }
-    .filter-btn:hover {
-      color: var(--text-dark);
-      border-bottom-color: var(--soft-gold);
-    }
-    .filter-btn.active {
-      color: var(--soft-gold);
-      border-bottom-color: var(--soft-gold);
-      font-weight: 500;
-    }
+    .filter-btn:hover { color: var(--text-dark); border-bottom-color: var(--soft-gold); }
+    .filter-btn.active { color: var(--soft-gold); border-bottom-color: var(--soft-gold); font-weight: 500; }
     
     .testimonial-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 2rem; }
     .review-card { background: var(--white-pure); padding: 2.5rem; border-radius: 28px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
@@ -174,50 +149,14 @@ Here is the final, ready-to-launch code:
     .review-verification-note { font-size: 0.9rem; color: var(--text-soft); margin: 1rem 0; }
     .footer-logo { max-height: 140px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; }
 
-    /* House Party Cards */
-    .house-party-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 2rem;
-      margin: 2.5rem 0 2rem;
-    }
-    .house-card {
-      background: var(--white-pure);
-      padding: 2.2rem 1.8rem;
-      border-radius: 28px;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-light);
-    }
-    .house-card h4 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #1e1b17;
-    }
-    .house-price {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--soft-gold);
-      margin-bottom: 1.5rem;
-      font-family: 'Cormorant Garamond', serif;
-    }
-    .house-menu-list {
-      list-style: none;
-      margin: 1.2rem 0;
-      font-size: 0.95rem;
-      color: var(--text-soft);
-    }
-    .house-menu-list li {
-      padding: 0.3rem 0;
-      border-bottom: 1px dashed var(--border-light);
-    }
+    .house-party-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin: 2.5rem 0 2rem; }
+    .house-card { background: var(--white-pure); padding: 2.2rem 1.8rem; border-radius: 28px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
+    .house-card h4 { font-size: 2rem; margin-bottom: 0.5rem; color: #1e1b17; }
+    .house-price { font-size: 1.5rem; font-weight: 600; color: var(--soft-gold); margin-bottom: 1.5rem; font-family: 'Cormorant Garamond', serif; }
+    .house-menu-list { list-style: none; margin: 1.2rem 0; font-size: 0.95rem; color: var(--text-soft); }
+    .house-menu-list li { padding: 0.3rem 0; border-bottom: 1px dashed var(--border-light); }
     .house-menu-list li:last-child { border: none; }
-    .house-inclusions {
-      margin-top: 1.5rem;
-      background: var(--beige);
-      padding: 1.2rem 1.5rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-    }
+    .house-inclusions { margin-top: 1.5rem; background: var(--beige); padding: 1.2rem 1.5rem; border-radius: 20px; font-size: 0.9rem; }
 
     @media (max-width: 900px) {
       h2 { font-size: 2.2rem; } .hero h1 { font-size: 3rem; }
@@ -226,6 +165,15 @@ Here is the final, ready-to-launch code:
       .gallery-grid { grid-template-columns: repeat(2,1fr); } .testimonial-grid { grid-template-columns: 1fr; }
       .venue-list { grid-template-columns: repeat(2,1fr); }
       .house-party-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--white); flex-direction: column; padding: 20px 0; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+      .nav-links.active { display: flex; }
+      .mobile-menu-btn { display: block; color: var(--text-dark); }
+      header { background: var(--white); padding: 10px 0; }
+      .whatsapp-text { display: none; }
+      .whatsapp-fab { padding: 0; width: 50px; justify-content: center; }
+      .logo-img { transform: scale(1.8); } /* Makes sure logo fits on mobile screens */
     }
     @media (max-width: 560px) {
       .pillars-grid { grid-template-columns: 1fr; } .gallery-grid { grid-template-columns: 1fr; }
@@ -548,4 +496,3 @@ Here is the final, ready-to-launch code:
 </script>
 </body>
 </html>
-```
