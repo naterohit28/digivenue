@@ -34,7 +34,7 @@
         .section-padding { padding: 100px 0; }
         .text-center { text-align: center; }
         .section-title { font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-dark); }
-        .section-subtitle { font-size: 1.1rem; color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3rem; display: block; }
+        .section-subtitle { font-size: 1.1rem; color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2rem; display: block; }
         
         /* Buttons */
         .btn { display: inline-block; padding: 14px 32px; border-radius: 2px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: var(--transition); border: 1px solid transparent; }
@@ -46,27 +46,30 @@
         .btn-outline-light:hover { background: var(--white); color: var(--text-dark); }
 
         /* --- HEADER & NAVIGATION --- */
-        header { position: fixed; width: 100%; top: 0; z-index: 1000; background: transparent; transition: var(--transition); padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        header.scrolled { background: rgba(253, 251, 247, 0.95); padding: 15px 0; backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 1px solid var(--bg-secondary); }
-        header.scrolled .logo, header.scrolled .nav-links a { color: var(--text-dark); }
+        header { position: fixed; width: 100%; top: 0; z-index: 1000; background: transparent; transition: var(--transition); padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        header.scrolled { background: rgba(253, 251, 247, 0.98); padding: 10px 0; backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 1px solid var(--bg-secondary); }
+        header.scrolled .nav-links a { color: var(--text-dark); }
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); letter-spacing: 1px; }
-        .logo span { color: var(--accent-gold); }
-        .nav-links { display: flex; gap: 30px; }
+        
+        /* LOGO STYLING */
+        .nav-logo { max-height: 65px; width: auto; transition: var(--transition); }
+        header.scrolled .nav-logo { max-height: 55px; }
+        .footer-logo { max-height: 90px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; } /* Background added to pop against dark footer */
+
+        .nav-links { display: flex; gap: 30px; align-items: center; }
         .nav-links a { font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); }
         .nav-links a:hover { color: var(--accent-gold); }
         .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
 
         /* --- HERO SECTION --- */
-        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.88), rgba(240, 235, 225, 0.95)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
-        .hero-content { max-width: 900px; padding: 0 20px; }
-        .hero-title { font-size: 4rem; line-height: 1.2; margin-bottom: 15px; color: var(--text-dark); }
-        
-        /* New Hero Context Elements */
+        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.90), rgba(240, 235, 225, 0.96)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
+        .hero-content { max-width: 900px; padding: 0 20px; margin-top: 40px; }
         .trust-badge { display: inline-block; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 8px 16px; border-radius: 50px; margin-bottom: 25px; }
-        .hero-subtitle { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 15px; font-weight: 500; letter-spacing: 1px; }
-        .hero-location { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 25px; font-weight: 400; }
-        .hero-services { font-size: 1.05rem; color: var(--text-dark); font-weight: 600; margin-bottom: 40px; line-height: 1.8; letter-spacing: 1px; }
+        .hero-title { font-size: 4rem; line-height: 1.1; margin-bottom: 15px; color: var(--text-dark); }
+        
+        .hero-location { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 5px; font-weight: 500; letter-spacing: 1px; }
+        .hero-trusted { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 30px; font-style: italic; font-weight: 400; }
+        .hero-services { font-size: 1.05rem; color: var(--text-dark); font-weight: 600; margin-bottom: 40px; line-height: 1.8; letter-spacing: 1px; text-transform: uppercase; }
 
         .hero-btns { display: flex; gap: 20px; justify-content: center; }
 
@@ -78,15 +81,6 @@
         
         .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; text-align: left; border-top: 1px solid var(--bg-secondary); padding: 30px 0; margin-top: 30px; }
         
-        /* --- DUAL OFFERING SECTION --- */
-        #dual-offering { background: var(--text-dark); color: var(--white); }
-        #dual-offering .section-title { color: var(--white); }
-        .dual-grid { display: flex; gap: 0; border: 1px solid rgba(255,255,255,0.1); }
-        .dual-card { flex: 1; padding: 60px 40px; text-align: center; }
-        .dual-card:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
-        .dual-title { font-size: 2rem; margin-bottom: 15px; color: var(--accent-gold); }
-        .dual-price { font-size: 1.2rem; font-family: 'Lato', sans-serif; letter-spacing: 1px; margin-bottom: 20px; color: rgba(255,255,255,0.7); }
-
         /* --- ABOUT & APPROACH --- */
         #about { background: var(--bg-secondary); }
         .split-layout { display: flex; align-items: center; gap: 60px; }
@@ -94,7 +88,7 @@
         .split-image { flex: 1; height: 500px; background: url('https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; }
         .lead-text { font-size: 1.2rem; font-weight: 400; margin-bottom: 20px; font-style: italic; color: var(--text-muted); }
 
-        /* --- MENU JOURNEYS (UPGRADED) --- */
+        /* --- MENU JOURNEYS --- */
         .menu-wrapper { max-width: 1000px; margin: 0 auto; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; }
         .menu-tier { background: var(--white); padding: 40px; border: 1px solid var(--bg-secondary); transition: var(--transition); }
@@ -106,7 +100,8 @@
         .tier-tags { display: flex; flex-wrap: wrap; gap: 10px; }
         .tier-tag { font-size: 0.8rem; background: var(--bg-secondary); padding: 5px 12px; border-radius: 4px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 1px; }
         
-        .menu-disclaimer { margin-top: 40px; font-size: 0.95rem; color: var(--text-muted); font-style: italic; text-align: center; }
+        .menu-disclaimer-box { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--bg-secondary); text-align: center; }
+        .menu-disclaimer { font-size: 0.95rem; color: var(--text-muted); font-style: italic; margin-bottom: 5px; }
 
         /* --- VENUES --- */
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
@@ -125,7 +120,7 @@
         /* --- QR CODE BOX --- */
         .qr-box { background: var(--white); padding: 15px; display: inline-block; border-radius: 4px; text-align: center; border: 1px solid var(--bg-secondary); }
         .qr-box img { width: 100px; height: 100px; margin: 0 auto 10px; }
-        .qr-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 0; font-weight: 700; }
+        .qr-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dark); margin: 0; font-weight: 700; }
 
         /* --- CONTACT & FOOTER --- */
         #contact { background: var(--text-dark); color: var(--white); }
@@ -133,7 +128,6 @@
         .contact-info p { margin-bottom: 15px; font-size: 1.1rem; color: rgba(255,255,255,0.8); }
         .contact-info i { color: var(--accent-gold); margin-right: 15px; width: 20px; text-align: center; }
         
-        /* Direct Contact Card replacing the Form */
         .direct-contact-card { background: var(--white); padding: 50px 40px; border-radius: 2px; text-align: center; }
         .direct-contact-card h3 { color: var(--text-dark); margin-bottom: 15px; font-size: 1.8rem; }
         .direct-contact-card p { color: var(--text-muted); margin-bottom: 30px; font-size: 1rem; }
@@ -143,7 +137,7 @@
         footer { background: #1A1918; color: rgba(255,255,255,0.5); font-size: 0.9rem; padding: 60px 0 30px; }
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; }
         .footer-heading { color: var(--white); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 20px; }
-        .power-line { color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; margin-top: 15px; font-weight: 500; }
+        .power-line { color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-size: 0.85rem; margin-top: 15px; font-weight: 600; }
 
         /* --- FLOATING WHATSAPP --- */
         .whatsapp-fab { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; padding: 0 20px; height: 50px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -153,34 +147,35 @@
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 900px) {
             .split-layout { flex-direction: column; }
-            .dual-grid { flex-direction: column; }
             .menu-grid { grid-template-columns: 1fr; }
-            .dual-card:first-child { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
             .contact-grid { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr; text-align: center; }
             .hero-title { font-size: 3rem; }
+            .footer-logo { margin: 0 auto 20px; }
         }
         @media (max-width: 768px) {
             .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--white); flex-direction: column; padding: 20px 0; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
             .nav-links.active { display: flex; }
             .mobile-menu-btn { display: block; color: var(--text-dark); }
-            header { background: var(--white); padding: 15px 0; }
+            header { background: var(--white); padding: 10px 0; }
             .whatsapp-text { display: none; }
             .whatsapp-fab { padding: 0; width: 50px; justify-content: center; }
-            .trust-badge { font-size: 0.75rem; padding: 6px 12px; }
+            .hero-services { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/919876543210" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
+    <a href="https://wa.me/YOUR_NUMBER" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span class="whatsapp-text">Chat</span>
     </a>
 
     <header id="header">
         <div class="container nav-container">
-            <div class="logo">Flavor<span>Fusion</span></div>
+            <a href="#">
+                <img src="FLAVOR FUSION Logo.svg" alt="Flavor Fusion Catering Logo" class="nav-logo">
+            </a>
             <nav class="nav-links" id="nav-links">
                 <a href="#about">About</a>
                 <a href="#services">What We Do</a>
@@ -201,15 +196,15 @@
             
             <h1 class="hero-title">Curating Thoughtful Celebrations</h1>
             
-            <p class="hero-subtitle">Trusted by families & corporate clients across Mumbai</p>
             <p class="hero-location">Serving Mumbai, Thane & Navi Mumbai</p>
+            <p class="hero-trusted">Trusted by families & corporate clients across Mumbai</p>
             
             <p class="hero-services">
                 Weddings · Corporate Events · Social Celebrations · Live Catering · Premium Curated Setups
             </p>
 
             <div class="hero-btns">
-                <a href="https://wa.me/919876543210" class="btn btn-gold">Get Quote</a>
+                <a href="https://wa.me/YOUR_NUMBER" class="btn btn-gold">Get Quote</a>
                 <a href="#services" class="btn btn-outline" style="background:var(--white)">Explore Experiences</a>
             </div>
         </div>
@@ -217,10 +212,11 @@
 
     <section id="services" class="section-padding">
         <div class="container">
-            <div class="text-center">
+            <div class="text-center" style="max-width: 800px; margin: 0 auto;">
                 <h2 class="section-title">From Catering to Complete Execution</h2>
                 <span class="section-subtitle">The Integrated Experience Model</span>
-                <p style="max-width: 700px; margin: 0 auto; color: var(--text-muted);">We believe in structured execution over chaos. Experience over item counts. We operate as a single team with one vision, ensuring your celebration is seamless from the first sketch to the final farewell.</p>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">We believe in structured execution over chaos. Experience over item counts. We operate as a single team with one vision, ensuring your celebration is seamless from the first sketch to the final farewell.</p>
+                <p style="color: var(--text-dark); font-weight: 700; font-size: 1.1rem; border-top: 1px solid var(--bg-secondary); padding-top: 20px; display: inline-block;">We specialize in both standalone catering and complete event execution.</p>
             </div>
             <div class="pillars-grid">
                 <div class="pillar-card"><i class="fas fa-map-marked-alt pillar-icon"></i><h3 class="pillar-title">Venue Experience</h3><p class="pillar-desc">Strategic space planning, logical flow, and uninterrupted guest movement.</p></div>
@@ -265,7 +261,6 @@
             
             <div class="menu-wrapper">
                 <div class="menu-grid">
-                    
                     <div class="menu-tier">
                         <div class="tier-header">
                             <h3 class="tier-title">Affordable Elegance</h3>
@@ -291,10 +286,12 @@
                             <span class="tier-tag" style="background: var(--accent-gold); color: white;">Grand Luxe</span>
                         </div>
                     </div>
-
                 </div>
 
-                <p class="menu-disclaimer">* Final pricing depends on guest count, venue, and customization.</p>
+                <div class="menu-disclaimer-box">
+                    <p class="menu-disclaimer">Menus are customized based on event type, guest profile, and service style.</p>
+                    <p class="menu-disclaimer">* Final pricing depends on guest count, venue, and customization.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -318,7 +315,8 @@
 
             <div class="venue-context">
                 <p style="color: var(--text-dark); font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; font-family: 'Playfair Display', serif;">We execute at any venue — not limited to listed partnerships.</p>
-                <p style="color: var(--text-muted); font-size: 1rem;">Whether it is a preferred banquet, a private lawn, or a venue of your own choosing across Mumbai, Thane, or Navi Mumbai, our execution team is fully equipped to deliver a seamless experience.</p>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 10px;">Whether it is a preferred banquet, a private lawn, or a venue of your own choosing across Mumbai, Thane, or Navi Mumbai, our execution team is fully equipped to deliver a seamless experience.</p>
+                <p style="color: var(--text-dark); font-size: 0.95rem; font-weight: 600; font-style: italic;">Our teams are experienced with banquet halls, lawns, terraces, and private residences.</p>
             </div>
         </div>
     </section>
@@ -347,7 +345,7 @@
 
             <div class="text-center" style="margin-top: 50px;">
                 <p style="margin-bottom: 15px; font-size: 1.1rem;">We value your feedback — share your experience with us.</p>
-                <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" class="btn btn-outline">Leave a Review</a>
+                <a href="https://forms.gle/YOUR_FORM_LINK" target="_blank" class="btn btn-outline">Leave a Review</a>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 15px; font-style: italic;">* Reviews are collected and verified before display.</p>
             </div>
         </div>
@@ -362,14 +360,14 @@
                 
                 <div class="contact-info">
                     <p><i class="fas fa-map-marker-alt"></i> Lalbaug, Mumbai, Maharashtra</p>
-                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
-                    <p><i class="fab fa-whatsapp"></i> +91 91234 56789</p>
+                    <p><i class="fas fa-phone"></i> +91 YOUR_NUMBER</p>
+                    <p><i class="fab fa-whatsapp"></i> +91 YOUR_NUMBER</p>
                     <p><i class="fas fa-envelope"></i> hello@flavorfusion.in</p>
                 </div>
 
                 <div style="margin-top: 40px;">
                     <div class="qr-box">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_GOOGLE_FORM_LINK" alt="Review QR Code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/YOUR_FORM_LINK" alt="Review QR Code">
                         <p class="qr-label">Scan to leave a review</p>
                     </div>
                 </div>
@@ -377,10 +375,10 @@
             
             <div class="direct-contact-card">
                 <h3>Let's Discuss Your Event</h3>
-                <p>Skip the forms. Reach out directly to our team for immediate assistance, date availability, and custom curation tailored to your vision.</p>
-                <a href="https://wa.me/919876543210" target="_blank" class="btn-whatsapp-large">
+                <p>Reach out directly to our team for immediate assistance, date availability, and custom curation tailored to your vision.</p>
+                <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="btn-whatsapp-large">
                     <i class="fab fa-whatsapp" style="font-size: 1.8rem;"></i>
-                    Start a Conversation
+                    Send Details on WhatsApp
                 </a>
             </div>
         </div>
@@ -389,20 +387,20 @@
     <footer>
         <div class="container footer-grid">
             <div>
-                <div class="logo" style="color: var(--white); font-size: 1.8rem;">Flavor<span style="color: var(--accent-gold);">Fusion</span></div>
-                <p class="power-line">Serving Mumbai · Thane · Navi Mumbai</p>
+                <img src="FLAVOR FUSION Logo.svg" alt="Flavor Fusion Logo" class="footer-logo">
+                <p class="power-line">Executing events across Mumbai · Thane · Navi Mumbai</p>
                 <p style="margin-top: 15px; max-width: 300px; color: rgba(255,255,255,0.6);">Curating thoughtful celebrations with discipline, refinement, and trust.</p>
             </div>
             
             <div>
                 <h4 class="footer-heading">Client Feedback</h4>
                 <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">We value your feedback — share your experience with us.</p>
-                <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" class="btn btn-outline-light" style="padding: 10px 20px; font-size: 0.8rem;">Leave a Review</a>
+                <a href="https://forms.gle/YOUR_FORM_LINK" target="_blank" class="btn btn-outline-light" style="padding: 10px 20px; font-size: 0.8rem;">Leave a Review</a>
             </div>
 
             <div>
                  <div class="qr-box">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_GOOGLE_FORM_LINK" alt="Footer QR Code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/YOUR_FORM_LINK" alt="Footer QR Code">
                     <p class="qr-label">Scan to review</p>
                 </div>
             </div>
