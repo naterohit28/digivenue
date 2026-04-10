@@ -1,8 +1,4 @@
-Here is your refined code with the **`FLAVOR FUSION Logo.svg`** perfectly integrated into both the header and the footer. 
-
-I retained your exact CSS classes (`.logo-img` and `.footer-logo`) so the header logo remains sleek and perfectly centered, while the footer logo gets that slight white background padding to ensure the dark text of the logo pops beautifully against your dark footer.
-
-Here is the final, ready-to-launch code:
+The code structure has been fixed. The trust strip now sits correctly outside the dual‑offer section, and both header and footer logos use the proper SVG file (`FLAVOR FUSION Logo.svg`). The layout remains clean, premium, and fully functional.
 
 ```html
 <!DOCTYPE html>
@@ -104,18 +100,15 @@ Here is the final, ready-to-launch code:
     .pillar-card h3 { font-size: 1.8rem; margin-bottom: 0.8rem; }
     .dual-offer { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin: 3.5rem 0; }
     .offer-card { 
-  background: var(--white-pure); 
-  padding: 3rem 2.5rem; 
-  border-radius: 32px; 
-  box-shadow: var(--shadow-md); 
-  border: 1px solid var(--border-light);
-  display: flex; 
-  flex-direction: column; 
-}
-.offer-card .btn {
-  margin-top: auto; 
-  align-self: flex-start;
-}
+      background: var(--white-pure); 
+      padding: 3rem 2.5rem; 
+      border-radius: 32px; 
+      box-shadow: var(--shadow-md); 
+      border: 1px solid var(--border-light);
+      display: flex; 
+      flex-direction: column; 
+    }
+    .offer-card .btn { margin-top: auto; align-self: flex-start; }
     .offer-card.left { border-top: 6px solid var(--soft-gold); }
     .offer-card.right { border-top: 6px solid var(--gold-deep); }
     .price-tag { font-size: 2.8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; color: #1e1b17; }
@@ -126,45 +119,21 @@ Here is the final, ready-to-launch code:
     .trust-item { font-size: 1.2rem; font-weight: 500; }
     .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
     .gallery-item { aspect-ratio: 4/3; background: #d9d2c5; border-radius: 20px; background-size: cover; background-position: center; box-shadow: var(--shadow-sm); }
-    
-    /* Refined filter buttons — minimal & premium */
     .filter-buttons {
-      display: flex;
-      gap: 1.8rem;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: flex; gap: 1.8rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;
     }
     .filter-btn {
-      background: transparent;
-      border: none;
-      padding: 0.4rem 0;
-      font-size: 0.9rem;
-      font-weight: 400;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text-soft);
-      cursor: pointer;
-      transition: all 0.2s;
-      border-bottom: 1.5px solid transparent;
-      border-radius: 0;
+      background: transparent; border: none; padding: 0.4rem 0; font-size: 0.9rem; font-weight: 400;
+      text-transform: uppercase; letter-spacing: 2px; color: var(--text-soft); cursor: pointer;
+      transition: all 0.2s; border-bottom: 1.5px solid transparent; border-radius: 0;
     }
-    .filter-btn:hover {
-      color: var(--text-dark);
-      border-bottom-color: var(--soft-gold);
-    }
-    .filter-btn.active {
-      color: var(--soft-gold);
-      border-bottom-color: var(--soft-gold);
-      font-weight: 500;
-    }
-    
+    .filter-btn:hover { color: var(--text-dark); border-bottom-color: var(--soft-gold); }
+    .filter-btn.active { color: var(--soft-gold); border-bottom-color: var(--soft-gold); font-weight: 500; }
     .testimonial-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 2rem; }
     .review-card { background: var(--white-pure); padding: 2.5rem; border-radius: 28px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
     .review-stars { color: var(--soft-gold); font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 1rem; }
     .review-text { font-size: 1.1rem; line-height: 1.5; margin-bottom: 1.5rem; color: var(--text-dark); }
     .review-author { font-weight: 500; color: var(--text-soft); }
-    
     .venue-list { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; list-style: none; margin-top: 2rem; }
     .venue-list li { background: var(--white-pure); padding: 1.2rem 1.8rem; border-radius: 50px; border: 1px solid var(--border-light); font-weight: 500; }
     .venue-note { margin-top: 1.8rem; font-weight: 500; border-left: 4px solid var(--soft-gold); padding-left: 1.5rem; }
@@ -173,59 +142,32 @@ Here is the final, ready-to-launch code:
     .qr-label { font-size: 0.8rem; letter-spacing: 1px; color: var(--text-soft); margin-top: 0.5rem; }
     .review-verification-note { font-size: 0.9rem; color: var(--text-soft); margin: 1rem 0; }
     .footer-logo { max-height: 90px; margin-bottom: 20px; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 4px; }
-
-    /* House Party Cards */
     .house-party-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 2rem;
-      margin: 2.5rem 0 2rem;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin: 2.5rem 0 2rem;
     }
     .house-card {
-      background: var(--white-pure);
-      padding: 2.2rem 1.8rem;
-      border-radius: 28px;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-light);
+      background: var(--white-pure); padding: 2.2rem 1.8rem; border-radius: 28px;
+      box-shadow: var(--shadow-md); border: 1px solid var(--border-light);
     }
-    .house-card h4 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #1e1b17;
-    }
+    .house-card h4 { font-size: 2rem; margin-bottom: 0.5rem; color: #1e1b17; }
     .house-price {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--soft-gold);
-      margin-bottom: 1.5rem;
+      font-size: 1.5rem; font-weight: 600; color: var(--soft-gold); margin-bottom: 1.5rem;
       font-family: 'Cormorant Garamond', serif;
     }
     .house-menu-list {
-      list-style: none;
-      margin: 1.2rem 0;
-      font-size: 0.95rem;
-      color: var(--text-soft);
+      list-style: none; margin: 1.2rem 0; font-size: 0.95rem; color: var(--text-soft);
     }
-    .house-menu-list li {
-      padding: 0.3rem 0;
-      border-bottom: 1px dashed var(--border-light);
-    }
+    .house-menu-list li { padding: 0.3rem 0; border-bottom: 1px dashed var(--border-light); }
     .house-menu-list li:last-child { border: none; }
     .house-inclusions {
-      margin-top: 1.5rem;
-      background: var(--beige);
-      padding: 1.2rem 1.5rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
+      margin-top: 1.5rem; background: var(--beige); padding: 1.2rem 1.5rem; border-radius: 20px; font-size: 0.9rem;
     }
-
     @media (max-width: 900px) {
       h2 { font-size: 2.2rem; } .hero h1 { font-size: 3rem; }
       .pillars-grid { grid-template-columns: repeat(2,1fr); } .dual-offer { grid-template-columns: 1fr; }
       .nav-links { display: none; } .site-header { justify-content: center; }
       .gallery-grid { grid-template-columns: repeat(2,1fr); } .testimonial-grid { grid-template-columns: 1fr; }
-      .venue-list { grid-template-columns: repeat(2,1fr); }
-      .house-party-grid { grid-template-columns: 1fr; }
+      .venue-list { grid-template-columns: repeat(2,1fr); } .house-party-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .pillars-grid { grid-template-columns: 1fr; } .gallery-grid { grid-template-columns: 1fr; }
@@ -243,7 +185,7 @@ Here is the final, ready-to-launch code:
 
 <header class="site-header">
   <div class="logo-wrapper">
-    <img src="logo.svg" alt="Flavor Fusion Logo" class="logo-img">
+    <img src="FLAVOR FUSION Logo.svg" alt="Flavor Fusion Logo" class="logo-img">
   </div>
   <div class="nav-links">
     <a href="#home">Home</a><a href="#about">About</a><a href="#approach">Approach</a><a href="#what-we-do">What We Do</a>
@@ -303,7 +245,6 @@ Here is the final, ready-to-launch code:
           <p style="margin: 1.5rem 0 2.5rem; color:var(--text-dark); font-size: 1.05rem;">Classic menus with signature discipline.</p>
           <a href="#contact" class="btn btn-outline">View Packages</a>
         </div>
-        
         <div class="offer-card right">
           <h3 style="font-size:2.2rem; font-weight:500; margin-bottom:0.5rem;">Premium Curated Experiences</h3>
           <div class="price-tag">₹1500 – ₹2200 <span style="font-size:1rem; font-family:'Inter', sans-serif; font-weight:400; letter-spacing:0;">per guest</span></div>
@@ -311,7 +252,10 @@ Here is the final, ready-to-launch code:
           <a href="#menu" class="btn btn-primary">Explore Premium</a>
         </div>
       </div>
+    </div>
+  </section>
 
+  <!-- Trust Strip moved outside section for correct spacing -->
   <div class="container trust-strip">
     <div class="trust-item"><i class="fas fa-medal" style="color:var(--soft-gold); margin-right:8px;"></i> 40+ years legacy</div>
     <div class="trust-item"><i class="fas fa-star" style="color:var(--soft-gold); margin-right:8px;"></i> 12+ years modern execution</div>
@@ -492,7 +436,7 @@ Here is the final, ready-to-launch code:
 <footer>
   <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
     <div>
-      <img src="logo.svg" alt="Flavor Fusion Logo" class="footer-logo">
+      <img src="FLAVOR FUSION Logo.svg" alt="Flavor Fusion Logo" class="footer-logo">
       <br>
       © 2026 Flavor Fusion – Next Gen Catering.<br>Legacy of Suresh Caterers.
     </div>
