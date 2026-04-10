@@ -65,10 +65,16 @@
         .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
 
         /* --- HERO SECTION --- */
-        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(253, 251, 247, 0.8), rgba(253, 251, 247, 0.9)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
-        .hero-content { max-width: 800px; padding: 0 20px; }
-        .hero-title { font-size: 4rem; line-height: 1.2; margin-bottom: 20px; color: var(--text-dark); }
-        .hero-subtitle { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; font-weight: 300; }
+        /* Slightly darkened the overlay for better text contrast */
+        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.88), rgba(240, 235, 225, 0.95)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
+        .hero-content { max-width: 900px; padding: 0 20px; }
+        .hero-title { font-size: 4rem; line-height: 1.2; margin-bottom: 15px; color: var(--text-dark); }
+        .hero-subtitle { font-size: 1.2rem; color: var(--accent-gold); margin-bottom: 25px; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .hero-context { margin-bottom: 40px; font-size: 1.1rem; color: var(--text-muted); font-weight: 300; line-height: 1.8; }
+        .hero-context span { display: block; }
+        .hero-context .highlight-text { font-style: italic; color: var(--text-dark); font-weight: 400; margin-top: 5px; }
+
         .hero-btns { display: flex; gap: 20px; justify-content: center; }
 
         /* --- INTEGRATED EXPERIENCE PILLARS --- */
@@ -107,23 +113,29 @@
         .menu-category h3 { font-size: 1.8rem; margin-bottom: 20px; border-bottom: 1px solid var(--accent-gold); display: inline-block; padding-bottom: 10px; }
         .menu-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
         .menu-tag { background: var(--white); padding: 10px 20px; border: 1px solid var(--bg-secondary); border-radius: 50px; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; }
+        .menu-disclaimer { margin-top: 40px; font-size: 0.95rem; color: var(--text-muted); font-style: italic; }
 
         /* --- VENUES --- */
-        .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
         .venue-card { background: var(--white); padding: 30px; text-align: center; border: 1px solid var(--bg-secondary); }
         .venue-card h4 { font-size: 1.3rem; margin-bottom: 10px; }
         .venue-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; }
+        .venue-context { max-width: 800px; margin: 0 auto; padding: 30px; background: var(--white); border-left: 3px solid var(--accent-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
 
         /* --- CONTACT & FOOTER --- */
         #contact { background: var(--text-dark); color: var(--white); }
         .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
         .contact-info p { margin-bottom: 15px; font-size: 1.1rem; color: rgba(255,255,255,0.8); }
         .contact-info i { color: var(--accent-gold); margin-right: 15px; width: 20px; text-align: center; }
-        footer { text-align: center; padding: 30px 0; background: #1A1918; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+        
+        footer { text-align: center; padding: 40px 0 30px; background: #1A1918; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+        .power-line { color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 15px; font-weight: 500; }
 
         /* --- FLOATING WHATSAPP --- */
-        .whatsapp-fab { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; transition: transform 0.3s ease; }
-        .whatsapp-fab:hover { transform: scale(1.1); color: white; }
+        /* Updated to Pill Design with "Chat" text */
+        .whatsapp-fab { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; padding: 0 20px; height: 50px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .whatsapp-fab:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6); color: white; }
+        .whatsapp-text { font-size: 1rem; font-family: 'Lato', sans-serif; font-weight: 600; }
 
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 900px) {
@@ -139,13 +151,16 @@
             .nav-links.active { display: flex; }
             .mobile-menu-btn { display: block; color: var(--text-dark); }
             header { background: var(--white); padding: 15px 0; }
+            .whatsapp-text { display: none; } /* Show only icon on small screens to save space */
+            .whatsapp-fab { padding: 0; width: 50px; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/YOUR_NUMBER_HERE" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
+    <a href="https://wa.me/919876543210" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-text">Chat</span>
     </a>
 
     <header id="header">
@@ -168,9 +183,15 @@
     <section id="hero">
         <div class="hero-content">
             <h1 class="hero-title">Curating Thoughtful Celebrations</h1>
-            <p class="hero-subtitle">A refined approach to Venue, Cuisine, Design & Execution.</p>
+            <p class="hero-subtitle">A refined approach to Venue, Cuisine, Design & Execution</p>
+            
+            <div class="hero-context">
+                <span>For weddings, corporate events & premium celebrations across Mumbai, Thane & Navi Mumbai</span>
+                <span class="highlight-text">For clients who value structure, elegance, and seamless execution.</span>
+            </div>
+
             <div class="hero-btns">
-                <a href="https://wa.me/YOUR_NUMBER_HERE" class="btn btn-gold">Get Quote</a>
+                <a href="https://wa.me/919876543210" class="btn btn-gold">Get Quote</a>
                 <a href="#approach" class="btn btn-outline" style="background:var(--white)">Explore Experiences</a>
             </div>
         </div>
@@ -284,6 +305,8 @@
                         <span class="menu-tag" style="border-color: var(--accent-gold); color: var(--accent-gold);">Grand Luxe</span>
                     </div>
                 </div>
+
+                <p class="menu-disclaimer">* Final pricing depends on guest count, venue, and customization.</p>
             </div>
         </div>
     </section>
@@ -292,8 +315,8 @@
         <div class="container">
             <div class="text-center">
                 <h2 class="section-title">Our Canvas</h2>
-                <span class="section-subtitle">Preferred Venue Partnerships</span>
-                <p style="margin-bottom: 40px; color: var(--text-muted);">We have established exclusive coordination rights and deep partnerships with premium venues across the city to ensure seamless execution.</p>
+                <span class="section-subtitle">Venue Partnerships & Operations</span>
+                <p style="margin-bottom: 40px; color: var(--text-muted); max-width: 700px; margin-left: auto; margin-right: auto;">We have strong working relationships and execution experience across these venues.</p>
             </div>
             
             <div class="venues-grid">
@@ -322,6 +345,11 @@
                     <p>Thane</p>
                 </div>
             </div>
+
+            <div class="venue-context text-center">
+                <p style="color: var(--text-dark); font-weight: 600; margin-bottom: 10px;">We execute catering and complete event services at any venue across Mumbai, Thane, and Navi Mumbai — not limited to listed venues.</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Our listed venues are preferred partnerships, but we are fully equipped to operate at any banquet, lawn, or private venue of your choice.</p>
+            </div>
         </div>
     </section>
 
@@ -334,8 +362,8 @@
                 
                 <div class="contact-info">
                     <p><i class="fas fa-map-marker-alt"></i> Lalbaug, Mumbai, Maharashtra</p>
-                    <p><i class="fas fa-phone"></i> +91 XXXXX XXXXX</p>
-                    <p><i class="fab fa-whatsapp"></i> +91 XXXXX XXXXX</p>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fab fa-whatsapp"></i> +91 91234 56789</p>
                     <p><i class="fas fa-envelope"></i> hello@flavorfusion.in</p>
                 </div>
             </div>
@@ -358,6 +386,7 @@
 
     <footer>
         <div class="container">
+            <p class="power-line">Serving Mumbai · Thane · Navi Mumbai</p>
             <p>&copy; 2026 Flavor Fusion - Next Gen Catering. All rights reserved. A legacy of Suresh Caterers.</p>
         </div>
     </footer>
@@ -379,21 +408,6 @@
         mobileBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
         });
-
-        // Dynamic Data Fetching Placeholder (Google Sheets API)
-        /*
-        async function loadTestimonials() {
-            try {
-                // Replace with your AppScript/Google Sheets Endpoint
-                const response = await fetch('YOUR_GOOGLE_SHEETS_JSON_ENDPOINT');
-                const data = await response.json();
-                // Map over data and append to DOM
-            } catch (error) {
-                console.error("Failed to load dynamic data", error);
-            }
-        }
-        // loadTestimonials();
-        */
     </script>
 </body>
 </html>
