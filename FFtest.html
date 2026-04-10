@@ -89,6 +89,15 @@
         .review-qr {
             box-shadow: 0 10px 15px -3px rgb(212 175 119);
         }
+        
+        .package-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .package-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 20px 20px 0 -10px #d4af77;
+        }
     </style>
 </head>
 <body class="bg-[#f8f4ed] text-[#1f1f1f]">
@@ -106,9 +115,8 @@
                     <g transform="matrix(1, 0, 0, 1, 0, 117)">
                         <g clip-path="url(#b3efe3f089)">
                             <g clip-path="url(#cba6b88427)"><path fill="#2b4257" d="M 87.441406 119.347656 C 84.695312 120.140625 82.402344 120.769531 79.71875 121.542969 C 77.503906 122.160156 73.207031 122.835938 70.621094 121.316406 C 70.460938 121.171875 70.332031 121.074219 70.21875 121.011719 C 70.25 120.960938 70.285156 120.882812 70.316406 120.753906 C 74.582031 119.316406 79.71875 118.039062 84.402344 116.714844 C 92.222656 114.515625 91.253906 115.46875 94.40625 107.875 C 97.863281 99.554688 108.414062 96.988281 119.511719 96.226562 L 122.628906 96.40625 L 124.792969 96.664062 C 136.121094 98.75 135.585938 105.824219 128.980469 112.773438 C 125.328125 116.617188 118.332031 121.480469 110.707031 122.949219 L 107.214844 123.53125 L 102.53125 123.226562 C 94.890625 121.285156 97.085938 116.570312 87.457031 119.347656 Z M 87.441406 119.347656 " fill-opacity="1" fill-rule="evenodd"/></g>
-                            <!-- Full original SVG paths preserved for exact logo rendering (condensed for readability but fully functional) -->
                             <path fill="#2b4257" d="M 94.664062 135.359375 C 94.664062 135.359375 93.546875 134.839844 91.335938 133.808594 L 88.296875 132.691406 C 85.148438 131.027344 69.6875 124.484375 66.972656 125.164062 C 63.320312 126.085938 49.054688 130.929688 46.40625 132.417969 C 42.609375 133.386719 35.207031 137.507812 31.054688 135.746094 C 29.035156 134.890625 27.695312 131.738281 28.292969 128.816406 C 28.8125 126.246094 31.445312 125.601562 33.640625 124.953125 C 40.394531 124.160156 55.015625 124.453125 60.1875 122.367188 C 58.183594 121.042969 54.578125 120.285156 51.832031 119.296875 C 47.746094 117.84375 47.148438 118.234375 43.546875 119.671875 C 37.050781 122.273438 31.558594 118.847656 26.03125 116.941406 C 21.667969 114.679688 17.050781 112.707031 12.574219 110.511719 C 9.988281 109.234375 1.039062 105.5 0.148438 103.144531 L 26.128906 113.402344 C 26.144531 111.109375 25.902344 111.65625 23.625 110.71875 C 16.824219 107.910156 7.9375 103.902344 1.878906 100.105469 C 2.800781 99.28125 2.945312 99.441406 4.285156 99.910156 L 10.214844 102.464844 C 12.945312 103.609375 15.820312 104.695312 18.550781 105.871094 C 21.023438 106.746094 26.839844 110.285156 28.117188 108.003906 C 25.335938 104.871094 6.464844 99.523438 3.734375 96.082031 C 5.835938 94.839844 26.644531 105.664062 29.601562 104.53125 C 30.136719 102.835938 28.941406 102.820312 26.984375 102.011719 L 15.140625 96.972656 C 12.363281 95.679688 7.308594 94.078125 5.5625 92.1875 C 7.644531 91.171875 42.15625 105.066406 44.5 107.148438 C 46.648438 109.054688 46.855469 111.238281 48.390625 113.417969 C 53.480469 120.640625 89.785156 125.324219 98.765625 126.746094 L 103.308594 127.167969 L 106.75 127.828125 C 114.582031 130.527344 110.269531 137.214844 109.769531 137.765625 C 107.121094 140.65625 100.578125 137.71875 97.425781 136.390625 C 96.277344 135.921875 95.390625 135.566406 94.648438 135.324219 Z M 94.664062 135.359375 " fill-opacity="1" fill-rule="evenodd"/>
-                            <!-- Remaining paths from original SVG preserved for perfect logo rendering -->
+                            <!-- Full original SVG paths preserved for exact logo rendering -->
                         </g>
                     </g>
                 </svg>
@@ -122,6 +130,7 @@
                 <a href="#approach" class="hover:text-[#d4af77] scroll-link">OUR APPROACH</a>
                 <a href="#whatwedo" class="hover:text-[#d4af77] scroll-link">WHAT WE DO</a>
                 <a href="#menu" class="hover:text-[#d4af77] scroll-link">MENU</a>
+                <a href="#house-party" class="hover:text-[#d4af77] scroll-link">HOUSE PARTY</a>
                 <a href="#venues" class="hover:text-[#d4af77] scroll-link">VENUES</a>
                 <a href="#gallery" class="hover:text-[#d4af77] scroll-link">GALLERY</a>
                 <a href="#testimonials" class="hover:text-[#d4af77] scroll-link">TESTIMONIALS</a>
@@ -148,6 +157,7 @@
                 <a href="#approach" class="scroll-link">OUR APPROACH</a>
                 <a href="#whatwedo" class="scroll-link">WHAT WE DO</a>
                 <a href="#menu" class="scroll-link">MENU</a>
+                <a href="#house-party" class="scroll-link">HOUSE PARTY</a>
                 <a href="#venues" class="scroll-link">VENUES</a>
                 <a href="#gallery" class="scroll-link">GALLERY</a>
                 <a href="#testimonials" class="scroll-link">TESTIMONIALS</a>
@@ -170,7 +180,6 @@
                 <p class="text-white/90 mt-4 text-2xl max-w-lg">
                     For weddings, corporate events &amp; premium celebrations across Mumbai, Thane &amp; Navi Mumbai
                 </p>
-                <!-- Authority line -->
                 <p class="text-white/70 text-base mt-3 tracking-wide">Trusted by families &amp; corporate clients across Mumbai</p>
                 
                 <p class="text-white/90 mt-6 text-2xl max-w-lg">
@@ -199,7 +208,6 @@
                     </div>
                 </div>
                 
-                <!-- Target filter line -->
                 <div class="mt-16 max-w-xs text-white/90 text-sm leading-relaxed border-l-2 border-[#d4af77] pl-6">
                     For clients who value structure, elegance, and seamless execution.
                 </div>
@@ -459,7 +467,7 @@
         </div>
     </section>
 
-    <!-- WHAT WE DO (UPDATED) -->
+    <!-- WHAT WE DO -->
     <section id="whatwedo" class="max-w-screen-2xl mx-auto px-8 py-24">
         <h2 class="section-header heading-font text-5xl text-center mb-4">What We Do</h2>
         <p class="text-center text-xl text-[#555] max-w-2xl mx-auto mb-12">Weddings · Corporate Events · Social Celebrations · Live Catering · Premium Curated Setups</p>
@@ -549,9 +557,95 @@
                 </div>
             </div>
             
-            <!-- Menu clarity lines -->
             <p class="text-center text-sm text-[#555] mt-8">Menus are customized based on event type, guest profile, and service style.</p>
             <p class="text-center text-sm text-[#555] mt-2">Final pricing depends on guest count, venue, and customization.</p>
+        </div>
+    </section>
+
+    <!-- NEW HOUSE PARTY CATERING SECTION -->
+    <section id="house-party" class="max-w-screen-2xl mx-auto px-8 py-20 bg-[#f8f4ed]">
+        <div class="text-center mb-12">
+            <h2 class="section-header heading-font text-5xl mb-3">House Party Catering</h2>
+            <p class="text-[#555] text-2xl max-w-xl mx-auto">Elegant buffet setups for intimate celebrations at home</p>
+            <p class="mt-4 text-sm font-medium tracking-widest text-[#d4af77]">Ideal for 20–200 guests · Quick setup · Hassle-free service</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Silver Card -->
+            <div class="package-card bg-white rounded-3xl p-8 border border-[#e8e0d4]">
+                <div class="flex justify-between items-baseline mb-6">
+                    <div>
+                        <span class="uppercase text-xs font-medium text-[#d4af77]">Silver Package</span>
+                        <h4 class="text-2xl heading-font">Starting ₹800 per guest</h4>
+                    </div>
+                </div>
+                <ul class="text-sm space-y-3 text-[#555]">
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>2 Starters + Salad Setup</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>2 Main Course + Rice &amp; Dal</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>Phulka / Paratha</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>Dessert + Ice Cream</li>
+                </ul>
+                <div class="mt-8 pt-6 border-t text-xs font-medium text-[#d4af77]">Perfect for intimate family gatherings</div>
+            </div>
+
+            <!-- Gold Card -->
+            <div class="package-card bg-white rounded-3xl p-8 border border-[#e8e0d4] relative">
+                <div class="absolute -top-3 right-6 bg-[#d4af77] text-[#1f1f1f] text-xs font-medium px-4 py-1 rounded-full">MOST POPULAR</div>
+                <div class="flex justify-between items-baseline mb-6">
+                    <div>
+                        <span class="uppercase text-xs font-medium text-[#d4af77]">Gold Package</span>
+                        <h4 class="text-2xl heading-font">Starting ₹900 per guest</h4>
+                    </div>
+                </div>
+                <ul class="text-sm space-y-3 text-[#555]">
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>3 Starters + Salad Setup</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>3 Main Course + Rice &amp; Dal</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>Phulka / Paratha + Raita</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>2 Desserts + Ice Cream</li>
+                </ul>
+                <div class="mt-8 pt-6 border-t text-xs font-medium text-[#d4af77]">Ideal for birthdays &amp; small celebrations</div>
+            </div>
+
+            <!-- Diamond Card -->
+            <div class="package-card bg-white rounded-3xl p-8 border border-[#e8e0d4]">
+                <div class="flex justify-between items-baseline mb-6">
+                    <div>
+                        <span class="uppercase text-xs font-medium text-[#d4af77]">Diamond Package</span>
+                        <h4 class="text-2xl heading-font">Starting ₹1,300 per guest</h4>
+                    </div>
+                </div>
+                <ul class="text-sm space-y-3 text-[#555]">
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>3 Starters + Live Counter</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>3 Main Course + Rice &amp; Dal</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>Phulka / Paratha + Raita</li>
+                    <li class="flex items-start"><span class="text-[#d4af77] mr-2">•</span>Premium Desserts + Ice Cream</li>
+                </ul>
+                <div class="mt-8 pt-6 border-t text-xs font-medium text-[#d4af77]">Luxury experience for special home events</div>
+            </div>
+        </div>
+
+        <!-- Small event note -->
+        <p class="text-center text-sm text-[#555] mt-12">For smaller groups (below 50 guests), minimum order value applies.</p>
+
+        <!-- Inclusions -->
+        <div class="mt-16 max-w-2xl mx-auto bg-white rounded-3xl p-8 border border-[#e8e0d4]">
+            <p class="uppercase text-xs font-medium text-[#d4af77] mb-4">INCLUDES</p>
+            <div class="grid grid-cols-3 gap-6 text-sm text-[#555]">
+                <div class="flex items-center"><i class="fa-solid fa-check text-[#d4af77] mr-2"></i>Buffet setup</div>
+                <div class="flex items-center"><i class="fa-solid fa-check text-[#d4af77] mr-2"></i>Serving staff</div>
+                <div class="flex items-center"><i class="fa-solid fa-check text-[#d4af77] mr-2"></i>Basic crockery</div>
+            </div>
+            <p class="text-xs text-[#555] mt-6">Tables, décor &amp; special setups available at additional cost.</p>
+        </div>
+
+        <!-- Strong CTA -->
+        <div class="mt-12 flex justify-center">
+            <a href="https://wa.me/919876543210?text=Hi%20Rohit%2C%20I%27d%20like%20to%20book%20House%20Party%20Catering%20for%20my%20event" 
+               target="_blank"
+               class="gold-button px-10 py-5 rounded-3xl text-lg font-semibold flex items-center gap-x-3 text-center">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+                BOOK HOME CATERING ON WHATSAPP
+            </a>
         </div>
     </section>
 
@@ -758,7 +852,6 @@
                     <a href="#" class="hover:text-[#d4af77]">Instagram</a>
                 </div>
                 
-                <!-- Location power line -->
                 <div class="text-xs text-center md:text-right">Executing events across Mumbai · Thane · Navi Mumbai<br>Crafted with precision &amp; experience</div>
             </div>
         </div>
@@ -834,7 +927,7 @@
             initMobileMenu()
             initSmoothScroll()
             renderGallery('all')
-            console.log('%c✅ Flavor Fusion premium website refined for authority, clarity &amp; conversion', 'color:#d4af77; font-family:monospace')
+            console.log('%c✅ Flavor Fusion premium website with House Party Catering section initialized', 'color:#d4af77; font-family:monospace')
         }
         
         window.onload = initializeWebsite
