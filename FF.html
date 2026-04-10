@@ -114,12 +114,60 @@
     .qr-container { background: white; padding: 1rem; border-radius: 16px; display: inline-block; }
     .qr-label { font-size: 0.8rem; letter-spacing: 1px; color: var(--text-soft); margin-top: 0.5rem; }
     .review-verification-note { font-size: 0.9rem; color: var(--text-soft); margin: 1rem 0; }
+
+    /* House Party Cards */
+    .house-party-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 2rem;
+      margin: 2.5rem 0 2rem;
+    }
+    .house-card {
+      background: var(--white-pure);
+      padding: 2.2rem 1.8rem;
+      border-radius: 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-light);
+      transition: transform 0.2s;
+    }
+    .house-card h4 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #1e1b17;
+    }
+    .house-price {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--soft-gold);
+      margin-bottom: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .house-menu-list {
+      list-style: none;
+      margin: 1.2rem 0;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+    }
+    .house-menu-list li {
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed var(--border-light);
+    }
+    .house-menu-list li:last-child { border: none; }
+    .house-inclusions {
+      margin-top: 1.5rem;
+      background: var(--beige);
+      padding: 1.2rem 1.5rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
     @media (max-width: 900px) {
       h2 { font-size: 2.2rem; } .hero h1 { font-size: 3rem; }
       .pillars-grid { grid-template-columns: repeat(2,1fr); } .dual-offer { grid-template-columns: 1fr; }
       .nav-links { display: none; } .site-header { justify-content: center; }
       .gallery-grid { grid-template-columns: repeat(2,1fr); } .testimonial-grid { grid-template-columns: 1fr; }
       .venue-list { grid-template-columns: repeat(2,1fr); }
+      .house-party-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .pillars-grid { grid-template-columns: 1fr; } .gallery-grid { grid-template-columns: 1fr; }
@@ -142,8 +190,8 @@
   </div>
   <div class="nav-links">
     <a href="#home">Home</a><a href="#about">About</a><a href="#approach">Approach</a><a href="#what-we-do">What We Do</a>
-    <a href="#menu">Menu</a><a href="#venues">Venues</a><a href="#gallery">Gallery</a><a href="#testimonials">Testimonials</a>
-    <a href="#contact">Contact</a>
+    <a href="#menu">Menu</a><a href="#house-party">House Party</a><a href="#venues">Venues</a><a href="#gallery">Gallery</a>
+    <a href="#testimonials">Testimonials</a><a href="#contact">Contact</a>
   </div>
 </header>
 
@@ -153,7 +201,7 @@
 </a>
 
 <main>
-  <!-- HOME / Hero (enhanced) -->
+  <!-- HOME / Hero -->
   <section id="home" style="padding-top: 2rem;">
     <div class="hero">
       <h1>Curating Thoughtful<br>Celebrations</h1>
@@ -231,7 +279,7 @@
     </div>
   </section>
 
-  <!-- WHAT WE DO (strengthened) -->
+  <!-- WHAT WE DO -->
   <section id="what-we-do">
     <div class="container">
       <div class="section-subhead">Celebrations, elevated</div>
@@ -258,7 +306,75 @@
     </div>
   </section>
 
-  <!-- VENUES (with crucial flexibility) -->
+  <!-- NEW: HOUSE PARTY CATERING SECTION -->
+  <section id="house-party" style="background: var(--cream);">
+    <div class="container">
+      <div class="section-subhead">Intimate · Effortless · Refined</div>
+      <h2>House Party Catering</h2>
+      <div class="gold-accent"></div>
+      <p style="font-size:1.2rem; margin-bottom:0.5rem;">Elegant buffet setups for intimate celebrations at home</p>
+      <p style="color:var(--text-soft); margin-bottom:2rem;"><i class="fas fa-users" style="margin-right:8px;"></i> Ideal for 20–200 guests · Quick setup · Hassle-free service</p>
+      
+      <div class="house-party-grid">
+        <!-- Silver -->
+        <div class="house-card">
+          <h4>Silver Package</h4>
+          <div class="house-price">Starting ₹800 <span style="font-size:0.9rem;">per guest</span></div>
+          <ul class="house-menu-list">
+            <li>2 live starters</li>
+            <li>Fresh salad bar</li>
+            <li>2 main course (1 paneer, 1 veg)</li>
+            <li>Dal tadka · Steamed rice</li>
+            <li>Tawa phulka / butter roti</li>
+            <li>Choice of dessert</li>
+            <li>Ice cream counter</li>
+          </ul>
+        </div>
+        <!-- Gold -->
+        <div class="house-card">
+          <h4>Gold Package</h4>
+          <div class="house-price">Starting ₹900 <span style="font-size:0.9rem;">per guest</span></div>
+          <ul class="house-menu-list">
+            <li>3 starters (1 live)</li>
+            <li>Gourmet salad + soup</li>
+            <li>3 main course (paneer, veg, dal makhani)</li>
+            <li>Jeera rice · peas pulao</li>
+            <li>Assorted breads (phulka/lachha)</li>
+            <li>2 desserts + ice cream</li>
+          </ul>
+        </div>
+        <!-- Diamond -->
+        <div class="house-card">
+          <h4>Diamond Package</h4>
+          <div class="house-price">Starting ₹1300 <span style="font-size:0.9rem;">per guest</span></div>
+          <ul class="house-menu-list">
+            <li>4 premium starters (2 live)</li>
+            <li>Signature salad + soup shots</li>
+            <li>4 main course (exotic veg/global)</li>
+            <li>Biryani / flavoured rice</li>
+            <li>Dal makhani · bread basket</li>
+            <li>3 desserts + live ice cream</li>
+            <li>Welcome drink included</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="margin: 0.5rem 0 1.5rem; font-style: italic; color: var(--text-soft);">For smaller groups (below 50 guests), minimum order value applies.</p>
+
+      <div class="house-inclusions" style="max-width:800px;">
+        <p><strong><i class="fas fa-check-circle" style="color:var(--soft-gold); margin-right:8px;"></i>Includes:</strong> Buffet setup · Serving staff · Basic crockery</p>
+        <p style="margin-top:0.5rem;">Tables, décor & special setups available at additional cost.</p>
+      </div>
+
+      <div style="margin-top: 2.5rem; text-align: left;">
+        <a href="https://wa.me/919820123456?text=Hi%2C%20I'd%20like%20to%20book%20House%20Party%20Catering" class="btn btn-primary" target="_blank">
+          <i class="fab fa-whatsapp"></i> Book Home Catering on WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VENUES -->
   <section id="venues" style="background:var(--beige);">
     <div class="container">
       <div class="section-subhead">Preferred partnerships</div><h2>Venues</h2>
@@ -284,7 +400,7 @@
     </div>
   </section>
 
-  <!-- TESTIMONIALS (with review collection) -->
+  <!-- TESTIMONIALS -->
   <section id="testimonials">
     <div class="container">
       <div class="section-subhead">Trusted by families & firms</div><h2>Testimonials</h2>
@@ -297,7 +413,7 @@
     </div>
   </section>
 
-  <!-- CONTACT (form removed, WhatsApp CTA) -->
+  <!-- CONTACT -->
   <section id="contact">
     <div class="container">
       <div class="section-subhead">Plan your celebration</div><h2>Contact</h2>
@@ -315,7 +431,6 @@
           </div>
           <a href="https://wa.me/919820123456?text=Plan%20My%20Celebration%20with%20Flavor%20Fusion" class="btn btn-primary" style="margin-bottom:1.5rem;">Plan Your Celebration</a>
           <br>
-          <!-- WhatsApp CTA replacing form -->
           <a href="https://wa.me/919820123456?text=Hello%2C%20I'd%20like%20to%20send%20details%20about%20my%20event" class="btn btn-outline" style="border-color:var(--soft-gold); color:var(--soft-gold);" target="_blank">
             <i class="fab fa-whatsapp"></i> Send Details on WhatsApp
           </a>
@@ -360,7 +475,7 @@
       });
     });
 
-    // Gallery images (real catering)
+    // Gallery images
     const galleryItems = [
       { category:'weddings', img:'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600', title:'Elegant wedding' },
       { category:'weddings', img:'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=600', title:'Reception' },
@@ -381,7 +496,7 @@
     filterBtns.forEach(b=>b.addEventListener('click',()=>{filterBtns.forEach(b=>b.classList.remove('active'));b.classList.add('active');renderGallery(b.dataset.filter);}));
     renderGallery();
 
-    // Testimonials (generic, safe)
+    // Testimonials
     const testimonialData = [
       { review:'A flawlessly executed celebration. Every detail was handled with calm precision.', client:'Wedding Client, Mumbai' },
       { review:'From first call to final send-off, composed and professional. Impeccable dining journey.', client:'Corporate Host, Thane' },
@@ -391,7 +506,7 @@
       <div class="testimonial-card"><i class="fas fa-quote-left" style="color:var(--soft-gold); opacity:0.4; font-size:2rem;"></i><p style="margin:1rem 0;">${t.review}</p><h4>— ${t.client}</h4></div>
     `).join('');
 
-    // Google Review link unified: actual Google Form URL (replace if needed)
+    // Review link
     const reviewFormUrl = 'https://forms.gle/FlavorFusionReview';
     document.querySelectorAll('a[href*="forms.gle"]').forEach(el => el.href = reviewFormUrl);
   })();
