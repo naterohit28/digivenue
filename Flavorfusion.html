@@ -10,11 +10,11 @@
     <style>
         /* --- CSS VARIABLES (Premium Palette) --- */
         :root {
-            --bg-primary: #FDFBF7; /* Soft cream/beige */
-            --bg-secondary: #F4EFE6; /* Slightly darker beige for contrast */
-            --accent-gold: #C5A059; /* Elegant soft gold */
+            --bg-primary: #FDFBF7;
+            --bg-secondary: #F4EFE6;
+            --accent-gold: #C5A059;
             --accent-gold-hover: #A88645;
-            --text-dark: #2C2A29; /* Deep charcoal, not harsh black */
+            --text-dark: #2C2A29;
             --text-muted: #5A5753;
             --white: #FFFFFF;
             --transition: all 0.3s ease;
@@ -23,17 +23,8 @@
         /* --- GLOBAL RESET & TYPOGRAPHY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Lato', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        h1, h2, h3, h4, h5, h6, .serif {
-            font-family: 'Playfair Display', serif;
-            font-weight: 500;
-        }
+        body { font-family: 'Lato', sans-serif; background-color: var(--bg-primary); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, h6, .serif { font-family: 'Playfair Display', serif; font-weight: 500; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         img { max-width: 100%; height: auto; display: block; }
@@ -51,6 +42,8 @@
         .btn-gold:hover { background: var(--accent-gold-hover); }
         .btn-outline { border-color: var(--text-dark); color: var(--text-dark); }
         .btn-outline:hover { background: var(--text-dark); color: var(--bg-primary); }
+        .btn-outline-light { border-color: var(--white); color: var(--white); }
+        .btn-outline-light:hover { background: var(--white); color: var(--text-dark); }
 
         /* --- HEADER & NAVIGATION --- */
         header { position: fixed; width: 100%; top: 0; z-index: 1000; background: transparent; transition: var(--transition); padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -65,25 +58,24 @@
         .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
 
         /* --- HERO SECTION --- */
-        /* Slightly darkened the overlay for better text contrast */
         #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(240, 235, 225, 0.88), rgba(240, 235, 225, 0.95)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; position: relative; }
         .hero-content { max-width: 900px; padding: 0 20px; }
         .hero-title { font-size: 4rem; line-height: 1.2; margin-bottom: 15px; color: var(--text-dark); }
         .hero-subtitle { font-size: 1.2rem; color: var(--accent-gold); margin-bottom: 25px; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
-        
         .hero-context { margin-bottom: 40px; font-size: 1.1rem; color: var(--text-muted); font-weight: 300; line-height: 1.8; }
         .hero-context span { display: block; }
         .hero-context .highlight-text { font-style: italic; color: var(--text-dark); font-weight: 400; margin-top: 5px; }
-
         .hero-btns { display: flex; gap: 20px; justify-content: center; }
 
-        /* --- INTEGRATED EXPERIENCE PILLARS --- */
+        /* --- REUSABLE GRIDS & CARDS --- */
         .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
         .pillar-card { background: var(--white); padding: 40px 30px; text-align: center; border: 1px solid var(--bg-secondary); transition: var(--transition); }
         .pillar-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.03); border-color: var(--accent-gold); }
         .pillar-icon { font-size: 2rem; color: var(--accent-gold); margin-bottom: 20px; }
-        .pillar-title { font-size: 1.2rem; margin-bottom: 15px; }
-        .pillar-desc { font-size: 0.95rem; color: var(--text-muted); }
+        
+        .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; border-top: 1px solid var(--bg-secondary); border-bottom: 1px solid var(--bg-secondary); padding: 60px 0; margin-top: 60px; }
+        .trust-item h3 { font-size: 2.5rem; color: var(--accent-gold); margin-bottom: 10px; }
+        .trust-item p { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
 
         /* --- DUAL OFFERING SECTION --- */
         #dual-offering { background: var(--text-dark); color: var(--white); }
@@ -93,12 +85,6 @@
         .dual-card:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
         .dual-title { font-size: 2rem; margin-bottom: 15px; color: var(--accent-gold); }
         .dual-price { font-size: 1.2rem; font-family: 'Lato', sans-serif; letter-spacing: 1px; margin-bottom: 20px; color: rgba(255,255,255,0.7); }
-        .dual-desc { font-size: 1rem; color: rgba(255,255,255,0.8); }
-
-        /* --- TRUST / LEGACY SECTION --- */
-        .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; border-top: 1px solid var(--bg-secondary); border-bottom: 1px solid var(--bg-secondary); padding: 60px 0; margin-top: 60px; }
-        .trust-item h3 { font-size: 2.5rem; color: var(--accent-gold); margin-bottom: 10px; }
-        .trust-item p { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
 
         /* --- ABOUT & APPROACH --- */
         #about { background: var(--bg-secondary); }
@@ -119,8 +105,20 @@
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
         .venue-card { background: var(--white); padding: 30px; text-align: center; border: 1px solid var(--bg-secondary); }
         .venue-card h4 { font-size: 1.3rem; margin-bottom: 10px; }
-        .venue-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; }
         .venue-context { max-width: 800px; margin: 0 auto; padding: 30px; background: var(--white); border-left: 3px solid var(--accent-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+
+        /* --- TESTIMONIALS (NEW) --- */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .review-card { background: var(--white); padding: 40px; text-align: center; border: 1px solid var(--bg-secondary); }
+        .review-stars { color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 15px; }
+        .review-text { font-size: 1rem; color: var(--text-muted); font-style: italic; margin-bottom: 20px; }
+        .review-author { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .review-event { font-size: 0.8rem; color: var(--accent-gold); }
+
+        /* --- QR CODE BOX --- */
+        .qr-box { background: var(--white); padding: 15px; display: inline-block; border-radius: 4px; text-align: center; border: 1px solid var(--bg-secondary); }
+        .qr-box img { width: 100px; height: 100px; margin: 0 auto 10px; }
+        .qr-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 0; font-weight: 700; }
 
         /* --- CONTACT & FOOTER --- */
         #contact { background: var(--text-dark); color: var(--white); }
@@ -128,11 +126,12 @@
         .contact-info p { margin-bottom: 15px; font-size: 1.1rem; color: rgba(255,255,255,0.8); }
         .contact-info i { color: var(--accent-gold); margin-right: 15px; width: 20px; text-align: center; }
         
-        footer { text-align: center; padding: 40px 0 30px; background: #1A1918; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
-        .power-line { color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 15px; font-weight: 500; }
+        footer { background: #1A1918; color: rgba(255,255,255,0.5); font-size: 0.9rem; padding: 60px 0 30px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; }
+        .footer-heading { color: var(--white); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 20px; }
+        .power-line { color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; margin-top: 15px; font-weight: 500; }
 
         /* --- FLOATING WHATSAPP --- */
-        /* Updated to Pill Design with "Chat" text */
         .whatsapp-fab { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; padding: 0 20px; height: 50px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .whatsapp-fab:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6); color: white; }
         .whatsapp-text { font-size: 1rem; font-family: 'Lato', sans-serif; font-weight: 600; }
@@ -142,16 +141,15 @@
             .split-layout { flex-direction: column; }
             .dual-grid { flex-direction: column; }
             .dual-card:first-child { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-            .trust-grid { grid-template-columns: repeat(2, 1fr); }
             .contact-grid { grid-template-columns: 1fr; }
-            .hero-title { font-size: 2.8rem; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
         }
         @media (max-width: 768px) {
             .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--white); flex-direction: column; padding: 20px 0; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
             .nav-links.active { display: flex; }
             .mobile-menu-btn { display: block; color: var(--text-dark); }
             header { background: var(--white); padding: 15px 0; }
-            .whatsapp-text { display: none; } /* Show only icon on small screens to save space */
+            .whatsapp-text { display: none; }
             .whatsapp-fab { padding: 0; width: 50px; justify-content: center; }
         }
     </style>
@@ -168,10 +166,10 @@
             <div class="logo">Flavor<span>Fusion</span></div>
             <nav class="nav-links" id="nav-links">
                 <a href="#about">About</a>
-                <a href="#approach">Our Approach</a>
                 <a href="#services">What We Do</a>
                 <a href="#menu">Journeys</a>
                 <a href="#venues">Venues</a>
+                <a href="#testimonials">Experiences</a>
                 <a href="#contact">Contact</a>
             </nav>
             <div class="mobile-menu-btn" id="mobile-menu-btn">
@@ -192,7 +190,7 @@
 
             <div class="hero-btns">
                 <a href="https://wa.me/919876543210" class="btn btn-gold">Get Quote</a>
-                <a href="#approach" class="btn btn-outline" style="background:var(--white)">Explore Experiences</a>
+                <a href="#services" class="btn btn-outline" style="background:var(--white)">Explore Experiences</a>
             </div>
         </div>
     </section>
@@ -204,54 +202,16 @@
                 <span class="section-subtitle">The Integrated Experience Model</span>
                 <p style="max-width: 700px; margin: 0 auto; color: var(--text-muted);">We believe in structured execution over chaos. Experience over item counts. We operate as a single team with one vision, ensuring your celebration is seamless from the first sketch to the final farewell.</p>
             </div>
-
             <div class="pillars-grid">
-                <div class="pillar-card">
-                    <i class="fas fa-map-marked-alt pillar-icon"></i>
-                    <h3 class="pillar-title">Venue Experience</h3>
-                    <p class="pillar-desc">Strategic space planning, logical flow, and uninterrupted guest movement.</p>
-                </div>
-                <div class="pillar-card">
-                    <i class="fas fa-utensils pillar-icon"></i>
-                    <h3 class="pillar-title">Culinary Experience</h3>
-                    <p class="pillar-desc">Designing a complete dining journey, rather than a crowded list of isolated items.</p>
-                </div>
-                <div class="pillar-card">
-                    <i class="fas fa-gem pillar-icon"></i>
-                    <h3 class="pillar-title">Design & Decor</h3>
-                    <p class="pillar-desc">Visual storytelling rooted in elegance, bringing your aesthetic vision to life.</p>
-                </div>
-                <div class="pillar-card">
-                    <i class="fas fa-clipboard-list pillar-icon"></i>
-                    <h3 class="pillar-title">Event Coordination</h3>
-                    <p class="pillar-desc">Master timelines, disciplined execution, and total on-ground control.</p>
-                </div>
+                <div class="pillar-card"><i class="fas fa-map-marked-alt pillar-icon"></i><h3 class="pillar-title">Venue Experience</h3></div>
+                <div class="pillar-card"><i class="fas fa-utensils pillar-icon"></i><h3 class="pillar-title">Culinary Experience</h3></div>
+                <div class="pillar-card"><i class="fas fa-gem pillar-icon"></i><h3 class="pillar-title">Design & Decor</h3></div>
+                <div class="pillar-card"><i class="fas fa-clipboard-list pillar-icon"></i><h3 class="pillar-title">Event Coordination</h3></div>
             </div>
         </div>
     </section>
 
-    <section id="dual-offering" class="section-padding">
-        <div class="container">
-            <div class="text-center">
-                <h2 class="section-title">Tailored to Your Vision</h2>
-                <span class="section-subtitle">Excellence at Every Scale</span>
-            </div>
-            <div class="dual-grid">
-                <div class="dual-card">
-                    <h3 class="dual-title">Affordable Elegance</h3>
-                    <p class="dual-price">Packages starting at ₹600 per guest</p>
-                    <p class="dual-desc">Standardized excellence. Perfect for social functions and streamlined celebrations requiring our signature discipline and taste without the premium bespoke setups.</p>
-                </div>
-                <div class="dual-card">
-                    <h3 class="dual-title">Premium Curated Experiences</h3>
-                    <p class="dual-price">Journeys starting at ₹1,500 – ₹2,200 per guest</p>
-                    <p class="dual-desc">Bespoke conceptualization. Live interactive counters, premium regional and global cuisine integrations, and high-end aesthetic presentation for luxury events.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="section-padding">
+    <section id="about" class="section-padding" style="background: var(--bg-secondary);">
         <div class="container">
             <div class="split-layout">
                 <div class="split-text">
@@ -259,17 +219,9 @@
                     <span class="section-subtitle">Led by Rohit Nate</span>
                     <p class="lead-text">"Balance, discipline, and meaningful celebrations."</p>
                     <p style="margin-bottom: 20px; color: var(--text-muted);">Flavor Fusion is a second-generation event execution company. Built upon the 40-year trusted legacy of Suresh Caterers, we bring over 12 years of modern, refined execution experience to the table.</p>
-                    <p style="margin-bottom: 30px; color: var(--text-muted);">Our promise is clarity, preparation, and execution discipline. We bridge the gap between traditional catering roots and modern, structured event management. One team handles the entire experience—eliminating vendor confusion and guaranteeing a calm, composed celebration.</p>
-                    
                     <div class="trust-grid" style="border: none; padding: 0; margin-top: 30px; text-align: left; gap: 10px;">
-                        <div>
-                            <h3 style="font-size: 2rem; color: var(--accent-gold);">40+</h3>
-                            <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Years Legacy</p>
-                        </div>
-                        <div>
-                            <h3 style="font-size: 2rem; color: var(--accent-gold);">12+</h3>
-                            <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Years Modern Exec.</p>
-                        </div>
+                        <div><h3 style="font-size: 2rem; color: var(--accent-gold);">40+</h3><p style="font-size: 0.8rem; color: var(--text-muted);">Years Legacy</p></div>
+                        <div><h3 style="font-size: 2rem; color: var(--accent-gold);">12+</h3><p style="font-size: 0.8rem; color: var(--text-muted);">Years Modern Exec.</p></div>
                     </div>
                 </div>
                 <div class="split-image"></div>
@@ -277,78 +229,32 @@
         </div>
     </section>
 
-    <section id="menu" class="section-padding">
+    <section id="testimonials" class="section-padding">
         <div class="container">
             <div class="text-center">
-                <h2 class="section-title">Dining Journeys</h2>
-                <span class="section-subtitle">Menus designed as experiences, not item lists</span>
+                <h2 class="section-title">Client Experiences</h2>
+                <span class="section-subtitle">Trust Built on Execution</span>
             </div>
-            
-            <div class="menu-wrapper">
-                <div class="menu-category">
-                    <h3>Catering Packages</h3>
-                    <div class="menu-list">
-                        <span class="menu-tag">Standard</span>
-                        <span class="menu-tag">Silver</span>
-                        <span class="menu-tag">Golden</span>
-                        <span class="menu-tag">Platinum</span>
-                        <span class="menu-tag">Diamond</span>
-                    </div>
-                </div>
-                
-                <div class="menu-category">
-                    <h3>Premium Experiences</h3>
-                    <div class="menu-list">
-                        <span class="menu-tag" style="border-color: var(--accent-gold); color: var(--accent-gold);">Royal Heritage</span>
-                        <span class="menu-tag" style="border-color: var(--accent-gold); color: var(--accent-gold);">Imperial Fusion</span>
-                        <span class="menu-tag" style="border-color: var(--accent-gold); color: var(--accent-gold);">Satvik Heritage</span>
-                        <span class="menu-tag" style="border-color: var(--accent-gold); color: var(--accent-gold);">Grand Luxe</span>
-                    </div>
-                </div>
 
-                <p class="menu-disclaimer">* Final pricing depends on guest count, venue, and customization.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="venues" class="section-padding" style="background: var(--bg-secondary);">
-        <div class="container">
-            <div class="text-center">
-                <h2 class="section-title">Our Canvas</h2>
-                <span class="section-subtitle">Venue Partnerships & Operations</span>
-                <p style="margin-bottom: 40px; color: var(--text-muted); max-width: 700px; margin-left: auto; margin-right: auto;">We have strong working relationships and execution experience across these venues.</p>
-            </div>
-            
-            <div class="venues-grid">
-                <div class="venue-card">
-                    <h4>Victoria South</h4>
-                    <p>Byculla</p>
+            <div class="testimonials-grid" id="reviews-container">
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"The structured approach took all the anxiety out of our planning. The food was exquisite, but the seamless coordination was the true luxury."</p>
+                    <p class="review-author">- Sample Client</p>
+                    <p class="review-event">Wedding Reception</p>
                 </div>
-                <div class="venue-card">
-                    <h4>Ashraya Banquet</h4>
-                    <p>Nerul</p>
-                </div>
-                <div class="venue-card">
-                    <h4>Windflower Banquet</h4>
-                    <p>Vashi</p>
-                </div>
-                <div class="venue-card">
-                    <h4>Trupti Banquet</h4>
-                    <p>Thane</p>
-                </div>
-                <div class="venue-card">
-                    <h4>Rosebelle Banquet</h4>
-                    <p>Thane</p>
-                </div>
-                <div class="venue-card">
-                    <h4>Momai Maa Banquet</h4>
-                    <p>Thane</p>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Professional, disciplined, and visually stunning. They managed our entire corporate gala flawlessly."</p>
+                    <p class="review-author">- Sample Corporate</p>
+                    <p class="review-event">Corporate Event</p>
                 </div>
             </div>
 
-            <div class="venue-context text-center">
-                <p style="color: var(--text-dark); font-weight: 600; margin-bottom: 10px;">We execute catering and complete event services at any venue across Mumbai, Thane, and Navi Mumbai — not limited to listed venues.</p>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Our listed venues are preferred partnerships, but we are fully equipped to operate at any banquet, lawn, or private venue of your choice.</p>
+            <div class="text-center" style="margin-top: 50px;">
+                <p style="margin-bottom: 15px; font-size: 1.1rem;">We value your feedback — share your experience with us.</p>
+                <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" class="btn btn-outline">Leave a Review</a>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 15px; font-style: italic;">* Reviews are collected and verified before display.</p>
             </div>
         </div>
     </section>
@@ -365,6 +271,13 @@
                     <p><i class="fas fa-phone"></i> +91 98765 43210</p>
                     <p><i class="fab fa-whatsapp"></i> +91 91234 56789</p>
                     <p><i class="fas fa-envelope"></i> hello@flavorfusion.in</p>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <div class="qr-box">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_GOOGLE_FORM_LINK" alt="Review QR Code">
+                        <p class="qr-label">Scan to leave a review</p>
+                    </div>
                 </div>
             </div>
             <div style="background: var(--white); padding: 40px; border-radius: 2px;">
@@ -385,24 +298,38 @@
     </section>
 
     <footer>
-        <div class="container">
-            <p class="power-line">Serving Mumbai · Thane · Navi Mumbai</p>
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="color: var(--white); font-size: 1.8rem;">Flavor<span style="color: var(--accent-gold);">Fusion</span></div>
+                <p class="power-line">Serving Mumbai · Thane · Navi Mumbai</p>
+                <p style="margin-top: 15px; max-width: 300px; color: rgba(255,255,255,0.6);">Curating thoughtful celebrations with discipline, refinement, and trust.</p>
+            </div>
+            
+            <div>
+                <h4 class="footer-heading">Client Feedback</h4>
+                <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">We value your feedback — share your experience with us.</p>
+                <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" class="btn btn-outline-light" style="padding: 10px 20px; font-size: 0.8rem;">Leave a Review</a>
+            </div>
+
+            <div>
+                 <div class="qr-box">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_GOOGLE_FORM_LINK" alt="Footer QR Code">
+                    <p class="qr-label">Scan to review</p>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="text-align: center;">
             <p>&copy; 2026 Flavor Fusion - Next Gen Catering. All rights reserved. A legacy of Suresh Caterers.</p>
         </div>
     </footer>
 
     <script>
-        // Sticky Header & Color Change on Scroll
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
         });
 
-        // Mobile Menu Toggle
         const mobileBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.getElementById('nav-links');
         mobileBtn.addEventListener('click', () => {
