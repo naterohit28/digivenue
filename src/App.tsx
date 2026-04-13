@@ -1,173 +1,191 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
-  LayoutDashboard, 
-  Calendar as CalendarIcon, 
+  Users, 
   Target, 
+  Calendar as CalendarIcon, 
+  TrendingUp, 
   Plus,
-  TrendingUp,
-  Building2,
-  CheckCircle2
+  ArrowUpRight,
+  Clock,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { VENUES, INITIAL_BOOKINGS, INITIAL_LEADS, INITIAL_INQUIRIES, INITIAL_SOCIAL_LINKS } from './constants';
-import { Booking, Lead, Inquiry, SocialLinks, OnboardingState } from './types';
 
 // Components
-import Dashboard from './components/Dashboard';
-import Calendar from './components/Calendar';
-import Bookings from './components/Bookings';
-import Leads from './components/Leads';
-import QuickAddModal from './components/QuickAddModal';
-import Growth from './components/Growth';
+import TopBar from './components/Layout/TopBar';
+import Sidebar from './components/Layout/Sidebar';
+import StatCard from './components/Dashboard/StatCard';
+import RecentInquiries from './components/Dashboard/RecentInquiries';
+import QuickActions from './components/Dashboard/QuickActions';
+import ActivityTimeline from './components/Dashboard/ActivityTimeline';
+import SocialMediaLeads from './components/SocialMedia/SocialMediaLeads';
+import Modal from './components/UI/Modal';
+
+// Data & Types
+import { MOCK_INQUIRIES, MOCK_SOCIAL_LEADS, MOCK_ACTIVITIES } from './data/mockData';
+import { cn } from './lib/utils';
 
 export default function App() {
   const [activePage, setActivePage] = useState('dashboard');
-  const [bookings, setBookings] = useState<Booking[]>(INITIAL_BOOKINGS);
-  const [leads, setLeads] = useState<Lead[]>(INITIAL_LEADS);
-  const [inquiries, setInquiries] = useState<Inquiry[]>(INITIAL_INQUIRIES);
-  const [socialLinks, setSocialLinks] = useState<SocialLinks>(INITIAL_SOCIAL_LINKS);
-  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
-  const [notification, setNotification] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
-  const showNotification = (msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 3000);
-  };
-
-  const navItems = [
-    { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
-    { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
-    { id: 'add', label: 'Add', icon: Plus, isCenter: true },
-    { id: 'leads', label: 'Leads', icon: Target },
-    { id: 'growth', label: 'Growth', icon: TrendingUp },
-  ];
-
-  const handleQuickAdd = (data: any) => {
-    if (data.type === 'booking') {
-      const newBooking: Booking = {
-        id: Date.now(),
-        client: data.name,
-        date: data.date,
-        guests: parseInt(data.guests) || 0,
-        etype: 'General',
-        venue: VENUES[0].id,
-        amount: 0,
-        advance: 0,
-        notes: `Phone: ${data.phone}`
-      };
-      setBookings([newBooking, ...bookings]);
-      showNotification('Booking added successfully!');
-    } else {
-      const newInquiry: Inquiry = {
-        id: Date.now(),
-        name: data.name,
-        contact: data.phone,
-        date: data.date,
-        guests: parseInt(data.guests) || 0,
-        etype: 'General',
-        budget: 0,
-        message: 'Quick inquiry',
-        status: 'new',
-        received: 'Just now'
-      };
-      setInquiries([newInquiry, ...inquiries]);
-      showNotification('Inquiry saved!');
-    }
-  };
-
-  const renderPage = () => {
+  const renderContent = () => {
     switch (activePage) {
-      case 'dashboard': return <Dashboard bookings={bookings} leads={leads} inquiries={inquiries} onAddClick={() => setIsQuickAddOpen(true)} />;
-      case 'calendar': return <Calendar bookings={bookings} inquiries={inquiries} />;
-      case 'bookings': return <Bookings bookings={bookings} />;
-      case 'leads': return <Leads leads={leads} />;
-      case 'growth': return <Growth links={socialLinks} onUpdate={setSocialLinks} venueName="Ashraya Grand" bookings={bookings} onNotify={showNotification} />;
-      default: return <Dashboard bookings={bookings} leads={leads} inquiries={inquiries} onAddClick={() => setIsQuickAddOpen(true)} />;
+      case 'dashboard':
+        return (
+          <div className="space-y-8 animate-slide-up">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-bold text-navy">Venue Overview</h2>
+                <p className="text-muted mt-1">Here's what's happening at Ashraya Grand today</p>
+              </div>
+              <div className="flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-border shadow-sm">
+                <button className="px-4 py-2 bg-navy text-white rounded-xl text-xs font-bold shadow-lg shadow-navy/20">Today</button>
+                <button className="px-4 py-2 text-muted hover:text-navy rounded-xl text-xs font-bold transition-colors">This Week</button>
+                <button className="px-4 py-2 text-muted hover:text-navy rounded-xl text-xs font-bold transition-colors">This Month</button>
+              </div>
+            </div>
+
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <StatCard 
+                label="Total Inquiries" 
+                value={12} 
+                subValue="+3 since yesterday" 
+                icon={Target} 
+                color="sky" 
+                delay={0.1}
+              />
+              <StatCard 
+                label="Pending Follow-ups" 
+                value={5} 
+                subValue="2 urgent tasks" 
+                icon={Clock} 
+                color="rose" 
+                delay={0.2}
+              />
+              <StatCard 
+                label="Confirmed Bookings" 
+                value={8} 
+                subValue="4 weddings, 4 corporate" 
+                icon={CheckCircle2} 
+                color="jade" 
+                delay={0.3}
+              />
+              <StatCard 
+                label="Est. Revenue" 
+                value="₹24.5L" 
+                subValue="15% above target" 
+                icon={TrendingUp} 
+                color="gold" 
+                delay={0.4}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-8">
+                <RecentInquiries inquiries={MOCK_INQUIRIES} />
+                <div className="bg-navy rounded-[40px] p-8 text-white relative overflow-hidden group">
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-bold mb-2 font-serif">Grow Your Bookings</h3>
+                    <p className="text-white/70 max-w-md mb-6 leading-relaxed">
+                      Our smart algorithm suggests the best dates to promote based on historical demand and upcoming muhurats.
+                    </p>
+                    <button className="flex items-center gap-2 bg-gold text-navy px-6 py-3 rounded-2xl font-bold text-sm hover:scale-105 transition-transform">
+                      View Growth Insights
+                      <ArrowUpRight size={18} />
+                    </button>
+                  </div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl group-hover:bg-gold/20 transition-all"></div>
+                </div>
+              </div>
+              <div className="space-y-8">
+                <QuickActions onAddInquiry={() => setIsInquiryModalOpen(true)} />
+                <ActivityTimeline activities={MOCK_ACTIVITIES} />
+              </div>
+            </div>
+          </div>
+        );
+      case 'social':
+        return <SocialMediaLeads leads={MOCK_SOCIAL_LEADS} />;
+      default:
+        return (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 animate-slide-up">
+            <div className="w-20 h-20 bg-bg rounded-3xl flex items-center justify-center text-4xl">🚧</div>
+            <h3 className="text-2xl font-bold text-navy font-serif">{activePage.charAt(0).toUpperCase() + activePage.slice(1)} Module</h3>
+            <p className="text-muted max-w-xs">This section is part of the full DigiVenue SmartOS experience and is coming soon in the demo.</p>
+            <button 
+              onClick={() => setActivePage('dashboard')}
+              className="text-gold font-bold hover:underline"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-bg">
-      {/* Header */}
-      <header className="h-16 bg-white border-b border-border flex items-center justify-between px-6 shrink-0 z-10 shadow-sm">
-        <span className="font-serif text-xl font-bold text-navy">
-          Digi<span className="text-gold">Venue</span>
-        </span>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gold text-navy font-bold flex items-center justify-center text-xs shadow-sm">RS</div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-4 pb-24 md:max-w-4xl md:mx-auto w-full">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activePage}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.2 }}
-            className="h-full"
-          >
-            {renderPage()}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border flex items-center justify-around py-2 px-4 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] safe-area-bottom">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => {
-              if (item.id === 'add') setIsQuickAddOpen(true);
-              else setActivePage(item.id);
-            }}
-            className={`flex flex-col items-center gap-1 min-w-[64px] transition-all ${
-              item.isCenter ? 'relative -top-8' : ''
-            } ${activePage === item.id ? 'text-navy' : 'text-muted'}`}
-          >
-            {item.isCenter ? (
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-16 h-16 bg-navy text-white rounded-full flex items-center justify-center shadow-2xl border-[6px] border-bg active:scale-90 transition-all">
-                  <item.icon size={32} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-navy mt-1">
-                  {item.label}
-                </span>
-              </div>
-            ) : (
-              <>
-                <item.icon size={24} className={activePage === item.id ? 'text-gold' : ''} />
-                <span className={`text-[10px] font-bold uppercase tracking-wider ${activePage === item.id ? 'text-navy' : ''}`}>
-                  {item.label}
-                </span>
-              </>
-            )}
-          </button>
-        ))}
-      </nav>
-
-      <QuickAddModal 
-        isOpen={isQuickAddOpen} 
-        onClose={() => setIsQuickAddOpen(false)} 
-        onAdd={handleQuickAdd} 
+    <div className="flex min-h-screen bg-bg">
+      <Sidebar 
+        activePage={activePage} 
+        onPageChange={setActivePage} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
+      
+      <div className="flex-1 flex flex-col min-w-0">
+        <TopBar onMenuClick={() => setIsSidebarOpen(true)} />
+        
+        <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto max-w-[1600px] mx-auto w-full">
+          {renderContent()}
+        </main>
+      </div>
 
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {notification && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-navy text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/10"
-          >
-            <CheckCircle2 size={18} className="text-gold" />
-            <span className="text-xs font-bold">{notification}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Inquiry Modal */}
+      <Modal 
+        isOpen={isInquiryModalOpen} 
+        onClose={() => setIsInquiryModalOpen(false)}
+        title="Add New Inquiry"
+      >
+        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsInquiryModalOpen(false); }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-muted">Client Name</label>
+              <input type="text" className="w-full px-4 py-3 bg-bg border border-border rounded-xl outline-none focus:border-gold transition-colors" placeholder="e.g. Amit Sharma" required />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-muted">Phone Number</label>
+              <input type="tel" className="w-full px-4 py-3 bg-bg border border-border rounded-xl outline-none focus:border-gold transition-colors" placeholder="+91 XXXXX XXXXX" required />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-muted">Event Type</label>
+              <select className="w-full px-4 py-3 bg-bg border border-border rounded-xl outline-none focus:border-gold transition-colors appearance-none">
+                <option>Wedding</option>
+                <option>Reception</option>
+                <option>Engagement</option>
+                <option>Corporate</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-muted">Event Date</label>
+              <input type="date" className="w-full px-4 py-3 bg-bg border border-border rounded-xl outline-none focus:border-gold transition-colors" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase tracking-widest font-bold text-muted">Notes</label>
+            <textarea className="w-full px-4 py-3 bg-bg border border-border rounded-xl outline-none focus:border-gold transition-colors min-h-[100px]" placeholder="Any special requirements..."></textarea>
+          </div>
+          <div className="flex gap-3 pt-4">
+            <button type="button" onClick={() => setIsInquiryModalOpen(false)} className="flex-1 py-4 bg-bg text-navy font-bold rounded-2xl hover:bg-border transition-colors">Cancel</button>
+            <button type="submit" className="flex-1 py-4 bg-navy text-white font-bold rounded-2xl shadow-lg shadow-navy/20 hover:bg-navy-mid transition-colors">Save Inquiry</button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
