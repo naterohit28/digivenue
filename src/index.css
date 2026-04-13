@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "DM Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-
+  
   --color-navy: #003265;
   --color-navy-mid: #00418a;
   --color-navy-lit: #1a5aab;
@@ -24,7 +24,7 @@
   --color-violet: #6030a0;
   --color-violet-pale: #f0eafa;
   --color-bg: #f4f6f9;
-  --color-surface: #f9fafc;
+  --color-surface: #ffffff;
   --color-border: #dde3ec;
   --color-border-l: #c8d2e0;
   --color-text: #0d1b2a;
@@ -39,59 +39,72 @@
   body {
     @apply bg-bg text-text font-sans antialiased text-[14px] md:text-[16px];
   }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-navy;
+  }
   button, input, select, textarea {
     @apply min-h-[44px];
   }
 }
 
-.card-mobile {
-  @apply bg-white p-4 rounded-2xl border border-border shadow-sm mb-3;
-}
+@layer components {
+  .card-shadow {
+    box-shadow: 0 2px 8px rgba(0, 50, 101, 0.08);
+  }
+  
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
 
-.badge {
-  @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider font-mono;
-}
+  .card-mobile {
+    @apply bg-white p-4 rounded-2xl border border-border shadow-sm mb-3;
+  }
 
-.badge::before {
-  content: '';
-  @apply w-1.5 h-1.5 rounded-full;
-}
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider font-mono;
+  }
 
-.b-confirmed { @apply bg-gold-pale text-gold border border-gold/25; }
-.b-confirmed::before { @apply bg-gold; }
-.b-paid { @apply bg-jade-pale text-jade border border-jade/25; }
-.b-paid::before { @apply bg-jade; }
-.b-pending { @apply bg-amber-pale text-amber border border-amber/25; }
-.b-pending::before { @apply bg-amber; }
-.b-overdue { @apply bg-rose-pale text-rose border border-rose/25; }
-.b-overdue::before { @apply bg-rose; }
-.b-new { @apply bg-sky-pale text-sky border border-sky/25; }
-.b-new::before { @apply bg-sky; }
-.b-follow { @apply bg-violet-pale text-violet border border-violet/25; }
-.b-follow::before { @apply bg-violet; }
-.b-converted { @apply bg-jade-pale text-jade border border-jade/25; }
-.b-converted::before { @apply bg-jade; }
-.b-lost { @apply bg-gray-100 text-muted border border-border; }
-.b-lost::before { @apply bg-faint; }
+  .badge::before {
+    content: '';
+    @apply w-1.5 h-1.5 rounded-full;
+  }
 
-.data-table {
-  @apply w-full border-collapse;
-}
+  .b-confirmed { @apply bg-gold-pale text-gold border border-gold/25; }
+  .b-confirmed::before { @apply bg-gold; }
+  .b-paid { @apply bg-jade-pale text-jade border border-jade/25; }
+  .b-paid::before { @apply bg-jade; }
+  .b-pending { @apply bg-amber-pale text-amber border border-amber/25; }
+  .b-pending::before { @apply bg-amber; }
+  .b-overdue { @apply bg-rose-pale text-rose border border-rose/25; }
+  .b-overdue::before { @apply bg-rose; }
+  .b-new { @apply bg-sky-pale text-sky border border-sky/25; }
+  .b-new::before { @apply bg-sky; }
+  .b-follow { @apply bg-violet-pale text-violet border border-violet/25; }
+  .b-follow::before { @apply bg-violet; }
+  .b-converted { @apply bg-jade-pale text-jade border border-jade/25; }
+  .b-converted::before { @apply bg-jade; }
+  .b-lost { @apply bg-gray-100 text-muted border border-border; }
+  .b-lost::before { @apply bg-faint; }
 
-.data-table th {
-  @apply text-left px-3.5 py-2.5 text-[10px] uppercase tracking-wider text-muted font-semibold border-b border-border bg-surface whitespace-nowrap;
-}
+  .data-table {
+    @apply w-full border-collapse;
+  }
 
-.data-table td {
-  @apply px-3.5 py-3 text-sm border-b border-border align-middle;
-}
+  .data-table th {
+    @apply text-left px-3.5 py-2.5 text-[10px] uppercase tracking-wider text-muted font-semibold border-b border-border bg-surface whitespace-nowrap;
+  }
 
-.data-table tr:last-child td {
-  @apply border-b-0;
-}
+  .data-table td {
+    @apply px-3.5 py-3 text-sm border-b border-border align-middle;
+  }
 
-.data-table tr:hover td {
-  @apply bg-surface;
+  .data-table tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-surface/50;
+  }
 }
 
 @keyframes slideUp {
