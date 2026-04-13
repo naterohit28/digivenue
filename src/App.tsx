@@ -27,10 +27,12 @@ export default function App() {
   const [inquiries, setInquiries] = useState<Inquiry[]>(INITIAL_INQUIRIES);
   const [socialLinks, setSocialLinks] = useState<SocialLinks>(INITIAL_SOCIAL_LINKS);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
-  const [onboarding, setOnboarding] = useState<OnboardingState>({ 
-    step: 1, 
-    isComplete: localStorage.getItem('onboardingComplete') === 'true' 
-  });
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   const navItems = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
@@ -54,6 +56,7 @@ export default function App() {
         notes: `Phone: ${data.phone}`
       };
       setBookings([newBooking, ...bookings]);
+      showNotification('Booking added successfully!');
     } else {
       const newInquiry: Inquiry = {
         id: Date.now(),
@@ -68,57 +71,23 @@ export default function App() {
         received: 'Just now'
       };
       setInquiries([newInquiry, ...inquiries]);
+      showNotification('Inquiry saved!');
     }
-    if (onboarding.step === 2) setOnboarding({ ...onboarding, step: 3 });
-  };
-
-  const completeOnboarding = () => {
-    setOnboarding({ ...onboarding, isComplete: true });
-    localStorage.setItem('onboardingComplete', 'true');
   };
 
   const renderPage = () => {
     switch (activePage) {
-      case 'dashboard': return <Dashboard bookings={bookings} leads={leads} inquiries={inquiries} />;
+      case 'dashboard': return <Dashboard bookings={bookings} leads={leads} inquiries={inquiries} onAddClick={() => setIsQuickAddOpen(true)} />;
       case 'calendar': return <Calendar bookings={bookings} inquiries={inquiries} />;
       case 'bookings': return <Bookings bookings={bookings} />;
       case 'leads': return <Leads leads={leads} />;
-      case 'growth': return <Growth links={socialLinks} onUpdate={setSocialLinks} venueName="Ashraya Grand" bookings={bookings} />;
-      default: return <Dashboard bookings={bookings} leads={leads} inquiries={inquiries} />;
+      case 'growth': return <Growth links={socialLinks} onUpdate={setSocialLinks} venueName="Ashraya Grand" bookings={bookings} onNotify={showNotification} />;
+      default: return <Dashboard bookings={bookings} leads={leads} inquiries={inquiries} onAddClick={() => setIsQuickAddOpen(true)} />;
     }
   };
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-bg">
-      {/* Onboarding Overlay */}
-      {!onboarding.isComplete && (
-        <div className="fixed inset-0 z-[200] bg-navy/95 flex items-center justify-center p-6 text-white text-center backdrop-blur-md">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-8 max-w-xs">
-            <div className="w-24 h-24 bg-gold rounded-full flex items-center justify-center mx-auto text-navy shadow-[0_0_30px_rgba(212,175,55,0.3)]">
-              {onboarding.step === 1 ? <Building2 size={48} /> : onboarding.step === 2 ? <Plus size={48} /> : <CheckCircle2 size={48} />}
-            </div>
-            <div className="space-y-2">
-              <h2 className="font-serif text-3xl font-bold">
-                {onboarding.step === 1 ? 'Welcome to DigiVenue' : onboarding.step === 2 ? 'Add Your First Booking' : 'Ready to Go!'}
-              </h2>
-              <p className="text-sm text-white/60 leading-relaxed">
-                {onboarding.step === 1 ? 'The smartest way to manage your banquet hall. Let\'s set up your venue first.' : onboarding.step === 2 ? 'Quickly add a booking or inquiry to see how it works.' : 'You\'re all set to manage your venue like a pro.'}
-              </p>
-            </div>
-            <button 
-              onClick={() => {
-                if (onboarding.step === 1) setOnboarding({ ...onboarding, step: 2 });
-                else if (onboarding.step === 3) completeOnboarding();
-                else setIsQuickAddOpen(true);
-              }}
-              className="w-full py-4 bg-gold text-navy font-bold rounded-2xl shadow-xl active:scale-95 transition-all"
-            >
-              {onboarding.step === 1 ? 'Get Started' : onboarding.step === 2 ? '+ Quick Add' : 'Enter Dashboard'}
-            </button>
-          </motion.div>
-        </div>
-      )}
-
       {/* Header */}
       <header className="h-16 bg-white border-b border-border flex items-center justify-between px-6 shrink-0 z-10 shadow-sm">
         <span className="font-serif text-xl font-bold text-navy">
@@ -184,6 +153,21 @@ export default function App() {
         onClose={() => setIsQuickAddOpen(false)} 
         onAdd={handleQuickAdd} 
       />
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-navy text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/10"
+          >
+            <CheckCircle2 size={18} className="text-gold" />
+            <span className="text-xs font-bold">{notification}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
